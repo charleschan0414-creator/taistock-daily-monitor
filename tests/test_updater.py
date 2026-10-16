@@ -8,6 +8,15 @@ from pathlib import Path
 
 
 class UpdaterTests(unittest.TestCase):
+    def test_manifest_url_uses_branch_redirect_to_avoid_stale_negative_raw_cache(self):
+        from updater import MANIFEST_URL
+
+        self.assertEqual(
+            MANIFEST_URL,
+            "https://github.com/charleschan0414-creator/taistock-daily-monitor/"
+            "raw/refs/heads/main/software_manifest.json",
+        )
+
     def test_same_version_does_not_download_archive(self):
         from updater import check_for_updates
 

@@ -14,8 +14,8 @@ import zipfile
 
 
 MANIFEST_URL = (
-    "https://raw.githubusercontent.com/charleschan0414-creator/"
-    "taistock-daily-monitor/main/software_manifest.json"
+    "https://github.com/charleschan0414-creator/taistock-daily-monitor/"
+    "raw/refs/heads/main/software_manifest.json"
 )
 ARCHIVE_URL = (
     "https://github.com/charleschan0414-creator/taistock-daily-monitor/"

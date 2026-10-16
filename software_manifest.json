@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.16.1",
+  "version": "2026.10.16.2",
   "files": {
     "README.md": "c0eb6189072f9576ad7c4ff88b207e782bf54ed5ec7f4824fb47d8f1c3518265",
     "app.py": "f6a25b677bbe1ca3992576561bbedf17d3bb09696d485584535114cb637e7ce7",
@@ -12,7 +12,7 @@
     "start_mobile.bat": "5683cf56d7bd6496f55ed12105993ef953f02ec939f4c0476617963b76c394bd",
     "start_remote_mobile.bat": "b1d473164cea3cdc27811196c0a827ad254482f24a1fe3dfa4d1b8b002e67c2f",
     "uninstall_daily_task.bat": "9af73a167ea36fa099bb8e68642172a7985812ce4a631a9ab2030845d262cf7d",
-    "updater.py": "ecde873a7da0c468cad70a6c977420cd1a864ca915e150692e09346cf8acc2e3",
+    "updater.py": "1c3366f9ae7cf3a2d681704ca9391522339dd9e62cbc54b03589b0a5bfa81bb5",
     "taistock/__init__.py": "57cf16a918c27fb218f81e6959d551fec330f080f10580b8872b4d9135561d58",
     "taistock/backtest.py": "1353d4197019faf5b61d29874ab4e92f70cd5d85943561ffdd7de527aee9752b",
     "taistock/core.py": "d591cb9876694337862fc44557bb6b352aeb55f2acb68cd8be993e18f544c059",
