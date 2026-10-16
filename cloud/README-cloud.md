@@ -39,7 +39,7 @@ npx wrangler login
 npm run deploy
 ```
 
-現有 KV 保留作 GitHub 無法連線時的備援；`npm run seed` 仍可由本機資料初始化 KV。Wrangler 設定中的舊 Cron 可保留作 KV 備援，但主要每日計算以 GitHub Actions 為準。
+現有 KV 保留作 GitHub 無法連線時的備援；`npm run seed` 仍可由本機資料初始化 KV。Cloudflare Workers 免費 Cron 已停用，避免10毫秒CPU限制產生失敗日更；主要每日計算全部由 GitHub Actions 執行。
 
 ## 方法限制
 
