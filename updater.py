@@ -7,19 +7,24 @@ import io
 import json
 import os
 from pathlib import Path, PurePosixPath
+import re
 import sys
 import tempfile
 from urllib.request import Request, urlopen
 import zipfile
 
 
-MANIFEST_URL = (
-    "https://github.com/charleschan0414-creator/taistock-daily-monitor/"
-    "raw/refs/heads/main/software_manifest.json"
+COMMITS_URL = (
+    "https://api.github.com/repos/charleschan0414-creator/"
+    "taistock-daily-monitor/commits/main"
 )
-ARCHIVE_URL = (
+MANIFEST_URL_TEMPLATE = (
+    "https://raw.githubusercontent.com/charleschan0414-creator/"
+    "taistock-daily-monitor/{commit}/software_manifest.json"
+)
+ARCHIVE_URL_TEMPLATE = (
     "https://github.com/charleschan0414-creator/taistock-daily-monitor/"
-    "archive/refs/heads/main.zip"
+    "archive/{commit}.zip"
 )
 USER_AGENT = "TaiStockScanner-Updater/1.0"
 PROTECTED_DIRS = {
@@ -66,23 +71,38 @@ def _download(url, timeout):
         return response.read()
 
 
+def _version_key(version):
+    version = str(version)
+    if re.fullmatch(r"[0-9]+(?:\.[0-9]+)*", version) is None:
+        raise ValueError(f"invalid release version: {version}")
+    return tuple(int(part) for part in version.split("."))
+
+
 def check_for_updates(root=None, download=None, timeout=5, replace=None, check_only=False):
     root = Path(root or Path(__file__).resolve().parent)
     download = download or _download
     replace = replace or os.replace
-    remote = json.loads(download(MANIFEST_URL, timeout).decode("utf-8"))
+    commit = str(json.loads(download(COMMITS_URL, timeout).decode("utf-8"))["sha"])
+    if re.fullmatch(r"[0-9a-f]{40}", commit) is None:
+        raise ValueError("invalid GitHub commit SHA")
+    manifest_url = MANIFEST_URL_TEMPLATE.format(commit=commit)
+    archive_url = ARCHIVE_URL_TEMPLATE.format(commit=commit)
+    remote = json.loads(download(manifest_url, timeout).decode("utf-8"))
     local_path = root / "software_manifest.json"
     local = json.loads(local_path.read_text(encoding="utf-8")) if local_path.exists() else {}
     version = str(remote["version"])
-    if str(local.get("version", "")) == version:
+    local_version = str(local.get("version", ""))
+    if local_version == version:
         return UpdateResult("current", version, "已是最新版")
+    if local_version and _version_key(version) < _version_key(local_version):
+        return UpdateResult("current", local_version, "已安裝較新版本")
     if check_only:
         return UpdateResult("available", version, f"有新版本 {version}")
 
     files = remote.get("files")
     if not isinstance(files, dict) or not files:
         raise ValueError("manifest files must be a non-empty object")
-    archive_bytes = download(ARCHIVE_URL, timeout)
+    archive_bytes = download(archive_url, timeout)
     with zipfile.ZipFile(io.BytesIO(archive_bytes)) as bundle, tempfile.TemporaryDirectory(
         prefix="taistock-update-", dir=root
     ) as staging_directory:

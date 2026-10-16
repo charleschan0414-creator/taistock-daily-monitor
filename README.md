@@ -81,8 +81,8 @@ python app.py --help
 ### 版本更新
 
 - **雲端版／PWA**：直接重新開啟固定網址即可取得已發布的新版本；瀏覽器會自動更新網頁殼層，不需下載 ZIP。
-- **桌面版**：從本版開始，每次執行 `run.bat` 都會先向固定官方來源 `charleschan0414-creator/taistock-daily-monitor` 檢查版本。版本相同時只讀取小型 manifest，不下載完整程式；有新版才下載 GitHub `main` 壓縮檔。
-- 更新只安裝 `software_manifest.json` 明列且 SHA256 驗證通過的程式檔，並以暫存、原子替換及失敗回復保護目前版本。`data/`、`public_data/`、`scanner.db`、`python_path.txt`、官方 cache、憑證與使用者設定永遠不會被覆蓋。
+- **桌面版**：從本版開始，每次執行 `run.bat` 都會先向固定官方來源 `charleschan0414-creator/taistock-daily-monitor` 查詢 `main` 當下的 40 位 commit SHA，再以同一 SHA 讀取 manifest 與下載壓縮檔。版本相同時只讀取小型 manifest，不下載完整程式；有新版才下載該不可變 commit 的壓縮檔，不使用可能不同步的分支壓縮檔。
+- 更新只安裝 `software_manifest.json` 明列且 SHA256 驗證通過的程式檔，並以暫存、原子替換及失敗回復保護目前版本。release manifest 由 `build_software_manifest.py` 對 Git clean-filter 後的 blob bytes 產生，因此 Windows CRLF 工作樹與 GitHub archive 的 LF 內容不會造成誤判。`data/`、`public_data/`、`scanner.db`、`python_path.txt`、官方 cache、憑證與使用者設定永遠不會被覆蓋。
 - 若網路、GitHub 或驗證失敗，會顯示警告並繼續啟動目前可用版本。只檢查不安裝可執行 `run.bat --check-only` 或 `python updater.py --check-only`。
 - **先前下載舊 ZIP 的使用者**：舊版沒有更新器，需只做一次換成新版 ZIP。請解壓到新的固定資料夾；若要沿用舊資料，再複製自己的 `data/` 與 `python_path.txt` 到新版。之後由桌面版自動更新，不必再次整包替換。
 
