@@ -1,4 +1,5 @@
 import { updateRolling } from './cron.js';
+import { fetchTaifexMarket } from './taifex.js';
 
 const DOWNLOADS = new Set(['latest.csv', 'backtest_100d.csv']);
 const RAW_BASE = 'https://raw.githubusercontent.com/charleschan0414-creator/taistock-daily-monitor/main/public_data/';
@@ -60,8 +61,12 @@ export async function dashboard(env, fetcher = fetch) {
   const merge = row => ({ ...row, current_price: prices.get(row.code)?.price ?? null,
     realtime: prices.get(row.code)?.realtime ?? false,
     price_status: prices.get(row.code)?.realtime ? '即時' : '非即時' });
+  let globalMarket;
+  try { globalMarket = await fetchTaifexMarket(fetcher); }
+  catch { globalMarket = { status: 'unavailable', fetched_at: null, notice: '期交所行情，可能延遲', items: [],
+    risk: { status: '中性', rule: 'TAIFEX 資料無法取得，維持中性' } }; }
   return json({ data_date: latest.data_date, updated_at: latest.updated_at, data_source: loaded.source,
-    daily_status: dailyStatus ?? null, realtime_status: status,
+    daily_status: dailyStatus ?? null, realtime_status: status, global_market: globalMarket,
     strategy_gate: latest.strategy_gate ?? { enabled: false, status: '未提供策略閘門' },
     long: long.map(merge), short: short.map(merge), disclaimer: '規則式研究觀察，非投資建議、獲利保證或下單服務。' });
 }

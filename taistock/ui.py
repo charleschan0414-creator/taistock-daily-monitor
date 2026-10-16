@@ -8,6 +8,7 @@ import socket
 from datetime import date, timedelta
 from tkinter import ttk, messagebox
 from .backtest import OfficialHistoryFetcher
+from .global_market import GlobalMarketClient
 from .net import HttpClient
 from .scanner import Scanner
 from .storage import load_optimizer_state, load_result, save_result
@@ -16,6 +17,23 @@ from .realtime import RealtimeQuoteClient
 from .mobile import lan_ipv4
 
 BG, PANEL, FG, MUTED, ACCENT = "#0b1220", "#111c2f", "#e7edf7", "#8fa2bd", "#4da3ff"
+
+
+class BackgroundRefreshGate:
+    def __init__(self):
+        self._lock = threading.Lock()
+        self._running = False
+
+    def try_start(self):
+        with self._lock:
+            if self._running:
+                return False
+            self._running = True
+            return True
+
+    def finish(self):
+        with self._lock:
+            self._running = False
 
 
 def visible_signal_rows(result):
@@ -38,6 +56,23 @@ def display_quote_values(quote):
     return price, change, f"{clock} {quote.get('status', '')}".strip()
 
 
+def format_global_market(payload):
+    scenario = payload.get("scenario", {})
+    scenario_text = f"情境：{scenario.get('bias', '中性')}｜{scenario.get('basis', 'TX / UNF / SXF 尚無完整資料')}"
+    rows = []
+    for item in payload.get("items", []):
+        pct = item.get("change_pct")
+        rows.append((item.get("contract", item.get("symbol", "—")), item.get("contract_name", "—"),
+                     f"{item['price']:,.10g}" if item.get("price") is not None else "—",
+                     f"{pct:+.2f}%" if pct is not None else "—",
+                     f"{item['volume']:,}" if item.get("volume") is not None else "—"))
+    status = (f"系統抓取時間 {payload.get('fetched_at', '—')}｜期交所行情，可能延遲，非投資建議｜"
+              "情境僅供參考，不加入現有策略分數")
+    if payload.get("status") != "ok":
+        status = f"{payload.get('message', 'TAIFEX 行情更新失敗')}｜{status}"
+    return scenario_text, rows, status
+
+
 def format_backtest_summary(result):
     period, metrics = result["period"], result["metrics"]
     lines = [
@@ -57,6 +92,7 @@ def format_backtest_summary(result):
 class Dashboard(tk.Tk):
     def __init__(self, data_dir):
         super().__init__(); self.data_dir = data_dir; self.events = queue.Queue(); self.current_result = None; self.quotes = {}
+        self.global_market_gate = BackgroundRefreshGate()
         self.title("TaiStock Monitor｜台股多空規則式觀察"); self.geometry("1420x820"); self.minsize(1080, 680); self.configure(bg=BG)
         style = ttk.Style(self); style.theme_use("clam")
         style.configure("Treeview", background=PANEL, fieldbackground=PANEL, foreground=FG, rowheight=27, borderwidth=0)
@@ -67,6 +103,7 @@ class Dashboard(tk.Tk):
         if cached:
             self._render(cached, "離線顯示上次成功結果"); self.refresh_quotes()
         self.after(60000, self._auto_refresh_quotes)
+        self.refresh_global_market(); self.after(60000, self._auto_refresh_global_market)
         self._load_backtest()
 
     def _build(self):
@@ -82,6 +119,9 @@ class Dashboard(tk.Tk):
         self.quote_button = tk.Button(row, text="更新現價", command=self.refresh_quotes, bg="#f59e0b", fg="#06121f",
                                       relief="flat", padx=18, pady=8, font=("Microsoft JhengHei UI", 11, "bold"))
         self.quote_button.pack(side="right", padx=(0, 8))
+        self.global_market_button = tk.Button(row, text="更新期貨", command=self.refresh_global_market, bg="#2dd4bf", fg="#06121f",
+                                              relief="flat", padx=18, pady=8, font=("Microsoft JhengHei UI", 11, "bold"))
+        self.global_market_button.pack(side="right", padx=(0, 8))
         self.mobile_button = tk.Button(row, text="手機版", command=self.open_mobile, bg="#a78bfa", fg="#06121f",
                                        relief="flat", padx=18, pady=8, font=("Microsoft JhengHei UI", 11, "bold"))
         self.mobile_button.pack(side="right", padx=(0, 8))
@@ -115,6 +155,19 @@ class Dashboard(tk.Tk):
         self.backtest_text = tk.Text(backtest_frame, bg=PANEL, fg=FG, insertbackground=FG, relief="flat",
                                      padx=24, pady=20, font=("Microsoft JhengHei UI", 12), state="disabled")
         self.backtest_text.pack(fill="both", expand=True)
+        global_frame = tk.Frame(tabs, bg=PANEL); tabs.add(global_frame, text="美股連動與台股夜盤")
+        self.global_scenario = tk.StringVar(value="情境：讀取中…")
+        tk.Label(global_frame, textvariable=self.global_scenario, fg=FG, bg=PANEL, anchor="w",
+                 font=("Microsoft JhengHei UI", 13, "bold"), padx=18, pady=12).pack(fill="x")
+        market_columns = ("contract", "name", "price", "change", "volume")
+        self.global_tree = ttk.Treeview(global_frame, columns=market_columns, show="headings", height=7)
+        for column, heading, width in zip(market_columns, ("契約", "商品", "價格", "漲跌幅", "成交量"),
+                                          (100, 220, 130, 120, 130)):
+            self.global_tree.heading(column, text=heading); self.global_tree.column(column, width=width, anchor="center")
+        self.global_tree.pack(fill="both", expand=True, padx=18)
+        self.global_market_status = tk.StringVar(value="期交所行情讀取中…")
+        tk.Label(global_frame, textvariable=self.global_market_status, fg="#fbbf24", bg=PANEL, anchor="w",
+                 font=("Microsoft JhengHei UI", 10), padx=18, pady=12).pack(fill="x")
         bottom = tk.Frame(self, bg=BG); bottom.pack(fill="x", padx=18, pady=(7, 14))
         self.progress = ttk.Progressbar(bottom, maximum=100); self.progress.pack(fill="x")
         self.status = tk.StringVar(value="就緒｜可離線開啟上次結果")
@@ -183,6 +236,25 @@ class Dashboard(tk.Tk):
     def _auto_refresh_quotes(self):
         self.refresh_quotes(); self.after(60000, self._auto_refresh_quotes)
 
+    def refresh_global_market(self):
+        if not self.global_market_gate.try_start():
+            return
+        self.global_market_button.configure(state="disabled")
+        def worker():
+            self.events.put(("global_market_done", GlobalMarketClient().fetch()))
+        threading.Thread(target=worker, daemon=True).start()
+
+    def _auto_refresh_global_market(self):
+        self.refresh_global_market(); self.after(60000, self._auto_refresh_global_market)
+
+    def _render_global_market(self, payload):
+        scenario, rows, status = format_global_market(payload)
+        self.global_scenario.set(scenario)
+        self.global_tree.delete(*self.global_tree.get_children())
+        for row in rows:
+            self.global_tree.insert("", "end", values=row)
+        self.global_market_status.set(status)
+
     def open_mobile(self):
         root = self.data_dir.parent
         running = False
@@ -219,6 +291,8 @@ class Dashboard(tk.Tk):
                     self.quotes.update(event[1]); self._render(self.current_result, "現價更新成功"); self.quote_button.configure(state="normal")
                 elif event[0] == "quotes_error":
                     self.status.set("現價更新失敗，保留最後報價｜" + event[1]); self.quote_button.configure(state="normal")
+                elif event[0] == "global_market_done":
+                    self._render_global_market(event[1]); self.global_market_gate.finish(); self.global_market_button.configure(state="normal")
                 else: self.status.set("更新失敗｜" + event[1]); self.button.configure(state="normal"); messagebox.showerror("資料更新失敗", event[1])
         except queue.Empty:
             pass

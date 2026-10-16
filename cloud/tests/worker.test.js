@@ -19,6 +19,27 @@ function env(fetcher) {
     ASSETS: { fetch: async () => new Response('asset') }, fetcher };
 }
 
+test('dashboard加入TAIFEX全球市場情境與系統抓取時間', async () => {
+  const taifex = [
+    { contract: 'TX106', price: '100', ttlvol: '1,000', contractName: '臺股期貨', updown: '1' },
+    { contract: 'ZEF106', price: '100', ttlvol: '900', contractName: '小型電子期貨', updown: '1' },
+    { contract: 'CDF106', price: '100', ttlvol: '800', contractName: '台積電期貨', updown: '1' },
+    { contract: 'UNF126', price: '100', ttlvol: '700', contractName: '那斯達克100期貨', updown: '2' },
+    { contract: 'SXF126', price: '100', ttlvol: '600', contractName: '費城半導體期貨', updown: '-1' },
+  ];
+  const fetcher = async url => {
+    const value = String(url);
+    if (value.includes('getQuotes?objId=12')) return new Response(JSON.stringify(taifex));
+    throw new Error('other source unavailable');
+  };
+  const body = await (await createWorker(fetcher).fetch(new Request('https://x/api/dashboard'), env(fetcher))).json();
+  assert.equal(body.global_market.status, 'available');
+  assert.match(body.global_market.fetched_at, /^\d{4}-\d\d-\d\dT/);
+  assert.equal(body.global_market.items.length, 5);
+  assert.equal(body.global_market.risk.status, '風險偏多');
+  assert.equal(body.global_market.notice, '期交所行情，可能延遲');
+});
+
 test('dashboard優先讀固定GitHub Raw latest且不接受請求URL覆寫', async () => {
   const calls = [];
   const githubLatest = { ...latest, data_date: '2026-10-16', long_top10: [{ code: '9999', market: '上市', close: 50 }] };
@@ -49,13 +70,15 @@ test('dashboard在MIS失敗時仍回KV清單並標示非即時', async () => {
   assert.equal(body.long[0].realtime, false);
   assert.equal(body.realtime_status, 'unavailable');
   assert.equal(body.data_source, 'kv');
+  assert.equal(body.global_market.status, 'unavailable');
+  assert.equal(body.global_market.fetched_at, null);
   assert.equal(res.headers.get('access-control-allow-origin'), null);
 });
 
 test('dashboard產生上市與上櫃MIS channel並合併現價', async () => {
   let called = '';
   const worker = createWorker(async url => {
-    called = String(url);
+    if (String(url).includes('getStockInfo.jsp')) called = String(url);
     return new Response(JSON.stringify({ msgArray: [
       { c: '2330', z: '101', tlong: '1' }, { c: '6488', z: '-', y: '199', tlong: '2' },
     ] }), { headers: { 'content-type': 'application/json' } });

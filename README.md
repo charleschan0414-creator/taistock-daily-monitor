@@ -99,6 +99,8 @@ python app.py --help
 
 桌面版開啟上次成功清單後，會在背景抓取 TWSE MIS 官方報價；「更新現價」可手動更新，之後每 60 秒自動更新。上市使用 `tse_代號.tw`，上櫃使用 `otc_代號.tw`。現價缺值時會回退可用報價並明確標示「非即時」；交易時段以台北時區週一至週五 09:00–13:30 判斷，收盤後標示「收盤/非即時」。網路失敗保留最後成功值，不會卡住視窗。
 
+桌面版、本機手機版與 Cloudflare 雲端版另整合 TAIFEX 官方夜盤行情端點，每 60 秒更新臺股期貨（TX）、小型電子期貨（ZEF）、台積電期貨（CDF）、那斯達克100期貨（UNF）及費城半導體期貨（SXF）。系統以 TX／UNF／SXF 至少兩項同向顯示「風險偏多／中性／偏空」市場情境；這是透明的夜盤脈動摘要，不會直接加入既有選股分數或改寫策略。頁面顯示的是系統抓取時間，並明示「期交所行情，可能延遲」；不可視為逐筆即時成交或投資建議。
+
 手機版是跨平台 PWA 網頁，不是原生 App。啟動方式：
 
 ```bat
@@ -137,7 +139,7 @@ start_remote_mobile.bat
 
 每次依序重跑 100 日無前視回測、70/30 策略閘門與當日清單。每日使用相同滾動窗口重新評估不等於新的獨立樣本外證據；`strategy_history.jsonl` 按資料日保留稽核。候選只有通過最後 30 日保留測試才啟用，且新設定只用於後續訊號，不回寫當期結果。未計手續費、交易稅、滑價、借券費與融券限制；不保證提高勝率或獲利。
 
-Cloudflare Worker 只從固定 GitHub Raw 白名單讀取 `public_data/`，GitHub 失敗才回退既有 KV，並繼續以 TWSE MIS 合併現價。Windows 關機不影響 GitHub/Cloudflare 讀取。雲端原始碼、測試及說明在 `cloud/`；Cloudflare OAuth 憑證由 Wrangler 存放於使用者設定檔，不會放入專案或 ZIP。
+Cloudflare Worker 只從固定 GitHub Raw 白名單讀取 `public_data/`，GitHub 失敗才回退既有 KV，並繼續以 TWSE MIS 合併現價、以 TAIFEX 官方端點取得夜盤與美股連動期貨情境。PWA 在頁面可見時每 60 秒刷新，切到背景會暫停以減少不必要請求。Windows 關機不影響 GitHub/Cloudflare 讀取。雲端原始碼、測試及說明在 `cloud/`；Cloudflare OAuth 憑證由 Wrangler 存放於使用者設定檔，不會放入專案或 ZIP。
 
 ## 驗證
 

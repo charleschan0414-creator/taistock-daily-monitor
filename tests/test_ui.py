@@ -1,5 +1,6 @@
 import unittest
-from taistock.ui import format_backtest_summary, display_quote_values, visible_signal_rows
+from taistock.ui import (format_backtest_summary, display_quote_values, visible_signal_rows,
+                         format_global_market, BackgroundRefreshGate)
 
 
 class BacktestUiTests(unittest.TestCase):
@@ -30,6 +31,25 @@ class BacktestUiTests(unittest.TestCase):
         values = display_quote_values({"price": 101.5, "change_pct": 1.25,
                                        "quote_time": "2026-10-16T10:00:00+08:00", "status": "即時"})
         self.assertEqual(values, ("101.5", "+1.25%", "10:00:00 即時"))
+
+    def test_formats_global_market_rows_scenario_and_system_fetch_time(self):
+        payload = {"status": "ok", "fetched_at": "2026-10-17T22:01:02+08:00",
+                   "scenario": {"bias": "偏多", "basis": "TX / UNF / SXF 上漲 2、下跌 1"},
+                   "items": [{"symbol": "TX", "contract": "TX106", "contract_name": "臺股期貨",
+                              "price": 23123.0, "change_pct": 0.45, "volume": 12345}]}
+        scenario, rows, status = format_global_market(payload)
+        self.assertIn("偏多", scenario)
+        self.assertIn("TX / UNF / SXF", scenario)
+        self.assertEqual(rows[0], ("TX106", "臺股期貨", "23,123", "+0.45%", "12,345"))
+        self.assertIn("系統抓取時間 2026-10-17T22:01:02+08:00", status)
+        self.assertIn("可能延遲，非投資建議", status)
+
+    def test_background_refresh_gate_prevents_overlap_until_finished(self):
+        gate = BackgroundRefreshGate()
+        self.assertTrue(gate.try_start())
+        self.assertFalse(gate.try_start())
+        gate.finish()
+        self.assertTrue(gate.try_start())
 
 
 if __name__ == "__main__": unittest.main()

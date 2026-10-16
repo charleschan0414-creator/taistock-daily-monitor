@@ -8,6 +8,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
+from .global_market import GlobalMarketClient
 from .realtime import RealtimeQuoteClient, TAIPEI
 
 DOWNLOADS = {"latest.csv", "backtest_100d.csv"}
@@ -21,7 +22,7 @@ def load_json(path, default):
         return default
 
 
-def build_dashboard(latest, backtest, quote_client=None):
+def build_dashboard(latest, backtest, quote_client=None, global_client=None):
     longs = list(latest.get("long_top10", latest.get("top10", [])))[:10]
     shorts = list(latest.get("short_top10", []))[:10]
     rows = longs + shorts
@@ -30,6 +31,11 @@ def build_dashboard(latest, backtest, quote_client=None):
         quotes = (quote_client or RealtimeQuoteClient()).fetch(rows) if rows else {}
     except Exception as exc:
         quotes, quote_error = {}, str(exc)
+    try:
+        global_market = (global_client or GlobalMarketClient()).fetch()
+    except Exception as exc:
+        global_market = {"status": "error", "message": f"TAIFEX 行情更新失敗：{exc}",
+                         "fetched_at": datetime.now(TAIPEI).isoformat(timespec="seconds"), "items": []}
     def merge(items):
         return [dict(row, realtime=quotes.get(str(row.get("code")), {
             "price": None, "change_pct": None, "quote_time": None,
@@ -43,11 +49,12 @@ def build_dashboard(latest, backtest, quote_client=None):
         "strategy_gate": latest.get("strategy_gate", {"enabled": False, "status": "未啟用｜保留基準訊號",
                                                         "directions": {"long": True, "short": True}}),
         "quote_error": quote_error,
+        "global_market": global_market,
         "disclaimer": "僅供研究、非投資建議",
     }
 
 
-def _handler(root, quote_client):
+def _handler(root, quote_client, global_client):
     root, data, mobile = Path(root), Path(root) / "data", Path(root) / "mobile"
     class Handler(BaseHTTPRequestHandler):
         server_version = "TaiStockMobile/1.0"
@@ -71,7 +78,7 @@ def _handler(root, quote_client):
                 latest = load_json(data / "latest.json", {})
                 if not latest:
                     return self._json_error(503, "尚無 latest.json 資料")
-                result = build_dashboard(latest, load_json(data / "backtest_100d.json", {}), quote_client)
+                result = build_dashboard(latest, load_json(data / "backtest_100d.json", {}), quote_client, global_client)
                 return self._send(200, json.dumps(result, ensure_ascii=False).encode(), "application/json; charset=utf-8")
             if raw_path.startswith("/download/"):
                 name = raw_path[len("/download/"):]
@@ -89,8 +96,9 @@ def _handler(root, quote_client):
     return Handler
 
 
-def create_server(host, port, root, quote_client=None):
-    return ThreadingHTTPServer((host, port), _handler(root, quote_client or RealtimeQuoteClient()))
+def create_server(host, port, root, quote_client=None, global_client=None):
+    return ThreadingHTTPServer((host, port), _handler(root, quote_client or RealtimeQuoteClient(),
+                                                     global_client or GlobalMarketClient()))
 
 
 def lan_ipv4():

@@ -1,3 +1,5 @@
+import { createRefreshController } from './refresh.js';
+
 const $ = id => document.getElementById(id);
 const fmt = value => value == null ? '—' : new Intl.NumberFormat('zh-TW', { maximumFractionDigits: 2 }).format(value);
 const percent = value => Number.isFinite(value) ? `${(value * 100).toFixed(2)}%` : '—';
@@ -38,6 +40,28 @@ function renderList(id, rows) {
   if (!rows.length) { const empty = document.createElement('p'); empty.className = 'empty'; empty.textContent = '目前沒有符合規則的觀察標的。'; box.append(empty); return; }
   box.append(...rows.map(card));
 }
+function renderMarket(market) {
+  $('market-risk').textContent = market?.risk?.status ?? '中性';
+  $('market-rule').textContent = market?.risk?.rule ?? 'TAIFEX 資料無法取得，維持中性';
+  $('market-fetched').textContent = market?.fetched_at ? `系統抓取：${new Date(market.fetched_at).toLocaleString('zh-TW')}` : '系統抓取：—';
+  const box = $('market-list'); box.replaceChildren();
+  if (market?.status !== 'available' || !market.items?.length) {
+    const empty = document.createElement('p'); empty.className = 'empty'; empty.textContent = '期交所行情暫時無法取得，選股清單仍可使用。'; box.append(empty); return;
+  }
+  for (const item of market.items) {
+    const node = document.createElement('article'); node.className = 'market-card';
+    const heading = document.createElement('div'); heading.className = 'market-heading';
+    const title = document.createElement('strong'); title.textContent = item.name;
+    const contract = document.createElement('span'); contract.textContent = item.contract; heading.append(title, contract);
+    const price = document.createElement('div'); price.className = 'market-price'; price.textContent = fmt(item.price);
+    const move = document.createElement('div'); move.className = item.change > 0 ? 'market-up' : item.change < 0 ? 'market-down' : '';
+    const sign = item.change > 0 ? '+' : '';
+    move.textContent = `${sign}${fmt(item.change)} / ${item.change_pct == null ? '—' : `${sign}${item.change_pct.toFixed(2)}%`}`;
+    const volume = document.createElement('small'); volume.textContent = `成交量 ${fmt(item.volume)}`;
+    node.append(heading, price, move, volume); box.append(node);
+  }
+}
+
 async function load() {
   $('refresh').disabled = true; $('message').textContent = '';
   try {
@@ -58,9 +82,12 @@ async function load() {
     if (daily?.status !== 'success') warnings.push('每日收盤後回測/優化尚未成功');
     if (missedTradingDays(data.data_date) > 0) warnings.push('盤後資料已過期，07:40 備援可能尚未完成');
     $('message').textContent = warnings.length ? `注意：${warnings.join('；')}。` : '';
+    renderMarket(data.global_market);
     renderList('long-list', data.long ?? []); renderList('short-list', data.short ?? []);
   } catch (error) { $('message').textContent = `資料載入失敗：${error.message}`; }
   finally { $('refresh').disabled = false; }
 }
-$('refresh').addEventListener('click', load); load();
+const refreshController = createRefreshController({ load });
+$('refresh').addEventListener('click', refreshController.manual);
+refreshController.start();
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});

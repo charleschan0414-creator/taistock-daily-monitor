@@ -25,6 +25,7 @@ RELEASE_FILES = (
     "taistock/backtest.py",
     "taistock/core.py",
     "taistock/data.py",
+    "taistock/global_market.py",
     "taistock/mobile.py",
     "taistock/models.py",
     "taistock/net.py",
