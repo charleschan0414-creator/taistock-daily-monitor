@@ -1,0 +1,24 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "taistock-cloud-monitor",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-10-16",
+  "workers_dev": true,
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*", "/download/*"]
+  },
+  "kv_namespaces": [
+    {
+      "binding": "DATA",
+      "id": "745c550fae324da7a4313d17bdee6626"
+    }
+  ],
+  "triggers": {
+    "crons": ["35 0 * * 1-5"]
+  },
+  "observability": {
+    "enabled": true
+  }
+}

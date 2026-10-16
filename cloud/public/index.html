@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#071b2c"><meta name="description" content="台股多空規則式研究監看">
+  <link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css"><title>台股雲端 Monitor</title>
+</head>
+<body>
+  <header><div><p class="eyebrow">TAIWAN MARKET · CLOUD</p><h1>台股雲端 Monitor</h1></div><span id="cloud" class="pill">● 雲端運行</span></header>
+  <main>
+    <section class="hero">
+      <div><strong>電腦關機仍可用</strong><p>GitHub Actions 台北交易日 16:10 更新，07:40 備援檢查；免費排程可能延遲。</p></div>
+      <button id="refresh" type="button">重新整理</button>
+    </section>
+    <section class="meta" aria-live="polite">
+      <div><span>資料日</span><strong id="data-date">—</strong></div>
+      <div><span>更新時間</span><strong id="updated-at">—</strong></div>
+      <div><span>現價狀態</span><strong id="price-status">載入中</strong></div>
+      <div><span>策略閘門</span><strong id="gate">—</strong></div>
+      <div><span>每日收盤後回測/優化</span><strong id="daily-status">載入中</strong></div>
+      <div><span>資料來源</span><strong id="data-source">—</strong></div>
+      <div><span>最後成功時間</span><strong id="completed-at">—</strong></div>
+      <div><span>保留測試勝率 / PF</span><strong id="test-metrics">—</strong></div>
+    </section>
+    <p id="message" role="status"></p>
+    <section><div class="section-title"><h2>偏多觀察</h2><span class="long">LONG · 最多10</span></div><div id="long-list" class="cards"></div></section>
+    <section><div class="section-title"><h2>偏空觀察</h2><span class="short">SHORT · 最多10</span></div><div id="short-list" class="cards"></div></section>
+    <nav class="downloads" aria-label="資料下載"><a href="/download/latest.csv">下載 latest.csv</a><a href="/download/backtest_100d.csv">下載 backtest_100d.csv</a></nav>
+  </main>
+  <footer>唯讀監看 · 不提供下單 · 規則式研究觀察，非投資建議；不保證提高勝率或獲利。</footer>
+  <script type="module" src="/app.js"></script>
+</body></html>

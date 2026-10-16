@@ -1,0 +1,1486 @@
+{
+  "period": {
+    "from": "2026-05-15",
+    "to": "2026-10-07"
+  },
+  "signal_dates": [
+    "2026-05-15",
+    "2026-05-18",
+    "2026-05-19",
+    "2026-05-20",
+    "2026-05-21",
+    "2026-05-22",
+    "2026-05-25",
+    "2026-05-26",
+    "2026-05-27",
+    "2026-05-28",
+    "2026-05-29",
+    "2026-06-01",
+    "2026-06-02",
+    "2026-06-03",
+    "2026-06-04",
+    "2026-06-05",
+    "2026-06-08",
+    "2026-06-09",
+    "2026-06-10",
+    "2026-06-11",
+    "2026-06-12",
+    "2026-06-15",
+    "2026-06-16",
+    "2026-06-17",
+    "2026-06-18",
+    "2026-06-22",
+    "2026-06-23",
+    "2026-06-24",
+    "2026-06-25",
+    "2026-06-26",
+    "2026-06-29",
+    "2026-06-30",
+    "2026-07-01",
+    "2026-07-02",
+    "2026-07-03",
+    "2026-07-06",
+    "2026-07-07",
+    "2026-07-08",
+    "2026-07-09",
+    "2026-07-13",
+    "2026-07-14",
+    "2026-07-15",
+    "2026-07-16",
+    "2026-07-17",
+    "2026-07-20",
+    "2026-07-21",
+    "2026-07-22",
+    "2026-07-23",
+    "2026-07-24",
+    "2026-07-27",
+    "2026-07-28",
+    "2026-07-29",
+    "2026-07-30",
+    "2026-07-31",
+    "2026-08-03",
+    "2026-08-04",
+    "2026-08-05",
+    "2026-08-06",
+    "2026-08-07",
+    "2026-08-10",
+    "2026-08-11",
+    "2026-08-12",
+    "2026-08-13",
+    "2026-08-14",
+    "2026-08-17",
+    "2026-08-18",
+    "2026-08-19",
+    "2026-08-20",
+    "2026-08-21",
+    "2026-08-24",
+    "2026-08-25",
+    "2026-08-26",
+    "2026-08-27",
+    "2026-08-28",
+    "2026-08-31",
+    "2026-09-01",
+    "2026-09-02",
+    "2026-09-03",
+    "2026-09-04",
+    "2026-09-07",
+    "2026-09-08",
+    "2026-09-09",
+    "2026-09-10",
+    "2026-09-11",
+    "2026-09-14",
+    "2026-09-15",
+    "2026-09-16",
+    "2026-09-17",
+    "2026-09-18",
+    "2026-09-21",
+    "2026-09-22",
+    "2026-09-23",
+    "2026-09-24",
+    "2026-09-29",
+    "2026-09-30",
+    "2026-10-01",
+    "2026-10-02",
+    "2026-10-05",
+    "2026-10-06",
+    "2026-10-07"
+  ],
+  "metrics": {
+    "signals": 1652,
+    "trades": 1459,
+    "triggered": 1459,
+    "untriggered": 191,
+    "unresolved": 2,
+    "win_rate": 0.431117203564085,
+    "average_return": 0.0037715614446141073,
+    "median_return": -0.014629049111807733,
+    "cumulative_return": 0.5131220055729802,
+    "max_drawdown": -0.11578242789603554,
+    "profit_factor": 1.217307898716017,
+    "signal_days": 100,
+    "long": {
+      "signals": 977,
+      "trades": 891,
+      "triggered": 891,
+      "untriggered": 85,
+      "unresolved": 1,
+      "win_rate": 0.468013468013468,
+      "average_return": 0.007015195882842685,
+      "median_return": -0.014405762304922003,
+      "cumulative_return": 0.7363252408844707,
+      "max_drawdown": -0.13579895587717106,
+      "profit_factor": 1.393767347627418
+    },
+    "short": {
+      "signals": 675,
+      "trades": 568,
+      "triggered": 568,
+      "untriggered": 106,
+      "unresolved": 1,
+      "win_rate": 0.3732394366197183,
+      "average_return": -0.0013166045491564225,
+      "median_return": -0.01473301497720867,
+      "cumulative_return": -0.19958127339926846,
+      "max_drawdown": -0.27792534316193584,
+      "profit_factor": 0.9208517231426727
+    }
+  },
+  "walk_forward": [
+    {
+      "signal_date": "2026-05-15",
+      "weights": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "sample_count": 0,
+      "changed": false,
+      "baseline_metric": null,
+      "selected_metric": null
+    },
+    {
+      "signal_date": "2026-05-18",
+      "weights": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "sample_count": 0,
+      "changed": false,
+      "baseline_metric": null,
+      "selected_metric": null
+    },
+    {
+      "signal_date": "2026-05-19",
+      "weights": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "sample_count": 12,
+      "changed": false,
+      "baseline_metric": null,
+      "selected_metric": null
+    },
+    {
+      "signal_date": "2026-05-20",
+      "weights": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "sample_count": 25,
+      "changed": false,
+      "baseline_metric": null,
+      "selected_metric": null
+    },
+    {
+      "signal_date": "2026-05-21",
+      "weights": {
+        "volume_growth_pct": 0.45,
+        "ma5_distance_pct": 0.25,
+        "institutional_lots": 0.2,
+        "volume_rank": 0.1
+      },
+      "sample_count": 39,
+      "changed": true,
+      "baseline_metric": 0.017911895655012406,
+      "selected_metric": 0.01796477988748362
+    },
+    {
+      "signal_date": "2026-05-22",
+      "weights": {
+        "volume_growth_pct": 0.45,
+        "ma5_distance_pct": 0.25,
+        "institutional_lots": 0.2,
+        "volume_rank": 0.1
+      },
+      "sample_count": 50,
+      "changed": true,
+      "baseline_metric": 0.01462093333159938,
+      "selected_metric": 0.019136201620936277
+    },
+    {
+      "signal_date": "2026-05-25",
+      "weights": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "sample_count": 66,
+      "changed": false,
+      "baseline_metric": 0.013304227979276509,
+      "selected_metric": 0.013304227979276509
+    },
+    {
+      "signal_date": "2026-05-26",
+      "weights": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "sample_count": 78,
+      "changed": false,
+      "baseline_metric": 0.01386280135979306,
+      "selected_metric": 0.01386280135979306
+    },
+    {
+      "signal_date": "2026-05-27",
+      "weights": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "sample_count": 90,
+      "changed": false,
+      "baseline_metric": 0.013091314352861325,
+      "selected_metric": 0.013091314352861325
+    },
+    {
+      "signal_date": "2026-05-28",
+      "weights": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "sample_count": 105,
+      "changed": false,
+      "baseline_metric": 0.014816310966542895,
+      "selected_metric": 0.014816310966542895
+    },
+    {
+      "signal_date": "2026-05-29",
+      "weights": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "sample_count": 118,
+      "changed": false,
+      "baseline_metric": 0.011796833492632573,
+      "selected_metric": 0.011796833492632573
+    },
+    {
+      "signal_date": "2026-06-01",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 132,
+      "changed": true,
+      "baseline_metric": 0.011285760250402658,
+      "selected_metric": 0.01241978624976781
+    },
+    {
+      "signal_date": "2026-06-02",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 148,
+      "changed": true,
+      "baseline_metric": 0.009557273123413883,
+      "selected_metric": 0.01210607110377725
+    },
+    {
+      "signal_date": "2026-06-03",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.4,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "sample_count": 160,
+      "changed": true,
+      "baseline_metric": 0.011244652651242176,
+      "selected_metric": 0.01277425740351097
+    },
+    {
+      "signal_date": "2026-06-04",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 176,
+      "changed": true,
+      "baseline_metric": 0.01107658303220717,
+      "selected_metric": 0.012835499862350693
+    },
+    {
+      "signal_date": "2026-06-05",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.4,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "sample_count": 186,
+      "changed": true,
+      "baseline_metric": 0.008693741711808763,
+      "selected_metric": 0.010975062955741981
+    },
+    {
+      "signal_date": "2026-06-08",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.4,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "sample_count": 196,
+      "changed": true,
+      "baseline_metric": 0.008550604210859148,
+      "selected_metric": 0.010603793330399047
+    },
+    {
+      "signal_date": "2026-06-09",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.4,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "sample_count": 213,
+      "changed": true,
+      "baseline_metric": 0.00885409988646693,
+      "selected_metric": 0.009809160936223608
+    },
+    {
+      "signal_date": "2026-06-10",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.4,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "sample_count": 220,
+      "changed": true,
+      "baseline_metric": 0.01104799018450326,
+      "selected_metric": 0.011974109990327917
+    },
+    {
+      "signal_date": "2026-06-11",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.4,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "sample_count": 229,
+      "changed": true,
+      "baseline_metric": 0.008787525376954196,
+      "selected_metric": 0.00966739886866335
+    },
+    {
+      "signal_date": "2026-06-12",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.4,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "sample_count": 250,
+      "changed": true,
+      "baseline_metric": 0.007612008230786233,
+      "selected_metric": 0.009345244573874022
+    },
+    {
+      "signal_date": "2026-06-15",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 271,
+      "changed": true,
+      "baseline_metric": 0.006852409418798897,
+      "selected_metric": 0.008121762429762617
+    },
+    {
+      "signal_date": "2026-06-16",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 279,
+      "changed": true,
+      "baseline_metric": 0.006960228267142559,
+      "selected_metric": 0.007469847320736364
+    },
+    {
+      "signal_date": "2026-06-17",
+      "weights": {
+        "volume_growth_pct": 0.45,
+        "ma5_distance_pct": 0.25,
+        "institutional_lots": 0.2,
+        "volume_rank": 0.1
+      },
+      "sample_count": 292,
+      "changed": true,
+      "baseline_metric": 0.005891850151629741,
+      "selected_metric": 0.006345734660724398
+    },
+    {
+      "signal_date": "2026-06-18",
+      "weights": {
+        "volume_growth_pct": 0.45,
+        "ma5_distance_pct": 0.25,
+        "institutional_lots": 0.2,
+        "volume_rank": 0.1
+      },
+      "sample_count": 302,
+      "changed": true,
+      "baseline_metric": 0.005868535330137837,
+      "selected_metric": 0.006801860342445747
+    },
+    {
+      "signal_date": "2026-06-22",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 315,
+      "changed": true,
+      "baseline_metric": 0.00843791277660423,
+      "selected_metric": 0.009322829723053276
+    },
+    {
+      "signal_date": "2026-06-23",
+      "weights": {
+        "volume_growth_pct": 0.45,
+        "ma5_distance_pct": 0.25,
+        "institutional_lots": 0.2,
+        "volume_rank": 0.1
+      },
+      "sample_count": 330,
+      "changed": true,
+      "baseline_metric": 0.008381655375376185,
+      "selected_metric": 0.008852036283427931
+    },
+    {
+      "signal_date": "2026-06-24",
+      "weights": {
+        "volume_growth_pct": 0.45,
+        "ma5_distance_pct": 0.25,
+        "institutional_lots": 0.2,
+        "volume_rank": 0.1
+      },
+      "sample_count": 348,
+      "changed": true,
+      "baseline_metric": 0.006380507348308485,
+      "selected_metric": 0.006608531092755682
+    },
+    {
+      "signal_date": "2026-06-25",
+      "weights": {
+        "volume_growth_pct": 0.45,
+        "ma5_distance_pct": 0.25,
+        "institutional_lots": 0.2,
+        "volume_rank": 0.1
+      },
+      "sample_count": 360,
+      "changed": true,
+      "baseline_metric": 0.005323594593435658,
+      "selected_metric": 0.005456799174883072
+    },
+    {
+      "signal_date": "2026-06-26",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 379,
+      "changed": true,
+      "baseline_metric": 0.005938779034648472,
+      "selected_metric": 0.006313236161411659
+    },
+    {
+      "signal_date": "2026-06-29",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 394,
+      "changed": true,
+      "baseline_metric": 0.005295985774638612,
+      "selected_metric": 0.006129179368669198
+    },
+    {
+      "signal_date": "2026-06-30",
+      "weights": {
+        "volume_growth_pct": 0.45,
+        "ma5_distance_pct": 0.25,
+        "institutional_lots": 0.2,
+        "volume_rank": 0.1
+      },
+      "sample_count": 412,
+      "changed": true,
+      "baseline_metric": 0.0054402027938951665,
+      "selected_metric": 0.006072491792502151
+    },
+    {
+      "signal_date": "2026-07-01",
+      "weights": {
+        "volume_growth_pct": 0.45,
+        "ma5_distance_pct": 0.25,
+        "institutional_lots": 0.2,
+        "volume_rank": 0.1
+      },
+      "sample_count": 423,
+      "changed": true,
+      "baseline_metric": 0.0052180727478034206,
+      "selected_metric": 0.006677319368158438
+    },
+    {
+      "signal_date": "2026-07-02",
+      "weights": {
+        "volume_growth_pct": 0.45,
+        "ma5_distance_pct": 0.25,
+        "institutional_lots": 0.2,
+        "volume_rank": 0.1
+      },
+      "sample_count": 445,
+      "changed": true,
+      "baseline_metric": 0.0051891681148790465,
+      "selected_metric": 0.0068026989008846805
+    },
+    {
+      "signal_date": "2026-07-03",
+      "weights": {
+        "volume_growth_pct": 0.45,
+        "ma5_distance_pct": 0.25,
+        "institutional_lots": 0.2,
+        "volume_rank": 0.1
+      },
+      "sample_count": 460,
+      "changed": true,
+      "baseline_metric": 0.004838147703793593,
+      "selected_metric": 0.005733397509541349
+    },
+    {
+      "signal_date": "2026-07-06",
+      "weights": {
+        "volume_growth_pct": 0.45,
+        "ma5_distance_pct": 0.25,
+        "institutional_lots": 0.2,
+        "volume_rank": 0.1
+      },
+      "sample_count": 471,
+      "changed": true,
+      "baseline_metric": 0.005662429374014101,
+      "selected_metric": 0.006806952311846757
+    },
+    {
+      "signal_date": "2026-07-07",
+      "weights": {
+        "volume_growth_pct": 0.45,
+        "ma5_distance_pct": 0.25,
+        "institutional_lots": 0.2,
+        "volume_rank": 0.1
+      },
+      "sample_count": 482,
+      "changed": true,
+      "baseline_metric": 0.005509706144371661,
+      "selected_metric": 0.006233184967941976
+    },
+    {
+      "signal_date": "2026-07-08",
+      "weights": {
+        "volume_growth_pct": 0.45,
+        "ma5_distance_pct": 0.25,
+        "institutional_lots": 0.2,
+        "volume_rank": 0.1
+      },
+      "sample_count": 502,
+      "changed": true,
+      "baseline_metric": 0.004168742221367816,
+      "selected_metric": 0.004916320778718344
+    },
+    {
+      "signal_date": "2026-07-09",
+      "weights": {
+        "volume_growth_pct": 0.45,
+        "ma5_distance_pct": 0.25,
+        "institutional_lots": 0.2,
+        "volume_rank": 0.1
+      },
+      "sample_count": 517,
+      "changed": true,
+      "baseline_metric": 0.0039016806154209844,
+      "selected_metric": 0.0050952751967956855
+    },
+    {
+      "signal_date": "2026-07-13",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 530,
+      "changed": true,
+      "baseline_metric": 0.004644977652104037,
+      "selected_metric": 0.005691058737746313
+    },
+    {
+      "signal_date": "2026-07-14",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 544,
+      "changed": true,
+      "baseline_metric": 0.004373329183294588,
+      "selected_metric": 0.00577307800027067
+    },
+    {
+      "signal_date": "2026-07-15",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 569,
+      "changed": true,
+      "baseline_metric": 0.005412033562279652,
+      "selected_metric": 0.0062760832605045554
+    },
+    {
+      "signal_date": "2026-07-16",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 585,
+      "changed": true,
+      "baseline_metric": 0.004856992734271697,
+      "selected_metric": 0.00550027368488693
+    },
+    {
+      "signal_date": "2026-07-17",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 591,
+      "changed": true,
+      "baseline_metric": 0.0035812323175965595,
+      "selected_metric": 0.00443381926087701
+    },
+    {
+      "signal_date": "2026-07-20",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 612,
+      "changed": true,
+      "baseline_metric": 0.003960248622730364,
+      "selected_metric": 0.00479178745925915
+    },
+    {
+      "signal_date": "2026-07-21",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 629,
+      "changed": true,
+      "baseline_metric": 0.004462787019505475,
+      "selected_metric": 0.004998783593553127
+    },
+    {
+      "signal_date": "2026-07-22",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 642,
+      "changed": true,
+      "baseline_metric": 0.00421079229215833,
+      "selected_metric": 0.004872237775317042
+    },
+    {
+      "signal_date": "2026-07-23",
+      "weights": {
+        "volume_growth_pct": 0.45,
+        "ma5_distance_pct": 0.25,
+        "institutional_lots": 0.2,
+        "volume_rank": 0.1
+      },
+      "sample_count": 653,
+      "changed": true,
+      "baseline_metric": 0.004170516792406505,
+      "selected_metric": 0.004595992833979193
+    },
+    {
+      "signal_date": "2026-07-24",
+      "weights": {
+        "volume_growth_pct": 0.45,
+        "ma5_distance_pct": 0.25,
+        "institutional_lots": 0.2,
+        "volume_rank": 0.1
+      },
+      "sample_count": 669,
+      "changed": true,
+      "baseline_metric": 0.0039043137786191314,
+      "selected_metric": 0.004306364374361386
+    },
+    {
+      "signal_date": "2026-07-27",
+      "weights": {
+        "volume_growth_pct": 0.45,
+        "ma5_distance_pct": 0.25,
+        "institutional_lots": 0.2,
+        "volume_rank": 0.1
+      },
+      "sample_count": 684,
+      "changed": true,
+      "baseline_metric": 0.003253863625335243,
+      "selected_metric": 0.003655783140723649
+    },
+    {
+      "signal_date": "2026-07-28",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 697,
+      "changed": true,
+      "baseline_metric": 0.004432167152732352,
+      "selected_metric": 0.004949349702459971
+    },
+    {
+      "signal_date": "2026-07-29",
+      "weights": {
+        "volume_growth_pct": 0.45,
+        "ma5_distance_pct": 0.25,
+        "institutional_lots": 0.2,
+        "volume_rank": 0.1
+      },
+      "sample_count": 719,
+      "changed": true,
+      "baseline_metric": 0.004405159014636869,
+      "selected_metric": 0.004858034732049638
+    },
+    {
+      "signal_date": "2026-07-30",
+      "weights": {
+        "volume_growth_pct": 0.45,
+        "ma5_distance_pct": 0.25,
+        "institutional_lots": 0.2,
+        "volume_rank": 0.1
+      },
+      "sample_count": 746,
+      "changed": true,
+      "baseline_metric": 0.00420155557656301,
+      "selected_metric": 0.004655101687820636
+    },
+    {
+      "signal_date": "2026-07-31",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 764,
+      "changed": true,
+      "baseline_metric": 0.003660247188825647,
+      "selected_metric": 0.004900382463650601
+    },
+    {
+      "signal_date": "2026-08-03",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 770,
+      "changed": true,
+      "baseline_metric": 0.003813349330708998,
+      "selected_metric": 0.005041702194296475
+    },
+    {
+      "signal_date": "2026-08-04",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 779,
+      "changed": true,
+      "baseline_metric": 0.0027935737202634723,
+      "selected_metric": 0.00427009669110468
+    },
+    {
+      "signal_date": "2026-08-05",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 788,
+      "changed": true,
+      "baseline_metric": 0.003542204328222961,
+      "selected_metric": 0.004993601286377682
+    },
+    {
+      "signal_date": "2026-08-06",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 800,
+      "changed": true,
+      "baseline_metric": 0.0040798613144461555,
+      "selected_metric": 0.004892768171809655
+    },
+    {
+      "signal_date": "2026-08-07",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 809,
+      "changed": true,
+      "baseline_metric": 0.0038202794657595687,
+      "selected_metric": 0.004618798591134334
+    },
+    {
+      "signal_date": "2026-08-10",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 818,
+      "changed": true,
+      "baseline_metric": 0.0040306559076440564,
+      "selected_metric": 0.004592155448059431
+    },
+    {
+      "signal_date": "2026-08-11",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 831,
+      "changed": true,
+      "baseline_metric": 0.004326054535608215,
+      "selected_metric": 0.004821591717147426
+    },
+    {
+      "signal_date": "2026-08-12",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 848,
+      "changed": true,
+      "baseline_metric": 0.0049162687589156635,
+      "selected_metric": 0.0060096758088278995
+    },
+    {
+      "signal_date": "2026-08-13",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 859,
+      "changed": true,
+      "baseline_metric": 0.004692636259275036,
+      "selected_metric": 0.006130352777807682
+    },
+    {
+      "signal_date": "2026-08-14",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 869,
+      "changed": true,
+      "baseline_metric": 0.0045557252980860195,
+      "selected_metric": 0.0059583755600690885
+    },
+    {
+      "signal_date": "2026-08-17",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 888,
+      "changed": true,
+      "baseline_metric": 0.004838796475584653,
+      "selected_metric": 0.0059951409095665925
+    },
+    {
+      "signal_date": "2026-08-18",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 907,
+      "changed": true,
+      "baseline_metric": 0.0040296088065825235,
+      "selected_metric": 0.005247919634929288
+    },
+    {
+      "signal_date": "2026-08-19",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 922,
+      "changed": true,
+      "baseline_metric": 0.003811846646333833,
+      "selected_metric": 0.005215661204308218
+    },
+    {
+      "signal_date": "2026-08-20",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 943,
+      "changed": true,
+      "baseline_metric": 0.004064935462660056,
+      "selected_metric": 0.005325800916734282
+    },
+    {
+      "signal_date": "2026-08-21",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 957,
+      "changed": true,
+      "baseline_metric": 0.0032887530419108166,
+      "selected_metric": 0.004902957381350811
+    },
+    {
+      "signal_date": "2026-08-24",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 971,
+      "changed": true,
+      "baseline_metric": 0.0034003040125657378,
+      "selected_metric": 0.005132937806977459
+    },
+    {
+      "signal_date": "2026-08-25",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 983,
+      "changed": true,
+      "baseline_metric": 0.00327321428877991,
+      "selected_metric": 0.004903735992672321
+    },
+    {
+      "signal_date": "2026-08-26",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1001,
+      "changed": true,
+      "baseline_metric": 0.0038729267702627993,
+      "selected_metric": 0.00516178871551335
+    },
+    {
+      "signal_date": "2026-08-27",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1020,
+      "changed": true,
+      "baseline_metric": 0.003195070745932825,
+      "selected_metric": 0.004443822503259999
+    },
+    {
+      "signal_date": "2026-08-28",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1032,
+      "changed": true,
+      "baseline_metric": 0.0032473200373182927,
+      "selected_metric": 0.004685337357027681
+    },
+    {
+      "signal_date": "2026-08-31",
+      "weights": {
+        "volume_growth_pct": 0.45,
+        "ma5_distance_pct": 0.25,
+        "institutional_lots": 0.2,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1045,
+      "changed": true,
+      "baseline_metric": 0.002983898453034913,
+      "selected_metric": 0.004065220134586822
+    },
+    {
+      "signal_date": "2026-09-01",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1059,
+      "changed": true,
+      "baseline_metric": 0.0032248577688774403,
+      "selected_metric": 0.004324843394043747
+    },
+    {
+      "signal_date": "2026-09-02",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1073,
+      "changed": true,
+      "baseline_metric": 0.0030693206995486017,
+      "selected_metric": 0.0041079974468506185
+    },
+    {
+      "signal_date": "2026-09-03",
+      "weights": {
+        "volume_growth_pct": 0.45,
+        "ma5_distance_pct": 0.25,
+        "institutional_lots": 0.2,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1083,
+      "changed": true,
+      "baseline_metric": 0.0029162300547957106,
+      "selected_metric": 0.0039455782510441325
+    },
+    {
+      "signal_date": "2026-09-04",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1104,
+      "changed": true,
+      "baseline_metric": 0.0026159641088239747,
+      "selected_metric": 0.003838716744284739
+    },
+    {
+      "signal_date": "2026-09-07",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1119,
+      "changed": true,
+      "baseline_metric": 0.002491430240184222,
+      "selected_metric": 0.0036398778351709317
+    },
+    {
+      "signal_date": "2026-09-08",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1129,
+      "changed": true,
+      "baseline_metric": 0.002171942408678239,
+      "selected_metric": 0.003382560062729582
+    },
+    {
+      "signal_date": "2026-09-09",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1139,
+      "changed": true,
+      "baseline_metric": 0.0020312694691647817,
+      "selected_metric": 0.0030621057405998513
+    },
+    {
+      "signal_date": "2026-09-10",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1152,
+      "changed": true,
+      "baseline_metric": 0.0018227168167538595,
+      "selected_metric": 0.0024918795819173292
+    },
+    {
+      "signal_date": "2026-09-11",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1162,
+      "changed": true,
+      "baseline_metric": 0.0023437386783237407,
+      "selected_metric": 0.003017797693057056
+    },
+    {
+      "signal_date": "2026-09-14",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1177,
+      "changed": true,
+      "baseline_metric": 0.0015599177848097715,
+      "selected_metric": 0.002380096575800545
+    },
+    {
+      "signal_date": "2026-09-15",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1200,
+      "changed": true,
+      "baseline_metric": 0.0019860130936539813,
+      "selected_metric": 0.002767681410675074
+    },
+    {
+      "signal_date": "2026-09-16",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1213,
+      "changed": true,
+      "baseline_metric": 0.0017054218858639251,
+      "selected_metric": 0.0025147095922279303
+    },
+    {
+      "signal_date": "2026-09-17",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1227,
+      "changed": true,
+      "baseline_metric": 0.0017027805731355107,
+      "selected_metric": 0.0025666886572862247
+    },
+    {
+      "signal_date": "2026-09-18",
+      "weights": {
+        "volume_growth_pct": 0.45,
+        "ma5_distance_pct": 0.25,
+        "institutional_lots": 0.2,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1256,
+      "changed": true,
+      "baseline_metric": 0.0019597780884004945,
+      "selected_metric": 0.0027323444053455512
+    },
+    {
+      "signal_date": "2026-09-21",
+      "weights": {
+        "volume_growth_pct": 0.45,
+        "ma5_distance_pct": 0.25,
+        "institutional_lots": 0.2,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1264,
+      "changed": true,
+      "baseline_metric": 0.0019793006841673207,
+      "selected_metric": 0.0027474269648080957
+    },
+    {
+      "signal_date": "2026-09-22",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1277,
+      "changed": true,
+      "baseline_metric": 0.002488567597825146,
+      "selected_metric": 0.003063531788418219
+    },
+    {
+      "signal_date": "2026-09-23",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1292,
+      "changed": true,
+      "baseline_metric": 0.0029392555246984297,
+      "selected_metric": 0.00353365006038761
+    },
+    {
+      "signal_date": "2026-09-24",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1306,
+      "changed": true,
+      "baseline_metric": 0.0027203262023308026,
+      "selected_metric": 0.0035348146023999956
+    },
+    {
+      "signal_date": "2026-09-29",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1314,
+      "changed": true,
+      "baseline_metric": 0.0021665843790998423,
+      "selected_metric": 0.003012018596351838
+    },
+    {
+      "signal_date": "2026-09-30",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1331,
+      "changed": true,
+      "baseline_metric": 0.0024033586222634252,
+      "selected_metric": 0.0031932164560426928
+    },
+    {
+      "signal_date": "2026-10-01",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1350,
+      "changed": true,
+      "baseline_metric": 0.0026696157318922198,
+      "selected_metric": 0.003404647197617087
+    },
+    {
+      "signal_date": "2026-10-02",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1364,
+      "changed": true,
+      "baseline_metric": 0.0029643579941969348,
+      "selected_metric": 0.003350149416454519
+    },
+    {
+      "signal_date": "2026-10-05",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1377,
+      "changed": true,
+      "baseline_metric": 0.0035165236413519916,
+      "selected_metric": 0.003744768169430087
+    },
+    {
+      "signal_date": "2026-10-06",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1395,
+      "changed": true,
+      "baseline_metric": 0.0029720427643766087,
+      "selected_metric": 0.0035373883441236747
+    },
+    {
+      "signal_date": "2026-10-07",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1411,
+      "changed": true,
+      "baseline_metric": 0.002864361374859591,
+      "selected_metric": 0.0034466939707249204
+    }
+  ],
+  "optimization": {
+    "source": "walk_forward_backtest_100d",
+    "minimum_samples": 30,
+    "sample_count": 1459,
+    "changed": true,
+    "period": {
+      "from": "2026-05-15",
+      "to": "2026-10-15"
+    },
+    "old_weights": {
+      "volume_growth_pct": 0.35,
+      "ma5_distance_pct": 0.3,
+      "institutional_lots": 0.25,
+      "volume_rank": 0.1
+    },
+    "new_weights": {
+      "volume_growth_pct": 0.25,
+      "ma5_distance_pct": 0.2,
+      "institutional_lots": 0.45,
+      "volume_rank": 0.1
+    },
+    "metrics": {
+      "baseline": 0.003115595797873558,
+      "selected": 0.0037847012568023304
+    },
+    "updated_at": "2026-10-16T14:06:53+08:00"
+  },
+  "cost_rate": 0.0,
+  "cost_assumption": "未計入手續費、交易稅、滑價、借券費與融券限制",
+  "completed_at": "2026-10-16T14:06:53+08:00",
+  "data_collection": {
+    "complete_trading_days": 110,
+    "latest_complete_date": "2026-10-15",
+    "network_requests": 0,
+    "cache_hits": 460
+  }
+}

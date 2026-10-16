@@ -1,0 +1,11 @@
+{
+  "name": "TaiStock Monitor 台股手機版",
+  "short_name": "台股 Monitor",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#08111f",
+  "theme_color": "#0b5cff",
+  "lang": "zh-TW",
+  "icons": [{"src":"/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}

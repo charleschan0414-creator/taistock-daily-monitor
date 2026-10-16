@@ -1,0 +1,27 @@
+{
+  "source": "walk_forward_backtest_100d",
+  "minimum_samples": 30,
+  "sample_count": 1459,
+  "changed": true,
+  "period": {
+    "from": "2026-05-15",
+    "to": "2026-10-15"
+  },
+  "old_weights": {
+    "volume_growth_pct": 0.35,
+    "ma5_distance_pct": 0.3,
+    "institutional_lots": 0.25,
+    "volume_rank": 0.1
+  },
+  "new_weights": {
+    "volume_growth_pct": 0.25,
+    "ma5_distance_pct": 0.2,
+    "institutional_lots": 0.45,
+    "volume_rank": 0.1
+  },
+  "metrics": {
+    "baseline": 0.003115595797873558,
+    "selected": 0.0037847012568023304
+  },
+  "updated_at": "2026-10-16T14:06:53+08:00"
+}

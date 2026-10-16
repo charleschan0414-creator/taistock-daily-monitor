@@ -1,0 +1,16 @@
+{
+  "name": "taistock-cloud-monitor",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "seed": "node scripts/seed.mjs",
+    "tail": "wrangler tail"
+  },
+  "devDependencies": {
+    "wrangler": "4.151.0"
+  }
+}

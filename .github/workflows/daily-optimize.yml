@@ -1,0 +1,55 @@
+name: Daily post-close backtest and optimization
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Taipei Mon-Fri 16:10 (UTC 08:10)
+    - cron: '10 8 * * 1-5'
+    # Taipei Mon-Fri 07:40 backup (UTC previous day 23:40)
+    - cron: '40 23 * * 0-4'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: taistock-daily-monitor
+  cancel-in-progress: false
+
+jobs:
+  daily:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run tests
+        run: python -m unittest discover -s tests -v
+      - name: Compile Python
+        run: python -m py_compile app.py daily_pipeline.py publish_public_data.py taistock/*.py tests/*.py
+      - name: Run daily pipeline
+        run: python daily_pipeline.py
+      - name: Build public GitHub Raw artifacts
+        run: python publish_public_data.py
+      - name: Read verified data date
+        id: result
+        shell: bash
+        run: |
+          python -c "import json,os; d=json.load(open('data/daily_status.json',encoding='utf-8')); assert d['status']=='success'; open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8').write('data_date='+d['data_date']+'\n')"
+      - name: Commit only approved generated artifacts
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- data/latest.json data/latest.csv data/backtest_100d.json data/backtest_100d.csv data/backtest_trades.csv data/optimizer.json data/strategy_optimization.json data/daily_status.json data/strategy_history.jsonl
+          git add -- 'data/backtest_cache/*.json.gz'
+          git add -- public_data/latest.json public_data/latest.csv public_data/backtest_100d.json public_data/backtest_100d.csv public_data/optimizer.json public_data/strategy_optimization.json public_data/daily_status.json
+          if git diff --cached --quiet; then
+            echo 'No generated changes to commit.'
+            exit 0
+          fi
+          git commit -m "data: daily results ${{ steps.result.outputs.data_date }}"
+          git push

@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Node / local tooling
+node_modules/
+tools/
+
+# Local runtime state and secrets
+scanner.db
+*.db
+notification_fallback*
+python_path*
+data/mobile_url.txt
+data/remote_mobile_url.txt
+task.xml
+.dev.vars
+.env
+.env.*
+.wrangler/
+wrangler.toml.user
+.cloudflare/
+*.pem
+*.key
+
+# Local/generated packaging
+*.zip
+*.7z
+*.tar
+*.tar.gz
+
+# Explicit public generated data
+!data/backtest_cache/
+!data/backtest_cache/*.json.gz
+!data/latest.json
+!data/latest.csv
+!data/backtest_100d.json
+!data/backtest_100d.csv
+!data/backtest_trades.csv
+!data/optimizer.json
+!data/strategy_optimization.json
+!data/daily_status.json
+!data/strategy_history.jsonl
+!public_data/
+!public_data/*.json
+!public_data/*.csv
+!.github/
+!.github/workflows/
+!.github/workflows/*.yml
