@@ -78,6 +78,14 @@ run.bat --update --notify
 python app.py --help
 ```
 
+### 版本更新
+
+- **雲端版／PWA**：直接重新開啟固定網址即可取得已發布的新版本；瀏覽器會自動更新網頁殼層，不需下載 ZIP。
+- **桌面版**：從本版開始，每次執行 `run.bat` 都會先向固定官方來源 `charleschan0414-creator/taistock-daily-monitor` 檢查版本。版本相同時只讀取小型 manifest，不下載完整程式；有新版才下載 GitHub `main` 壓縮檔。
+- 更新只安裝 `software_manifest.json` 明列且 SHA256 驗證通過的程式檔，並以暫存、原子替換及失敗回復保護目前版本。`data/`、`public_data/`、`scanner.db`、`python_path.txt`、官方 cache、憑證與使用者設定永遠不會被覆蓋。
+- 若網路、GitHub 或驗證失敗，會顯示警告並繼續啟動目前可用版本。只檢查不安裝可執行 `run.bat --check-only` 或 `python updater.py --check-only`。
+- **先前下載舊 ZIP 的使用者**：舊版沒有更新器，需只做一次換成新版 ZIP。請解壓到新的固定資料夾；若要沿用舊資料，再複製自己的 `data/` 與 `python_path.txt` 到新版。之後由桌面版自動更新，不必再次整包替換。
+
 每日結果寫入 `data/latest.json`、`latest.csv`、`scanner.db`。日更會重用最近 6 個完整交易日的官方逐日批次快取，只需補抓尚未快取的新交易日，避免逐檔大量請求觸發交易所 307/429 限流。現有 `TaiStockScannerDaily` 每天 08:30 只執行 `run.bat --update --notify`，不會每日重跑 100 日回測；本功能不重建或刪除排程。
 
 ## 429 故障排除
