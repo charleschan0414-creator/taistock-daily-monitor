@@ -1472,15 +1472,15 @@
       "baseline": 0.003115595797873558,
       "selected": 0.0037847012568023304
     },
-    "updated_at": "2026-10-16T06:17:03+00:00"
+    "updated_at": "2026-10-16T06:18:50+00:00"
   },
   "cost_rate": 0.0,
   "cost_assumption": "未計入手續費、交易稅、滑價、借券費與融券限制",
-  "completed_at": "2026-10-16T06:17:03+00:00",
+  "completed_at": "2026-10-16T06:18:50+00:00",
   "data_collection": {
     "complete_trading_days": 110,
     "latest_complete_date": "2026-10-15",
-    "network_requests": 0,
-    "cache_hits": 460
+    "network_requests": 10,
+    "cache_hits": 450
   }
 }
