@@ -1,11 +1,11 @@
 {
-  "version": "2026.10.17.6",
+  "version": "2026.10.18.1",
   "files": {
     "README.md": "61d7d6eab54f367e56fe44b32bcf28873265ef3556498423313b445b50af1c1e",
     "app.py": "d32cbd295145d640105d298502eb952b4ee60655e6c694bbca8ee3443d3fc998",
     "build_software_manifest.py": "48b9b589e242f9185bec3467cbbcfd070df5f0ceb9bf17d6f7528a58926144b2",
     "daily_pipeline.py": "14a1667501ade6c7b09937b261f90bb6a9157c59f053da326e224769fef2f2b8",
-    "install.bat": "7b9a35686969b2a617e3c9dcfb6ecce5377fa2d083a993d2b09423785a2444cf",
+    "install.bat": "5e0bed023fafa5ffc0392e8ab0faa4b76840f0769363e918558a64975708fe63",
     "install_daily_task.bat": "56e3e7e2bdc5795557fccf88b39d8fc81a352fd286a27704823386b16c234582",
     "mobile_server.py": "668046c8fb0acdf7f859f46100b2425d41b8621e521d0e5313f1e107b8539afb",
     "publish_public_data.py": "000176676466bbb2889f52121b47a4bab5db5d25c11c8f09dabff2a7df8cfa03",

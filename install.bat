@@ -62,12 +62,16 @@ if errorlevel 1 (
 
 echo [2/4] Creating TaiStockScannerSoftwareUpdate...
 set "TSS_ROOT=%ROOT%"
-set "TSS_PYTHON=%PYTHON_EXE%"
-rem PowerShell emits an XML repetition interval PT2H with StartWhenAvailable.
-rem LogonType Interactive maps to Task Scheduler XML InteractiveToken; no password is stored.
-powershell -NoProfile -ExecutionPolicy Bypass -Command "$ErrorActionPreference='Stop'; $a=New-ScheduledTaskAction -Execute $env:TSS_PYTHON -Argument 'updater.py --check-only' -WorkingDirectory $env:TSS_ROOT; $t=New-ScheduledTaskTrigger -Daily -At '00:00'; $t.Repetition.Interval='PT2H'; $t.Repetition.Duration='P1D'; $s=New-ScheduledTaskSettingsSet -StartWhenAvailable; $p=New-ScheduledTaskPrincipal -UserId ([Security.Principal.WindowsIdentity]::GetCurrent().Name) -LogonType Interactive -RunLevel Limited; Register-ScheduledTask -TaskName 'TaiStockScannerSoftwareUpdate' -Action $a -Trigger $t -Settings $s -Principal $p -Force | Out-Null"
+rem schtasks HOURLY /MO 2 avoids PowerShell versions where the Repetition child is null.
+rem /IT maps to Task Scheduler XML InteractiveToken; no password is stored.
+schtasks /Create /TN "%UPDATE_TASK%" /TR "\"%PYTHON_EXE%\" \"%ROOT%updater.py\" --check-only" /SC HOURLY /MO 2 /ST 00:00 /RL LIMITED /IT /F
 if errorlevel 1 (
   echo [ERROR] Could not create %UPDATE_TASK%.
+  exit /b 1
+)
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$ErrorActionPreference='Stop'; Set-ScheduledTask -TaskName 'TaiStockScannerSoftwareUpdate' -Settings (New-ScheduledTaskSettingsSet -StartWhenAvailable) | Out-Null"
+if errorlevel 1 (
+  echo [ERROR] Could not enable StartWhenAvailable for %UPDATE_TASK%.
   exit /b 1
 )
 
