@@ -1,6 +1,6 @@
 {
-  "started_at": "2026-10-17T17:35:02+08:00",
-  "completed_at": "2026-10-17T17:35:16+08:00",
+  "started_at": "2026-10-17T22:34:15+08:00",
+  "completed_at": "2026-10-17T22:34:41+08:00",
   "status": "success",
   "data_date": "2026-10-16",
   "backtest": {
@@ -312,8 +312,8 @@
   },
   "weights": {
     "volume_growth_pct": 0.25,
-    "ma5_distance_pct": 0.4,
-    "institutional_lots": 0.25,
+    "ma5_distance_pct": 0.2,
+    "institutional_lots": 0.45,
     "volume_rank": 0.1
   }
 }
