@@ -67,7 +67,7 @@ jobs:
       - name: Upload daily status diagnostics
         if: always()
         timeout-minutes: 5
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: daily-status-${{ github.run_id }}
           path: data/daily_status.json
