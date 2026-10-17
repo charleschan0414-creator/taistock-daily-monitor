@@ -1,6 +1,6 @@
 {
-  "started_at": "2026-10-18T05:23:12+08:00",
-  "completed_at": "2026-10-18T05:23:28+08:00",
+  "started_at": "2026-10-18T05:25:31+08:00",
+  "completed_at": "2026-10-18T05:26:26+08:00",
   "status": "success",
   "data_date": "2026-10-16",
   "backtest": {
@@ -497,8 +497,8 @@
   },
   "weights": {
     "volume_growth_pct": 0.25,
-    "ma5_distance_pct": 0.4,
-    "institutional_lots": 0.25,
+    "ma5_distance_pct": 0.2,
+    "institutional_lots": 0.45,
     "volume_rank": 0.1
   },
   "market_history": {
@@ -506,17 +506,17 @@
     "snapshot_id": "2026-10-18:morning_backup",
     "regime": {
       "snapshot_count": 1,
-      "first": "2026-10-18T05:23:28+08:00",
-      "last": "2026-10-18T05:23:28+08:00",
+      "first": "2026-10-17T21:25:59+00:00",
+      "last": "2026-10-17T21:25:59+00:00",
       "first_snapshot": {
         "snapshot_id": "2026-10-18:morning_backup",
-        "fetched_at": "2026-10-18T05:23:28+08:00",
+        "fetched_at": "2026-10-17T21:25:59+00:00",
         "market_date": "2026-10-18",
         "phase": "morning_backup"
       },
       "last_snapshot": {
         "snapshot_id": "2026-10-18:morning_backup",
-        "fetched_at": "2026-10-18T05:23:28+08:00",
+        "fetched_at": "2026-10-17T21:25:59+00:00",
         "market_date": "2026-10-18",
         "phase": "morning_backup"
       },
@@ -527,7 +527,7 @@
       },
       "latest": {
         "snapshot_id": "2026-10-18:morning_backup",
-        "fetched_at": "2026-10-18T05:23:28+08:00",
+        "fetched_at": "2026-10-17T21:25:59+00:00",
         "market_date": "2026-10-18",
         "phase": "morning_backup",
         "scenario": {
@@ -581,7 +581,7 @@
   },
   "health": {
     "overall": "ok",
-    "generated_at": "2026-10-18T05:23:28+08:00",
+    "generated_at": "2026-10-18T05:26:26+08:00",
     "sources": {
       "daily_status": {
         "status": "ok",
@@ -606,13 +606,13 @@
       "market_regime": {
         "status": "ok",
         "message": "可正常讀取",
-        "date": "2026-10-18T05:23:28+08:00"
+        "date": "2026-10-17T21:25:59+00:00"
       }
     },
     "latest_data_date": "2026-10-16",
     "pipeline": {
       "status": "success",
-      "completed_at": "2026-10-18T05:23:28+08:00",
+      "completed_at": "2026-10-18T05:26:26+08:00",
       "data_date": "2026-10-16",
       "freshness": "fresh"
     },
