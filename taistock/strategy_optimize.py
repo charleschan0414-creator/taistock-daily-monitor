@@ -156,10 +156,14 @@ def optimize_strategy(backtest: dict, output_path: Path | None = None) -> dict:
             continue
         objective, penalty = _objective(standard, baseline_train["standard"]["trades"])
         evaluated.append((objective, -penalty, standard["trades"], gate, metrics, penalty))
-    if not evaluated:
-        raise ValueError("有限網格沒有符合至少 100 筆訓練成交的候選")
-    _, _, _, selected_gate, candidate_train, sparse_penalty = max(
-        evaluated, key=lambda item: (item[0], item[1], item[2]))
+    no_robust_candidate = not evaluated
+    if no_robust_candidate:
+        selected_gate = dict(BASELINE_GATE)
+        candidate_train = baseline_train
+        sparse_penalty = 0.0
+    else:
+        _, _, _, selected_gate, candidate_train, sparse_penalty = max(
+            evaluated, key=lambda item: (item[0], item[1], item[2]))
     candidate_test_rows = [row for row in test if _passes(row, selected_gate)]
     candidate_test = _metric_set(candidate_test_rows, test_dates)
     checks = _holdout_checks(candidate_test["standard"], baseline_test["standard"],
@@ -169,9 +173,10 @@ def optimize_strategy(backtest: dict, output_path: Path | None = None) -> dict:
     applied_gate = dict(selected_gate if upgrade_approved else BASELINE_GATE)
     applied_mode = "candidate" if upgrade_approved else "incumbent_protective"
     direction_text = "偏空啟用" if applied_gate["short_enabled"] else "偏空停用"
-    status = (f"已啟用｜偏多分數≥{applied_gate['long_score_min']}、偏空分數≥{applied_gate['short_score_min']}、"
-              f"{direction_text}、量增≥{applied_gate['volume_growth_min']}%｜成本後驗證通過" if upgrade_approved
-              else "保留既有保護性篩選｜成本後升級未通過")
+    status = ("保留既有保護性篩選｜沒有符合訓練穩健條件的候選" if no_robust_candidate else
+              (f"已啟用｜偏多分數≥{applied_gate['long_score_min']}、偏空分數≥{applied_gate['short_score_min']}、"
+               f"{direction_text}、量增≥{applied_gate['volume_growth_min']}%｜成本後驗證通過" if upgrade_approved
+               else "保留既有保護性篩選｜成本後升級未通過"))
     report = {
         "version": VERSION,
         "method": {
@@ -222,11 +227,14 @@ def load_strategy_gate(directory: Path) -> dict:
         cost_validated = bool(decision.get("cost_validated", False))
         approved = (cost_validated and decision.get("applied_mode") == "candidate"
                     and bool(decision.get("upgrade_approved")))
-        gate = decision["applied_gate"] if approved else dict(BASELINE_GATE)
+        protective = (bool(decision.get("enabled"))
+                      and decision.get("applied_mode") == "incumbent_protective"
+                      and isinstance(decision.get("applied_gate"), dict))
+        gate = decision["applied_gate"] if approved or protective else dict(BASELINE_GATE)
         status = (decision.get("status", "策略閘門狀態不明") if approved or
                   decision.get("applied_mode") == "incumbent_protective"
                   else "保留既有保護性篩選｜舊版報告未經成本後驗證")
-        return {"version": report.get("version", VERSION), "enabled": approved,
+        return {"version": report.get("version", VERSION), "enabled": approved or protective,
                 "applied_mode": "candidate" if approved else "incumbent_protective",
                 "cost_validated": approved, "status": status, "applied_gate": gate,
                 "directions": {"long": True, "short": bool(gate.get("short_enabled", True))},

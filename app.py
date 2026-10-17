@@ -74,7 +74,7 @@ def run_backtest(days=100):
     if days < 1:
         raise ValueError("回測交易日數須大於 0")
     end_date = data_end_date()
-    total = days + 10
+    total = days + 6
     print(f"抓取截至 {end_date} 的 {total} 個四源完整交易日（可續跑快取）…", flush=True)
     fetcher = OfficialHistoryFetcher(
         HttpClient(timeout=35, retries=6), DATA / "backtest_cache", throttle=0.35,
@@ -105,7 +105,7 @@ def run_backtest(days=100):
               f"最大同時持倉 {portfolio['peak_positions']}｜成本 {portfolio['costs']:,.0f}")
     print(f"資料：網路請求 {fetcher.requests}｜快取命中 {fetcher.cache_hits}")
     print("成本假設：" + result["cost_assumption"])
-    print("限制：上列日 OHLC 的等權訊號批次，不是帳戶報酬；帳戶模型僅在實際出場日認列損益，未用逐日 OHLC 評價未實現部位；空方假設可取得券源且未含借券費。")
+    print("限制：訊號於收盤後形成，只能在次一交易日當沖並於收盤前強制沖銷；日 OHLC 無法重建盤中先後，採停損優先、target1 優先。上列為訊號批次，不是帳戶報酬；空方假設可取得券源且未含借券費。")
     print("聲明：歷史規則回測不代表未來績效，不保證獲利。")
     return result
 
@@ -138,7 +138,7 @@ def main(argv=None):
     parser.add_argument("--update", action="store_true", help="更新資料後結束（不開啟視窗）")
     parser.add_argument("--notify", action="store_true", help="更新完成後發送 Windows 通知；須搭配 --update")
     parser.add_argument("--backtest", nargs="?", const=100, type=int, metavar="DAYS",
-                        help="以官方逐日資料執行回測（預設 100 信號日）")
+                        help="以官方逐日資料執行次一交易日限定當沖回測（預設 100 信號日；收盤強制沖銷）")
     parser.add_argument("--optimize-strategy", action="store_true",
                         help="以 backtest_100d.json 執行前70日訓練、後30日保留測試的品質閘門優化")
     parser.add_argument("--backup", nargs="?", const="", metavar="PATH",

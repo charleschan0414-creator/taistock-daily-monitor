@@ -17,7 +17,7 @@ from .data import _number
 from .portfolio import simulate_portfolio
 from .storage import CANDIDATE_WEIGHTS, MIN_SAMPLES
 
-HOLDING_DAYS = 5
+NEXT_DAY_EXECUTION_DAYS = 1
 COST_SCENARIOS = {"gross": 0.0, "standard": 0.00435, "stress": 0.00535}
 
 
@@ -164,63 +164,47 @@ class OfficialHistoryFetcher:
 
 
 def simulate_trade(signal: dict, future_days, require_full_horizon: bool = False) -> dict:
-    """收盤訊號最早次日觸發；最多五日，OHLC 同日採停損、target1 保守優先。"""
-    single_day_call = isinstance(future_days, dict)
-    days = [future_days] if single_day_call else list(future_days[:HOLDING_DAYS])
-    if require_full_horizon and len(days) < HOLDING_DAYS:
-        return {"status": "unresolved", "triggered": False, "entry_date": None, "exit": None,
-                "exit_date": None, "exit_reason": "insufficient_future_days", "return": None,
+    """收盤訊號只交易次一交易日；停損優先，未出場則當日收盤強制沖銷。"""
+    days = [future_days] if isinstance(future_days, dict) else list(future_days[:NEXT_DAY_EXECUTION_DAYS])
+    if require_full_horizon and len(days) < NEXT_DAY_EXECUTION_DAYS:
+        return {"status": "unresolved", "triggered": False, "entry_date": None,
+                "entry": None, "exit": None, "exit_date": None,
+                "exit_reason": "missing_next_trading_day", "return": None,
                 "mfe": None, "mae": None}
     direction = signal["signal_direction"]
-    entry, stop = float(signal["entry_trigger"]), float(signal["stop_loss"])
+    entry_trigger, stop = float(signal["entry_trigger"]), float(signal["stop_loss"])
     target1, target2 = float(signal["target1"]), float(signal["target2"])
-    triggered = False
-    entry_date = None
-    highs, lows = [], []
-    for index, day in enumerate(days):
-        was_triggered = triggered
-        touched = day["high"] >= entry if direction == "long" else day["low"] <= entry
-        if not triggered and not touched:
-            continue
-        if not triggered:
-            triggered, entry_date = True, day.get("date")
-        highs.append(float(day["high"])); lows.append(float(day["low"]))
-        stop_hit = day["low"] <= stop if direction == "long" else day["high"] >= stop
-        target_hit = day["high"] >= target1 if direction == "long" else day["low"] <= target1
-        target2_hit = day["high"] >= target2 if direction == "long" else day["low"] <= target2
-        if stop_hit:
-            opening = float(day["open"])
-            if was_triggered:
-                exit_price = min(opening, stop) if direction == "long" else max(opening, stop)
-            else:
-                exit_price = stop
-            reason = "stop"
-        elif target_hit:
-            exit_price, reason = target1, "target1"
-        elif target2_hit:
-            exit_price, reason = target2, "target2"
-        elif index == len(days) - 1:
-            exit_price, reason = float(day["close"]), "close" if single_day_call else "day5_close"
-        else:
-            continue
-        value = ((exit_price - entry) / entry if direction == "long" else (entry - exit_price) / entry)
-        favorable = (max(highs) - entry) / entry if direction == "long" else (entry - min(lows)) / entry
-        adverse = (min(lows) - entry) / entry if direction == "long" else (entry - max(highs)) / entry
-        return {"status": "settled", "triggered": True, "entry_date": entry_date,
-                "exit": exit_price, "exit_date": day.get("date"), "exit_reason": reason,
-                "return": value, "mfe": favorable, "mae": adverse}
-    if not triggered:
-        return {"status": "untriggered", "triggered": False, "entry_date": None, "exit": None,
-                "exit_date": days[-1].get("date") if days else None, "exit_reason": "untriggered",
-                "return": None, "mfe": None, "mae": None}
-    # This occurs only when a caller explicitly allows a short horizon.
-    day = days[-1]
-    exit_price = float(day["close"])
+    if not days:
+        return {"status": "unresolved", "triggered": False, "entry_date": None,
+                "entry": None, "exit": None, "exit_date": None,
+                "exit_reason": "missing_next_trading_day", "return": None,
+                "mfe": None, "mae": None}
+    day = days[0]
+    touched = day["high"] >= entry_trigger if direction == "long" else day["low"] <= entry_trigger
+    if not touched:
+        return {"status": "untriggered", "triggered": False, "entry_date": None,
+                "entry": None, "exit": None, "exit_date": day.get("date"),
+                "exit_reason": "untriggered", "return": None, "mfe": None, "mae": None}
+    opening = float(day["open"])
+    entry = max(entry_trigger, opening) if direction == "long" else min(entry_trigger, opening)
+    stop_hit = day["low"] <= stop if direction == "long" else day["high"] >= stop
+    target_hit = day["high"] >= target1 if direction == "long" else day["low"] <= target1
+    target2_hit = day["high"] >= target2 if direction == "long" else day["low"] <= target2
+    if stop_hit:
+        exit_price, reason = stop, "stop"
+    elif target_hit:
+        exit_price, reason = target1, "target1"
+    elif target2_hit:
+        exit_price, reason = target2, "target2"
+    else:
+        exit_price, reason = float(day["close"]), "forced_close"
     value = ((exit_price - entry) / entry if direction == "long" else (entry - exit_price) / entry)
-    favorable = (max(highs) - entry) / entry if direction == "long" else (entry - min(lows)) / entry
-    adverse = (min(lows) - entry) / entry if direction == "long" else (entry - max(highs)) / entry
-    return {"status": "settled", "triggered": True, "entry_date": entry_date,
-            "exit": exit_price, "exit_date": day.get("date"), "exit_reason": "close",
+    favorable = ((float(day["high"]) - entry) / entry if direction == "long"
+                 else (entry - float(day["low"])) / entry)
+    adverse = ((float(day["low"]) - entry) / entry if direction == "long"
+               else (entry - float(day["high"])) / entry)
+    return {"status": "settled", "triggered": True, "entry_date": day.get("date"), "entry": entry,
+            "exit": exit_price, "exit_date": day.get("date"), "exit_reason": reason,
             "return": value, "mfe": favorable, "mae": adverse}
 
 
@@ -315,8 +299,7 @@ def build_backtest(days: list[dict], signal_days: int = 100, weights: dict | Non
     if signal_days < 1 or len(days) < signal_days + 6:
         raise ValueError(f"回測需要至少 {signal_days + 6} 個完整交易日")
     ordered = sorted(days, key=lambda row: row["date"])
-    # Prefer five complete future days. Small fixture compatibility keeps one future day.
-    future_buffer = HOLDING_DAYS if len(ordered) >= signal_days + 10 else 1
+    future_buffer = NEXT_DAY_EXECUTION_DAYS
     selected = list(range(len(ordered) - signal_days - future_buffer,
                           len(ordered) - future_buffer))
     if selected[0] < 5:
@@ -378,15 +361,12 @@ def build_backtest(days: list[dict], signal_days: int = 100, weights: dict | Non
                 }.items()
             })
         for signal in signals:
-            future = []
-            for day in ordered[i + 1:i + 1 + HOLDING_DAYS]:
-                quote = day["quotes"].get(signal["code"])
-                if quote is None:
-                    break
-                future.append({**quote, "date": day["date"]})
-            execution = simulate_trade(signal, future, require_full_horizon=(future_buffer == HOLDING_DAYS))
+            next_day = ordered[i + 1]
+            quote = next_day["quotes"].get(signal["code"])
+            future = [] if quote is None else [{**quote, "date": next_day["date"]}]
+            execution = simulate_trade(signal, future, require_full_horizon=True)
             trade = {"signal_date": current["date"], "code": signal["code"], "name": signal["name"],
-                     "direction": signal["signal_direction"], "entry": signal["entry_trigger"],
+                     "direction": signal["signal_direction"], "entry_trigger": signal["entry_trigger"],
                      "stop_loss": signal["stop_loss"], "target1": signal["target1"], "target2": signal["target2"],
                      "score": signal["score"], "volume_growth_pct": signal["volume_growth_pct"],
                      "ma5_distance_pct": signal["ma5_distance_pct"],
@@ -420,7 +400,7 @@ def build_backtest(days: list[dict], signal_days: int = 100, weights: dict | Non
 
 
 TRADE_FIELDS = ["signal_date", "trade_date", "code", "name", "direction", "entry_date", "exit_date",
-                "status", "entry", "exit", "exit_reason", "return", "triggered", "mfe", "mae", "score",
+                "status", "entry_trigger", "entry", "exit", "exit_reason", "return", "triggered", "mfe", "mae", "score",
                 "stop_loss", "target1", "target2", "volume_growth_pct", "ma5_distance_pct",
                 "institutional_abs_lots", "volume_rank"]
 CANDIDATE_AUDIT_FIELDS = [

@@ -8,13 +8,13 @@
     "selection_objective": "standard net average return, then cumulative return, PF, drawdown, trades"
   },
   "train_dates": {
-    "from": "2026-05-18",
-    "to": "2026-08-25",
+    "from": "2026-05-22",
+    "to": "2026-08-31",
     "days": 70
   },
   "holdout_dates": {
-    "from": "2026-08-26",
-    "to": "2026-10-08",
+    "from": "2026-09-01",
+    "to": "2026-10-15",
     "days": 30
   },
   "costs": {
@@ -62,46 +62,46 @@
   "directions": {
     "long": {
       "selected_parameters": {
-        "score_min": 90,
+        "score_min": 80,
         "volume_rank_max": 20,
-        "volume_growth_min": 100,
-        "ma5_distance_max": 10,
+        "volume_growth_min": 20,
+        "ma5_distance_max": 3,
         "daily_limit": 3
       },
       "selection": {
         "standard": {
-          "trades": 9,
-          "win_rate": 0.5555555555555556,
-          "average_return": 0.012159197754430213,
-          "profit_factor": 1.8128002625406066,
-          "max_drawdown": -0.061303889770693676,
-          "cumulative_return": 0.008562477950431191
+          "trades": 7,
+          "win_rate": 0.7142857142857143,
+          "average_return": 0.004503244741434666,
+          "profit_factor": 3.344136262160451,
+          "max_drawdown": -0.013402289060045036,
+          "cumulative_return": 0.02399161026984231
         },
         "stress": {
-          "trades": 9,
-          "win_rate": 0.5555555555555556,
-          "average_return": 0.011159197754430212,
-          "profit_factor": 1.724431185092537,
-          "max_drawdown": -0.0632406238370179,
-          "cumulative_return": 0.0015262750097020383
+          "trades": 7,
+          "win_rate": 0.7142857142857143,
+          "average_return": 0.0035032447414346654,
+          "profit_factor": 2.5874900973087116,
+          "max_drawdown": -0.01538784158529738,
+          "cumulative_return": 0.017886927037121803
         }
       },
       "holdout": {
         "standard": {
-          "trades": 5,
-          "win_rate": 0.4,
-          "average_return": -0.0015131900066302142,
-          "profit_factor": 0.9201304385487581,
-          "max_drawdown": -0.035147101449275464,
-          "cumulative_return": -0.013598359877977195
+          "trades": 3,
+          "win_rate": 0.3333333333333333,
+          "average_return": -0.005684402715791706,
+          "profit_factor": 0.4049958672045954,
+          "max_drawdown": -0.028495289903624488,
+          "cumulative_return": -0.017218600656963345
         },
         "stress": {
-          "trades": 5,
-          "win_rate": 0.4,
-          "average_return": -0.002513190006630215,
-          "profit_factor": 0.8714202333632785,
-          "max_drawdown": -0.036147101449275354,
-          "cumulative_return": -0.017553394692498947
+          "trades": 3,
+          "win_rate": 0.3333333333333333,
+          "average_return": -0.006684402715791707,
+          "profit_factor": 0.3459628251181367,
+          "max_drawdown": -0.03046562924866858,
+          "cumulative_return": -0.02018134498190094
         }
       },
       "activation_checks": {
@@ -116,29 +116,29 @@
         "required_profitable_windows": 2,
         "windows": [
           {
-            "from": "2026-09-07",
-            "to": "2026-10-06",
+            "from": "2026-09-11",
+            "to": "2026-10-13",
             "days": 20,
-            "trades": 5,
-            "profit_factor": 0.9201304385487581,
+            "trades": 3,
+            "profit_factor": 0.4049958672045954,
             "data_sufficient": true,
             "profit_factor_above_1": false
           },
           {
-            "from": "2026-09-08",
-            "to": "2026-10-07",
+            "from": "2026-09-14",
+            "to": "2026-10-14",
             "days": 20,
-            "trades": 5,
-            "profit_factor": 0.9201304385487581,
+            "trades": 3,
+            "profit_factor": 0.4049958672045954,
             "data_sufficient": true,
             "profit_factor_above_1": false
           },
           {
-            "from": "2026-09-09",
-            "to": "2026-10-08",
+            "from": "2026-09-15",
+            "to": "2026-10-15",
             "days": 20,
-            "trades": 5,
-            "profit_factor": 0.9201304385487581,
+            "trades": 3,
+            "profit_factor": 0.4049958672045954,
             "data_sufficient": true,
             "profit_factor_above_1": false
           }
@@ -153,52 +153,52 @@
     "short": {
       "selected_parameters": {
         "score_min": 90,
-        "volume_rank_max": 100,
-        "volume_growth_min": 50,
-        "ma5_distance_max": 10,
+        "volume_rank_max": 20,
+        "volume_growth_min": 20,
+        "ma5_distance_max": 20,
         "daily_limit": 3
       },
       "selection": {
         "standard": {
-          "trades": 14,
-          "win_rate": 0.5714285714285714,
-          "average_return": 0.017987755136144996,
-          "profit_factor": 2.6949428129121866,
-          "max_drawdown": -0.07787691611616021,
-          "cumulative_return": 0.26733288633568586
+          "trades": 10,
+          "win_rate": 0.7,
+          "average_return": 0.014333567704704217,
+          "profit_factor": 2.537096340951704,
+          "max_drawdown": -0.05990422862540179,
+          "cumulative_return": 0.14467901316557352
         },
         "stress": {
-          "trades": 14,
-          "win_rate": 0.5714285714285714,
-          "average_return": 0.016987755136145,
-          "profit_factor": 2.5385822664869733,
-          "max_drawdown": -0.08071685922733651,
-          "cumulative_return": 0.2499833273108334
+          "trades": 10,
+          "win_rate": 0.7,
+          "average_return": 0.01333356770470422,
+          "profit_factor": 2.3852922216093195,
+          "max_drawdown": -0.06184308168006425,
+          "cumulative_return": 0.13342774303137883
         }
       },
       "holdout": {
         "standard": {
-          "trades": 5,
-          "win_rate": 0.2,
-          "average_return": -0.01578002686120271,
-          "profit_factor": 0.30962092135233427,
-          "max_drawdown": -0.10965691276416556,
-          "cumulative_return": -0.07815203417764816
+          "trades": 4,
+          "win_rate": 0.25,
+          "average_return": -0.015698760204304746,
+          "profit_factor": 0.08344671250483326,
+          "max_drawdown": -0.06713464146033299,
+          "cumulative_return": -0.06180134377125901
         },
         "stress": {
-          "trades": 5,
-          "win_rate": 0.2,
-          "average_return": -0.01678002686120271,
-          "profit_factor": 0.2906964654718061,
-          "max_drawdown": -0.11331773762445851,
-          "cumulative_return": -0.08282907995165611
+          "trades": 4,
+          "win_rate": 0.25,
+          "average_return": -0.016698760204304747,
+          "profit_factor": 0.06596241016395879,
+          "max_drawdown": -0.06999607237350303,
+          "cumulative_return": -0.06560913773905819
         }
       },
       "activation_checks": {
         "standard_profit_factor_at_least_1_3": false,
         "standard_average_return_above_0": false,
         "holdout_trades_at_least_30": false,
-        "standard_max_drawdown_at_least_minus_0_10": false,
+        "standard_max_drawdown_at_least_minus_0_10": true,
         "rolling_20_signal_day_windows": false
       },
       "rolling_20_signal_day_checks": {
@@ -206,29 +206,29 @@
         "required_profitable_windows": 2,
         "windows": [
           {
-            "from": "2026-09-07",
-            "to": "2026-10-06",
+            "from": "2026-09-11",
+            "to": "2026-10-13",
             "days": 20,
-            "trades": 5,
-            "profit_factor": 0.30962092135233427,
+            "trades": 4,
+            "profit_factor": 0.08344671250483326,
             "data_sufficient": true,
             "profit_factor_above_1": false
           },
           {
-            "from": "2026-09-08",
-            "to": "2026-10-07",
+            "from": "2026-09-14",
+            "to": "2026-10-14",
             "days": 20,
-            "trades": 5,
-            "profit_factor": 0.30962092135233427,
+            "trades": 4,
+            "profit_factor": 0.08344671250483326,
             "data_sufficient": true,
             "profit_factor_above_1": false
           },
           {
-            "from": "2026-09-09",
-            "to": "2026-10-08",
+            "from": "2026-09-15",
+            "to": "2026-10-15",
             "days": 20,
-            "trades": 5,
-            "profit_factor": 0.30962092135233427,
+            "trades": 4,
+            "profit_factor": 0.08344671250483326,
             "data_sufficient": true,
             "profit_factor_above_1": false
           }
@@ -251,10 +251,10 @@
     "source_is_daily_ohlc": true,
     "not_true_intraday": true,
     "claims": [
-      "不可宣稱13:20當沖",
+      "僅模擬次一交易日當沖並於收盤強制沖銷",
       "不可宣稱60%勝率"
     ],
-    "notice": "日 OHLC 研究結果不是逐筆盤中回測，不保證勝率或獲利。"
+    "notice": "日 OHLC 只能保守模擬次一交易日當沖，不能重建盤中先後；不跨日持有，也不保證勝率或獲利。"
   },
-  "updated_at": "2026-10-17T21:33:58+00:00"
+  "updated_at": "2026-10-18T07:30:24+08:00"
 }

@@ -61,7 +61,7 @@
 
     <details class="v2-analysis">
       <summary><span><span class="eyebrow">RESEARCH</span><strong id="v2-title">V2 成本後績效檢驗</strong></span><span id="v2-quality" class="status-badge">尚未完成</span></summary>
-      <p class="v2-note">日K OHLC 模擬，不是 13:20 真實當沖；不保證 60% 勝率或獲利。</p>
+      <p class="v2-note">日K OHLC 模擬僅限次一交易日當沖，收盤強制沖銷且不跨日；無法重建盤中先後，不是 13:20 真實當沖，不保證 60% 勝率或獲利。</p>
       <div class="v2-costs"><div><span>標準成本 0.435%</span><strong>保留區間品質門檻</strong></div><div><span>壓力成本 0.535%</span><strong id="v2-status">尚未完成</strong></div></div>
       <div class="v2-directions" aria-live="polite">
         <article><span>偏多 · 標準成本 holdout</span><strong id="v2-long-metrics">尚未完成</strong></article>
@@ -71,7 +71,7 @@
 
     <details class="backtest-performance">
       <summary><span><span class="eyebrow">CORE BACKTEST</span><strong>100日成本後績效</strong></span><span id="backtest-period" class="timestamp">—</span></summary>
-      <p class="backtest-note">訊號批次，不是帳戶報酬。standard 每筆成交扣雙邊總成本 0.435%；stress 0.535%；未另計固定滑價、借券費與融券限制。</p>
+      <p class="backtest-note">次一交易日限定當沖，收盤強制沖銷，嚴禁跨日持有。訊號批次，不是帳戶報酬。standard 每筆成交扣雙邊總成本 0.435%；stress 0.535%；未另計固定滑價、借券費與融券限制。</p>
       <h3 id="backtest-standard-label">standard 0.435%</h3>
       <div class="backtest-metrics" aria-live="polite">
         <article><span>整體</span><strong id="backtest-standard-overall">尚未完成</strong></article>

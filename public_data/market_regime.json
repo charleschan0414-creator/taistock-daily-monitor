@@ -1,16 +1,16 @@
 {
   "snapshot_count": 1,
-  "first": "2026-10-17T21:34:01+00:00",
-  "last": "2026-10-17T21:34:01+00:00",
+  "first": "2026-10-18T07:30:26+08:00",
+  "last": "2026-10-18T07:30:26+08:00",
   "first_snapshot": {
     "snapshot_id": "2026-10-18:morning_backup",
-    "fetched_at": "2026-10-17T21:34:01+00:00",
+    "fetched_at": "2026-10-18T07:30:26+08:00",
     "market_date": "2026-10-18",
     "phase": "morning_backup"
   },
   "last_snapshot": {
     "snapshot_id": "2026-10-18:morning_backup",
-    "fetched_at": "2026-10-17T21:34:01+00:00",
+    "fetched_at": "2026-10-18T07:30:26+08:00",
     "market_date": "2026-10-18",
     "phase": "morning_backup"
   },
@@ -21,7 +21,7 @@
   },
   "latest": {
     "snapshot_id": "2026-10-18:morning_backup",
-    "fetched_at": "2026-10-17T21:34:01+00:00",
+    "fetched_at": "2026-10-18T07:30:26+08:00",
     "market_date": "2026-10-18",
     "phase": "morning_backup",
     "scenario": {

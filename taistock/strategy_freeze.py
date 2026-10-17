@@ -11,6 +11,7 @@ import os
 from pathlib import Path
 
 MINIMUM_FORWARD_SIGNAL_DAYS = 20
+EXECUTION_MODEL = "next_day_intraday_forced_close_v1"
 _REQUIRED_FIELDS = {
     "active_gate",
     "strategy_version",
@@ -84,6 +85,8 @@ def build_registry_update(existing: dict | None, optimization_report: dict,
         return {
             "active_gate": gate,
             "strategy_version": 1,
+            "execution_model": EXECUTION_MODEL,
+            "cost_validated": bool(optimization_report.get("decision", {}).get("cost_validated")),
             "activated_on": data_date,
             "minimum_forward_signal_days": MINIMUM_FORWARD_SIGNAL_DAYS,
             "forward_signal_days": 0,
@@ -96,6 +99,22 @@ def build_registry_update(existing: dict | None, optimization_report: dict,
         }
 
     current = copy.deepcopy(_validate(existing))
+    if current.get("execution_model") != EXECUTION_MODEL:
+        return {
+            "active_gate": copy.deepcopy(current["active_gate"]),
+            "strategy_version": int(current["strategy_version"]) + 1,
+            "execution_model": EXECUTION_MODEL,
+            "cost_validated": False,
+            "activated_on": data_date,
+            "minimum_forward_signal_days": MINIMUM_FORWARD_SIGNAL_DAYS,
+            "forward_signal_days": 0,
+            "last_observed_date": data_date,
+            "status": "forward_observation",
+            "forward_observation": {
+                "not_holdout_reuse": True,
+                "description": "Counts new unique live signal dates after activation regardless of outcome.",
+            },
+        }
     last_date = current["last_observed_date"]
     is_new_date = data_date > last_date
     if is_new_date:
@@ -109,6 +128,7 @@ def build_registry_update(existing: dict | None, optimization_report: dict,
         current.update({
             "active_gate": candidate,
             "strategy_version": int(current["strategy_version"]) + 1,
+            "cost_validated": True,
             "activated_on": data_date,
             "forward_signal_days": 0,
             "last_observed_date": data_date,
@@ -138,18 +158,23 @@ def apply_active_gate_to_report(optimization_report: dict, registry: dict) -> di
     original_decision = copy.deepcopy(report.get("decision", {}))
     report["optimization_decision"] = original_decision
     decision = report.setdefault("decision", {})
+    cost_validated = bool(active.get("cost_validated", True))
     decision.update({
         "enabled": True,
-        "upgrade_approved": True,
-        "cost_validated": True,
-        "applied_mode": "candidate",
+        "upgrade_approved": cost_validated,
+        "cost_validated": cost_validated,
+        "applied_mode": "candidate" if cost_validated else "incumbent_protective",
         "applied_gate": copy.deepcopy(active["active_gate"]),
-        "status": (f"策略版本 v{active['strategy_version']} 凍結中｜"
-                   f"前瞻新訊號日 {active['forward_signal_days']}/"
-                   f"{active['minimum_forward_signal_days']}"),
+        "status": ((f"策略版本 v{active['strategy_version']} 凍結中｜"
+                    f"前瞻新訊號日 {active['forward_signal_days']}/"
+                    f"{active['minimum_forward_signal_days']}") if cost_validated else
+                   (f"策略版本 v{active['strategy_version']} 保護性觀察｜"
+                    "未經新當沖模式成本驗證")),
     })
     report["strategy_freeze"] = {
         "strategy_version": active["strategy_version"],
+        "execution_model": active.get("execution_model", "legacy_unknown"),
+        "cost_validated": cost_validated,
         "activated_on": active["activated_on"],
         "forward_signal_days": active["forward_signal_days"],
         "minimum_forward_signal_days": active["minimum_forward_signal_days"],

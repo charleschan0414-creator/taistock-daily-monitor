@@ -146,6 +146,7 @@ def format_backtest_summary(result):
     period = result["period"]
     scenarios = result.get("metrics_scenarios")
     lines = [f"回測期間  {period['from']} ～ {period['to']}",
+             "次一交易日限定當沖｜收盤強制沖銷｜嚴禁跨日持有",
              "100日成本後績效｜訊號批次，不是帳戶報酬"]
 
     def pf_text(value):

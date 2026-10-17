@@ -98,7 +98,7 @@ class V2OptimizationTests(unittest.TestCase):
         self.assertEqual(report["candidate_count_per_direction"], 360)
         self.assertTrue(report["limitations"]["source_is_daily_ohlc"])
         self.assertTrue(report["limitations"]["not_true_intraday"])
-        self.assertIn("不可宣稱13:20當沖", report["limitations"]["claims"])
+        self.assertIn("僅模擬次一交易日當沖並於收盤強制沖銷", report["limitations"]["claims"])
         self.assertIn("不可宣稱60%勝率", report["limitations"]["claims"])
         self.assertEqual(saved["decision"], report["decision"])
         rolling = report["directions"]["long"]["rolling_20_signal_day_checks"]

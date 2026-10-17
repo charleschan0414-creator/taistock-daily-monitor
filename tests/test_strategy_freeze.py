@@ -4,6 +4,7 @@ import unittest
 from pathlib import Path
 
 from taistock.strategy_freeze import (
+    EXECUTION_MODEL,
     MINIMUM_FORWARD_SIGNAL_DAYS,
     apply_active_gate_to_report,
     build_registry_update,
@@ -40,7 +41,23 @@ class StrategyFreezeTests(unittest.TestCase):
         self.assertEqual(registry["forward_signal_days"], 0)
         self.assertEqual(registry["last_observed_date"], "2026-10-15")
         self.assertEqual(registry["status"], "forward_observation")
+        self.assertEqual(registry["execution_model"], EXECUTION_MODEL)
         self.assertTrue(registry["forward_observation"]["not_holdout_reuse"])
+
+    def test_execution_model_change_starts_new_strategy_version_and_forward_window(self):
+        legacy = build_registry_update(None, approved_report(GATE_A), "2026-10-15")
+        legacy.pop("execution_model")
+        legacy["forward_signal_days"] = 12
+
+        migrated = build_registry_update(legacy, approved_report(GATE_B), "2026-10-16")
+
+        self.assertEqual(migrated["strategy_version"], 2)
+        self.assertEqual(migrated["execution_model"], EXECUTION_MODEL)
+        self.assertEqual(migrated["active_gate"], GATE_A)
+        self.assertFalse(migrated["cost_validated"])
+        self.assertEqual(migrated["activated_on"], "2026-10-16")
+        self.assertEqual(migrated["forward_signal_days"], 0)
+        self.assertEqual(migrated["last_observed_date"], "2026-10-16")
 
     def test_same_gate_counts_only_newer_unique_dates_without_resetting_activation(self):
         original = build_registry_update(None, approved_report(GATE_A), "2026-10-15")
@@ -85,6 +102,20 @@ class StrategyFreezeTests(unittest.TestCase):
         self.assertEqual(report["decision"]["applied_gate"], GATE_A)
         self.assertTrue(report["decision"]["cost_validated"])
         self.assertEqual(report["strategy_freeze"]["strategy_version"], 1)
+
+    def test_execution_model_migration_applies_protective_gate_without_false_cost_validation(self):
+        legacy = build_registry_update(None, approved_report(GATE_A), "2026-10-15")
+        legacy.pop("execution_model")
+        migrated = build_registry_update(legacy, approved_report(GATE_B), "2026-10-16")
+
+        report = apply_active_gate_to_report(approved_report(GATE_B), migrated)
+
+        self.assertTrue(report["decision"]["enabled"])
+        self.assertFalse(report["decision"]["upgrade_approved"])
+        self.assertFalse(report["decision"]["cost_validated"])
+        self.assertEqual(report["decision"]["applied_mode"], "incumbent_protective")
+        self.assertEqual(report["decision"]["applied_gate"], GATE_A)
+        self.assertIn("未經新當沖模式成本驗證", report["decision"]["status"])
 
     def test_atomic_write_failure_keeps_existing_registry(self):
         with tempfile.TemporaryDirectory() as tmp:

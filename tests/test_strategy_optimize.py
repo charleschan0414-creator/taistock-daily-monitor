@@ -37,6 +37,40 @@ def fixture_backtest(test_high_return=0.04):
 
 
 class StrategyOptimizationTests(unittest.TestCase):
+    def test_frozen_protective_gate_is_applied_without_claiming_cost_validation(self):
+        frozen_gate = {"long_score_min": 70, "short_score_min": 70,
+                       "short_enabled": True, "volume_growth_min": 20}
+        report = {"version": VERSION, "decision": {"enabled": True,
+                  "upgrade_approved": False, "cost_validated": False,
+                  "applied_mode": "incumbent_protective", "applied_gate": frozen_gate,
+                  "status": "未經新當沖模式成本驗證"}}
+        with tempfile.TemporaryDirectory() as directory:
+            Path(directory, "strategy_optimization.json").write_text(
+                json.dumps(report), encoding="utf-8")
+            state = load_strategy_gate(Path(directory))
+
+        self.assertEqual(state["applied_gate"], frozen_gate)
+        self.assertEqual(state["applied_mode"], "incumbent_protective")
+        self.assertFalse(state["cost_validated"])
+        rows = [{"code": "65", "signal_direction": "long", "score": 65, "volume_growth_pct": 30},
+                {"code": "75", "signal_direction": "long", "score": 75, "volume_growth_pct": 30}]
+        self.assertEqual([row["code"] for row in apply_strategy_gate(rows, state)], ["75"])
+
+    def test_no_robust_training_candidate_returns_disabled_auditable_report(self):
+        backtest = fixture_backtest()
+        for row in backtest["trades"]:
+            row["return"] = -0.02
+
+        report = optimize_strategy(backtest)
+
+        self.assertEqual(report["eligible_train_candidate_count"], 0)
+        self.assertEqual(report["selected_gate"], BASELINE_GATE)
+        self.assertFalse(report["decision"]["enabled"])
+        self.assertFalse(report["decision"]["upgrade_approved"])
+        self.assertFalse(report["decision"]["cost_validated"])
+        self.assertEqual(report["decision"]["applied_mode"], "incumbent_protective")
+        self.assertIn("沒有符合訓練穩健條件", report["decision"]["status"])
+
     def test_v2_report_preserves_gross_standard_and_stress_metrics(self):
         report = optimize_strategy(fixture_backtest())
         self.assertGreaterEqual(VERSION, 2)

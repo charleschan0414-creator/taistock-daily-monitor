@@ -10,7 +10,7 @@ Cloudflare 提供公開 HTTPS 唯讀 PWA；資料計算由公開 GitHub repo `ch
 - 每次依序執行 100 日無前視回測、70/30 策略閘門優化及當日清單；任一步或最終完整性驗證失敗都不標示成功。
 - `public_data/` 是固定公開白名單：`latest.json/.csv`、回測摘要 JSON/CSV、optimizer、strategy optimization、daily status。
 - `data/strategy_history.jsonl` 依 `data_date` 冪等保存每日基準/候選 train/test 指標與實際 gate，避免把每日重疊窗口誤稱為新增獨立樣本外證據。
-- `data/backtest_cache/*.json.gz` 由 git 持久化，只新增缺少的官方交易日，避免每日重抓約 110 日。
+- `data/backtest_cache/*.json.gz` 由 git 持久化，只新增缺少的官方交易日，避免每日重抓 106 日（5 日暖機＋100 訊號日＋1 次日執行日）。
 
 公開 repo 的資料任何人均可見。不得提交 token、cookie、`scanner.db`、Wrangler/Cloudflare 憑證或其他本機狀態。
 

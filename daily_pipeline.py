@@ -170,6 +170,7 @@ def main():
             "strategy_freeze": {
                 "active_gate": proposed_registry["active_gate"],
                 "strategy_version": proposed_registry["strategy_version"],
+                "execution_model": proposed_registry.get("execution_model"),
                 "activated_on": proposed_registry["activated_on"],
                 "minimum_forward_signal_days": proposed_registry["minimum_forward_signal_days"],
                 "forward_signal_days": proposed_registry["forward_signal_days"],

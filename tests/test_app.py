@@ -53,6 +53,7 @@ class AppCliTests(unittest.TestCase):
              patch("app.build_backtest", return_value=result), \
              patch("app.write_backtest_outputs"), redirect_stdout(output):
             app.run_backtest(1)
+        fetcher.collect.assert_called_once_with(unittest.mock.ANY, 7)
         text = output.getvalue()
         self.assertIn("gross", text)
         self.assertIn("standard", text)

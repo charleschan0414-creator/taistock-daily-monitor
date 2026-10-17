@@ -88,51 +88,45 @@ class ExecutionTests(unittest.TestCase):
 
     def test_close_fallback(self):
         close_exit = simulate_trade(self.long, {"open": 99, "high": 103, "low": 97, "close": 102})
-        self.assertEqual(close_exit["exit_reason"], "close")
+        self.assertEqual(close_exit["exit_reason"], "forced_close")
         self.assertAlmostEqual(close_exit["return"], 0.02)
 
-    def test_long_stop_gap_after_entry_fills_at_worse_open(self):
-        days = [
-            {"date": "2026-01-02", "open": 99, "high": 103, "low": 97, "close": 102},
-            {"date": "2026-01-05", "open": 90, "high": 93, "low": 89, "close": 91},
-        ]
-        result = simulate_trade(self.long, days)
-        self.assertEqual(result["exit_reason"], "stop")
-        self.assertEqual(result["exit"], 90.0)
-        self.assertAlmostEqual(result["return"], -0.10)
-
-    def test_short_stop_gap_after_entry_fills_at_worse_open(self):
-        days = [
-            {"date": "2026-01-02", "open": 101, "high": 103, "low": 97, "close": 98},
-            {"date": "2026-01-05", "open": 110, "high": 112, "low": 108, "close": 109},
-        ]
-        result = simulate_trade(self.short, days)
-        self.assertEqual(result["exit_reason"], "stop")
-        self.assertEqual(result["exit"], 110.0)
-        self.assertAlmostEqual(result["return"], -0.10)
-
-    def test_waits_up_to_five_days_and_reports_mfe_mae_without_costs(self):
+    def test_only_next_trading_day_is_eligible_and_untriggered_never_carries_forward(self):
         days = [
             {"date": "2026-01-02", "open": 98, "high": 99, "low": 97, "close": 98},
             {"date": "2026-01-05", "open": 100, "high": 103, "low": 96, "close": 102},
-            {"date": "2026-01-06", "open": 102, "high": 111, "low": 101, "close": 109},
         ]
         result = simulate_trade(self.long, days)
-        self.assertTrue(result["triggered"])
-        self.assertEqual(result["entry_date"], "2026-01-05")
-        self.assertEqual(result["exit_date"], "2026-01-06")
-        self.assertEqual(result["exit_reason"], "target1")
-        self.assertAlmostEqual(result["return"], .075)
-        self.assertAlmostEqual(result["mfe"], .11)
-        self.assertAlmostEqual(result["mae"], -.04)
-        self.assertNotIn("net_return", result)
-
-    def test_less_than_five_future_days_is_unresolved(self):
-        result = simulate_trade(self.long, [{"date": "2026-01-02", "open": 100,
-                                             "high": 120, "low": 90, "close": 100}],
-                                require_full_horizon=True)
-        self.assertEqual(result["status"], "unresolved")
+        self.assertEqual(result["status"], "untriggered")
         self.assertFalse(result["triggered"])
+        self.assertEqual(result["exit_date"], "2026-01-02")
+
+    def test_one_future_day_is_a_complete_horizon_and_closes_same_day(self):
+        result = simulate_trade(self.long, [{"date": "2026-01-02", "open": 100,
+                                             "high": 103, "low": 97, "close": 102}],
+                                require_full_horizon=True)
+        self.assertEqual(result["status"], "settled")
+        self.assertEqual(result["entry_date"], "2026-01-02")
+        self.assertEqual(result["exit_date"], "2026-01-02")
+        self.assertEqual(result["exit_reason"], "forced_close")
+
+    def test_gap_through_entry_uses_worse_open_for_long_returns_and_excursions(self):
+        result = simulate_trade(
+            self.long, {"date": "2026-01-02", "open": 104, "high": 106, "low": 101, "close": 105}
+        )
+        self.assertEqual(result["entry"], 104.0)
+        self.assertAlmostEqual(result["return"], 1 / 104)
+        self.assertAlmostEqual(result["mfe"], 2 / 104)
+        self.assertAlmostEqual(result["mae"], -3 / 104)
+
+    def test_gap_through_entry_uses_worse_open_for_short_returns_and_excursions(self):
+        result = simulate_trade(
+            self.short, {"date": "2026-01-02", "open": 96, "high": 99, "low": 94, "close": 95}
+        )
+        self.assertEqual(result["entry"], 96.0)
+        self.assertAlmostEqual(result["return"], 1 / 96)
+        self.assertAlmostEqual(result["mfe"], 2 / 96)
+        self.assertAlmostEqual(result["mae"], -3 / 96)
 
 
 class OfficialHistoryFetcherTests(unittest.TestCase):
@@ -288,6 +282,11 @@ class BacktestAggregationTests(unittest.TestCase):
         self.assertEqual(trade["signal_date"], "2026-01-06")
         self.assertEqual(trade["trade_date"], "2026-01-07")
         self.assertLess(trade["signal_date"], trade["trade_date"])
+        self.assertEqual(trade["entry_date"], trade["exit_date"])
+        self.assertEqual(trade["exit_reason"], "forced_close")
+        self.assertEqual(trade["entry_trigger"], 101.0)
+        realized = result["portfolio_standard"]["realized_trades"][0]
+        self.assertEqual(realized["notional"], trade["entry"] * realized["shares"])
         with tempfile.TemporaryDirectory() as directory:
             write_backtest_outputs(result, Path(directory), 1)
             self.assertTrue((Path(directory) / "backtest_1d.json").exists())

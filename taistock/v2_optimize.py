@@ -185,8 +185,8 @@ def optimize_v2(backtest: dict, output_path=None) -> dict:
         "limitations": {
             "source_is_daily_ohlc": True,
             "not_true_intraday": True,
-            "claims": ["不可宣稱13:20當沖", "不可宣稱60%勝率"],
-            "notice": "日 OHLC 研究結果不是逐筆盤中回測，不保證勝率或獲利。",
+            "claims": ["僅模擬次一交易日當沖並於收盤強制沖銷", "不可宣稱60%勝率"],
+            "notice": "日 OHLC 只能保守模擬次一交易日當沖，不能重建盤中先後；不跨日持有，也不保證勝率或獲利。",
         },
         "updated_at": datetime.now().astimezone().isoformat(timespec="seconds"),
     }

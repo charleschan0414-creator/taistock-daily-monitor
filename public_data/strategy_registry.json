@@ -5,7 +5,9 @@
     "short_enabled": true,
     "volume_growth_min": 20
   },
-  "strategy_version": 1,
+  "strategy_version": 2,
+  "execution_model": "next_day_intraday_forced_close_v1",
+  "cost_validated": false,
   "activated_on": "2026-10-16",
   "minimum_forward_signal_days": 20,
   "forward_signal_days": 0,
