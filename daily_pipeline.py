@@ -9,6 +9,15 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from app import run_backtest, run_strategy_optimization, update
+from taistock.global_market import GlobalMarketClient
+from taistock.health import build_health_report
+from taistock.market_history import capture_market_history
+from taistock.strategy_freeze import (
+    apply_active_gate_to_report,
+    build_registry_update,
+    load_registry,
+    write_registry,
+)
 from taistock.v2_optimize import optimize_v2
 
 ROOT = Path(__file__).resolve().parent
@@ -25,6 +34,24 @@ def atomic_json(path, value):
     temporary = path.with_name(path.name + ".tmp")
     temporary.write_text(json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False), encoding="utf-8")
     os.replace(temporary, path)
+
+
+def _app_version():
+    try:
+        return str(json.loads((ROOT / "software_manifest.json").read_text(encoding="utf-8"))["version"])
+    except (OSError, ValueError, KeyError, TypeError):
+        return "unknown"
+
+
+def write_status_with_health(status):
+    """Write source status first, then attach a non-recursive health snapshot."""
+    clean_status = {key: value for key, value in status.items() if key != "health"}
+    path = DATA / "daily_status.json"
+    atomic_json(path, clean_status)
+    now = datetime.now(TAIPEI)
+    final_status = dict(clean_status)
+    final_status["health"] = build_health_report(DATA, _app_version(), now)
+    atomic_json(path, final_status)
 
 
 def validate_outputs(backtest, latest, expected_data_date):
@@ -74,6 +101,39 @@ def append_history_once(path, record):
     return True
 
 
+def record_market_history(client=None, clock=None):
+    """Capture TAIFEX context without allowing it to affect stock-pipeline success."""
+    try:
+        result = capture_market_history(
+            DATA,
+            client or GlobalMarketClient(clock=clock),
+            clock=clock,
+        )
+        snapshot = {"status": result["status"]}
+        if result.get("snapshot_id"):
+            snapshot["snapshot_id"] = result["snapshot_id"]
+        if result.get("error"):
+            snapshot["error"] = result["error"]
+        return {**result, "history_snapshot": snapshot, "affects_stock_scores": False}
+    except Exception as exc:
+        error = f"{type(exc).__name__}: {exc}"
+        regime = None
+        path = DATA / "market_regime.json"
+        try:
+            if path.exists():
+                loaded = json.loads(path.read_text(encoding="utf-8"))
+                regime = loaded if isinstance(loaded, dict) else None
+        except (OSError, ValueError, TypeError):
+            regime = None
+        return {
+            "status": "error",
+            "error": error,
+            "history_snapshot": {"status": "error", "error": error},
+            "regime": regime,
+            "affects_stock_scores": False,
+        }
+
+
 def main():
     started = taipei_now()
     status = {"started_at": started, "completed_at": None, "status": "running", "data_date": None}
@@ -82,15 +142,42 @@ def main():
         backtest = run_backtest(100)
         v2_report = optimize_v2(backtest, DATA / "v2_optimization.json")
         strategy = run_strategy_optimization()
-        latest = update(False)
         expected = backtest.get("data_collection", {}).get("latest_complete_date")
         if not expected:
             raise ValueError("backtest did not report latest_complete_date")
+        registry_path = DATA / "strategy_registry.json"
+        proposed_registry = build_registry_update(load_registry(registry_path), strategy, expected)
+        effective_strategy = apply_active_gate_to_report(strategy, proposed_registry)
+        # app.update reads this report; publish the optimizer decision separately inside it.
+        atomic_json(DATA / "strategy_optimization.json", effective_strategy)
+        latest = update(False)
         validate_outputs(backtest, latest, expected)
+        market_history = record_market_history()
+        write_registry(registry_path, proposed_registry)
         status.update({
             "completed_at": taipei_now(), "status": "success", "data_date": latest["data_date"],
-            "backtest": {"period": backtest["period"], "metrics": backtest["metrics"]},
+            "backtest": {
+                "period": backtest["period"],
+                "metrics": backtest["metrics"],
+                "metrics_scenarios": backtest.get("metrics_scenarios") or {"gross": backtest["metrics"]},
+                "costs": backtest.get("costs") or {"gross": 0.0, "standard": 0.00435, "stress": 0.00535},
+                "portfolio_standard": {
+                    key: value for key, value in backtest.get("portfolio_standard", {}).items()
+                    if key not in {"realized_trades", "skipped", "equity_curve"}
+                },
+            },
             "strategy": {"decision": strategy["decision"], "baseline": strategy["baseline"], "candidate": strategy["candidate"]},
+            "strategy_freeze": {
+                "active_gate": proposed_registry["active_gate"],
+                "strategy_version": proposed_registry["strategy_version"],
+                "activated_on": proposed_registry["activated_on"],
+                "minimum_forward_signal_days": proposed_registry["minimum_forward_signal_days"],
+                "forward_signal_days": proposed_registry["forward_signal_days"],
+                "last_observed_date": proposed_registry["last_observed_date"],
+                "status": proposed_registry["status"],
+                "pending_candidate": proposed_registry.get("pending_candidate"),
+                "not_holdout_reuse": True,
+            },
             "v2_analysis": {
                 "version": v2_report["version"],
                 "costs": v2_report["costs"],
@@ -104,15 +191,16 @@ def main():
                 },
                 "limitations": v2_report["limitations"],
             },
-            "gate": strategy["decision"].get("applied_gate"),
+            "gate": proposed_registry["active_gate"],
             "weights": latest.get("optimization", {}).get("new_weights") or latest.get("optimization", {}).get("weights"),
+            "market_history": market_history,
         })
-        append_history_once(DATA / "strategy_history.jsonl", history_record(latest["data_date"], strategy))
-        atomic_json(DATA / "daily_status.json", status)
+        append_history_once(DATA / "strategy_history.jsonl", history_record(latest["data_date"], effective_strategy))
+        write_status_with_health(status)
         return 0
     except Exception as exc:
         status.update({"completed_at": taipei_now(), "status": "error", "error": f"{type(exc).__name__}: {exc}"})
-        atomic_json(DATA / "daily_status.json", status)
+        write_status_with_health(status)
         print(status["error"], file=sys.stderr)
         return 1
 

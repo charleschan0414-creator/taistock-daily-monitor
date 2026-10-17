@@ -4,6 +4,8 @@ import json
 import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from taistock.backup import create_backup, restore_backup
+from taistock.health import export_diagnostics
 from taistock.backtest import OfficialHistoryFetcher, build_backtest, write_backtest_outputs
 from taistock.net import HttpClient
 from taistock.notify import notify, build_summary
@@ -14,6 +16,13 @@ from taistock.strategy_optimize import load_strategy_gate, optimize_strategy
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / "data"
 TAIPEI = timezone(timedelta(hours=8))
+
+
+def app_version():
+    try:
+        return str(json.loads((ROOT / "software_manifest.json").read_text(encoding="utf-8"))["version"])
+    except (OSError, ValueError, KeyError, TypeError):
+        return "unknown"
 
 
 def data_end_date(now=None):
@@ -78,13 +87,25 @@ def run_backtest(days=100):
     write_backtest_outputs(result, DATA, days)
     metrics = result["metrics"]
     print(f"回測期間: {result['period']['from']} ~ {result['period']['to']}（{metrics['signal_days']} 信號日）")
-    for label, values in (("整體", metrics), ("偏多", metrics["long"]), ("偏空", metrics["short"])):
-        factor = "無虧損樣本" if values["profit_factor"] is None else f"{values['profit_factor']:.4f}"
-        print(f"{label}: 訊號 {values['signals']}｜成交 {values['trades']}｜未觸發 {values['untriggered']}｜未結算 {values['unresolved']}｜"
-              f"勝率 {values['win_rate']:.2%}｜平均報酬 {values['average_return']:.4%}｜中位數 {values['median_return']:.4%}｜"
-              f"累積複利 {values['cumulative_return']:.4%}｜最大回撤 {values['max_drawdown']:.4%}｜PF {factor}")
+    for scenario in ("gross", "standard", "stress"):
+        scenario_metrics = result["metrics_scenarios"][scenario]
+        cost = result["costs"][scenario]
+        print(f"{scenario}（每筆已成交雙邊總成本 {cost:.3%}）")
+        for label, values in (("整體", scenario_metrics), ("偏多", scenario_metrics["long"]),
+                              ("偏空", scenario_metrics["short"])):
+            factor = "無虧損樣本" if values["profit_factor"] is None else f"{values['profit_factor']:.4f}"
+            print(f"  {label}: 訊號 {values['signals']}｜成交 {values['trades']}｜未觸發 {values['untriggered']}｜未結算 {values['unresolved']}｜"
+                  f"勝率 {values['win_rate']:.2%}｜平均報酬 {values['average_return']:.4%}｜中位數 {values['median_return']:.4%}｜"
+                  f"累積訊號批次指標 {values['cumulative_return']:.4%}｜最大回撤 {values['max_drawdown']:.4%}｜PF {factor}")
+    portfolio = result.get("portfolio_standard", {})
+    if portfolio:
+        print("保守帳戶模型（研究估算）："
+              f"期初資金 {portfolio['initial_capital']:,.0f}｜期末資金 {portfolio['final_capital']:,.0f}｜"
+              f"淨報酬 {portfolio['net_return']:.2%}｜最大回撤 {portfolio['max_drawdown']:.2%}｜"
+              f"最大同時持倉 {portfolio['peak_positions']}｜成本 {portfolio['costs']:,.0f}")
     print(f"資料：網路請求 {fetcher.requests}｜快取命中 {fetcher.cache_hits}")
     print("成本假設：" + result["cost_assumption"])
+    print("限制：上列日 OHLC 的等權訊號批次，不是帳戶報酬；帳戶模型僅在實際出場日認列損益，未用逐日 OHLC 評價未實現部位；空方假設可取得券源且未含借券費。")
     print("聲明：歷史規則回測不代表未來績效，不保證獲利。")
     return result
 
@@ -120,12 +141,40 @@ def main(argv=None):
                         help="以官方逐日資料執行回測（預設 100 信號日）")
     parser.add_argument("--optimize-strategy", action="store_true",
                         help="以 backtest_100d.json 執行前70日訓練、後30日保留測試的品質閘門優化")
+    parser.add_argument("--backup", nargs="?", const="", metavar="PATH",
+                        help="安全備份白名單內的個人資料；未指定路徑時存入 backups 資料夾")
+    parser.add_argument("--restore", type=Path, metavar="PATH",
+                        help="驗證並安全還原備份；較新的現有資料不會被覆蓋")
+    parser.add_argument("--diagnostics", nargs="?", const="", metavar="PATH",
+                        help="匯出匿名系統健康診斷；未指定路徑時存入 diagnostics 資料夾")
     args = parser.parse_args(argv)
     if args.notify and not args.update: parser.error("--notify 須搭配 --update")
-    if args.backtest is not None and (args.update or args.notify or args.optimize_strategy):
-        parser.error("--backtest 不可與 --update/--notify/--optimize-strategy 共用")
-    if args.optimize_strategy and (args.update or args.notify):
-        parser.error("--optimize-strategy 不可與 --update/--notify 共用")
+    operations = sum((bool(args.update), args.backtest is not None, bool(args.optimize_strategy),
+                      args.backup is not None, args.restore is not None, args.diagnostics is not None))
+    if operations > 1:
+        parser.error("--update、--backtest、--optimize-strategy、--backup、--restore、--diagnostics 不可共用")
+    if args.diagnostics is not None:
+        now = datetime.now(TAIPEI)
+        destination = (ROOT / "diagnostics" / f"health-{now:%Y%m%d-%H%M%S}.json"
+                       if args.diagnostics == "" else Path(args.diagnostics))
+        try: result = export_diagnostics(DATA, app_version(), destination, now)
+        except Exception as exc:
+            print(f"診斷匯出失敗：{exc}", file=sys.stderr); return 1
+        print(f"匿名診斷已匯出：{result}")
+        return 0
+    if args.backup is not None:
+        destination = None if args.backup == "" else Path(args.backup)
+        try: result = create_backup(ROOT, destination)
+        except Exception as exc:
+            print(f"備份失敗：{exc}", file=sys.stderr); return 1
+        print(f"備份完成：{result['path']}｜檔案數：{result['file_count']}")
+        return 0
+    if args.restore is not None:
+        try: result = restore_backup(ROOT, args.restore)
+        except Exception as exc:
+            print(f"還原失敗：{exc}", file=sys.stderr); return 1
+        print(f"還原完成：{result['path']}｜檔案數：{result['file_count']}")
+        return 0
     if args.backtest is not None:
         try: run_backtest(args.backtest)
         except Exception as exc:

@@ -70,6 +70,19 @@ class MobileTests(unittest.TestCase):
         self.assertIn('aria-pressed="true"', html)
         self.assertIn("el('details')", html)
 
+    def test_mobile_page_renders_compatible_100_day_cost_performance(self):
+        html = (Path(__file__).resolve().parent.parent / "mobile" / "index.html").read_text(encoding="utf-8")
+        for marker in ('id="backtest-performance"', 'id="backtest-period"',
+                       'id="backtest-standard"', 'id="backtest-gross"', 'id="backtest-stress"'):
+            self.assertIn(marker, html)
+        self.assertIn("100日成本後績效", html)
+        self.assertIn("訊號批次，不是帳戶報酬", html)
+        self.assertIn("standard 0.435%", html)
+        self.assertIn("stress 0.535%", html)
+        self.assertIn("data?.backtest", html)
+        self.assertIn("metrics_scenarios", html)
+        self.assertIn("舊報告未提供", html)
+
     def test_mobile_page_builds_api_content_without_innerhtml(self):
         html = (Path(__file__).resolve().parent.parent / "mobile" / "index.html").read_text(encoding="utf-8")
         script = html.split("<script>", 1)[1].split("</script>", 1)[0]

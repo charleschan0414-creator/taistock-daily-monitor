@@ -19,7 +19,10 @@ class DailyPipelineTests(unittest.TestCase):
         daily_pipeline.validate_outputs(backtest, latest, "2026-10-15")
 
     def test_main_runs_steps_in_order_and_writes_success_audit(self):
+        portfolio = {"initial_capital": 1_000_000, "final_capital": 1_010_000,
+                     "net_return": .01, "max_drawdown": -.02, "realized_only_equity": True}
         backtest = {"period": {"from": "2026-05-01", "to": "2026-10-07"}, "metrics": {"signal_days": 100, "win_rate": .5},
+                    "portfolio_standard": portfolio,
                     "data_collection": {"latest_complete_date": "2026-10-15"}}
         report = {
             "baseline": {"train": {"win_rate": .4}, "test": {"win_rate": .3}},
@@ -42,20 +45,45 @@ class DailyPipelineTests(unittest.TestCase):
             "errors": [], "long_top10": [], "short_top10": [],
             "optimization": {"new_weights": {"volume_growth_pct": .35}},
         }
+        market_history = {
+            "status": "ok", "snapshot_id": "2026-10-17:post_close",
+            "regime": {"snapshot_count": 1, "insufficient_history": True,
+                       "affects_stock_scores": False},
+            "affects_stock_scores": False,
+        }
         order = []
+        effective_gates = []
+        def run_update(notify):
+            order.append(("update", notify))
+            effective = json.loads((Path(tmp) / "strategy_optimization.json").read_text(encoding="utf-8"))
+            effective_gates.append(effective["decision"]["applied_gate"])
+            return latest
         with tempfile.TemporaryDirectory() as tmp, \
              patch.object(daily_pipeline, "DATA", Path(tmp)), \
              patch.object(daily_pipeline, "run_backtest", side_effect=lambda days: order.append(("backtest", days)) or backtest), \
              patch.object(daily_pipeline, "optimize_v2", side_effect=lambda source, output: order.append(("v2", source, output.name)) or v2), \
              patch.object(daily_pipeline, "run_strategy_optimization", side_effect=lambda: order.append(("optimize",)) or report), \
-             patch.object(daily_pipeline, "update", side_effect=lambda notify: order.append(("update", notify)) or latest):
+             patch.object(daily_pipeline, "update", side_effect=run_update), \
+             patch.object(daily_pipeline, "record_market_history", return_value=market_history):
             self.assertEqual(daily_pipeline.main(), 0)
             status = json.loads((Path(tmp) / "daily_status.json").read_text(encoding="utf-8"))
             history = [json.loads(line) for line in (Path(tmp) / "strategy_history.jsonl").read_text(encoding="utf-8").splitlines()]
         self.assertEqual(order, [("backtest", 100), ("v2", backtest, "v2_optimization.json"),
                                  ("optimize",), ("update", False)])
         self.assertEqual(status["status"], "success")
+        self.assertIn("health", status)
+        self.assertIn(status["health"]["overall"], {"ok", "warning"})
+        self.assertNotIn("raw_daily_status", status["health"])
         self.assertEqual(status["data_date"], "2026-10-15")
+        self.assertEqual(status["backtest"]["metrics"], backtest["metrics"])
+        self.assertEqual(status["backtest"]["metrics_scenarios"], {"gross": backtest["metrics"]})
+        self.assertEqual(status["backtest"]["costs"],
+                         {"gross": 0.0, "standard": .00435, "stress": .00535})
+        self.assertEqual(status["backtest"]["portfolio_standard"], portfolio)
+        self.assertEqual(effective_gates, [{"long_score_min": 0}])
+        self.assertEqual(status["strategy_freeze"]["forward_signal_days"], 0)
+        self.assertEqual(status["strategy_freeze"]["minimum_forward_signal_days"], 20)
+        self.assertTrue(status["strategy_freeze"]["not_holdout_reuse"])
         self.assertEqual(status["v2_analysis"]["decision"],
                          {"enabled": False, "status": "research only"})
         self.assertEqual(status["v2_analysis"]["costs"],
@@ -63,7 +91,60 @@ class DailyPipelineTests(unittest.TestCase):
         self.assertEqual(status["v2_analysis"]["directions"]["long"],
                          {"passed": False, "holdout": v2_holdout})
         self.assertTrue(status["v2_analysis"]["limitations"]["source_is_daily_ohlc"])
+        self.assertEqual(status["market_history"], market_history)
+        self.assertFalse(status["market_history"]["affects_stock_scores"])
         self.assertEqual(history[0]["applied_gate"], {"long_score_min": 0})
+
+    def test_market_history_exception_is_isolated_and_keeps_old_regime_summary(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            data = Path(tmp)
+            old = {"snapshot_count": 8, "insufficient_history": True,
+                   "affects_stock_scores": False}
+            (data / "market_regime.json").write_text(json.dumps(old), encoding="utf-8")
+            with patch.object(daily_pipeline, "DATA", data), \
+                 patch.object(daily_pipeline, "capture_market_history", side_effect=ValueError("corrupt history")):
+                result = daily_pipeline.record_market_history(client=object(), clock=lambda: None)
+        self.assertEqual(result["status"], "error")
+        self.assertEqual(result["history_snapshot"]["status"], "error")
+        self.assertIn("corrupt history", result["error"])
+        self.assertEqual(result["regime"], old)
+        self.assertFalse(result["affects_stock_scores"])
+
+    def test_update_uses_frozen_gate_and_failure_does_not_replace_registry(self):
+        gate_a = {"long_score_min": 55, "short_score_min": 70,
+                  "short_enabled": True, "volume_growth_min": 20}
+        gate_b = {"long_score_min": 70, "short_score_min": 70,
+                  "short_enabled": False, "volume_growth_min": 50}
+        registry = {
+            "active_gate": gate_a, "strategy_version": 3, "activated_on": "2026-10-01",
+            "minimum_forward_signal_days": 20, "forward_signal_days": 5,
+            "last_observed_date": "2026-10-14", "status": "forward_observation",
+            "forward_observation": {"not_holdout_reuse": True},
+        }
+        backtest = {"period": {}, "metrics": {"signal_days": 100},
+                    "data_collection": {"latest_complete_date": "2026-10-15"}}
+        report = {
+            "baseline": {"train": {}, "test": {}}, "candidate": {"train": {}, "test": {}},
+            "decision": {"enabled": True, "upgrade_approved": True, "cost_validated": True,
+                         "applied_mode": "candidate", "applied_gate": gate_b, "status": "approved"},
+        }
+        seen = []
+        with tempfile.TemporaryDirectory() as tmp:
+            data = Path(tmp)
+            (data / "strategy_registry.json").write_text(json.dumps(registry), encoding="utf-8")
+            def failing_update(notify):
+                effective = json.loads((data / "strategy_optimization.json").read_text(encoding="utf-8"))
+                seen.append(effective["decision"]["applied_gate"])
+                raise RuntimeError("scan failed")
+            with patch.object(daily_pipeline, "DATA", data), \
+                 patch.object(daily_pipeline, "run_backtest", return_value=backtest), \
+                 patch.object(daily_pipeline, "optimize_v2", return_value={}), \
+                 patch.object(daily_pipeline, "run_strategy_optimization", return_value=report), \
+                 patch.object(daily_pipeline, "update", side_effect=failing_update):
+                self.assertEqual(daily_pipeline.main(), 1)
+            unchanged = json.loads((data / "strategy_registry.json").read_text(encoding="utf-8"))
+        self.assertEqual(seen, [gate_a])
+        self.assertEqual(unchanged, registry)
 
     def test_history_is_idempotent_by_data_date(self):
         record = {"data_date": "2026-10-15", "applied_gate": {}}
@@ -94,6 +175,8 @@ class DailyPipelineTests(unittest.TestCase):
             self.assertEqual(daily_pipeline.main(), 1)
             status = json.loads((Path(tmp) / "daily_status.json").read_text(encoding="utf-8"))
         self.assertEqual(status["status"], "error")
+        self.assertEqual(status["health"]["overall"], "error")
+        self.assertNotIn("daily_status", status["health"].get("documents", {}))
         self.assertIn("offline", status["error"])
         self.assertIsNotNone(status["completed_at"])
 

@@ -26,6 +26,95 @@ class AppCliTests(unittest.TestCase):
         with patch("app.run_backtest", return_value={}) as runner:
             self.assertEqual(app.main(["--backtest", "100"]), 0)
         runner.assert_called_once_with(100)
+
+    def test_backtest_output_discloses_cost_scenarios_and_signal_batch_limit(self):
+        def metric(average):
+            values = {"signals": 1, "trades": 1, "untriggered": 0, "unresolved": 0,
+                      "win_rate": 1.0, "average_return": average, "median_return": average,
+                      "cumulative_return": average, "max_drawdown": 0.0, "profit_factor": None}
+            return {**values, "signal_days": 1, "long": dict(values),
+                    "short": {**values, "signals": 0, "trades": 0}}
+
+        scenarios = {"gross": metric(0.01), "standard": metric(0.00565),
+                     "stress": metric(0.00465)}
+        result = {"period": {"from": "2026-01-01", "to": "2026-01-01"},
+                  "metrics": scenarios["gross"], "metrics_scenarios": scenarios,
+                  "costs": {"gross": 0.0, "standard": 0.00435, "stress": 0.00535},
+                  "portfolio_standard": {"initial_capital": 1_000_000, "final_capital": 1_010_000,
+                                         "net_return": .01, "max_drawdown": -.02,
+                                         "peak_positions": 3, "costs": 435},
+                  "cost_assumption": "fixture"}
+        fetcher = unittest.mock.Mock()
+        fetcher.collect.return_value = [{"date": "2026-01-01"}]
+        fetcher.requests = 0
+        fetcher.cache_hits = 1
+        output = StringIO()
+        with patch("app.OfficialHistoryFetcher", return_value=fetcher), \
+             patch("app.build_backtest", return_value=result), \
+             patch("app.write_backtest_outputs"), redirect_stdout(output):
+            app.run_backtest(1)
+        text = output.getvalue()
+        self.assertIn("gross", text)
+        self.assertIn("standard", text)
+        self.assertIn("0.435%", text)
+        self.assertIn("stress", text)
+        self.assertIn("0.535%", text)
+        self.assertIn("訊號批次，不是帳戶報酬", text)
+        self.assertIn("保守帳戶模型（研究估算）", text)
+        self.assertIn("期末資金 1,010,000", text)
+        self.assertIn("淨報酬 1.00%", text)
+        self.assertIn("最大同時持倉 3", text)
+
+    def test_diagnostics_option_uses_requested_path_without_opening_ui(self):
+        destination = Path("C:/safe/diagnostics.json")
+        output = StringIO()
+        with patch("app.export_diagnostics", return_value=destination) as exporter, \
+             patch("app.app_version", return_value="2026.10.17.6"), redirect_stdout(output):
+            self.assertEqual(app.main(["--diagnostics", str(destination)]), 0)
+        self.assertEqual(exporter.call_args.args[:3], (app.DATA, "2026.10.17.6", destination))
+        self.assertIsNotNone(exporter.call_args.args[3].tzinfo)
+        self.assertIn(str(destination), output.getvalue())
+
+    def test_diagnostics_option_without_path_uses_diagnostics_folder(self):
+        with patch("app.export_diagnostics", side_effect=lambda data, version, path, now: path) as exporter, \
+             patch("app.app_version", return_value="2026.10.17.6"):
+            self.assertEqual(app.main(["--diagnostics"]), 0)
+        destination = exporter.call_args.args[2]
+        self.assertEqual(destination.parent, app.ROOT / "diagnostics")
+        self.assertRegex(destination.name, r"^health-\d{8}-\d{6}\.json$")
+
+    def test_backup_option_uses_optional_destination_without_opening_ui(self):
+        result = {"path": Path("C:/safe/backup.zip"), "file_count": 3, "completed": True}
+        output = StringIO()
+        with patch("app.create_backup", return_value=result) as creator, redirect_stdout(output):
+            self.assertEqual(app.main(["--backup", "C:/safe/backup.zip"]), 0)
+        creator.assert_called_once_with(app.ROOT, Path("C:/safe/backup.zip"))
+        self.assertIn("3", output.getvalue())
+        self.assertNotIn("secret", output.getvalue())
+
+    def test_backup_option_without_path_uses_timestamped_default(self):
+        result = {"path": Path("backups/TaiStockScanner-backup-20261017-120000.zip"),
+                  "file_count": 0, "completed": True}
+        with patch("app.create_backup", return_value=result) as creator:
+            self.assertEqual(app.main(["--backup"]), 0)
+        creator.assert_called_once_with(app.ROOT, None)
+
+    def test_restore_option_runs_safe_restore_without_opening_ui(self):
+        source = Path("C:/safe/backup.zip")
+        result = {"path": source, "file_count": 2, "completed": True}
+        output = StringIO()
+        with patch("app.restore_backup", return_value=result) as restorer, redirect_stdout(output):
+            self.assertEqual(app.main(["--restore", str(source)]), 0)
+        restorer.assert_called_once_with(app.ROOT, source)
+        self.assertIn("完成", output.getvalue())
+
+    def test_backup_failure_returns_nonzero_without_sensitive_output(self):
+        errors = StringIO()
+        with patch("app.create_backup", side_effect=ValueError("unsafe archive")), \
+             unittest.mock.patch("sys.stderr", errors):
+            self.assertEqual(app.main(["--backup"]), 1)
+        self.assertIn("備份失敗", errors.getvalue())
+
     def test_optimize_strategy_option_runs_without_opening_ui(self):
         with patch("app.run_strategy_optimization", return_value={}) as runner:
             self.assertEqual(app.main(["--optimize-strategy"]), 0)

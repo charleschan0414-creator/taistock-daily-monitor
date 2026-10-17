@@ -1,7 +1,7 @@
 import unittest
 
 from taistock.models import Quote
-from taistock.core import is_common_stock, evaluate_candidates, round_tw_price
+from taistock.core import audit_candidates, is_common_stock, evaluate_candidates, round_tw_price
 
 
 class CommonStockTests(unittest.TestCase):
@@ -28,6 +28,41 @@ class ScreeningTests(unittest.TestCase):
     def test_zero_previous_volume_is_not_eligible(self):
         rows = [{"code":"1111","name":"甲","market":"上市","date":"2026-10-15","close":12,"closes":[8,9,10,11,12],"volume":2000,"prev_volume":0,"institutional_net":3000,"volume_rank":1}]
         self.assertEqual(evaluate_candidates(rows), [])
+
+    def test_audit_preserves_every_row_with_reasons_and_exact_eligible_values(self):
+        rows = [
+            {"code":"1111","name":"多","market":"上市","date":"2026-10-15","close":12,"closes":[10,10.5,11,11.5,12],"volume":2000,"prev_volume":1000,"institutional_net":3000,"volume_rank":1},
+            {"code":"2222","name":"歷史不足","market":"上櫃","date":"2026-10-15","close":10,"closes":[9,10],"volume":1000,"prev_volume":0,"institutional_net":0,"volume_rank":2},
+            {"code":"3333","name":"量與方向不合","market":"上市","date":"2026-10-15","close":10,"closes":[10,10,10,10,10],"volume":1100,"prev_volume":1000,"institutional_net":1000,"volume_rank":3},
+        ]
+        evaluated = evaluate_candidates(rows)
+        audited = audit_candidates(rows)
+        self.assertEqual(len(audited), 3)
+        self.assertTrue(audited[0]["eligible"])
+        self.assertEqual(audited[0]["signal_direction"], "long")
+        for key in ("score", "entry_trigger", "stop_loss", "target1", "target2"):
+            self.assertEqual(audited[0][key], evaluated[0][key])
+        self.assertEqual(
+            audited[1]["rejection_reasons"],
+            ["insufficient_history", "zero_previous_volume"],
+        )
+        self.assertEqual(
+            audited[2]["rejection_reasons"],
+            ["volume_growth_below_20", "ma5_institutional_misaligned"],
+        )
+        self.assertFalse(audited[2]["eligible"])
+        self.assertIsNone(audited[2]["signal_direction"])
+        self.assertIsNone(audited[2]["score"])
+
+    def test_audit_does_not_change_evaluate_candidates_output(self):
+        rows = [{"code":"1111","name":"多","market":"上市","date":"2026-10-15","close":12,
+                 "closes":[10,10.5,11,11.5,12],"volume":2000,"prev_volume":1000,
+                 "institutional_net":3000,"volume_rank":1}]
+        before = evaluate_candidates(rows)
+        audit_candidates(rows)
+        self.assertEqual(evaluate_candidates(rows), before)
+        self.assertNotIn("eligible", before[0])
+        self.assertNotIn("rejection_reasons", before[0])
 
     def test_long_and_short_are_symmetric_and_include_reproducible_trade_levels(self):
         rows = [

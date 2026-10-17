@@ -107,16 +107,16 @@
   ],
   "metrics": {
     "signals": 1652,
-    "trades": 1457,
-    "triggered": 1457,
-    "untriggered": 193,
+    "trades": 1458,
+    "triggered": 1458,
+    "untriggered": 192,
     "unresolved": 2,
-    "win_rate": 0.43239533287577214,
-    "average_return": 0.0038274407510558144,
-    "median_return": -0.014634146341463448,
-    "cumulative_return": 0.525205179862392,
-    "max_drawdown": -0.11578242789603599,
-    "profit_factor": 1.2192708337415636,
+    "win_rate": 0.43141289437585734,
+    "average_return": 0.003487358162570384,
+    "median_return": -0.014643080496738979,
+    "cumulative_return": 0.47240434265572384,
+    "max_drawdown": -0.11713597960500322,
+    "profit_factor": 1.1976918856222638,
     "signal_days": 100,
     "long": {
       "signals": 977,
@@ -124,25 +124,25 @@
       "triggered": 892,
       "untriggered": 84,
       "unresolved": 1,
-      "win_rate": 0.4697309417040359,
-      "average_return": 0.00701375964888145,
+      "win_rate": 0.4674887892376682,
+      "average_return": 0.00674659976490199,
       "median_return": -0.014414419613999481,
-      "cumulative_return": 0.7379396366438367,
-      "max_drawdown": -0.13579895587717106,
-      "profit_factor": 1.3898663119573667
+      "cumulative_return": 0.69343832155935,
+      "max_drawdown": -0.13579895587717083,
+      "profit_factor": 1.3750436532967036
     },
     "short": {
       "signals": 675,
-      "trades": 565,
-      "triggered": 565,
-      "untriggered": 109,
+      "trades": 566,
+      "triggered": 566,
+      "untriggered": 108,
       "unresolved": 1,
-      "win_rate": 0.3734513274336283,
-      "average_return": -0.0012029954557768545,
-      "median_return": -0.014705882352941176,
-      "cumulative_return": -0.19119387369357155,
-      "max_drawdown": -0.28051513034977993,
-      "profit_factor": 0.9275779687806932
+      "win_rate": 0.3745583038869258,
+      "average_return": -0.0016491144686659961,
+      "median_return": -0.014715725647688813,
+      "cumulative_return": -0.22125999551495024,
+      "max_drawdown": -0.28451014994212287,
+      "profit_factor": 0.9035108754850056
     }
   },
   "walk_forward": [
@@ -208,8 +208,8 @@
       },
       "sample_count": 32,
       "changed": true,
-      "baseline_metric": 0.014247222051120608,
-      "selected_metric": 0.019406707274606562
+      "baseline_metric": 0.011875765288668266,
+      "selected_metric": 0.017338971089223318
     },
     {
       "signal_date": "2026-05-25",
@@ -221,8 +221,8 @@
       },
       "sample_count": 47,
       "changed": false,
-      "baseline_metric": 0.012741482090896556,
-      "selected_metric": 0.012741482090896556
+      "baseline_metric": 0.012551656730228376,
+      "selected_metric": 0.012551656730228376
     },
     {
       "signal_date": "2026-05-26",
@@ -234,8 +234,8 @@
       },
       "sample_count": 59,
       "changed": false,
-      "baseline_metric": 0.013524319325192413,
-      "selected_metric": 0.013524319325192413
+      "baseline_metric": 0.013372459036657864,
+      "selected_metric": 0.013372459036657864
     },
     {
       "signal_date": "2026-05-27",
@@ -247,8 +247,8 @@
       },
       "sample_count": 71,
       "changed": false,
-      "baseline_metric": 0.012680664822872162,
-      "selected_metric": 0.012680664822872162
+      "baseline_metric": 0.012554114582426704,
+      "selected_metric": 0.012554114582426704
     },
     {
       "signal_date": "2026-05-28",
@@ -260,8 +260,8 @@
       },
       "sample_count": 86,
       "changed": false,
-      "baseline_metric": 0.01471075374279241,
-      "selected_metric": 0.01471075374279241
+      "baseline_metric": 0.014602282108124875,
+      "selected_metric": 0.014602282108124875
     },
     {
       "signal_date": "2026-05-29",
@@ -273,8 +273,8 @@
       },
       "sample_count": 99,
       "changed": false,
-      "baseline_metric": 0.01132703623761211,
-      "selected_metric": 0.01132703623761211
+      "baseline_metric": 0.011232123557278016,
+      "selected_metric": 0.011232123557278016
     },
     {
       "signal_date": "2026-06-01",
@@ -286,8 +286,8 @@
       },
       "sample_count": 113,
       "changed": true,
-      "baseline_metric": 0.010811376774581142,
-      "selected_metric": 0.011748658334546391
+      "baseline_metric": 0.010727009947617503,
+      "selected_metric": 0.011664291507582752
     },
     {
       "signal_date": "2026-06-02",
@@ -299,8 +299,8 @@
       },
       "sample_count": 129,
       "changed": true,
-      "baseline_metric": 0.008957479282475641,
-      "selected_metric": 0.01147068446547892
+      "baseline_metric": 0.008881549138208367,
+      "selected_metric": 0.011394754321211642
     },
     {
       "signal_date": "2026-06-03",
@@ -312,8 +312,8 @@
       },
       "sample_count": 141,
       "changed": true,
-      "baseline_metric": 0.010834123233951309,
-      "selected_metric": 0.01250940462929332
+      "baseline_metric": 0.010761808810839619,
+      "selected_metric": 0.01243709020618163
     },
     {
       "signal_date": "2026-06-04",
@@ -325,8 +325,8 @@
       },
       "sample_count": 157,
       "changed": true,
-      "baseline_metric": 0.010687137075634203,
-      "selected_metric": 0.012346418329793312
+      "baseline_metric": 0.010621110863227878,
+      "selected_metric": 0.012280392117386987
     },
     {
       "signal_date": "2026-06-05",
@@ -338,8 +338,8 @@
       },
       "sample_count": 167,
       "changed": true,
-      "baseline_metric": 0.008144824126129761,
-      "selected_metric": 0.010608651069577637
+      "baseline_metric": 0.00808408001071594,
+      "selected_metric": 0.010547906954163817
     },
     {
       "signal_date": "2026-06-08",
@@ -351,8 +351,8 @@
       },
       "sample_count": 177,
       "changed": true,
-      "baseline_metric": 0.008050275116435066,
-      "selected_metric": 0.010250120601656384
+      "baseline_metric": 0.007996039299101297,
+      "selected_metric": 0.010195884784322618
     },
     {
       "signal_date": "2026-06-09",
@@ -364,8 +364,8 @@
       },
       "sample_count": 194,
       "changed": true,
-      "baseline_metric": 0.008407359110044975,
-      "selected_metric": 0.009426090896452095
+      "baseline_metric": 0.00835673901386679,
+      "selected_metric": 0.009375470800273908
     },
     {
       "signal_date": "2026-06-10",
@@ -377,8 +377,8 @@
       },
       "sample_count": 201,
       "changed": true,
-      "baseline_metric": 0.01075720171041984,
-      "selected_metric": 0.011743071181136409
+      "baseline_metric": 0.010708214520569984,
+      "selected_metric": 0.011694083991286552
     },
     {
       "signal_date": "2026-06-11",
@@ -390,8 +390,8 @@
       },
       "sample_count": 210,
       "changed": true,
-      "baseline_metric": 0.008377362579630433,
-      "selected_metric": 0.009310561737503777
+      "baseline_metric": 0.008310212490082538,
+      "selected_metric": 0.009243411647955882
     },
     {
       "signal_date": "2026-06-12",
@@ -403,8 +403,8 @@
       },
       "sample_count": 231,
       "changed": true,
-      "baseline_metric": 0.007170719158452342,
-      "selected_metric": 0.009000246409489451
+      "baseline_metric": 0.007109164909700104,
+      "selected_metric": 0.008938692160737215
     },
     {
       "signal_date": "2026-06-15",
@@ -416,8 +416,8 @@
       },
       "sample_count": 252,
       "changed": true,
-      "baseline_metric": 0.006394367202272719,
-      "selected_metric": 0.007577647953078515
+      "baseline_metric": 0.006022732259410364,
+      "selected_metric": 0.0070098457204298675
     },
     {
       "signal_date": "2026-06-16",
@@ -429,8 +429,8 @@
       },
       "sample_count": 260,
       "changed": true,
-      "baseline_metric": 0.0065304791038598735,
-      "selected_metric": 0.006920342812435155
+      "baseline_metric": 0.0062362386618308955,
+      "selected_metric": 0.00638093069141894
     },
     {
       "signal_date": "2026-06-17",
@@ -442,8 +442,8 @@
       },
       "sample_count": 273,
       "changed": true,
-      "baseline_metric": 0.005420466669621619,
-      "selected_metric": 0.00589649188647699
+      "baseline_metric": 0.005133402823739689,
+      "selected_metric": 0.0054998896573617345
     },
     {
       "signal_date": "2026-06-18",
@@ -455,8 +455,8 @@
       },
       "sample_count": 283,
       "changed": true,
-      "baseline_metric": 0.005428231866380638,
-      "selected_metric": 0.006403980742884358
+      "baseline_metric": 0.0051607405554452025,
+      "selected_metric": 0.006034419574845143
     },
     {
       "signal_date": "2026-06-22",
@@ -468,8 +468,8 @@
       },
       "sample_count": 296,
       "changed": true,
-      "baseline_metric": 0.00812158838744014,
-      "selected_metric": 0.008916736044666288
+      "baseline_metric": 0.007860041327858825,
+      "selected_metric": 0.008437258603762985
     },
     {
       "signal_date": "2026-06-23",
@@ -481,8 +481,8 @@
       },
       "sample_count": 311,
       "changed": true,
-      "baseline_metric": 0.0080763976665498,
-      "selected_metric": 0.00856679478345481
+      "baseline_metric": 0.00782598026907833,
+      "selected_metric": 0.0082208226261415
     },
     {
       "signal_date": "2026-06-24",
@@ -494,8 +494,8 @@
       },
       "sample_count": 329,
       "changed": true,
-      "baseline_metric": 0.006006029626492659,
-      "selected_metric": 0.006243360462549944
+      "baseline_metric": 0.00576583334728533,
+      "selected_metric": 0.005911509617780035
     },
     {
       "signal_date": "2026-06-25",
@@ -507,8 +507,8 @@
       },
       "sample_count": 341,
       "changed": true,
-      "baseline_metric": 0.004922354713460735,
-      "selected_metric": 0.005060783003984515
+      "baseline_metric": 0.004691577896183105,
+      "selected_metric": 0.004741945917833034
     },
     {
       "signal_date": "2026-06-26",
@@ -520,8 +520,8 @@
       },
       "sample_count": 360,
       "changed": true,
-      "baseline_metric": 0.005582614868050408,
-      "selected_metric": 0.005863358334546886
+      "baseline_metric": 0.00536465898506598,
+      "selected_metric": 0.005463793800460802
     },
     {
       "signal_date": "2026-06-29",
@@ -533,8 +533,8 @@
       },
       "sample_count": 375,
       "changed": true,
-      "baseline_metric": 0.004929584854704412,
-      "selected_metric": 0.005720426590763454
+      "baseline_metric": 0.004719413110397999,
+      "selected_metric": 0.005430057101589783
     },
     {
       "signal_date": "2026-06-30",
@@ -546,8 +546,8 @@
       },
       "sample_count": 393,
       "changed": true,
-      "baseline_metric": 0.005091409389105476,
-      "selected_metric": 0.0057455014566299405
+      "baseline_metric": 0.0048884849463268695,
+      "selected_metric": 0.005465144708462258
     },
     {
       "signal_date": "2026-07-01",
@@ -559,8 +559,8 @@
       },
       "sample_count": 404,
       "changed": true,
-      "baseline_metric": 0.004873501454970328,
-      "selected_metric": 0.006381389629337177
+      "baseline_metric": 0.004458587497602673,
+      "selected_metric": 0.005891624443426749
     },
     {
       "signal_date": "2026-07-02",
@@ -572,8 +572,8 @@
       },
       "sample_count": 426,
       "changed": true,
-      "baseline_metric": 0.0048547796175268795,
-      "selected_metric": 0.006520359783726243
+      "baseline_metric": 0.004453249981364633,
+      "selected_metric": 0.006046393474780667
     },
     {
       "signal_date": "2026-07-03",
@@ -585,8 +585,8 @@
       },
       "sample_count": 441,
       "changed": true,
-      "baseline_metric": 0.004503239459137261,
-      "selected_metric": 0.005426465821314633
+      "baseline_metric": 0.004114257624105086,
+      "selected_metric": 0.004967310959523606
     },
     {
       "signal_date": "2026-07-06",
@@ -598,8 +598,8 @@
       },
       "sample_count": 452,
       "changed": true,
-      "baseline_metric": 0.005358036076820806,
-      "selected_metric": 0.00653777510504831
+      "baseline_metric": 0.004975038577712201,
+      "selected_metric": 0.006085684164207916
     },
     {
       "signal_date": "2026-07-07",
@@ -611,8 +611,8 @@
       },
       "sample_count": 463,
       "changed": true,
-      "baseline_metric": 0.005205296890176977,
-      "selected_metric": 0.005950699314461543
+      "baseline_metric": 0.00482810238347911,
+      "selected_metric": 0.005505458236361153
     },
     {
       "signal_date": "2026-07-08",
@@ -624,8 +624,8 @@
       },
       "sample_count": 483,
       "changed": true,
-      "baseline_metric": 0.003833846065149334,
-      "selected_metric": 0.004603412227127817
+      "baseline_metric": 0.003467745514530816,
+      "selected_metric": 0.00417126647485391
     },
     {
       "signal_date": "2026-07-09",
@@ -637,8 +637,8 @@
       },
       "sample_count": 498,
       "changed": true,
-      "baseline_metric": 0.0035734121388752036,
-      "selected_metric": 0.004800629102823838
+      "baseline_metric": 0.0032227806256067636,
+      "selected_metric": 0.004386743030223477
     },
     {
       "signal_date": "2026-07-13",
@@ -650,8 +650,8 @@
       },
       "sample_count": 511,
       "changed": true,
-      "baseline_metric": 0.004346067134824799,
-      "selected_metric": 0.005341226443252775
+      "baseline_metric": 0.004005041964385632,
+      "selected_metric": 0.005026391448711012
     },
     {
       "signal_date": "2026-07-14",
@@ -663,8 +663,8 @@
       },
       "sample_count": 525,
       "changed": true,
-      "baseline_metric": 0.004075145653974545,
-      "selected_metric": 0.005434761747297609
+      "baseline_metric": 0.003743214488080422,
+      "selected_metric": 0.005128322352610293
     },
     {
       "signal_date": "2026-07-15",
@@ -676,8 +676,8 @@
       },
       "sample_count": 550,
       "changed": true,
-      "baseline_metric": 0.005148574394214287,
-      "selected_metric": 0.005959619514368039
+      "baseline_metric": 0.0048252648170446855,
+      "selected_metric": 0.005661139584477796
     },
     {
       "signal_date": "2026-07-16",
@@ -689,8 +689,8 @@
       },
       "sample_count": 566,
       "changed": true,
-      "baseline_metric": 0.004586151752030571,
-      "selected_metric": 0.005172180930409119
+      "baseline_metric": 0.004271027227447542,
+      "selected_metric": 0.004881257454440148
     },
     {
       "signal_date": "2026-07-17",
@@ -702,8 +702,8 @@
       },
       "sample_count": 572,
       "changed": true,
-      "baseline_metric": 0.0032855785098138517,
-      "selected_metric": 0.004087495354065073
+      "baseline_metric": 0.0029782348376896635,
+      "selected_metric": 0.0038037551737990396
     },
     {
       "signal_date": "2026-07-20",
@@ -715,8 +715,8 @@
       },
       "sample_count": 593,
       "changed": true,
-      "baseline_metric": 0.0036808519261022714,
-      "selected_metric": 0.004462434446548276
+      "baseline_metric": 0.0033809141255955327,
+      "selected_metric": 0.004185531379059737
     },
     {
       "signal_date": "2026-07-21",
@@ -728,8 +728,8 @@
       },
       "sample_count": 610,
       "changed": true,
-      "baseline_metric": 0.00420178879566334,
-      "selected_metric": 0.004682050560771779
+      "baseline_metric": 0.003908908355168525,
+      "selected_metric": 0.004411662859577088
     },
     {
       "signal_date": "2026-07-22",
@@ -741,8 +741,8 @@
       },
       "sample_count": 623,
       "changed": true,
-      "baseline_metric": 0.003950001045247114,
-      "selected_metric": 0.004559876862410298
+      "baseline_metric": 0.003663853488441836,
+      "selected_metric": 0.004295704970438473
     },
     {
       "signal_date": "2026-07-23",
@@ -754,8 +754,8 @@
       },
       "sample_count": 634,
       "changed": true,
-      "baseline_metric": 0.003914680955543815,
-      "selected_metric": 0.004349718256477686
+      "baseline_metric": 0.003634963680913936,
+      "selected_metric": 0.00401953947945942
     },
     {
       "signal_date": "2026-07-24",
@@ -767,8 +767,8 @@
       },
       "sample_count": 650,
       "changed": true,
-      "baseline_metric": 0.0036482500917141406,
-      "selected_metric": 0.004059136964285894
+      "baseline_metric": 0.0033746804494937093,
+      "selected_metric": 0.0037362148636856116
     },
     {
       "signal_date": "2026-07-27",
@@ -780,8 +780,8 @@
       },
       "sample_count": 665,
       "changed": true,
-      "baseline_metric": 0.0029864430186513084,
-      "selected_metric": 0.003397099914809027
+      "baseline_metric": 0.002715846959498491,
+      "selected_metric": 0.0030776878370413563
     },
     {
       "signal_date": "2026-07-28",
@@ -793,8 +793,8 @@
       },
       "sample_count": 678,
       "changed": true,
-      "baseline_metric": 0.004197997797362587,
-      "selected_metric": 0.004664916275422066
+      "baseline_metric": 0.003935946876919858,
+      "selected_metric": 0.0044229904375110264
     },
     {
       "signal_date": "2026-07-29",
@@ -806,8 +806,8 @@
       },
       "sample_count": 700,
       "changed": true,
-      "baseline_metric": 0.004175261024571728,
-      "selected_metric": 0.004637474385642491
+      "baseline_metric": 0.003918613215890705,
+      "selected_metric": 0.004334526847965938
     },
     {
       "signal_date": "2026-07-30",
@@ -819,8 +819,8 @@
       },
       "sample_count": 727,
       "changed": true,
-      "baseline_metric": 0.0039721887895684,
-      "selected_metric": 0.004434897448528199
+      "baseline_metric": 0.003720725785103155,
+      "selected_metric": 0.00413807006312794
     },
     {
       "signal_date": "2026-07-31",
@@ -832,8 +832,8 @@
       },
       "sample_count": 745,
       "changed": true,
-      "baseline_metric": 0.0034247033404301904,
-      "selected_metric": 0.004631876423589021
+      "baseline_metric": 0.0031782198013999012,
+      "selected_metric": 0.004404322417633092
     },
     {
       "signal_date": "2026-08-03",
@@ -845,8 +845,8 @@
       },
       "sample_count": 751,
       "changed": true,
-      "baseline_metric": 0.0035831167385112096,
-      "selected_metric": 0.0047785995415030634
+      "baseline_metric": 0.003339049704765531,
+      "selected_metric": 0.004553276457174154
     },
     {
       "signal_date": "2026-08-04",
@@ -858,8 +858,8 @@
       },
       "sample_count": 760,
       "changed": true,
-      "baseline_metric": 0.002548157608483997,
-      "selected_metric": 0.003997215137342068
+      "baseline_metric": 0.0023087841715411198,
+      "selected_metric": 0.0037762251892502537
     },
     {
       "signal_date": "2026-08-05",
@@ -871,8 +871,8 @@
       },
       "sample_count": 769,
       "changed": true,
-      "baseline_metric": 0.003315543814929126,
-      "selected_metric": 0.004739519471276121
+      "baseline_metric": 0.0030806868579285676,
+      "selected_metric": 0.004522699144846415
     },
     {
       "signal_date": "2026-08-06",
@@ -884,8 +884,8 @@
       },
       "sample_count": 781,
       "changed": true,
-      "baseline_metric": 0.003869304429705788,
-      "selected_metric": 0.004643829285296796
+      "baseline_metric": 0.0036409114256501984,
+      "selected_metric": 0.004432976490787173
     },
     {
       "signal_date": "2026-08-07",
@@ -897,8 +897,8 @@
       },
       "sample_count": 790,
       "changed": true,
-      "baseline_metric": 0.003608839248335485,
-      "selected_metric": 0.00436940870112305
+      "baseline_metric": 0.0033845614335421587,
+      "selected_metric": 0.004162355056064053
     },
     {
       "signal_date": "2026-08-10",
@@ -910,8 +910,8 @@
       },
       "sample_count": 799,
       "changed": true,
-      "baseline_metric": 0.003824860271480625,
-      "selected_metric": 0.0043445164830826265
+      "baseline_metric": 0.003602584937176525,
+      "selected_metric": 0.004139311531283084
     },
     {
       "signal_date": "2026-08-11",
@@ -923,8 +923,8 @@
       },
       "sample_count": 812,
       "changed": true,
-      "baseline_metric": 0.004129051781271585,
-      "selected_metric": 0.004582322493119127
+      "baseline_metric": 0.003910676014235977,
+      "selected_metric": 0.0043807176281932605
     },
     {
       "signal_date": "2026-08-12",
@@ -936,8 +936,8 @@
       },
       "sample_count": 829,
       "changed": true,
-      "baseline_metric": 0.00473440648927668,
-      "selected_metric": 0.005796850822880334
+      "baseline_metric": 0.004521630100883012,
+      "selected_metric": 0.005600415313465387
     },
     {
       "signal_date": "2026-08-13",
@@ -949,8 +949,8 @@
       },
       "sample_count": 840,
       "changed": true,
-      "baseline_metric": 0.004508524813961119,
-      "selected_metric": 0.005921376765791533
+      "baseline_metric": 0.0042975516152996,
+      "selected_metric": 0.005726605964083494
     },
     {
       "signal_date": "2026-08-14",
@@ -962,8 +962,8 @@
       },
       "sample_count": 850,
       "changed": true,
-      "baseline_metric": 0.004373915608256099,
-      "selected_metric": 0.00575173817285105
+      "baseline_metric": 0.004168173150057262,
+      "selected_metric": 0.005561796399284531
     },
     {
       "signal_date": "2026-08-17",
@@ -975,8 +975,8 @@
       },
       "sample_count": 869,
       "changed": true,
-      "baseline_metric": 0.004663117540220528,
-      "selected_metric": 0.005790799982071611
+      "baseline_metric": 0.0044590614956134846,
+      "selected_metric": 0.005602415108288425
     },
     {
       "signal_date": "2026-08-18",
@@ -988,8 +988,8 @@
       },
       "sample_count": 888,
       "changed": true,
-      "baseline_metric": 0.003845199162963104,
-      "selected_metric": 0.005036527349299989
+      "baseline_metric": 0.0036460404634266305,
+      "selected_metric": 0.004852663712487599
     },
     {
       "signal_date": "2026-08-19",
@@ -1001,8 +1001,8 @@
       },
       "sample_count": 903,
       "changed": true,
-      "baseline_metric": 0.0036269117662320626,
-      "selected_metric": 0.005007089924269599
+      "baseline_metric": 0.003430889424168603,
+      "selected_metric": 0.004826121777800712
     },
     {
       "signal_date": "2026-08-20",
@@ -1014,8 +1014,8 @@
       },
       "sample_count": 924,
       "changed": true,
-      "baseline_metric": 0.0038867916476191845,
-      "selected_metric": 0.005122170892392791
+      "baseline_metric": 0.003693808411634228,
+      "selected_metric": 0.0049240933913616315
     },
     {
       "signal_date": "2026-08-21",
@@ -1027,8 +1027,8 @@
       },
       "sample_count": 938,
       "changed": true,
-      "baseline_metric": 0.00310147886647745,
-      "selected_metric": 0.004695980585848373
+      "baseline_metric": 0.002911441939438829,
+      "selected_metric": 0.004500927168802423
     },
     {
       "signal_date": "2026-08-24",
@@ -1040,8 +1040,8 @@
       },
       "sample_count": 952,
       "changed": true,
-      "baseline_metric": 0.003217523448351744,
-      "selected_metric": 0.004932531796755159
+      "baseline_metric": 0.0030303442194640796,
+      "selected_metric": 0.004740411513800125
     },
     {
       "signal_date": "2026-08-25",
@@ -1053,8 +1053,8 @@
       },
       "sample_count": 964,
       "changed": true,
-      "baseline_metric": 0.003091258774053741,
-      "selected_metric": 0.00470290337794509
+      "baseline_metric": 0.002906852570779228,
+      "selected_metric": 0.004513629321404204
     },
     {
       "signal_date": "2026-08-26",
@@ -1066,8 +1066,8 @@
       },
       "sample_count": 982,
       "changed": true,
-      "baseline_metric": 0.003702382467160121,
-      "selected_metric": 0.0049676551568090125
+      "baseline_metric": 0.00352066832524728,
+      "selected_metric": 0.004781144225181132
     },
     {
       "signal_date": "2026-08-27",
@@ -1079,8 +1079,8 @@
       },
       "sample_count": 1001,
       "changed": true,
-      "baseline_metric": 0.0030172269936038546,
-      "selected_metric": 0.0042421517840729416
+      "baseline_metric": 0.002838127443660982,
+      "selected_metric": 0.004058324462972082
     },
     {
       "signal_date": "2026-08-28",
@@ -1092,8 +1092,8 @@
       },
       "sample_count": 1013,
       "changed": true,
-      "baseline_metric": 0.003072740016105839,
-      "selected_metric": 0.00448995295802438
+      "baseline_metric": 0.0028961808853110913,
+      "selected_metric": 0.004308733116655447
     },
     {
       "signal_date": "2026-08-31",
@@ -1105,8 +1105,8 @@
       },
       "sample_count": 1026,
       "changed": true,
-      "baseline_metric": 0.00280807589247881,
-      "selected_metric": 0.003904520954192285
+      "baseline_metric": 0.002633986120156716,
+      "selected_metric": 0.003699025071992105
     },
     {
       "signal_date": "2026-09-01",
@@ -1118,8 +1118,8 @@
       },
       "sample_count": 1040,
       "changed": true,
-      "baseline_metric": 0.0030547839238578706,
-      "selected_metric": 0.004129876578971793
+      "baseline_metric": 0.002883095389774702,
+      "selected_metric": 0.003953655905640624
     },
     {
       "signal_date": "2026-09-02",
@@ -1131,8 +1131,8 @@
       },
       "sample_count": 1054,
       "changed": true,
-      "baseline_metric": 0.0028994446337901303,
-      "selected_metric": 0.003912732956511709
+      "baseline_metric": 0.002730091998129862,
+      "selected_metric": 0.0037389098433619162
     },
     {
       "signal_date": "2026-09-03",
@@ -1144,8 +1144,8 @@
       },
       "sample_count": 1064,
       "changed": true,
-      "baseline_metric": 0.002746579296701744,
-      "selected_metric": 0.0037897442472622244
+      "baseline_metric": 0.002579499850781882,
+      "selected_metric": 0.003592523367029837
     },
     {
       "signal_date": "2026-09-04",
@@ -1157,8 +1157,8 @@
       },
       "sample_count": 1085,
       "changed": true,
-      "baseline_metric": 0.0024445833482415603,
-      "selected_metric": 0.003645058191404266
+      "baseline_metric": 0.0022797168751153385,
+      "selected_metric": 0.0034758396640332764
     },
     {
       "signal_date": "2026-09-07",
@@ -1170,8 +1170,8 @@
       },
       "sample_count": 1100,
       "changed": true,
-      "baseline_metric": 0.002320661857274261,
-      "selected_metric": 0.003446151565215513
+      "baseline_metric": 0.002157950501443807,
+      "selected_metric": 0.003279145044738262
     },
     {
       "signal_date": "2026-09-08",
@@ -1183,8 +1183,8 @@
       },
       "sample_count": 1110,
       "changed": true,
-      "baseline_metric": 0.001999255065141232,
-      "selected_metric": 0.003188013257258216
+      "baseline_metric": 0.0018386432106763323,
+      "selected_metric": 0.003023161659625833
     },
     {
       "signal_date": "2026-09-09",
@@ -1196,8 +1196,8 @@
       },
       "sample_count": 1120,
       "changed": true,
-      "baseline_metric": 0.001858989952430623,
-      "selected_metric": 0.002865955017718826
+      "baseline_metric": 0.0017004241088506265,
+      "selected_metric": 0.0027032034404384465
     },
     {
       "signal_date": "2026-09-10",
@@ -1209,8 +1209,8 @@
       },
       "sample_count": 1133,
       "changed": true,
-      "baseline_metric": 0.001649981034162131,
-      "selected_metric": 0.0022910235076425735
+      "baseline_metric": 0.0014934097294950904,
+      "selected_metric": 0.0021303191200135203
     },
     {
       "signal_date": "2026-09-11",
@@ -1222,8 +1222,8 @@
       },
       "sample_count": 1143,
       "changed": true,
-      "baseline_metric": 0.0021796210031129015,
-      "selected_metric": 0.002825969869532791
+      "baseline_metric": 0.0020249946835970045,
+      "selected_metric": 0.0026672618097003716
     },
     {
       "signal_date": "2026-09-14",
@@ -1235,8 +1235,8 @@
       },
       "sample_count": 1158,
       "changed": true,
-      "baseline_metric": 0.0013881963891289556,
-      "selected_metric": 0.0021827979143163754
+      "baseline_metric": 0.001235467325067241,
+      "selected_metric": 0.0020260371926414094
     },
     {
       "signal_date": "2026-09-15",
@@ -1248,8 +1248,8 @@
       },
       "sample_count": 1181,
       "changed": true,
-      "baseline_metric": 0.0018215379610583174,
-      "selected_metric": 0.0025774722461164644
+      "baseline_metric": 0.0016706601583791692,
+      "selected_metric": 0.0024226116544011946
     },
     {
       "signal_date": "2026-09-16",
@@ -1261,21 +1261,21 @@
       },
       "sample_count": 1194,
       "changed": true,
-      "baseline_metric": 0.0015395561415892864,
-      "selected_metric": 0.002323748779119757
+      "baseline_metric": 0.0013904852587027024,
+      "selected_metric": 0.002170742805269341
     },
     {
       "signal_date": "2026-09-17",
       "weights": {
-        "volume_growth_pct": 0.45,
-        "ma5_distance_pct": 0.25,
-        "institutional_lots": 0.2,
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
       "sample_count": 1208,
       "changed": true,
-      "baseline_metric": 0.001538846478938342,
-      "selected_metric": 0.002406754561515136
+      "baseline_metric": 0.0013915397485119547,
+      "selected_metric": 0.0022274076200556455
     },
     {
       "signal_date": "2026-09-18",
@@ -1287,8 +1287,8 @@
       },
       "sample_count": 1237,
       "changed": true,
-      "baseline_metric": 0.0018007671709221813,
-      "selected_metric": 0.0025823693512233214
+      "baseline_metric": 0.001655183326231775,
+      "selected_metric": 0.002396241201535437
     },
     {
       "signal_date": "2026-09-21",
@@ -1298,10 +1298,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 1246,
+      "sample_count": 1245,
       "changed": true,
-      "baseline_metric": 0.002029085351770381,
-      "selected_metric": 0.00280614333334884
+      "baseline_metric": 0.0016767038287061734,
+      "selected_metric": 0.002413453227990628
     },
     {
       "signal_date": "2026-09-22",
@@ -1311,10 +1311,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 1259,
+      "sample_count": 1258,
       "changed": true,
-      "baseline_metric": 0.0023777786742915723,
-      "selected_metric": 0.0028865616079775044
+      "baseline_metric": 0.002195302509825136,
+      "selected_metric": 0.0027397110468681965
     },
     {
       "signal_date": "2026-09-23",
@@ -1326,21 +1326,21 @@
       },
       "sample_count": 1273,
       "changed": true,
-      "baseline_metric": 0.00283484701991948,
-      "selected_metric": 0.003364033157815192
+      "baseline_metric": 0.002654444448231071,
+      "selected_metric": 0.0032188513530821265
     },
     {
       "signal_date": "2026-09-24",
       "weights": {
-        "volume_growth_pct": 0.45,
-        "ma5_distance_pct": 0.25,
-        "institutional_lots": 0.2,
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
       "sample_count": 1287,
       "changed": true,
-      "baseline_metric": 0.0027844237796690904,
-      "selected_metric": 0.003376538812886224
+      "baseline_metric": 0.002436255370291531,
+      "selected_metric": 0.0032235660439632525
     },
     {
       "signal_date": "2026-09-29",
@@ -1352,21 +1352,21 @@
       },
       "sample_count": 1295,
       "changed": true,
-      "baseline_metric": 0.002223817074209583,
-      "selected_metric": 0.0028403750531250764
+      "baseline_metric": 0.0018795172027139962,
+      "selected_metric": 0.0026984195107194126
     },
     {
       "signal_date": "2026-09-30",
       "weights": {
-        "volume_growth_pct": 0.45,
-        "ma5_distance_pct": 0.25,
-        "institutional_lots": 0.2,
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 1313,
+      "sample_count": 1312,
       "changed": true,
-      "baseline_metric": 0.0024625643014177133,
-      "selected_metric": 0.003060686377278164
+      "baseline_metric": 0.0021220479449935072,
+      "selected_metric": 0.0028850546994797542
     },
     {
       "signal_date": "2026-10-01",
@@ -1378,47 +1378,47 @@
       },
       "sample_count": 1331,
       "changed": true,
-      "baseline_metric": 0.0027310719700734043,
-      "selected_metric": 0.003273314274871774
+      "baseline_metric": 0.002366788669598376,
+      "selected_metric": 0.0030746649768045573
     },
     {
       "signal_date": "2026-10-02",
       "weights": {
         "volume_growth_pct": 0.25,
-        "ma5_distance_pct": 0.4,
-        "institutional_lots": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 1344,
+      "sample_count": 1345,
       "changed": true,
-      "baseline_metric": 0.002976306107470678,
-      "selected_metric": 0.003196165680414867
+      "baseline_metric": 0.0026679564085116793,
+      "selected_metric": 0.0030231293939177954
     },
     {
       "signal_date": "2026-10-05",
       "weights": {
         "volume_growth_pct": 0.25,
-        "ma5_distance_pct": 0.4,
-        "institutional_lots": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
       "sample_count": 1358,
       "changed": true,
-      "baseline_metric": 0.003366828066006439,
-      "selected_metric": 0.0035637528844945196
+      "baseline_metric": 0.003229149366654398,
+      "selected_metric": 0.003425425155143494
     },
     {
       "signal_date": "2026-10-06",
       "weights": {
         "volume_growth_pct": 0.25,
-        "ma5_distance_pct": 0.4,
-        "institutional_lots": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 1377,
+      "sample_count": 1376,
       "changed": true,
-      "baseline_metric": 0.0032910885203183454,
-      "selected_metric": 0.003583747799069426
+      "baseline_metric": 0.002652054000799567,
+      "selected_metric": 0.0031951637393451433
     },
     {
       "signal_date": "2026-10-07",
@@ -1430,8 +1430,8 @@
       },
       "sample_count": 1392,
       "changed": true,
-      "baseline_metric": 0.0030042400711449723,
-      "selected_metric": 0.00332409508601459
+      "baseline_metric": 0.0025465841464290075,
+      "selected_metric": 0.003130898996332786
     },
     {
       "signal_date": "2026-10-08",
@@ -1441,16 +1441,16 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 1409,
+      "sample_count": 1408,
       "changed": true,
-      "baseline_metric": 0.002827050056651239,
-      "selected_metric": 0.003061231063480467
+      "baseline_metric": 0.002319514101603171,
+      "selected_metric": 0.002715862354253027
     }
   ],
   "optimization": {
     "source": "walk_forward_backtest_100d",
     "minimum_samples": 30,
-    "sample_count": 1457,
+    "sample_count": 1458,
     "changed": true,
     "period": {
       "from": "2026-05-18",
@@ -1469,18 +1469,202 @@
       "volume_rank": 0.1
     },
     "metrics": {
-      "baseline": 0.003194481788470263,
-      "selected": 0.003415194791006881
+      "baseline": 0.002686261874956711,
+      "selected": 0.003349201163688031
     },
-    "updated_at": "2026-10-17T14:34:37+00:00"
+    "updated_at": "2026-10-18T05:23:25+08:00"
   },
   "cost_rate": 0.0,
-  "cost_assumption": "未計入手續費、交易稅、滑價、借券費與融券限制",
-  "completed_at": "2026-10-17T14:34:37+00:00",
+  "cost_assumption": "gross 未扣成本；standard 每筆已成交扣雙邊總成本 0.435%；stress 扣 0.535%；未觸發不扣成本；未另計固定滑價、借券費與融券限制",
+  "completed_at": "2026-10-18T05:23:25+08:00",
   "data_collection": {
     "complete_trading_days": 110,
     "latest_complete_date": "2026-10-16",
     "network_requests": 10,
     "cache_hits": 450
+  },
+  "portfolio_standard": {
+    "initial_capital": 1000000.0,
+    "final_capital": 713307.6510000011,
+    "total_return": -0.28669234899999885,
+    "net_return": -0.28669234899999885,
+    "max_drawdown": -0.3700555331510236,
+    "peak_positions": 10,
+    "open_positions": 0,
+    "gross_pnl": 90019.99999999999,
+    "net_pnl": -286692.3489999997,
+    "costs": 376712.3489999997,
+    "realized_only_equity": true,
+    "model": {
+      "risk_per_trade": 0.005,
+      "max_positions": 10,
+      "max_new_per_direction_per_day": 5,
+      "max_notional_per_position": 0.2,
+      "cost_rate": 0.00435,
+      "board_lot_shares": 1000
+    },
+    "event_order": "existing_exits_then_priority_entries_then_same_day_exits",
+    "exposure": {
+      "peak_notional": 1126450.0,
+      "peak_fraction_of_initial_capital": 1.12645,
+      "by_direction": {
+        "long": {
+          "peak_notional": 913200.0,
+          "realized_trades": 415,
+          "gross_pnl": 208700.00000000003,
+          "net_pnl": -6565.709500000243
+        },
+        "short": {
+          "peak_notional": 1038050.0,
+          "realized_trades": 277,
+          "gross_pnl": -118680.0000000002,
+          "net_pnl": -280126.63950000034
+        }
+      }
+    },
+    "borrow_fees_included": false,
+    "short_availability_mode": "assumed_available",
+    "realized_trade_count": 692,
+    "skipped_count": 766,
+    "equity_curve_points": 104
+  },
+  "costs": {
+    "gross": 0.0,
+    "standard": 0.00435,
+    "stress": 0.00535
+  },
+  "metrics_scenarios": {
+    "gross": {
+      "signals": 1652,
+      "trades": 1458,
+      "triggered": 1458,
+      "untriggered": 192,
+      "unresolved": 2,
+      "win_rate": 0.43141289437585734,
+      "average_return": 0.003487358162570384,
+      "median_return": -0.014643080496738979,
+      "cumulative_return": 0.47240434265572384,
+      "max_drawdown": -0.11713597960500322,
+      "profit_factor": 1.1976918856222638,
+      "signal_days": 100,
+      "long": {
+        "signals": 977,
+        "trades": 892,
+        "triggered": 892,
+        "untriggered": 84,
+        "unresolved": 1,
+        "win_rate": 0.4674887892376682,
+        "average_return": 0.00674659976490199,
+        "median_return": -0.014414419613999481,
+        "cumulative_return": 0.69343832155935,
+        "max_drawdown": -0.13579895587717083,
+        "profit_factor": 1.3750436532967036
+      },
+      "short": {
+        "signals": 675,
+        "trades": 566,
+        "triggered": 566,
+        "untriggered": 108,
+        "unresolved": 1,
+        "win_rate": 0.3745583038869258,
+        "average_return": -0.0016491144686659961,
+        "median_return": -0.014715725647688813,
+        "cumulative_return": -0.22125999551495024,
+        "max_drawdown": -0.28451014994212287,
+        "profit_factor": 0.9035108754850056
+      }
+    },
+    "standard": {
+      "signals": 1652,
+      "trades": 1458,
+      "triggered": 1458,
+      "untriggered": 192,
+      "unresolved": 2,
+      "win_rate": 0.42661179698216734,
+      "average_return": -0.0008626418374296115,
+      "median_return": -0.01899308049673898,
+      "cumulative_return": -0.04631878779195264,
+      "max_drawdown": -0.22544182789921285,
+      "profit_factor": 0.9571280000321694,
+      "signal_days": 100,
+      "long": {
+        "signals": 977,
+        "trades": 892,
+        "triggered": 892,
+        "untriggered": 84,
+        "unresolved": 1,
+        "win_rate": 0.4641255605381166,
+        "average_return": 0.002396599764902,
+        "median_return": -0.01876441961399948,
+        "cumulative_return": 0.09745138405528375,
+        "max_drawdown": -0.23066436784759747,
+        "profit_factor": 1.1179906365140115
+      },
+      "short": {
+        "signals": 675,
+        "trades": 566,
+        "triggered": 566,
+        "untriggered": 108,
+        "unresolved": 1,
+        "win_rate": 0.3674911660777385,
+        "average_return": -0.0059991144686659965,
+        "median_return": -0.01906572564768881,
+        "cumulative_return": -0.4926321106038215,
+        "max_drawdown": -0.5084501725486932,
+        "profit_factor": 0.6973384527802232
+      }
+    },
+    "stress": {
+      "signals": 1652,
+      "trades": 1458,
+      "triggered": 1458,
+      "untriggered": 192,
+      "unresolved": 2,
+      "win_rate": 0.4252400548696845,
+      "average_return": -0.001862641837429611,
+      "median_return": -0.01999308049673898,
+      "cumulative_return": -0.13716981571010034,
+      "max_drawdown": -0.2750205893087653,
+      "profit_factor": 0.9099946230809361,
+      "signal_days": 100,
+      "long": {
+        "signals": 977,
+        "trades": 892,
+        "triggered": 892,
+        "untriggered": 84,
+        "unresolved": 1,
+        "win_rate": 0.46300448430493274,
+        "average_return": 0.0013965997649019967,
+        "median_return": -0.01976441961399948,
+        "cumulative_return": -0.006969064951592774,
+        "max_drawdown": -0.2756895081270445,
+        "profit_factor": 1.0669905787828997
+      },
+      "short": {
+        "signals": 675,
+        "trades": 566,
+        "triggered": 566,
+        "untriggered": 108,
+        "unresolved": 1,
+        "win_rate": 0.3657243816254417,
+        "average_return": -0.006999114468665992,
+        "median_return": -0.020065725647688812,
+        "cumulative_return": -0.5403438509869989,
+        "max_drawdown": -0.5531306321376774,
+        "profit_factor": 0.6578083705116574
+      }
+    }
+  },
+  "candidate_universe_summary": {
+    "signal_dates": 100,
+    "total_rows": 10000,
+    "eligible": 3033,
+    "selected": 1652,
+    "rejection_reasons": {
+      "insufficient_history": 11,
+      "ma5_institutional_misaligned": 3325,
+      "volume_growth_below_20": 5684
+    },
+    "artifact": "candidate_universe_100d.csv.gz"
   }
 }

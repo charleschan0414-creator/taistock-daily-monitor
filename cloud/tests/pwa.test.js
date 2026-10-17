@@ -79,6 +79,24 @@ test('策略保留期指標相容成本後巢狀與舊版扁平格式', async ()
   } } } } }), { win_rate: 0.42, profit_factor: 1.17 });
 });
 
+test('PWA顯示核心100日成本後三情境且保留研究限制', async () => {
+  const [html, app, styles, sw] = await Promise.all([read('index.html'), read('app.js'), read('styles.css'), read('sw.js')]);
+  assert.match(html, /100日成本後績效/);
+  assert.match(html, /訊號批次，不是帳戶報酬/);
+  for (const id of ['backtest-period', 'backtest-standard-overall', 'backtest-standard-long',
+    'backtest-standard-short', 'backtest-gross-overall', 'backtest-stress-overall']) {
+    assert.match(html, new RegExp(`id="${id}"`));
+    assert.match(app, new RegExp(id));
+  }
+  assert.match(html, /standard 0\.435%/);
+  assert.match(html, /stress 0\.535%/);
+  assert.match(html, /借券費與融券限制/);
+  assert.match(app, /renderBacktestPerformance\(data\)/);
+  assert.doesNotMatch(app, /\.innerHTML\s*=/);
+  assert.match(styles, /\.backtest-performance/);
+  assert.match(sw, /taistock-monitor-v6/);
+});
+
 test('PWA顯示V2成本後績效檢驗、方法限制與新版快取', async () => {
   const [html, app, styles, sw] = await Promise.all([
     read('index.html'), read('app.js'), read('styles.css'), read('sw.js'),
@@ -97,5 +115,5 @@ test('PWA顯示V2成本後績效檢驗、方法限制與新版快取', async () 
   assert.match(app, /v2-quality/);
   assert.doesNotMatch(app, /\.innerHTML\s*=/);
   assert.match(styles, /\.v2-analysis/);
-  assert.match(sw, /taistock-monitor-v5/);
+  assert.match(sw, /taistock-monitor-v6/);
 });

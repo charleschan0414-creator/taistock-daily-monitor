@@ -1,7 +1,10 @@
 import unittest
+from pathlib import Path
+from unittest.mock import Mock, patch
 from taistock.ui import (format_backtest_summary, display_quote_values, visible_signal_rows,
                          format_global_market, BackgroundRefreshGate, dashboard_structure,
-                         signal_row_tags, global_market_layers, strategy_card_label)
+                         signal_row_tags, global_market_layers, strategy_card_label,
+                         format_health_report, Dashboard)
 
 
 class BacktestUiTests(unittest.TestCase):
@@ -19,6 +22,36 @@ class BacktestUiTests(unittest.TestCase):
         self.assertIn("偏多", text)
         self.assertIn("偏空", text)
         self.assertIn("2026-10-16T10:00:00+08:00", text)
+        self.assertIn("gross（舊報告，未扣成本）", text)
+
+    def test_prefers_gross_standard_stress_cost_scenarios_for_each_direction(self):
+        def metric(trades, win_rate, average, pf, drawdown):
+            return {"trades": trades, "win_rate": win_rate, "average_return": average,
+                    "profit_factor": pf, "max_drawdown": drawdown,
+                    "long": {"trades": trades - 2, "win_rate": win_rate + .01,
+                             "average_return": average + .001, "profit_factor": pf + .1,
+                             "max_drawdown": drawdown + .01},
+                    "short": {"trades": 2, "win_rate": win_rate - .02,
+                              "average_return": average - .001, "profit_factor": pf - .1,
+                              "max_drawdown": drawdown - .01}}
+        result = {
+            "period": {"from": "2026-05-22", "to": "2026-10-14"},
+            "metrics": metric(10, .55, .01, 1.4, -.08),
+            "metrics_scenarios": {
+                "gross": metric(10, .55, .01, 1.4, -.08),
+                "standard": metric(10, .50, .00565, 1.2, -.10),
+                "stress": metric(10, .45, .00465, 1.1, -.12),
+            },
+            "costs": {"gross": 0, "standard": .00435, "stress": .00535},
+        }
+        text = format_backtest_summary(result)
+        for label in ("gross（未扣成本）", "standard 0.435%", "stress 0.535%"):
+            self.assertIn(label, text)
+        for label in ("整體", "偏多", "偏空"):
+            self.assertGreaterEqual(text.count(label), 3)
+        self.assertIn("成交 10｜勝率 50.00%｜平均 0.56%｜PF 1.20｜最大回撤 -10.00%", text)
+        self.assertIn("訊號批次，不是帳戶報酬", text)
+        self.assertIn("借券費與融券限制", text)
 
     def test_visible_rows_are_top_ten_each_and_deduplicated_for_fetch(self):
         payload = {"long_top10": [{"code": str(i)} for i in range(12)],
@@ -54,9 +87,10 @@ class BacktestUiTests(unittest.TestCase):
     def test_dashboard_structure_has_one_primary_action_and_beginner_labels(self):
         structure = dashboard_structure()
         self.assertEqual(structure["primary_action"], "更新全部資料")
-        self.assertEqual(structure["tool_actions"], ("更新現價", "更新夜盤", "執行回測", "開啟手機版"))
+        self.assertEqual(structure["tool_actions"], ("更新現價", "更新夜盤", "執行回測", "開啟手機版",
+                                                     "匯出診斷", "建立備份", "還原備份"))
         self.assertEqual(structure["cards"], ("資料日", "今日偏多", "今日偏空", "即時報價", "策略狀態"))
-        self.assertEqual(structure["tabs"], ("今日偏多", "今日偏空", "所有訊號", "回測摘要", "夜盤脈動"))
+        self.assertEqual(structure["tabs"], ("今日偏多", "今日偏空", "所有訊號", "回測摘要", "夜盤脈動", "系統健康"))
     def test_strategy_card_distinguishes_protective_incumbent_from_cost_validated_candidate(self):
         self.assertEqual(strategy_card_label({"applied_mode": "incumbent_protective",
                                               "enabled": False}), "保護性篩選")
@@ -74,6 +108,47 @@ class BacktestUiTests(unittest.TestCase):
         self.assertEqual(layers["basis"], "依據｜TX 上漲")
         self.assertEqual(layers["fetched_at"], "抓取時間｜2026-10-17T22:01:02+08:00")
         self.assertIn("非投資建議", layers["notice"])
+    def test_health_text_contains_status_progress_schedule_and_error(self):
+        text = format_health_report({
+            "overall": "error", "latest_data_date": "2026-10-16",
+            "desktop_version": "2026.10.17.6", "next_update": "2026-10-18T08:30:00+08:00",
+            "pipeline": {"status": "error", "completed_at": "2026-10-17T07:00:00+08:00"},
+            "strategy": {"version": 3, "activated_on": "2026-10-01", "progress": "8/20"},
+            "universe": {"total": 100, "selected": 7},
+            "night_market": {"count": 17, "threshold": 60, "remaining": 43},
+            "recent_error": "RuntimeError: offline",
+            "sources": {"latest": {"status": "ok", "message": "可正常讀取", "date": "2026-10-16"}},
+        })
+        for expected in ("需處理", "2026.10.17.6", "8/20", "17/60", "08:30", "RuntimeError: offline", "100 / 7"):
+            self.assertIn(expected, text)
+
+    def test_restore_button_cancels_without_selected_file_or_confirmation(self):
+        dashboard = object.__new__(Dashboard)
+        dashboard.data_dir = Path("C:/app/data")
+        with patch("taistock.ui.filedialog.askopenfilename", return_value=""), \
+             patch("taistock.ui.restore_backup") as restorer:
+            dashboard.restore_backup_action()
+        restorer.assert_not_called()
+        with patch("taistock.ui.filedialog.askopenfilename", return_value="C:/safe/backup.zip"), \
+             patch("taistock.ui.messagebox.askyesno", return_value=False), \
+             patch("taistock.ui.restore_backup") as restorer:
+            dashboard.restore_backup_action()
+        restorer.assert_not_called()
+
+    def test_backup_and_confirmed_restore_show_clear_results(self):
+        dashboard = object.__new__(Dashboard)
+        dashboard.data_dir = Path("C:/app/data")
+        with patch("taistock.ui.create_backup", return_value={"path": Path("backup.zip"), "file_count": 3}), \
+             patch("taistock.ui.messagebox.showinfo") as info:
+            dashboard.create_backup_action()
+        self.assertIn("3", info.call_args.args[1])
+        with patch("taistock.ui.filedialog.askopenfilename", return_value="C:/safe/backup.zip"), \
+             patch("taistock.ui.messagebox.askyesno", return_value=True), \
+             patch("taistock.ui.restore_backup", return_value={"path": Path("backup.zip"), "file_count": 2}) as restorer, \
+             patch("taistock.ui.messagebox.showinfo") as info:
+            dashboard.restore_backup_action()
+        restorer.assert_called_once_with(Path("C:/app"), Path("C:/safe/backup.zip"))
+        self.assertIn("2", info.call_args.args[1])
 
 
 if __name__ == "__main__": unittest.main()

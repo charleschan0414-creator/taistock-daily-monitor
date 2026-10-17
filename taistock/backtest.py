@@ -4,6 +4,7 @@ from __future__ import annotations
 import csv
 import gzip
 import json
+import os
 import sqlite3
 import statistics
 import time
@@ -11,11 +12,13 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from urllib.parse import urlencode
 
-from .core import BASELINE_WEIGHTS, evaluate_candidates, is_common_stock
+from .core import BASELINE_WEIGHTS, audit_candidates, evaluate_candidates, is_common_stock
 from .data import _number
+from .portfolio import simulate_portfolio
 from .storage import CANDIDATE_WEIGHTS, MIN_SAMPLES
 
 HOLDING_DAYS = 5
+COST_SCENARIOS = {"gross": 0.0, "standard": 0.00435, "stress": 0.00535}
 
 
 def _table_with_security_code(payload: dict) -> dict:
@@ -175,6 +178,7 @@ def simulate_trade(signal: dict, future_days, require_full_horizon: bool = False
     entry_date = None
     highs, lows = [], []
     for index, day in enumerate(days):
+        was_triggered = triggered
         touched = day["high"] >= entry if direction == "long" else day["low"] <= entry
         if not triggered and not touched:
             continue
@@ -185,7 +189,12 @@ def simulate_trade(signal: dict, future_days, require_full_horizon: bool = False
         target_hit = day["high"] >= target1 if direction == "long" else day["low"] <= target1
         target2_hit = day["high"] >= target2 if direction == "long" else day["low"] <= target2
         if stop_hit:
-            exit_price, reason = stop, "stop"
+            opening = float(day["open"])
+            if was_triggered:
+                exit_price = min(opening, stop) if direction == "long" else max(opening, stop)
+            else:
+                exit_price = stop
+            reason = "stop"
         elif target_hit:
             exit_price, reason = target1, "target1"
         elif target2_hit:
@@ -287,6 +296,20 @@ def summarize_trades(trades: list[dict], signal_dates: list[str]) -> dict:
     return result
 
 
+def summarize_trade_scenarios(trades: list[dict], signal_dates: list[str]) -> dict:
+    """彙總毛報酬及每筆已成交僅扣一次雙邊總成本的情境。"""
+    scenarios = {}
+    for name, cost in COST_SCENARIOS.items():
+        adjusted = []
+        for row in trades:
+            item = dict(row)
+            if item.get("triggered") and item.get("return") is not None:
+                item["return"] = float(item["return"]) - cost
+            adjusted.append(item)
+        scenarios[name] = summarize_trades(adjusted, signal_dates)
+    return scenarios
+
+
 def build_backtest(days: list[dict], signal_days: int = 100, weights: dict | None = None) -> dict:
     del weights  # Walk-forward always starts at the fixed baseline; no full-period fitted weights.
     if signal_days < 1 or len(days) < signal_days + 6:
@@ -298,7 +321,7 @@ def build_backtest(days: list[dict], signal_days: int = 100, weights: dict | Non
                           len(ordered) - future_buffer))
     if selected[0] < 5:
         raise ValueError("不足 5 個暖機交易日")
-    trades, all_samples, weight_history = [], [], []
+    trades, all_samples, weight_history, candidate_universe = [], [], [], []
     for i in selected:
         current = ordered[i]
         wf = walk_forward_weights(all_samples, current["date"])
@@ -309,15 +332,51 @@ def build_backtest(days: list[dict], signal_days: int = 100, weights: dict | Non
         for rank, quote in enumerate(leaders, 1):
             history = [ordered[j]["quotes"].get(quote["code"]) for j in range(i - 4, i + 1)]
             previous = ordered[i - 1]["quotes"].get(quote["code"])
-            if any(item is None for item in history) or previous is None:
-                continue
-            rows.append({**quote, "date": current["date"], "prev_volume": previous["volume"],
-                         "closes": [item["close"] for item in history],
+            rows.append({**quote, "date": current["date"],
+                         "prev_volume": previous["volume"] if previous is not None else None,
+                         "closes": [item["close"] for item in history if item is not None],
                          "institutional_net": current["institutions"].get(quote["code"], 0),
                          "volume_rank": rank})
         evaluated = evaluate_candidates(rows, current_weights)
         signals = ([row for row in evaluated if row["signal_direction"] == "long"][:10] +
                    [row for row in evaluated if row["signal_direction"] == "short"][:10])
+        selected_ranks = {
+            (signal["code"], signal["signal_direction"]): rank
+            for direction in ("long", "short")
+            for rank, signal in enumerate(
+                [row for row in signals if row["signal_direction"] == direction], 1
+            )
+        }
+        for audited in audit_candidates(rows, current_weights):
+            direction = audited.get("signal_direction")
+            selected_rank = selected_ranks.get((audited["code"], direction))
+            candidate_universe.append({
+                field: value for field, value in {
+                    "signal_date": audited.get("date"),
+                    "code": audited.get("code"), "name": audited.get("name"),
+                    "market": audited.get("market"), "volume_rank": audited.get("volume_rank"),
+                    "close": audited.get("close"), "volume": audited.get("volume"),
+                    "prev_volume": audited.get("prev_volume"),
+                    "institutional_net": audited.get("institutional_net"),
+                    "history_count": len(audited.get("closes") or []),
+                    "ma5": audited.get("ma5"),
+                    "volume_growth_pct": audited.get("volume_growth_pct"),
+                    "above_ma5_pct": audited.get("above_ma5_pct"),
+                    "ma5_distance_pct": audited.get("ma5_distance_pct"),
+                    "institutional_lots": audited.get("institutional_lots"),
+                    "institutional_abs_lots": audited.get("institutional_abs_lots"),
+                    "volatility_proxy_pct": audited.get("volatility_proxy_pct"),
+                    "eligible": audited.get("eligible"), "signal_direction": direction,
+                    "rejection_reasons": audited.get("rejection_reasons", []),
+                    "score": audited.get("score"), "reason": audited.get("reason"),
+                    "action_text": audited.get("action_text"),
+                    "entry_trigger": audited.get("entry_trigger"),
+                    "stop_loss": audited.get("stop_loss"), "target1": audited.get("target1"),
+                    "target2": audited.get("target2"), "risk_pct": audited.get("risk_pct"),
+                    "entry_offset_pct": audited.get("entry_offset_pct"),
+                    "selected_signal": selected_rank is not None, "selected_rank": selected_rank,
+                }.items()
+            })
         for signal in signals:
             future = []
             for day in ordered[i + 1:i + 1 + HOLDING_DAYS]:
@@ -347,10 +406,16 @@ def build_backtest(days: list[dict], signal_days: int = 100, weights: dict | Non
                     "old_weights": dict(BASELINE_WEIGHTS), "new_weights": final_wf["weights"],
                     "metrics": {"baseline": final_wf["baseline_metric"], "selected": final_wf["selected_metric"]},
                     "updated_at": datetime.now().astimezone().isoformat(timespec="seconds")}
+    metrics_scenarios = summarize_trade_scenarios(trades, signal_dates)
+    portfolio_standard = simulate_portfolio(trades)
     return {"period": {"from": signal_dates[0], "to": signal_dates[-1]},
-            "signal_dates": signal_dates, "metrics": summarize_trades(trades, signal_dates),
+            "signal_dates": signal_dates, "metrics": metrics_scenarios["gross"],
+            "metrics_scenarios": metrics_scenarios, "costs": dict(COST_SCENARIOS),
+            "portfolio_standard": portfolio_standard,
             "trades": trades, "walk_forward": weight_history, "optimization": optimization,
-            "cost_rate": 0.0, "cost_assumption": "未計入手續費、交易稅、滑價、借券費與融券限制",
+            "_candidate_universe": candidate_universe,
+            "cost_rate": 0.0,
+            "cost_assumption": "gross 未扣成本；standard 每筆已成交扣雙邊總成本 0.435%；stress 扣 0.535%；未觸發不扣成本；未另計固定滑價、借券費與融券限制",
             "completed_at": datetime.now().astimezone().isoformat(timespec="seconds")}
 
 
@@ -358,15 +423,82 @@ TRADE_FIELDS = ["signal_date", "trade_date", "code", "name", "direction", "entry
                 "status", "entry", "exit", "exit_reason", "return", "triggered", "mfe", "mae", "score",
                 "stop_loss", "target1", "target2", "volume_growth_pct", "ma5_distance_pct",
                 "institutional_abs_lots", "volume_rank"]
+CANDIDATE_AUDIT_FIELDS = [
+    "signal_date", "code", "name", "market", "volume_rank", "close", "volume", "prev_volume",
+    "institutional_net", "history_count", "ma5", "volume_growth_pct", "above_ma5_pct",
+    "ma5_distance_pct", "institutional_lots", "institutional_abs_lots", "volatility_proxy_pct",
+    "eligible", "signal_direction", "rejection_reasons", "score", "reason", "action_text",
+    "entry_trigger", "stop_loss", "target1", "target2", "risk_pct", "entry_offset_pct",
+    "selected_signal", "selected_rank",
+]
+
+
+def _candidate_summary(rows: list[dict], signal_dates: list[str], artifact: str) -> dict:
+    rejection_counts = {}
+    for row in rows:
+        for reason in row.get("rejection_reasons", []):
+            rejection_counts[reason] = rejection_counts.get(reason, 0) + 1
+    return {
+        "signal_dates": len(signal_dates),
+        "total_rows": len(rows),
+        "eligible": sum(bool(row.get("eligible")) for row in rows),
+        "selected": sum(bool(row.get("selected_signal")) for row in rows),
+        "rejection_reasons": dict(sorted(rejection_counts.items())),
+        "artifact": artifact,
+    }
+
+
+def _write_candidate_audit_atomic(rows: list[dict], path: Path) -> None:
+    temporary = path.with_name(path.name + ".write.tmp")
+    temporary.unlink(missing_ok=True)
+    try:
+        with gzip.open(temporary, "wt", encoding="utf-8", newline="") as handle:
+            writer = csv.DictWriter(handle, fieldnames=CANDIDATE_AUDIT_FIELDS, extrasaction="ignore")
+            writer.writeheader()
+            for source in rows:
+                row = dict(source)
+                row["rejection_reasons"] = "|".join(row.get("rejection_reasons", []))
+                writer.writerow(row)
+        temporary.replace(path)
+    except BaseException:
+        temporary.unlink(missing_ok=True)
+        raise
+
+
+def _write_json_atomic(path: Path, value: dict) -> None:
+    temporary = path.with_name(path.name + ".tmp")
+    temporary.write_text(json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False),
+                         encoding="utf-8")
+    os.replace(temporary, path)
+
+
+def _portfolio_summary(portfolio: dict) -> dict:
+    summary = {key: value for key, value in portfolio.items()
+               if key not in {"realized_trades", "skipped", "equity_curve"}}
+    summary["realized_trade_count"] = len(portfolio.get("realized_trades", []))
+    summary["skipped_count"] = len(portfolio.get("skipped", []))
+    summary["equity_curve_points"] = len(portfolio.get("equity_curve", []))
+    return summary
 
 
 def write_backtest_outputs(result: dict, directory: Path, days: int = 100) -> None:
     directory.mkdir(parents=True, exist_ok=True)
+    candidates = list(result.get("_candidate_universe", []))
+    artifact_name = f"candidate_universe_{days}d.csv.gz"
+    _write_candidate_audit_atomic(candidates, directory / artifact_name)
+    public_result = {key: value for key, value in result.items() if not key.startswith("_")}
+    public_result["candidate_universe_summary"] = _candidate_summary(
+        candidates, result.get("signal_dates", []), artifact_name
+    )
+    portfolio = result.get("portfolio_standard")
+    if portfolio is not None:
+        _write_json_atomic(directory / f"portfolio_{days}d.json", portfolio)
+        public_result["portfolio_standard"] = _portfolio_summary(portfolio)
     json_path = directory / f"backtest_{days}d.json"
-    json_path.write_text(json.dumps(result, ensure_ascii=False, indent=2, allow_nan=False), encoding="utf-8")
+    _write_json_atomic(json_path, public_result)
     csv_path = directory / f"backtest_{days}d.csv"
     with csv_path.open("w", newline="", encoding="utf-8-sig") as handle:
-        writer = csv.DictWriter(handle, fieldnames=TRADE_FIELDS, extrasaction="ignore")
+        writer = csv.DictWriter(handle, fieldnames=TRADE_FIELDS, extrasaction="ignore", lineterminator="\n")
         writer.writeheader(); writer.writerows(result["trades"])
     # Keep the old generic filename for existing integrations.
     (directory / "backtest_trades.csv").write_bytes(csv_path.read_bytes())
@@ -380,7 +512,7 @@ def write_backtest_outputs(result: dict, directory: Path, days: int = 100) -> No
             status TEXT NOT NULL, triggered INTEGER NOT NULL, entry_date TEXT, exit_date TEXT,
             return_value REAL, payload TEXT NOT NULL,
             PRIMARY KEY(run_id,signal_date,code,direction))""")
-        payload = json.dumps(result, ensure_ascii=False, allow_nan=False)
+        payload = json.dumps(public_result, ensure_ascii=False, allow_nan=False)
         cursor = db.execute("INSERT INTO backtest_runs(completed_at,signal_days,period_from,period_to,payload) VALUES(?,?,?,?,?)",
                             (result.get("completed_at", datetime.now().isoformat()), len(result["signal_dates"]),
                              result["period"]["from"], result["period"]["to"], payload))
@@ -395,4 +527,4 @@ def write_backtest_outputs(result: dict, directory: Path, days: int = 100) -> No
         db.close()
     audit = result.get("optimization")
     if audit and audit.get("source") == "walk_forward_backtest_100d":
-        (directory / "optimizer.json").write_text(json.dumps(audit, ensure_ascii=False, indent=2), encoding="utf-8")
+        _write_json_atomic(directory / "optimizer.json", audit)

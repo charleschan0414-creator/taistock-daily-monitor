@@ -10,10 +10,11 @@ ROOT = Path(__file__).resolve().parent
 DATA = ROOT / "data"
 PUBLIC = ROOT / "public_data"
 JSON_COPIES = ("latest.json", "optimizer.json", "strategy_optimization.json", "v2_optimization.json",
-               "daily_status.json")
+               "strategy_registry.json", "daily_status.json", "market_regime.json", "portfolio_100d.json")
 CSV_COPIES = ("latest.csv", "backtest_100d.csv")
 BACKTEST_KEYS = ("period", "signal_dates", "metrics", "walk_forward", "optimization", "cost_rate",
-                 "cost_assumption", "completed_at", "data_collection")
+                 "cost_assumption", "completed_at", "data_collection", "portfolio_standard", "costs",
+                 "metrics_scenarios", "candidate_universe_summary")
 
 
 def atomic_bytes(path, content):

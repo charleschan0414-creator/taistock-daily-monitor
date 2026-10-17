@@ -83,12 +83,68 @@ python app.py --optimize-strategy
 
 ## 執行、資料與排程
 
+### Windows 初學者安裝、修復與移除
+
+1. 解壓縮到固定資料夾後，雙擊 `install.bat`。安裝程式會確認 Python 3.11 與 Tkinter、保存絕對 Python 路徑、覆寫兩個排程，並在桌面與 Start Menu 建立「台股每日觀察」捷徑。路徑包含空白也支援。
+2. 若捷徑或排程損壞，在資料夾的命令提示字元執行 `install.bat --repair`；修復與正常安裝相同，會安全覆寫排程及捷徑，不碰個人資料。可先執行 `install.bat --dry-run` 查看計畫，完全不寫檔、不建立排程或捷徑。
+3. 要移除整合時，雙擊 `uninstall.bat`；它只移除兩個排程與兩個「台股每日觀察」捷徑，不刪程式資料夾。`uninstall.bat --dry-run` 只列出計畫。
+
+安裝與移除永遠保留整個 `data/`、`public_data/`、`backups/`、`diagnostics/`，以及 `user_settings.json`、`python_path.txt`；要刪除這些資料只能由使用者自行處理。舊的 `install_daily_task.bat` 仍可使用，會轉交給 `install.bat`。
+
+安裝會建立：
+
+- `TaiStockScannerDaily`：每天 08:30 執行 `run.bat --update --notify`。
+- `TaiStockScannerSoftwareUpdate`：以安裝時保存的 Python 每 2 小時執行 `updater.py --check-only`。工作使用不需要密碼的目前使用者互動權杖，並啟用「錯過後在可用時儘快執行」；因此不儲存 Windows 密碼，但使用者登出時不會執行，登入後 Task Scheduler 才能補跑。電腦關機期間無法執行。
+
+若本機未登入或關機，固定 Cloudflare **公開雲端版不需要登入**，仍可直接唯讀查看；公開網址沒有存取驗證，請勿在公開資料放入個資或憑證。
+
+進階手動執行：
+
 ```bat
 run.bat
 run.bat --update
 run.bat --update --notify
 python app.py --help
 ```
+
+### 系統健康與匿名診斷
+
+桌面版新增「系統健康」分頁：集中顯示資料來源可讀狀態、最新資料日、每日流程結果、桌面版本、策略啟用日與前瞻進度、成交量前 100 候選／入選數、夜盤研究快照的 `60` 筆門檻，以及下一次本機每日排程（台北時間 08:30）。最新成功流程超過 48 小時會標示需注意；最近流程失敗會標示需處理並顯示錯誤。檔案缺少或 JSON 損壞只會顯示警告，不會讓健康頁崩潰。
+
+按「匯出診斷」會原子建立 `diagnostics/health-年月日-時分秒.json`。也可使用：
+
+```bat
+python app.py --diagnostics
+python app.py --diagnostics D:\診斷\health.json
+```
+
+診斷檔只包含健康報告與五個 JSON 資料源的安全欄位／結構摘要；不包含 signals、股票清單、本機路徑、hostname、username、環境變數或憑證，可先自行檢視再提供給維護者。
+
+### 一鍵安全備份與還原（初學者）
+
+桌面「系統健康」分頁可直接按「建立備份」。按「還原備份」後須選擇 ZIP 並再次確認；系統沿用下述白名單、完整驗證、拒絕覆蓋較新資料與失敗回復機制，不需也不會要求密碼。
+
+先關閉桌面程式，再在 TaiStockScanner 資料夾開啟命令提示字元。建立預設備份：
+
+```bat
+python app.py --backup
+```
+
+成功後會顯示 ZIP 路徑與檔案數；預設檔名是 `backups/TaiStockScanner-backup-年月日-時分秒.zip`。也可以自行指定位置：
+
+```bat
+python app.py --backup D:\我的備份\TaiStockScanner.zip
+```
+
+還原前建議先保留目前資料，再執行：
+
+```bat
+python app.py --restore D:\我的備份\TaiStockScanner.zip
+```
+
+備份只會收錄實際存在的 `data/scanner.db`、`data/strategy_history.jsonl`、`data/strategy_registry.json`、`data/global_market_history.jsonl`、`data/market_regime.json`、`data/latest.json`、`data/daily_status.json`，以及根目錄的 `user_settings.json`。官方下載快取、`public_data/`、token、憑證、`python_path.txt`、Git／Wrangler 資料都不會放入備份。
+
+還原會先檢查 ZIP 路徑、白名單、檔案數與大小、SHA256、SQLite 完整性及備份清單；任何驗證失敗都不會寫入。若目前同名檔案的修改時間晚於備份，或目前 `daily_status.json` 的 `data_date` 更新，程式會保守拒絕覆蓋，沒有強制覆蓋選項。正式替換前會暫存同名舊檔；中途失敗會回復原狀，且不會碰觸白名單以外的檔案。請勿手動修改備份 ZIP；看到「較新，拒絕覆蓋」時，先用 `--backup` 保存目前狀態，不要刪除較新的資料。
 
 ### 版本更新
 
@@ -113,6 +169,8 @@ python app.py --help
 
 桌面版、本機手機版與 Cloudflare 雲端版另整合 TAIFEX 官方夜盤行情端點，每 60 秒更新臺股期貨（TX）、小型電子期貨（ZEF）、台積電期貨（CDF）、那斯達克100期貨（UNF）及費城半導體期貨（SXF）。系統以 TX／UNF／SXF 至少兩項同向顯示「風險偏多／中性／偏空」市場情境；這是透明的夜盤脈動摘要，不會直接加入既有選股分數或改寫策略。頁面顯示的是系統抓取時間，並明示「期交所行情，可能延遲」；不可視為逐筆即時成交或投資建議。
 
+每日流水線會把上述五項行情以 `market_date + phase`（`post_close` 或 `morning_backup`）冪等累積至 `data/global_market_history.jsonl`，最多保留 250 筆，並產生不含策略建議的 `data/market_regime.json` 摘要。少於 60 筆快照一律標示 `insufficient_history`；至少累積 60 筆後也只能提出研究假說，任何規則若要影響實際選股，仍須另做嚴格時間保留測試並通過既有啟用閘門。市場摘要永遠標示 `affects_stock_scores=false`，TAIFEX 抓取失敗不會中斷個股流水線。
+
 手機版是跨平台 PWA 網頁，不是原生 App。啟動方式：
 
 ```bat
@@ -134,7 +192,7 @@ start_remote_mobile.bat
 
 此腳本會啟動本機手機伺服器，並在需要時從 Cloudflare 官方 GitHub Release 下載 `cloudflared.exe`，再顯示一個 `https://...trycloudflare.com` 公開網址。手機使用4G／5G即可開啟，不必與電腦使用同一Wi‑Fi；HTTPS也可讓PWA功能正常運作。
 
-- **任何拿到網址的人都能查看唯讀儀表板及下載程式開放的兩個CSV。**伺服器不提供寫入、下單或任意檔案存取。
+- **公開網址沒有登入保護；任何拿到網址的人都能查看唯讀儀表板及下載程式開放的兩個 CSV。**伺服器不提供寫入、下單或任意檔案存取。
 - 電腦、本機手機伺服器與Cloudflare Tunnel都必須保持執行。
 - Quick Tunnel沒有可用性保證；重新啟動後網址會改變。當前網址會另外記錄於 `data/remote_mobile_url.txt`。
 - 若要固定網址、登入驗證及長期服務，需另外申請Cloudflare帳號、網域與Named Tunnel。

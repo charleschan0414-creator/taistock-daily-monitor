@@ -1,6 +1,11 @@
+import csv
+import gzip
+import json
+import sqlite3
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from taistock.backtest import (
     OfficialHistoryFetcher,
@@ -10,6 +15,7 @@ from taistock.backtest import (
     parse_twse_day,
     parse_twse_institutions,
     simulate_trade,
+    summarize_trade_scenarios,
     summarize_trades,
     write_backtest_outputs,
 )
@@ -61,6 +67,15 @@ class ExecutionTests(unittest.TestCase):
         self.assertAlmostEqual(result["return"], -0.05)
         self.assertNotIn("net_return", result)
 
+    def test_open_through_stop_before_same_day_entry_does_not_create_gap_fill(self):
+        result = simulate_trade(
+            self.long, {"open": 90, "high": 101, "low": 89, "close": 96}
+        )
+        self.assertTrue(result["triggered"])
+        self.assertEqual(result["exit_reason"], "stop")
+        self.assertEqual(result["exit"], 95.0)
+        self.assertAlmostEqual(result["return"], -0.05)
+
     def test_same_day_target1_and_target2_conservatively_exits_at_target1(self):
         long = simulate_trade(self.long, {"open": 99, "high": 111, "low": 99, "close": 101})
         self.assertEqual(long["exit_reason"], "target1")
@@ -75,6 +90,26 @@ class ExecutionTests(unittest.TestCase):
         close_exit = simulate_trade(self.long, {"open": 99, "high": 103, "low": 97, "close": 102})
         self.assertEqual(close_exit["exit_reason"], "close")
         self.assertAlmostEqual(close_exit["return"], 0.02)
+
+    def test_long_stop_gap_after_entry_fills_at_worse_open(self):
+        days = [
+            {"date": "2026-01-02", "open": 99, "high": 103, "low": 97, "close": 102},
+            {"date": "2026-01-05", "open": 90, "high": 93, "low": 89, "close": 91},
+        ]
+        result = simulate_trade(self.long, days)
+        self.assertEqual(result["exit_reason"], "stop")
+        self.assertEqual(result["exit"], 90.0)
+        self.assertAlmostEqual(result["return"], -0.10)
+
+    def test_short_stop_gap_after_entry_fills_at_worse_open(self):
+        days = [
+            {"date": "2026-01-02", "open": 101, "high": 103, "low": 97, "close": 98},
+            {"date": "2026-01-05", "open": 110, "high": 112, "low": 108, "close": 109},
+        ]
+        result = simulate_trade(self.short, days)
+        self.assertEqual(result["exit_reason"], "stop")
+        self.assertEqual(result["exit"], 110.0)
+        self.assertAlmostEqual(result["return"], -0.10)
 
     def test_waits_up_to_five_days_and_reports_mfe_mae_without_costs(self):
         days = [
@@ -209,6 +244,22 @@ class BacktestAggregationTests(unittest.TestCase):
         self.assertEqual(metrics["long"]["trades"], 2)
         self.assertEqual(metrics["short"]["trades"], 1)
 
+    def test_cost_scenarios_deduct_round_trip_cost_once_only_from_executed_trades(self):
+        trades = [
+            {"signal_date": "2026-01-01", "direction": "long", "status": "settled",
+             "triggered": True, "return": 0.10},
+            {"signal_date": "2026-01-01", "direction": "short", "status": "untriggered",
+             "triggered": False, "return": None},
+        ]
+        scenarios = summarize_trade_scenarios(trades, ["2026-01-01"])
+        self.assertEqual(set(scenarios), {"gross", "standard", "stress"})
+        self.assertAlmostEqual(scenarios["gross"]["average_return"], 0.10)
+        self.assertAlmostEqual(scenarios["standard"]["average_return"], 0.10 - 0.00435)
+        self.assertAlmostEqual(scenarios["stress"]["average_return"], 0.10 - 0.00535)
+        self.assertEqual(scenarios["standard"]["trades"], 1)
+        self.assertEqual(scenarios["standard"]["untriggered"], 1)
+        self.assertEqual(scenarios["standard"]["short"]["average_return"], 0.0)
+
     def test_builds_one_signal_day_without_lookahead_and_exports_artifacts(self):
         dates = [f"2026-01-{day:02d}" for day in range(1, 8)]
         days = []
@@ -221,7 +272,18 @@ class BacktestAggregationTests(unittest.TestCase):
         result = build_backtest(days, signal_days=1)
         self.assertEqual(result["period"], {"from": "2026-01-06", "to": "2026-01-06"})
         self.assertEqual(result["metrics"]["signal_days"], 1)
+        self.assertEqual(result["metrics"], result["metrics_scenarios"]["gross"])
+        self.assertIn("portfolio_standard", result)
+        self.assertTrue(result["portfolio_standard"]["realized_only_equity"])
+        self.assertEqual(result["costs"], {"gross": 0.0, "standard": 0.00435, "stress": 0.00535})
         self.assertEqual(len(result["trades"]), 1)
+        self.assertEqual(len(result["_candidate_universe"]), 1)
+        candidate = result["_candidate_universe"][0]
+        self.assertTrue(candidate["eligible"])
+        self.assertTrue(candidate["selected_signal"])
+        self.assertEqual(candidate["selected_rank"], 1)
+        self.assertNotIn("return", candidate)
+        self.assertNotIn("high", candidate)
         trade = result["trades"][0]
         self.assertEqual(trade["signal_date"], "2026-01-06")
         self.assertEqual(trade["trade_date"], "2026-01-07")
@@ -229,8 +291,34 @@ class BacktestAggregationTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             write_backtest_outputs(result, Path(directory), 1)
             self.assertTrue((Path(directory) / "backtest_1d.json").exists())
-            csv_text = (Path(directory) / "backtest_trades.csv").read_text(encoding="utf-8-sig")
+            self.assertTrue((Path(directory) / "portfolio_1d.json").exists())
+            portfolio = json.loads((Path(directory) / "portfolio_1d.json").read_text(encoding="utf-8"))
+            self.assertEqual(portfolio, result["portfolio_standard"])
+            csv_path = Path(directory) / "backtest_trades.csv"
+            csv_text = csv_path.read_text(encoding="utf-8-sig")
             self.assertIn("signal_date,trade_date,code,name,direction", csv_text)
+            self.assertNotIn(b"\r\n", csv_path.read_bytes())
+
+    def test_preserves_top_volume_candidate_without_history_and_rejection_reason(self):
+        dates = [f"2026-01-{day:02d}" for day in range(1, 8)]
+        days = []
+        for index, date in enumerate(dates):
+            regular = {"code": "2330", "name": "台積電", "market": "上市", "volume": 100,
+                       "open": 100, "high": 101, "low": 99, "close": 100}
+            quotes = {"2330": regular}
+            if index == 5:
+                quotes["9999"] = {"code": "9999", "name": "新股", "market": "上市", "volume": 1000,
+                                  "open": 10, "high": 11, "low": 9, "close": 10}
+            days.append({"date": date, "quotes": quotes, "institutions": {}})
+
+        result = build_backtest(days, signal_days=1)
+        self.assertEqual(len(result["_candidate_universe"]), 2)
+        new_listing = next(row for row in result["_candidate_universe"] if row["code"] == "9999")
+        self.assertEqual(new_listing["volume_rank"], 1)
+        self.assertFalse(new_listing["eligible"])
+        self.assertIn("insufficient_history", new_listing["rejection_reasons"])
+        self.assertFalse(new_listing["selected_signal"])
+        self.assertIsNone(new_listing["selected_rank"])
 
     def test_walk_forward_uses_only_prior_resolved_samples(self):
         from taistock.backtest import walk_forward_weights
@@ -257,6 +345,60 @@ class BacktestAggregationTests(unittest.TestCase):
             names = {row[0] for row in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
             db.close()
             self.assertTrue({"backtest_runs", "backtest_trades"} <= names)
+    def test_writes_candidate_gzip_summary_and_excludes_private_rows_from_payloads(self):
+        candidates = [
+            {"signal_date": "2026-01-01", "code": "2330", "name": "台積電", "market": "上市",
+             "volume_rank": 1, "close": 100, "volume": 200, "prev_volume": 100,
+             "institutional_net": 1000, "ma5": 95, "volume_growth_pct": 100,
+             "above_ma5_pct": 5.26, "ma5_distance_pct": 5.26, "institutional_lots": 1,
+             "institutional_abs_lots": 1, "volatility_proxy_pct": 2, "eligible": True,
+             "signal_direction": "long", "rejection_reasons": [], "score": 90,
+             "entry_trigger": 101, "stop_loss": 98, "target1": 105.5, "target2": 107,
+             "risk_pct": 2.97, "entry_offset_pct": 1, "selected_signal": True, "selected_rank": 1},
+            {"signal_date": "2026-01-01", "code": "9999", "name": "新股", "market": "上市",
+             "volume_rank": 2, "close": 10, "volume": 100, "prev_volume": None,
+             "institutional_net": 0, "ma5": None, "volume_growth_pct": None,
+             "above_ma5_pct": None, "ma5_distance_pct": None, "institutional_lots": 0,
+             "institutional_abs_lots": 0, "volatility_proxy_pct": None, "eligible": False,
+             "signal_direction": None, "rejection_reasons": ["insufficient_history"], "score": None,
+             "entry_trigger": None, "stop_loss": None, "target1": None, "target2": None,
+             "risk_pct": None, "entry_offset_pct": None, "selected_signal": False, "selected_rank": None},
+        ]
+        result = {"period": {"from": "2026-01-01", "to": "2026-01-01"},
+                  "signal_dates": ["2026-01-01"], "metrics": {}, "trades": [],
+                  "optimization": None, "_candidate_universe": candidates}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            write_backtest_outputs(result, root, 100)
+            artifact = root / "candidate_universe_100d.csv.gz"
+            with gzip.open(artifact, "rt", encoding="utf-8", newline="") as handle:
+                rows = list(csv.DictReader(handle))
+            self.assertEqual(len(rows), 2)
+            self.assertEqual(rows[1]["rejection_reasons"], "insufficient_history")
+            payload = json.loads((root / "backtest_100d.json").read_text(encoding="utf-8"))
+            self.assertNotIn("_candidate_universe", payload)
+            self.assertEqual(payload["candidate_universe_summary"], {
+                "signal_dates": 1, "total_rows": 2, "eligible": 1, "selected": 1,
+                "rejection_reasons": {"insufficient_history": 1},
+                "artifact": "candidate_universe_100d.csv.gz",
+            })
+            db = sqlite3.connect(root / "scanner.db")
+            stored = json.loads(db.execute("SELECT payload FROM backtest_runs").fetchone()[0])
+            db.close()
+            self.assertNotIn("_candidate_universe", stored)
+            self.assertEqual(stored["candidate_universe_summary"], payload["candidate_universe_summary"])
+
+    def test_candidate_gzip_failure_leaves_no_partial_artifact(self):
+        result = {"period": {"from": "2026-01-01", "to": "2026-01-01"},
+                  "signal_dates": ["2026-01-01"], "metrics": {}, "trades": [],
+                  "optimization": None, "_candidate_universe": []}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with patch("taistock.backtest.gzip.open", side_effect=OSError("disk full")):
+                with self.assertRaises(OSError):
+                    write_backtest_outputs(result, root, 100)
+            self.assertFalse((root / "candidate_universe_100d.csv.gz").exists())
+            self.assertEqual(list(root.glob("candidate_universe_100d.csv.gz.*.tmp")), [])
 
 
 if __name__ == "__main__":

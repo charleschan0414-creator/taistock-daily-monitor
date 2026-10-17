@@ -1,0 +1,159 @@
+"""Persist a live strategy gate while measuring new forward signal dates.
+
+The forward counter is an operational observation window after activation.  It is
+not another evaluation of, or reuse of, the optimizer's 30-day holdout.
+"""
+from __future__ import annotations
+
+import copy
+import json
+import os
+from pathlib import Path
+
+MINIMUM_FORWARD_SIGNAL_DAYS = 20
+_REQUIRED_FIELDS = {
+    "active_gate",
+    "strategy_version",
+    "activated_on",
+    "minimum_forward_signal_days",
+    "forward_signal_days",
+    "last_observed_date",
+    "status",
+}
+
+
+def _approved_candidate(report: dict) -> dict | None:
+    decision = report.get("decision", {})
+    if not (decision.get("upgrade_approved") and decision.get("cost_validated")):
+        return None
+    gate = decision.get("applied_gate")
+    return copy.deepcopy(gate) if isinstance(gate, dict) and gate else None
+
+
+def _initial_gate(report: dict) -> dict:
+    decision = report.get("decision", {})
+    gate = decision.get("applied_gate")
+    if not isinstance(gate, dict) or not gate:
+        raise ValueError("optimization report has no usable applied_gate")
+    return copy.deepcopy(gate)
+
+
+def _validate(registry: dict) -> dict:
+    if not isinstance(registry, dict) or not _REQUIRED_FIELDS.issubset(registry):
+        raise ValueError("strategy registry is missing required fields")
+    if not isinstance(registry["active_gate"], dict) or not registry["active_gate"]:
+        raise ValueError("strategy registry active_gate is invalid")
+    if registry["minimum_forward_signal_days"] != MINIMUM_FORWARD_SIGNAL_DAYS:
+        raise ValueError("strategy registry minimum forward window is invalid")
+    if not isinstance(registry["forward_signal_days"], int) or registry["forward_signal_days"] < 0:
+        raise ValueError("strategy registry forward_signal_days is invalid")
+    return registry
+
+
+def load_registry(path: Path) -> dict | None:
+    """Load a valid registry; absence is the only migration-to-new state."""
+    path = Path(path)
+    if not path.exists():
+        return None
+    value = json.loads(path.read_text(encoding="utf-8"))
+    return _validate(value)
+
+
+def write_registry(path: Path, registry: dict) -> None:
+    """Atomically replace the registry after complete JSON serialization."""
+    path = Path(path)
+    _validate(registry)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    content = json.dumps(registry, ensure_ascii=False, indent=2, allow_nan=False) + "\n"
+    temporary = path.with_name(path.name + ".tmp")
+    try:
+        temporary.write_text(content, encoding="utf-8")
+        os.replace(temporary, path)
+    finally:
+        if temporary.exists():
+            temporary.unlink()
+
+
+def build_registry_update(existing: dict | None, optimization_report: dict,
+                          data_date: str) -> dict:
+    """Return the registry state for one successful unique signal date."""
+    if not isinstance(data_date, str) or not data_date:
+        raise ValueError("data_date is required for strategy forward observation")
+    if existing is None:
+        gate = _initial_gate(optimization_report)
+        return {
+            "active_gate": gate,
+            "strategy_version": 1,
+            "activated_on": data_date,
+            "minimum_forward_signal_days": MINIMUM_FORWARD_SIGNAL_DAYS,
+            "forward_signal_days": 0,
+            "last_observed_date": data_date,
+            "status": "forward_observation",
+            "forward_observation": {
+                "not_holdout_reuse": True,
+                "description": "Counts new unique live signal dates after activation regardless of outcome.",
+            },
+        }
+
+    current = copy.deepcopy(_validate(existing))
+    last_date = current["last_observed_date"]
+    is_new_date = data_date > last_date
+    if is_new_date:
+        current["forward_signal_days"] += 1
+        current["last_observed_date"] = data_date
+
+    candidate = _approved_candidate(optimization_report)
+    differs = candidate is not None and candidate != current["active_gate"]
+    mature = current["forward_signal_days"] >= current["minimum_forward_signal_days"]
+    if differs and mature and is_new_date:
+        current.update({
+            "active_gate": candidate,
+            "strategy_version": int(current["strategy_version"]) + 1,
+            "activated_on": data_date,
+            "forward_signal_days": 0,
+            "last_observed_date": data_date,
+            "status": "forward_observation",
+        })
+        current.pop("pending_candidate", None)
+    elif differs:
+        current["pending_candidate"] = {
+            "gate": candidate,
+            "observed_on": data_date,
+            "eligible_after_forward_signal_days": current["minimum_forward_signal_days"],
+        }
+        current["status"] = "pending_candidate"
+    elif mature:
+        current.pop("pending_candidate", None)
+        current["status"] = "eligible_for_new_version"
+    else:
+        current.pop("pending_candidate", None)
+        current["status"] = "forward_observation"
+    return current
+
+
+def apply_active_gate_to_report(optimization_report: dict, registry: dict) -> dict:
+    """Create the report consumed by app.update with the frozen active gate."""
+    active = _validate(registry)
+    report = copy.deepcopy(optimization_report)
+    original_decision = copy.deepcopy(report.get("decision", {}))
+    report["optimization_decision"] = original_decision
+    decision = report.setdefault("decision", {})
+    decision.update({
+        "enabled": True,
+        "upgrade_approved": True,
+        "cost_validated": True,
+        "applied_mode": "candidate",
+        "applied_gate": copy.deepcopy(active["active_gate"]),
+        "status": (f"策略版本 v{active['strategy_version']} 凍結中｜"
+                   f"前瞻新訊號日 {active['forward_signal_days']}/"
+                   f"{active['minimum_forward_signal_days']}"),
+    })
+    report["strategy_freeze"] = {
+        "strategy_version": active["strategy_version"],
+        "activated_on": active["activated_on"],
+        "forward_signal_days": active["forward_signal_days"],
+        "minimum_forward_signal_days": active["minimum_forward_signal_days"],
+        "status": active["status"],
+        "not_holdout_reuse": True,
+    }
+    return report

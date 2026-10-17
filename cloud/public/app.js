@@ -33,6 +33,40 @@ export function resolveStrategyTestMetrics(data) {
   const metrics = data?.daily_status?.strategy?.candidate?.test;
   return metrics?.standard ?? metrics;
 }
+
+const backtestMetricText = (metrics, unavailable = '尚未完成') => {
+  if (!metrics) return unavailable;
+  const pf = Number.isFinite(metrics.profit_factor)
+    ? String(metrics.profit_factor)
+    : metrics.profit_factor === null && metrics.trades > 0 ? '無虧損樣本' : '—';
+  return `成交 ${metrics.trades ?? 0} · 勝率 ${percent(metrics.win_rate)} · 平均 ${percent(metrics.average_return ?? metrics.average_net_return)} · PF ${pf} · 最大回撤 ${percent(metrics.max_drawdown)}`;
+};
+const backtestScenario = (metrics, unavailable) => ({
+  overall: backtestMetricText(metrics, unavailable),
+  long: backtestMetricText(metrics?.long, unavailable),
+  short: backtestMetricText(metrics?.short, unavailable),
+});
+export function resolveBacktestPerformance(data) {
+  const backtest = data?.daily_status?.backtest ?? data?.backtest;
+  const empty = backtestScenario(null, '尚未完成');
+  if (!backtest) {
+    return { available: false, legacy: false, period: '—', labels: { gross: 'gross（未扣成本）', standard: 'standard 0.435%', stress: 'stress 0.535%' }, gross: empty, standard: empty, stress: empty };
+  }
+  const scenarios = backtest.metrics_scenarios;
+  const costs = { gross: 0, standard: 0.00435, stress: 0.00535, ...(backtest.costs ?? {}) };
+  const unavailable = scenarios ? '尚未完成' : '舊報告未提供';
+  const period = backtest.period?.from && backtest.period?.to ? `${backtest.period.from} ～ ${backtest.period.to}` : '—';
+  const costPercent = value => Number.isFinite(value) ? `${(value * 100).toFixed(3)}%` : '—';
+  return {
+    available: true,
+    legacy: !scenarios,
+    period,
+    labels: { gross: scenarios ? 'gross（未扣成本）' : 'gross（舊報告，未扣成本）', standard: `standard ${costPercent(costs.standard)}`, stress: `stress ${costPercent(costs.stress)}` },
+    gross: backtestScenario(scenarios?.gross ?? backtest.metrics, unavailable),
+    standard: backtestScenario(scenarios?.standard, unavailable),
+    stress: backtestScenario(scenarios?.stress, unavailable),
+  };
+}
 function missedTradingDays(dataDate, now = new Date()) {
   if (!dataDate) return Infinity;
   const cursor = new Date(`${dataDate}T12:00:00+08:00`); cursor.setDate(cursor.getDate() + 1);
@@ -101,6 +135,23 @@ function renderMarket(market) {
   }
 }
 
+function renderBacktestPerformance(data) {
+  const view = resolveBacktestPerformance(data);
+  $('backtest-period').textContent = view.period;
+  $('backtest-standard-label').textContent = view.labels.standard;
+  $('backtest-gross-label').textContent = view.labels.gross;
+  $('backtest-stress-label').textContent = view.labels.stress;
+  $('backtest-standard-overall').textContent = view.standard.overall;
+  $('backtest-standard-long').textContent = view.standard.long;
+  $('backtest-standard-short').textContent = view.standard.short;
+  $('backtest-gross-overall').textContent = view.gross.overall;
+  $('backtest-gross-long').textContent = view.gross.long;
+  $('backtest-gross-short').textContent = view.gross.short;
+  $('backtest-stress-overall').textContent = view.stress.overall;
+  $('backtest-stress-long').textContent = view.stress.long;
+  $('backtest-stress-short').textContent = view.stress.short;
+}
+
 function renderV2Analysis(data) {
   const view = resolveV2Analysis(data);
   const summary = metrics => `交易 ${metrics.trades} · 勝率 ${metrics.winRate} · 平均報酬 ${metrics.averageReturn} · PF ${metrics.profitFactor}`;
@@ -134,6 +185,7 @@ async function load() {
     const testMetrics = resolveStrategyTestMetrics(data);
     const pf = testMetrics?.profit_factor == null ? (testMetrics ? '無虧損樣本' : '—') : fmt(testMetrics.profit_factor);
     $('test-metrics').textContent = `${percent(testMetrics?.win_rate)} / ${pf}`;
+    renderBacktestPerformance(data);
     renderV2Analysis(data);
     const warnings = [];
     if (daily?.status !== 'success') warnings.push('每日收盤後回測／優化尚未成功');

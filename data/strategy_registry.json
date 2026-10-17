@@ -1,0 +1,18 @@
+{
+  "active_gate": {
+    "long_score_min": 70,
+    "short_score_min": 70,
+    "short_enabled": true,
+    "volume_growth_min": 20
+  },
+  "strategy_version": 1,
+  "activated_on": "2026-10-16",
+  "minimum_forward_signal_days": 20,
+  "forward_signal_days": 0,
+  "last_observed_date": "2026-10-16",
+  "status": "forward_observation",
+  "forward_observation": {
+    "not_holdout_reuse": true,
+    "description": "Counts new unique live signal dates after activation regardless of outcome."
+  }
+}

@@ -5,8 +5,11 @@ import sys
 import threading
 import tkinter as tk
 import socket
-from datetime import date, timedelta
-from tkinter import ttk, messagebox
+from datetime import date, datetime, timedelta, timezone
+from pathlib import Path
+from tkinter import ttk, messagebox, filedialog
+from .backup import create_backup, restore_backup
+from .health import build_health_report, export_diagnostics
 from .backtest import OfficialHistoryFetcher
 from .global_market import GlobalMarketClient
 from .net import HttpClient
@@ -22,9 +25,10 @@ BG, PANEL, FG, MUTED, ACCENT = "#0b1220", "#111c2f", "#e7edf7", "#8fa2bd", "#4da
 def dashboard_structure():
     return {
         "primary_action": "更新全部資料",
-        "tool_actions": ("更新現價", "更新夜盤", "執行回測", "開啟手機版"),
+        "tool_actions": ("更新現價", "更新夜盤", "執行回測", "開啟手機版",
+                         "匯出診斷", "建立備份", "還原備份"),
         "cards": ("資料日", "今日偏多", "今日偏空", "即時報價", "策略狀態"),
-        "tabs": ("今日偏多", "今日偏空", "所有訊號", "回測摘要", "夜盤脈動"),
+        "tabs": ("今日偏多", "今日偏空", "所有訊號", "回測摘要", "夜盤脈動", "系統健康"),
     }
 
 
@@ -38,6 +42,37 @@ def strategy_card_label(strategy_gate):
     if strategy_gate.get("applied_mode") == "incumbent_protective":
         return "保護性篩選"
     return "已啟用" if strategy_gate.get("enabled") and strategy_gate.get("cost_validated") else "基準策略"
+
+
+def _desktop_version(root):
+    try:
+        return str(json.loads((Path(root) / "software_manifest.json").read_text(encoding="utf-8"))["version"])
+    except (OSError, ValueError, KeyError, TypeError):
+        return "unknown"
+
+
+def format_health_report(report):
+    overall = {"ok": "正常", "warning": "需注意", "error": "需處理"}.get(report.get("overall"), "未知")
+    pipeline = report.get("pipeline", {})
+    strategy = report.get("strategy", {})
+    universe = report.get("universe", {})
+    night = report.get("night_market", {})
+    lines = [
+        f"整體狀態｜{overall}",
+        f"桌面版本｜{report.get('desktop_version', '—')}",
+        f"最新資料日｜{report.get('latest_data_date') or '—'}",
+        f"每日流程｜{pipeline.get('status', 'unknown')}｜完成時間 {pipeline.get('completed_at') or '—'}",
+        f"策略版本｜v{strategy.get('version') or '—'}｜啟用日 {strategy.get('activated_on') or '—'}｜前瞻進度 {strategy.get('progress', '0/0')}",
+        f"候選宇宙｜總數 / 入選 {universe.get('total', 0)} / {universe.get('selected', 0)}",
+        f"夜盤研究快照｜{night.get('count', 0)}/{night.get('threshold', 60)}｜尚需 {night.get('remaining', 60)} 筆",
+        f"下次本機更新｜{report.get('next_update', '—')}（台北 08:30）",
+        f"最近錯誤｜{report.get('recent_error') or '無'}",
+        "",
+        "資料來源",
+    ]
+    for name, source in report.get("sources", {}).items():
+        lines.append(f"{name}｜{source.get('status', 'unknown')}｜{source.get('date') or '—'}｜{source.get('message', '')}")
+    return "\n".join(lines)
 
 
 class BackgroundRefreshGate:
@@ -108,16 +143,45 @@ def format_global_market(payload):
 
 
 def format_backtest_summary(result):
-    period, metrics = result["period"], result["metrics"]
-    lines = [
-        f"回測期間  {period['from']} ～ {period['to']}",
-        f"整體  訊號 {metrics.get('signals', metrics.get('trades', 0))}｜成交 {metrics['trades']}｜未觸發 {metrics.get('untriggered', 0)}｜未結算 {metrics.get('unresolved', 0)}",
-        f"勝率 {metrics['win_rate']:.2%}｜平均 {metrics.get('average_return', metrics.get('average_net_return', 0)):.2%}｜中位數 {metrics.get('median_return', 0):.2%}｜累積 {metrics['cumulative_return']:.2%}｜最大回撤 {metrics['max_drawdown']:.2%}",
-    ]
-    for key, label in (("long", "偏多"), ("short", "偏空")):
-        side = metrics[key]
-        lines.append(f"{label}  訊號 {side['signals']}｜成交 {side['trades']}｜勝率 {side['win_rate']:.2%}｜累積 {side['cumulative_return']:.2%}")
-    lines.extend(["成本：未計手續費、交易稅、滑價、借券費與融券限制",
+    period = result["period"]
+    scenarios = result.get("metrics_scenarios")
+    lines = [f"回測期間  {period['from']} ～ {period['to']}",
+             "100日成本後績效｜訊號批次，不是帳戶報酬"]
+
+    def pf_text(value):
+        if value is None:
+            return "無虧損樣本"
+        return f"{value:.2f}" if isinstance(value, (int, float)) else "—"
+
+    def row(label, metrics):
+        return (f"{label}  成交 {metrics.get('trades', 0)}｜勝率 {metrics.get('win_rate', 0):.2%}｜"
+                f"平均 {metrics.get('average_return', metrics.get('average_net_return', 0)):.2%}｜"
+                f"PF {pf_text(metrics.get('profit_factor'))}｜最大回撤 {metrics.get('max_drawdown', 0):.2%}")
+
+    if scenarios:
+        costs = {"gross": 0.0, "standard": 0.00435, "stress": 0.00535, **result.get("costs", {})}
+        labels = {
+            "gross": "gross（未扣成本）",
+            "standard": f"standard {costs['standard']:.3%}",
+            "stress": f"stress {costs['stress']:.3%}",
+        }
+        for name in ("gross", "standard", "stress"):
+            metrics = scenarios.get(name)
+            if not metrics:
+                continue
+            lines.append(labels[name])
+            lines.append(row("整體", metrics))
+            lines.append(row("偏多", metrics.get("long", {})))
+            lines.append(row("偏空", metrics.get("short", {})))
+    else:
+        metrics = result["metrics"]
+        lines.append("gross（舊報告，未扣成本）")
+        lines.append(row("整體", metrics))
+        lines.append(f"累積 {metrics.get('cumulative_return', 0):.2%}")
+        for key, label in (("long", "偏多"), ("short", "偏空")):
+            side = metrics.get(key, {})
+            lines.append(row(label, side) + f"｜累積 {side.get('cumulative_return', 0):.2%}")
+    lines.extend(["成本限制：standard 每筆成交扣雙邊總成本 0.435%；stress 扣 0.535%；未另計固定滑價、借券費與融券限制",
                   f"最後完成  {result.get('completed_at', '—')}",
                   "歷史回測不代表未來績效，不保證獲利。"])
     return "\n\n".join(lines)
@@ -132,7 +196,7 @@ class Dashboard(tk.Tk):
         style.configure("Treeview", background=PANEL, fieldbackground=PANEL, foreground=FG, rowheight=27, borderwidth=0)
         style.configure("Treeview.Heading", background="#19283f", foreground=FG, font=("Microsoft JhengHei UI", 10, "bold"))
         style.map("Treeview", background=[("selected", "#234a72")])
-        self._build(); self.after(120, self._poll)
+        self._build(); self._load_health(); self.after(120, self._poll)
         cached = load_result(data_dir)
         if cached:
             self._render(cached, "離線顯示上次成功結果"); self.refresh_quotes()
@@ -229,10 +293,64 @@ class Dashboard(tk.Tk):
         self.global_market_status = tk.StringVar(value="期交所行情讀取中…")
         tk.Label(global_frame, textvariable=self.global_market_status, fg="#fbbf24", bg=PANEL, anchor="w",
                  font=("Microsoft JhengHei UI", 10), padx=18, pady=12).pack(fill="x")
+
+        health_frame = tk.Frame(self.tabs, bg=PANEL); self.tabs.add(health_frame, text=layout["tabs"][5])
+        health_actions = tk.Frame(health_frame, bg=PANEL); health_actions.pack(fill="x", padx=18, pady=(14, 4))
+        for label, command in ((layout["tool_actions"][4], self.export_diagnostics_action),
+                               (layout["tool_actions"][5], self.create_backup_action),
+                               (layout["tool_actions"][6], self.restore_backup_action)):
+            tk.Button(health_actions, text=label, command=command, **tool_style).pack(side="left", padx=(0, 8))
+        self.health_text = tk.Text(health_frame, bg=PANEL, fg=FG, insertbackground=FG, relief="flat",
+                                   padx=24, pady=14, font=("Microsoft JhengHei UI", 11), state="disabled")
+        self.health_text.pack(fill="both", expand=True)
         bottom = tk.Frame(self, bg=BG); bottom.pack(fill="x", padx=20, pady=(7, 14))
         self.progress = ttk.Progressbar(bottom, maximum=100); self.progress.pack(fill="x")
         self.status = tk.StringVar(value="就緒｜可離線開啟上次結果")
         tk.Label(bottom, textvariable=self.status, fg=MUTED, bg=BG, anchor="w", font=("Microsoft JhengHei UI", 9)).pack(fill="x", pady=(5, 0))
+
+    def _load_health(self):
+        root = self.data_dir.parent
+        report = build_health_report(self.data_dir, _desktop_version(root), datetime.now(timezone.utc))
+        self.health_text.configure(state="normal")
+        self.health_text.delete("1.0", "end")
+        self.health_text.insert("1.0", format_health_report(report))
+        self.health_text.configure(state="disabled")
+        return report
+
+    def export_diagnostics_action(self):
+        root = self.data_dir.parent
+        now = datetime.now(timezone.utc)
+        destination = root / "diagnostics" / f"health-{now.astimezone().strftime('%Y%m%d-%H%M%S')}.json"
+        try:
+            result = export_diagnostics(self.data_dir, _desktop_version(root), destination, now)
+        except Exception as exc:
+            messagebox.showerror("診斷匯出失敗", str(exc)); return
+        messagebox.showinfo("匿名診斷已匯出", f"已建立：\n{result}\n\n不含股票清單、路徑、帳號或憑證。")
+
+    def create_backup_action(self):
+        root = self.data_dir.parent
+        try:
+            result = create_backup(root)
+        except Exception as exc:
+            messagebox.showerror("備份失敗", str(exc)); return
+        messagebox.showinfo("備份完成", f"已建立 {result['file_count']} 個資料檔：\n{result['path']}")
+
+    def restore_backup_action(self):
+        selected = filedialog.askopenfilename(title="選擇 TaiStockScanner 備份",
+                                              filetypes=(("ZIP 備份", "*.zip"), ("所有檔案", "*.*")))
+        if not selected:
+            return
+        if not messagebox.askyesno("確認保守還原",
+                                   "程式會先驗證備份；較新的現有資料不會被覆蓋。\n確定要繼續嗎？"):
+            return
+        root = self.data_dir.parent
+        try:
+            result = restore_backup(root, Path(selected))
+        except Exception as exc:
+            messagebox.showerror("還原失敗", str(exc)); return
+        messagebox.showinfo("還原完成", f"已還原 {result['file_count']} 個資料檔。")
+        if "health_text" in self.__dict__:
+            self._load_health()
 
     def update_data(self):
         self.button.configure(state="disabled"); self.status.set("更新中…")
@@ -346,7 +464,7 @@ class Dashboard(tk.Tk):
             while True:
                 event = self.events.get_nowait()
                 if event[0] == "progress": self.status.set(event[1]); self.progress["value"] = event[2]
-                elif event[0] == "done": self._render(event[1], "更新成功"); self.progress["value"] = 100; self.button.configure(state="normal")
+                elif event[0] == "done": self._render(event[1], "更新成功"); self._load_health(); self.progress["value"] = 100; self.button.configure(state="normal")
                 elif event[0] == "backtest_done":
                     self._load_backtest(); self.backtest_button.configure(state="normal"); self.status.set("100日回測完成")
                 elif event[0] == "backtest_error":

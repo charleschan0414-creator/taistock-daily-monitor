@@ -129,3 +129,70 @@ def evaluate_candidates(rows: list[dict], weights: dict | None = None) -> list[d
             )
         qualified.sort(key=lambda row: (-row["score"], row["volume_rank"], row["code"]))
     return by_direction["long"] + by_direction["short"]
+
+
+def audit_candidates(rows: list[dict], weights: dict | None = None) -> list[dict]:
+    """保留完整候選並記錄當日可知衍生值、資格與未入選原因。"""
+    evaluated = evaluate_candidates(rows, weights)
+    eligible_by_key = {
+        (item.get("date"), item.get("code"), item.get("volume_rank")): item
+        for item in evaluated
+    }
+    audited = []
+    for source in rows:
+        key = (source.get("date"), source.get("code"), source.get("volume_rank"))
+        eligible = eligible_by_key.get(key)
+        if eligible is not None:
+            item = dict(eligible)
+            item.update(eligible=True, rejection_reasons=[])
+            audited.append(item)
+            continue
+
+        item = dict(source)
+        closes = list(source.get("closes") or [])
+        previous = source.get("prev_volume")
+        institutional = source.get("institutional_net", 0)
+        reasons = []
+        if len(closes) < 5:
+            reasons.append("insufficient_history")
+        if previous is not None and previous <= 0:
+            reasons.append("zero_previous_volume")
+        ma5 = sum(closes[-5:]) / 5 if len(closes) >= 5 else None
+        growth = ((source["volume"] / previous - 1) * 100
+                  if previous is not None and previous > 0 else None)
+        if growth is not None and growth < 20:
+            reasons.append("volume_growth_below_20")
+        direction = None
+        if ma5 is not None:
+            if source["close"] > ma5 and institutional > 0:
+                direction = "long"
+            elif source["close"] < ma5 and institutional < 0:
+                direction = "short"
+            else:
+                reasons.append("ma5_institutional_misaligned")
+        distance = abs((source["close"] / ma5 - 1) * 100) if ma5 else None
+        returns = [abs(closes[i] / closes[i - 1] - 1)
+                   for i in range(max(1, len(closes) - 4), len(closes))
+                   if closes[i - 1] > 0]
+        volatility = (sum(returns) / len(returns) * 100) if returns else None
+        item.update(
+            ma5=round(ma5, 2) if ma5 is not None else None,
+            volume_growth_pct=round(growth, 2) if growth is not None else None,
+            above_ma5_pct=(round((source["close"] / ma5 - 1) * 100, 2) if ma5 else None),
+            ma5_distance_pct=round(distance, 2) if distance is not None else None,
+            institutional_lots=round(institutional / 1000, 2),
+            institutional_abs_lots=round(abs(institutional) / 1000, 2),
+            volatility_proxy_pct=round(volatility, 2) if volatility is not None else None,
+            eligible=False,
+            signal_direction=None,
+            rejection_reasons=reasons,
+            score=None,
+            entry_trigger=None,
+            stop_loss=None,
+            target1=None,
+            target2=None,
+            risk_pct=None,
+            entry_offset_pct=None,
+        )
+        audited.append(item)
+    return audited

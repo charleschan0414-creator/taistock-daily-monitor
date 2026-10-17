@@ -88,20 +88,20 @@
       },
       "holdout": {
         "standard": {
-          "trades": 6,
-          "win_rate": 0.3333333333333333,
-          "average_return": -0.008267398707367724,
-          "profit_factor": 0.6373080212377898,
-          "max_drawdown": -0.038592771830165296,
-          "cumulative_return": -0.017120984850276022
+          "trades": 5,
+          "win_rate": 0.4,
+          "average_return": -0.0015131900066302142,
+          "profit_factor": 0.9201304385487581,
+          "max_drawdown": -0.035147101449275464,
+          "cumulative_return": -0.013598359877977195
         },
         "stress": {
-          "trades": 6,
-          "win_rate": 0.3333333333333333,
-          "average_return": -0.009267398707367725,
-          "profit_factor": 0.6049906221425219,
-          "max_drawdown": -0.039592771830165296,
-          "cumulative_return": -0.02106553557395907
+          "trades": 5,
+          "win_rate": 0.4,
+          "average_return": -0.002513190006630215,
+          "profit_factor": 0.8714202333632785,
+          "max_drawdown": -0.036147101449275354,
+          "cumulative_return": -0.017553394692498947
         }
       },
       "activation_checks": {
@@ -119,8 +119,8 @@
             "from": "2026-09-07",
             "to": "2026-10-06",
             "days": 20,
-            "trades": 6,
-            "profit_factor": 0.6373080212377898,
+            "trades": 5,
+            "profit_factor": 0.9201304385487581,
             "data_sufficient": true,
             "profit_factor_above_1": false
           },
@@ -128,8 +128,8 @@
             "from": "2026-09-08",
             "to": "2026-10-07",
             "days": 20,
-            "trades": 6,
-            "profit_factor": 0.6373080212377898,
+            "trades": 5,
+            "profit_factor": 0.9201304385487581,
             "data_sufficient": true,
             "profit_factor_above_1": false
           },
@@ -137,8 +137,8 @@
             "from": "2026-09-09",
             "to": "2026-10-08",
             "days": 20,
-            "trades": 6,
-            "profit_factor": 0.6373080212377898,
+            "trades": 5,
+            "profit_factor": 0.9201304385487581,
             "data_sufficient": true,
             "profit_factor_above_1": false
           }
@@ -256,5 +256,5 @@
     ],
     "notice": "日 OHLC 研究結果不是逐筆盤中回測，不保證勝率或獲利。"
   },
-  "updated_at": "2026-10-17T14:34:37+00:00"
+  "updated_at": "2026-10-18T05:23:25+08:00"
 }

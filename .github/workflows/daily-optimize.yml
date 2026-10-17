@@ -17,39 +17,91 @@ concurrency:
 
 jobs:
   daily:
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v7
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        timeout-minutes: 5
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v7
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        timeout-minutes: 5
         with:
           python-version: '3.11'
       - name: Run tests
+        timeout-minutes: 10
         run: python -m unittest discover -s tests -v
       - name: Compile Python
+        timeout-minutes: 5
         run: python -m py_compile app.py daily_pipeline.py publish_public_data.py taistock/*.py tests/*.py
       - name: Run daily pipeline
+        timeout-minutes: 30
         run: python daily_pipeline.py
       - name: Build public GitHub Raw artifacts
+        timeout-minutes: 5
         run: python publish_public_data.py
       - name: Read verified data date
         id: result
+        timeout-minutes: 2
         shell: bash
         run: |
           python -c "import json,os; d=json.load(open('data/daily_status.json',encoding='utf-8')); assert d['status']=='success'; open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8').write('data_date='+d['data_date']+'\n')"
       - name: Commit only approved generated artifacts
+        timeout-minutes: 5
         shell: bash
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -- data/latest.json data/latest.csv data/backtest_100d.json data/backtest_100d.csv data/backtest_trades.csv data/optimizer.json data/strategy_optimization.json data/v2_optimization.json data/daily_status.json data/strategy_history.jsonl
+          git add -- data/global_market_history.jsonl data/market_regime.json data/candidate_universe_100d.csv.gz data/portfolio_100d.json data/strategy_registry.json public_data/market_regime.json
           git add -- 'data/backtest_cache/*.json.gz'
-          git add -- public_data/latest.json public_data/latest.csv public_data/backtest_100d.json public_data/backtest_100d.csv public_data/optimizer.json public_data/strategy_optimization.json public_data/v2_optimization.json public_data/daily_status.json
+          git add -- public_data/latest.json public_data/latest.csv public_data/backtest_100d.json public_data/backtest_100d.csv public_data/optimizer.json public_data/strategy_optimization.json public_data/v2_optimization.json public_data/daily_status.json public_data/portfolio_100d.json public_data/strategy_registry.json
           if git diff --cached --quiet; then
             echo 'No generated changes to commit.'
             exit 0
           fi
           git commit -m "data: daily results ${{ steps.result.outputs.data_date }}"
           git push
+      - name: Upload daily status diagnostics
+        if: always()
+        timeout-minutes: 5
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-status-${{ github.run_id }}
+          path: data/daily_status.json
+          if-no-files-found: warn
+          retention-days: 5
+      - name: Write run summary
+        if: always()
+        timeout-minutes: 2
+        shell: bash
+        env:
+          WORKFLOW_STATUS: ${{ job.status }}
+        run: |
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          from pathlib import Path
+
+          data_date = "unavailable"
+          pipeline_status = "unknown"
+          status_path = Path("data/daily_status.json")
+          if status_path.is_file():
+              try:
+                  payload = json.loads(status_path.read_text(encoding="utf-8"))
+                  data_date = str(payload.get("data_date") or data_date)
+                  pipeline_status = str(payload.get("status") or pipeline_status)
+              except (OSError, ValueError, TypeError):
+                  pipeline_status = "invalid"
+
+          import os
+          run_status = (
+              "success"
+              if os.environ.get("WORKFLOW_STATUS") == "success" and pipeline_status == "success"
+              else "failure"
+          )
+          print("## Daily pipeline summary")
+          print(f"- Data date: {data_date}")
+          print(f"- Status: {run_status}")
+          PY

@@ -211,6 +211,27 @@ h3 { margin-bottom: 0; font-size: 16px; }
 .system-details summary > span { color: var(--muted); font-size: 11px; }
 .system-details summary::after { margin-left: auto; }
 
+.backtest-performance { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface-soft); }
+.backtest-performance > summary, .backtest-scenario > summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  padding: 15px 18px; cursor: pointer; list-style: none;
+}
+.backtest-performance > summary::-webkit-details-marker, .backtest-scenario > summary::-webkit-details-marker { display: none; }
+.backtest-performance > summary::after, .backtest-scenario > summary::after { color: var(--muted); content: "+"; font-size: 20px; }
+.backtest-performance[open] > summary::after, .backtest-scenario[open] > summary::after { content: "−"; }
+.backtest-performance > summary > span:first-child { flex: 1; }
+.backtest-performance > summary strong { display: block; font-size: 16px; }
+.backtest-note { margin: 0; padding: 0 18px 12px; color: var(--muted); font-size: 12px; }
+.backtest-performance > h3 { margin: 0; padding: 4px 18px 8px; color: var(--green); font-size: 14px; }
+.backtest-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 0 18px 14px; }
+.backtest-metrics article { padding: 12px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); }
+.backtest-metrics span { display: block; margin-bottom: 4px; color: var(--muted); font-size: 10px; }
+.backtest-metrics strong { font-size: 12px; }
+.backtest-scenario { margin: 0 18px 10px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); }
+.backtest-scenario > summary { padding: 10px 12px; }
+.backtest-scenario > summary span { color: var(--muted); font-size: 10px; }
+.backtest-scenario .backtest-metrics { padding: 0 10px 10px; }
+
 .downloads { display: flex; gap: 10px; margin-top: 24px; }
 .downloads a { display: inline-flex; align-items: center; justify-content: center; padding: 0 14px; border: 1px solid var(--line); border-radius: 9px; color: var(--muted); font-size: 12px; font-weight: 650; text-decoration: none; }
 .downloads a:hover { border-color: var(--line-strong); color: var(--text); }
@@ -233,7 +254,7 @@ footer { padding: 20px 0 max(28px, env(safe-area-inset-bottom)); border-top: 1px
   .summary-card { padding: 13px; }
   .market-context, .signal-group { padding: 14px; }
   .levels { gap: 4px; }
-  .v2-costs, .v2-directions, .meta { grid-template-columns: 1fr; }
+  .v2-costs, .v2-directions, .meta, .backtest-metrics { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 420px) {
