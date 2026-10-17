@@ -1,0 +1,260 @@
+{
+  "version": "2.1",
+  "report_type": "research_audit_only",
+  "method": {
+    "split": "first_70_signal_days_selection_last_30_activation_only",
+    "selection_uses_holdout_outcomes": false,
+    "ranking": "each signal day and direction: score descending, volume_rank ascending",
+    "selection_objective": "standard net average return, then cumulative return, PF, drawdown, trades"
+  },
+  "train_dates": {
+    "from": "2026-05-18",
+    "to": "2026-08-25",
+    "days": 70
+  },
+  "holdout_dates": {
+    "from": "2026-08-26",
+    "to": "2026-10-08",
+    "days": 30
+  },
+  "costs": {
+    "standard": 0.00435,
+    "stress": 0.00535
+  },
+  "cost_definition": "每筆已成交 return 扣除一次雙邊總成本（小數報酬）",
+  "grid": {
+    "score_min": [
+      50,
+      60,
+      70,
+      80,
+      90
+    ],
+    "volume_rank_max": [
+      20,
+      50,
+      100
+    ],
+    "volume_growth_min": [
+      20,
+      50,
+      100
+    ],
+    "ma5_distance_max": [
+      3,
+      5,
+      10,
+      20
+    ],
+    "daily_limit": [
+      3,
+      5
+    ]
+  },
+  "candidate_count_per_direction": 360,
+  "activation_thresholds": {
+    "standard_profit_factor": ">=1.3",
+    "standard_average_return": ">0",
+    "holdout_trades": ">=30",
+    "standard_max_drawdown": ">=-0.10",
+    "rolling_windows": "latest 3 rolling 20-signal-day windows; at least 2 standard PF>1"
+  },
+  "directions": {
+    "long": {
+      "selected_parameters": {
+        "score_min": 90,
+        "volume_rank_max": 20,
+        "volume_growth_min": 100,
+        "ma5_distance_max": 10,
+        "daily_limit": 3
+      },
+      "selection": {
+        "standard": {
+          "trades": 9,
+          "win_rate": 0.5555555555555556,
+          "average_return": 0.012159197754430213,
+          "profit_factor": 1.8128002625406066,
+          "max_drawdown": -0.061303889770693676,
+          "cumulative_return": 0.008562477950431191
+        },
+        "stress": {
+          "trades": 9,
+          "win_rate": 0.5555555555555556,
+          "average_return": 0.011159197754430212,
+          "profit_factor": 1.724431185092537,
+          "max_drawdown": -0.0632406238370179,
+          "cumulative_return": 0.0015262750097020383
+        }
+      },
+      "holdout": {
+        "standard": {
+          "trades": 6,
+          "win_rate": 0.3333333333333333,
+          "average_return": -0.008267398707367724,
+          "profit_factor": 0.6373080212377898,
+          "max_drawdown": -0.038592771830165296,
+          "cumulative_return": -0.017120984850276022
+        },
+        "stress": {
+          "trades": 6,
+          "win_rate": 0.3333333333333333,
+          "average_return": -0.009267398707367725,
+          "profit_factor": 0.6049906221425219,
+          "max_drawdown": -0.039592771830165296,
+          "cumulative_return": -0.02106553557395907
+        }
+      },
+      "activation_checks": {
+        "standard_profit_factor_at_least_1_3": false,
+        "standard_average_return_above_0": false,
+        "holdout_trades_at_least_30": false,
+        "standard_max_drawdown_at_least_minus_0_10": true,
+        "rolling_20_signal_day_windows": false
+      },
+      "rolling_20_signal_day_checks": {
+        "window_days": 20,
+        "required_profitable_windows": 2,
+        "windows": [
+          {
+            "from": "2026-09-07",
+            "to": "2026-10-06",
+            "days": 20,
+            "trades": 6,
+            "profit_factor": 0.6373080212377898,
+            "data_sufficient": true,
+            "profit_factor_above_1": false
+          },
+          {
+            "from": "2026-09-08",
+            "to": "2026-10-07",
+            "days": 20,
+            "trades": 6,
+            "profit_factor": 0.6373080212377898,
+            "data_sufficient": true,
+            "profit_factor_above_1": false
+          },
+          {
+            "from": "2026-09-09",
+            "to": "2026-10-08",
+            "days": 20,
+            "trades": 6,
+            "profit_factor": 0.6373080212377898,
+            "data_sufficient": true,
+            "profit_factor_above_1": false
+          }
+        ],
+        "profitable_windows": 0,
+        "data_sufficient": true,
+        "passed": false,
+        "reason": "不通過：三個窗口中少於兩個 standard PF>1"
+      },
+      "passed": false
+    },
+    "short": {
+      "selected_parameters": {
+        "score_min": 90,
+        "volume_rank_max": 100,
+        "volume_growth_min": 50,
+        "ma5_distance_max": 10,
+        "daily_limit": 3
+      },
+      "selection": {
+        "standard": {
+          "trades": 14,
+          "win_rate": 0.5714285714285714,
+          "average_return": 0.017987755136144996,
+          "profit_factor": 2.6949428129121866,
+          "max_drawdown": -0.07787691611616021,
+          "cumulative_return": 0.26733288633568586
+        },
+        "stress": {
+          "trades": 14,
+          "win_rate": 0.5714285714285714,
+          "average_return": 0.016987755136145,
+          "profit_factor": 2.5385822664869733,
+          "max_drawdown": -0.08071685922733651,
+          "cumulative_return": 0.2499833273108334
+        }
+      },
+      "holdout": {
+        "standard": {
+          "trades": 5,
+          "win_rate": 0.2,
+          "average_return": -0.01578002686120271,
+          "profit_factor": 0.30962092135233427,
+          "max_drawdown": -0.10965691276416556,
+          "cumulative_return": -0.07815203417764816
+        },
+        "stress": {
+          "trades": 5,
+          "win_rate": 0.2,
+          "average_return": -0.01678002686120271,
+          "profit_factor": 0.2906964654718061,
+          "max_drawdown": -0.11331773762445851,
+          "cumulative_return": -0.08282907995165611
+        }
+      },
+      "activation_checks": {
+        "standard_profit_factor_at_least_1_3": false,
+        "standard_average_return_above_0": false,
+        "holdout_trades_at_least_30": false,
+        "standard_max_drawdown_at_least_minus_0_10": false,
+        "rolling_20_signal_day_windows": false
+      },
+      "rolling_20_signal_day_checks": {
+        "window_days": 20,
+        "required_profitable_windows": 2,
+        "windows": [
+          {
+            "from": "2026-09-07",
+            "to": "2026-10-06",
+            "days": 20,
+            "trades": 5,
+            "profit_factor": 0.30962092135233427,
+            "data_sufficient": true,
+            "profit_factor_above_1": false
+          },
+          {
+            "from": "2026-09-08",
+            "to": "2026-10-07",
+            "days": 20,
+            "trades": 5,
+            "profit_factor": 0.30962092135233427,
+            "data_sufficient": true,
+            "profit_factor_above_1": false
+          },
+          {
+            "from": "2026-09-09",
+            "to": "2026-10-08",
+            "days": 20,
+            "trades": 5,
+            "profit_factor": 0.30962092135233427,
+            "data_sufficient": true,
+            "profit_factor_above_1": false
+          }
+        ],
+        "profitable_windows": 0,
+        "data_sufficient": true,
+        "passed": false,
+        "reason": "不通過：三個窗口中少於兩個 standard PF>1"
+      },
+      "passed": false
+    }
+  },
+  "decision": {
+    "enabled": false,
+    "status": "未通過研究啟用門檻；保留現有 strategy_optimization 與即時選股規則",
+    "changes_existing_strategy_optimization": false,
+    "changes_live_screening_rules": false
+  },
+  "limitations": {
+    "source_is_daily_ohlc": true,
+    "not_true_intraday": true,
+    "claims": [
+      "不可宣稱13:20當沖",
+      "不可宣稱60%勝率"
+    ],
+    "notice": "日 OHLC 研究結果不是逐筆盤中回測，不保證勝率或獲利。"
+  },
+  "updated_at": "2026-10-17T16:05:21+08:00"
+}

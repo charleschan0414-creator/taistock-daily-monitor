@@ -1,6 +1,6 @@
 {
-  "started_at": "2026-10-17T07:51:04+08:00",
-  "completed_at": "2026-10-17T07:51:27+08:00",
+  "started_at": "2026-10-17T16:05:08+08:00",
+  "completed_at": "2026-10-17T16:05:22+08:00",
   "status": "success",
   "data_date": "2026-10-16",
   "backtest": {
@@ -124,6 +124,70 @@
       "train_sparse_trade_penalty": 0.0
     }
   },
+  "v2_analysis": {
+    "version": "2.1",
+    "costs": {
+      "standard": 0.00435,
+      "stress": 0.00535
+    },
+    "decision": {
+      "enabled": false,
+      "status": "未通過研究啟用門檻；保留現有 strategy_optimization 與即時選股規則"
+    },
+    "directions": {
+      "long": {
+        "passed": false,
+        "holdout": {
+          "standard": {
+            "trades": 6,
+            "win_rate": 0.3333333333333333,
+            "average_return": -0.008267398707367724,
+            "profit_factor": 0.6373080212377898,
+            "max_drawdown": -0.038592771830165296,
+            "cumulative_return": -0.017120984850276022
+          },
+          "stress": {
+            "trades": 6,
+            "win_rate": 0.3333333333333333,
+            "average_return": -0.009267398707367725,
+            "profit_factor": 0.6049906221425219,
+            "max_drawdown": -0.039592771830165296,
+            "cumulative_return": -0.02106553557395907
+          }
+        }
+      },
+      "short": {
+        "passed": false,
+        "holdout": {
+          "standard": {
+            "trades": 5,
+            "win_rate": 0.2,
+            "average_return": -0.01578002686120271,
+            "profit_factor": 0.30962092135233427,
+            "max_drawdown": -0.10965691276416556,
+            "cumulative_return": -0.07815203417764816
+          },
+          "stress": {
+            "trades": 5,
+            "win_rate": 0.2,
+            "average_return": -0.01678002686120271,
+            "profit_factor": 0.2906964654718061,
+            "max_drawdown": -0.11331773762445851,
+            "cumulative_return": -0.08282907995165611
+          }
+        }
+      }
+    },
+    "limitations": {
+      "source_is_daily_ohlc": true,
+      "not_true_intraday": true,
+      "claims": [
+        "不可宣稱13:20當沖",
+        "不可宣稱60%勝率"
+      ],
+      "notice": "日 OHLC 研究結果不是逐筆盤中回測，不保證勝率或獲利。"
+    }
+  },
   "gate": {
     "long_score_min": 55,
     "short_score_min": 70,
@@ -132,8 +196,8 @@
   },
   "weights": {
     "volume_growth_pct": 0.25,
-    "ma5_distance_pct": 0.2,
-    "institutional_lots": 0.45,
+    "ma5_distance_pct": 0.4,
+    "institutional_lots": 0.25,
     "volume_rank": 0.1
   }
 }

@@ -16,7 +16,7 @@ class PublishPublicDataTests(unittest.TestCase):
             (data / "latest.csv").write_text("code\n2330\n", encoding="utf-8")
             (data / "backtest_100d.json").write_text(json.dumps({"period": {}, "metrics": {}, "trades": [{"secret": 1}]}), encoding="utf-8")
             (data / "backtest_100d.csv").write_text("return\n1\n", encoding="utf-8")
-            for name in ("optimizer.json", "strategy_optimization.json", "daily_status.json"):
+            for name in ("optimizer.json", "strategy_optimization.json", "v2_optimization.json", "daily_status.json"):
                 (data / name).write_text("{}", encoding="utf-8")
             (data / "scanner.db").write_bytes(b"PRIVATE")
             publish_public_data.publish(data, public)
@@ -24,7 +24,8 @@ class PublishPublicDataTests(unittest.TestCase):
             names = {path.name for path in public.iterdir()}
         self.assertNotIn("trades", summary)
         self.assertEqual(names, {"latest.json", "latest.csv", "backtest_100d.json", "backtest_100d.csv",
-                                 "optimizer.json", "strategy_optimization.json", "daily_status.json"})
+                                 "optimizer.json", "strategy_optimization.json", "v2_optimization.json",
+                                 "daily_status.json"})
         self.assertNotIn("scanner.db", names)
 
 

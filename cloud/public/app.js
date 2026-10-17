@@ -3,6 +3,31 @@ import { createRefreshController } from './refresh.js';
 const $ = id => document.getElementById(id);
 const fmt = value => value == null ? '—' : new Intl.NumberFormat('zh-TW', { maximumFractionDigits: 2 }).format(value);
 const percent = value => Number.isFinite(value) ? `${(value * 100).toFixed(2)}%` : '—';
+const metricSource = direction => direction?.standard?.holdout ?? direction?.standard_holdout ?? direction?.standard ?? direction?.holdout?.standard ?? direction;
+const v2Value = value => Number.isFinite(value) ? value : '尚未完成';
+const v2Percent = value => Number.isFinite(value) ? percent(value) : '尚未完成';
+const v2Metrics = direction => {
+  const metrics = metricSource(direction);
+  return {
+    trades: v2Value(metrics?.trades),
+    winRate: v2Percent(metrics?.win_rate),
+    averageReturn: v2Percent(metrics?.average_return),
+    profitFactor: Number.isFinite(metrics?.profit_factor)
+      ? String(metrics.profit_factor)
+      : metrics?.profit_factor === null && metrics?.trades > 0 ? '無虧損樣本' : '尚未完成',
+  };
+};
+export function resolveV2Analysis(data) {
+  const analysis = data?.daily_status?.v2_analysis ?? data?.v2_analysis;
+  const directions = analysis?.selected ?? analysis?.directions;
+  return {
+    available: Boolean(analysis),
+    quality: analysis?.decision?.enabled === true ? '通過' : analysis?.decision?.enabled === false ? '未通過' : '尚未完成',
+    status: analysis?.decision?.status ?? '尚未完成',
+    long: v2Metrics(directions?.long),
+    short: v2Metrics(directions?.short),
+  };
+}
 function missedTradingDays(dataDate, now = new Date()) {
   if (!dataDate) return Infinity;
   const cursor = new Date(`${dataDate}T12:00:00+08:00`); cursor.setDate(cursor.getDate() + 1);
@@ -62,6 +87,15 @@ function renderMarket(market) {
   }
 }
 
+function renderV2Analysis(data) {
+  const view = resolveV2Analysis(data);
+  const summary = metrics => `交易 ${metrics.trades} · 勝率 ${metrics.winRate} · 平均報酬 ${metrics.averageReturn} · PF ${metrics.profitFactor}`;
+  $('v2-quality').textContent = view.quality;
+  $('v2-status').textContent = view.status;
+  $('v2-long-metrics').textContent = summary(view.long);
+  $('v2-short-metrics').textContent = summary(view.short);
+}
+
 async function load() {
   $('refresh').disabled = true; $('message').textContent = '';
   try {
@@ -78,6 +112,7 @@ async function load() {
     const testMetrics = daily?.strategy?.candidate?.test;
     const pf = testMetrics?.profit_factor == null ? (testMetrics ? '無虧損樣本' : '—') : fmt(testMetrics.profit_factor);
     $('test-metrics').textContent = `${percent(testMetrics?.win_rate)} / ${pf}`;
+    renderV2Analysis(data);
     const warnings = [];
     if (daily?.status !== 'success') warnings.push('每日收盤後回測/優化尚未成功');
     if (missedTradingDays(data.data_date) > 0) warnings.push('盤後資料已過期，07:40 備援可能尚未完成');
@@ -87,7 +122,9 @@ async function load() {
   } catch (error) { $('message').textContent = `資料載入失敗：${error.message}`; }
   finally { $('refresh').disabled = false; }
 }
-const refreshController = createRefreshController({ load });
-$('refresh').addEventListener('click', refreshController.manual);
-refreshController.start();
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});
+if (typeof document !== 'undefined') {
+  const refreshController = createRefreshController({ load });
+  $('refresh').addEventListener('click', refreshController.manual);
+  refreshController.start();
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});
+}

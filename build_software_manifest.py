@@ -34,6 +34,7 @@ RELEASE_FILES = (
     "taistock/scanner.py",
     "taistock/storage.py",
     "taistock/strategy_optimize.py",
+    "taistock/v2_optimize.py",
     "taistock/ui.py",
     "mobile/icon.svg",
     "mobile/index.html",

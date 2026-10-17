@@ -44,9 +44,9 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -- data/latest.json data/latest.csv data/backtest_100d.json data/backtest_100d.csv data/backtest_trades.csv data/optimizer.json data/strategy_optimization.json data/daily_status.json data/strategy_history.jsonl
+          git add -- data/latest.json data/latest.csv data/backtest_100d.json data/backtest_100d.csv data/backtest_trades.csv data/optimizer.json data/strategy_optimization.json data/v2_optimization.json data/daily_status.json data/strategy_history.jsonl
           git add -- 'data/backtest_cache/*.json.gz'
-          git add -- public_data/latest.json public_data/latest.csv public_data/backtest_100d.json public_data/backtest_100d.csv public_data/optimizer.json public_data/strategy_optimization.json public_data/daily_status.json
+          git add -- public_data/latest.json public_data/latest.csv public_data/backtest_100d.json public_data/backtest_100d.csv public_data/optimizer.json public_data/strategy_optimization.json public_data/v2_optimization.json public_data/daily_status.json
           if git diff --cached --quiet; then
             echo 'No generated changes to commit.'
             exit 0

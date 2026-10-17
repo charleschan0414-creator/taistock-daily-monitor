@@ -12,6 +12,8 @@ class WorkflowTests(unittest.TestCase):
         self.assertIn("40 23 * * 0-4", text)
         self.assertIn("contents: write", text)
         self.assertIn("python daily_pipeline.py", text)
+        self.assertIn("data/v2_optimization.json", text)
+        self.assertIn("public_data/v2_optimization.json", text)
         self.assertNotIn("git add .", text)
         self.assertNotIn("scanner.db", text)
 

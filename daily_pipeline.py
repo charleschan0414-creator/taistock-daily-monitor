@@ -9,6 +9,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from app import run_backtest, run_strategy_optimization, update
+from taistock.v2_optimize import optimize_v2
 
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / "data"
@@ -79,6 +80,7 @@ def main():
     atomic_json(DATA / "daily_status.json", status)
     try:
         backtest = run_backtest(100)
+        v2_report = optimize_v2(backtest, DATA / "v2_optimization.json")
         strategy = run_strategy_optimization()
         latest = update(False)
         expected = backtest.get("data_collection", {}).get("latest_complete_date")
@@ -89,6 +91,19 @@ def main():
             "completed_at": taipei_now(), "status": "success", "data_date": latest["data_date"],
             "backtest": {"period": backtest["period"], "metrics": backtest["metrics"]},
             "strategy": {"decision": strategy["decision"], "baseline": strategy["baseline"], "candidate": strategy["candidate"]},
+            "v2_analysis": {
+                "version": v2_report["version"],
+                "costs": v2_report["costs"],
+                "decision": {
+                    "enabled": v2_report["decision"]["enabled"],
+                    "status": v2_report["decision"]["status"],
+                },
+                "directions": {
+                    name: {"passed": bool(result["passed"]), "holdout": result["holdout"]}
+                    for name, result in v2_report["directions"].items()
+                },
+                "limitations": v2_report["limitations"],
+            },
             "gate": strategy["decision"].get("applied_gate"),
             "weights": latest.get("optimization", {}).get("new_weights") or latest.get("optimization", {}).get("weights"),
         })

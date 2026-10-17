@@ -9,7 +9,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / "data"
 PUBLIC = ROOT / "public_data"
-JSON_COPIES = ("latest.json", "optimizer.json", "strategy_optimization.json", "daily_status.json")
+JSON_COPIES = ("latest.json", "optimizer.json", "strategy_optimization.json", "v2_optimization.json",
+               "daily_status.json")
 CSV_COPIES = ("latest.csv", "backtest_100d.csv")
 BACKTEST_KEYS = ("period", "signal_dates", "metrics", "walk_forward", "optimization", "cost_rate",
                  "cost_assumption", "completed_at", "data_collection")

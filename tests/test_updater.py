@@ -408,7 +408,7 @@ class UpdaterTests(unittest.TestCase):
 
         root = Path(__file__).resolve().parents[1]
         manifest = json.loads((root / "software_manifest.json").read_text(encoding="utf-8"))
-        self.assertEqual(manifest["version"], "2026.10.17.1")
+        self.assertEqual(manifest["version"], "2026.10.17.3")
         self.assertIn("updater.py", manifest["files"])
         self.assertIn("run.bat", manifest["files"])
         self.assertIn("build_software_manifest.py", manifest["files"])
