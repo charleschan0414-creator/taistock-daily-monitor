@@ -19,6 +19,21 @@ from .mobile import lan_ipv4
 BG, PANEL, FG, MUTED, ACCENT = "#0b1220", "#111c2f", "#e7edf7", "#8fa2bd", "#4da3ff"
 
 
+def dashboard_structure():
+    return {
+        "primary_action": "更新全部資料",
+        "tool_actions": ("更新現價", "更新夜盤", "執行回測", "開啟手機版"),
+        "cards": ("資料日", "今日偏多", "今日偏空", "即時報價", "策略狀態"),
+        "tabs": ("今日偏多", "今日偏空", "所有訊號", "回測摘要", "夜盤脈動"),
+    }
+
+
+def signal_row_tags(direction, change, index):
+    zebra = "even" if index % 2 == 0 else "odd"
+    movement = "gain" if str(change).startswith("+") else "loss" if str(change).startswith("-") else "flat"
+    return zebra, direction if direction in ("long", "short") else "flat", movement
+
+
 class BackgroundRefreshGate:
     def __init__(self):
         self._lock = threading.Lock()
@@ -56,9 +71,22 @@ def display_quote_values(quote):
     return price, change, f"{clock} {quote.get('status', '')}".strip()
 
 
-def format_global_market(payload):
+def global_market_layers(payload):
     scenario = payload.get("scenario", {})
-    scenario_text = f"情境：{scenario.get('bias', '中性')}｜{scenario.get('basis', 'TX / UNF / SXF 尚無完整資料')}"
+    notice = "期交所行情，可能延遲，非投資建議｜情境僅供參考，不加入現有策略分數"
+    if payload.get("status") != "ok":
+        notice = f"{payload.get('message', 'TAIFEX 行情更新失敗')}｜{notice}"
+    return {
+        "scenario": scenario.get("bias", "中性"),
+        "basis": f"依據｜{scenario.get('basis', 'TX / UNF / SXF 尚無完整資料')}",
+        "fetched_at": f"抓取時間｜{payload.get('fetched_at', '—')}",
+        "notice": notice,
+    }
+
+
+def format_global_market(payload):
+    layers = global_market_layers(payload)
+    scenario_text = f"情境：{layers['scenario']}｜{layers['basis'][3:]}"
     rows = []
     for item in payload.get("items", []):
         pct = item.get("change_pct")
@@ -107,58 +135,85 @@ class Dashboard(tk.Tk):
         self._load_backtest()
 
     def _build(self):
-        header = tk.Frame(self, bg=BG); header.pack(fill="x", padx=18, pady=(16, 8))
-        tk.Label(header, text="TAISTOCK / DAILY MONITOR", fg=ACCENT, bg=BG, font=("Segoe UI", 10, "bold")).pack(anchor="w")
-        row = tk.Frame(header, bg=BG); row.pack(fill="x")
-        tk.Label(row, text="台股多空規則式觀察", fg=FG, bg=BG, font=("Microsoft JhengHei UI", 24, "bold")).pack(side="left")
-        self.button = tk.Button(row, text="立即更新", command=self.update_data, bg=ACCENT, fg="#06121f", relief="flat", padx=20, pady=8,
-                                font=("Microsoft JhengHei UI", 11, "bold")); self.button.pack(side="right")
-        self.backtest_button = tk.Button(row, text="100日回測", command=self.run_backtest, bg="#22c55e", fg="#06121f",
-                                         relief="flat", padx=20, pady=8,
-                                         font=("Microsoft JhengHei UI", 11, "bold")); self.backtest_button.pack(side="right", padx=(0, 8))
-        self.quote_button = tk.Button(row, text="更新現價", command=self.refresh_quotes, bg="#f59e0b", fg="#06121f",
-                                      relief="flat", padx=18, pady=8, font=("Microsoft JhengHei UI", 11, "bold"))
-        self.quote_button.pack(side="right", padx=(0, 8))
-        self.global_market_button = tk.Button(row, text="更新期貨", command=self.refresh_global_market, bg="#2dd4bf", fg="#06121f",
-                                              relief="flat", padx=18, pady=8, font=("Microsoft JhengHei UI", 11, "bold"))
-        self.global_market_button.pack(side="right", padx=(0, 8))
-        self.mobile_button = tk.Button(row, text="手機版", command=self.open_mobile, bg="#a78bfa", fg="#06121f",
-                                       relief="flat", padx=18, pady=8, font=("Microsoft JhengHei UI", 11, "bold"))
-        self.mobile_button.pack(side="right", padx=(0, 8))
-        tk.Label(header, text="僅供規則式研究觀察，非投資建議，不保證獲利；不會自動下單。每天 08:30 使用最近完整交易日資料。",
-                 fg="#fbbf24", bg=BG, font=("Microsoft JhengHei UI", 10)).pack(anchor="w", pady=(5, 0))
-        cards = tk.Frame(self, bg=BG); cards.pack(fill="x", padx=18, pady=8)
-        self.card_vars = []
-        for title in ("資料日期", "成交量池", "偏多數量", "偏空數量", "自我優化", "策略閘門"):
-            box = tk.Frame(cards, bg=PANEL, padx=14, pady=10); box.pack(side="left", fill="x", expand=True, padx=(0, 8))
-            tk.Label(box, text=title, fg=MUTED, bg=PANEL, font=("Microsoft JhengHei UI", 9)).pack(anchor="w")
+        layout = dashboard_structure()
+        header = tk.Frame(self, bg=BG); header.pack(fill="x", padx=20, pady=(16, 8))
+        brand = tk.Frame(header, bg=BG); brand.pack(fill="x")
+        title_box = tk.Frame(brand, bg=BG); title_box.pack(side="left", fill="x", expand=True)
+        tk.Label(title_box, text="TAISTOCK DASHBOARD", fg=ACCENT, bg=BG,
+                 font=("Segoe UI", 10, "bold")).pack(anchor="w")
+        tk.Label(title_box, text="台股多空觀察儀表板", fg=FG, bg=BG,
+                 font=("Microsoft JhengHei UI", 24, "bold")).pack(anchor="w")
+        self.button = tk.Button(brand, text=layout["primary_action"], command=self.update_data,
+                                bg=ACCENT, activebackground="#78b9ff", fg="#06121f", relief="flat",
+                                padx=24, pady=11, font=("Microsoft JhengHei UI", 12, "bold"))
+        self.button.pack(side="right")
+        tools = tk.Frame(header, bg=BG); tools.pack(fill="x", pady=(9, 0))
+        tool_style = {"bg": "#19283f", "activebackground": "#263b59", "fg": FG, "relief": "flat",
+                      "padx": 13, "pady": 6, "font": ("Microsoft JhengHei UI", 9, "bold")}
+        self.quote_button = tk.Button(tools, text=layout["tool_actions"][0], command=self.refresh_quotes, **tool_style)
+        self.global_market_button = tk.Button(tools, text=layout["tool_actions"][1], command=self.refresh_global_market, **tool_style)
+        self.backtest_button = tk.Button(tools, text=layout["tool_actions"][2], command=self.run_backtest, **tool_style)
+        self.mobile_button = tk.Button(tools, text=layout["tool_actions"][3], command=self.open_mobile, **tool_style)
+        for widget in (self.quote_button, self.global_market_button, self.backtest_button, self.mobile_button):
+            widget.pack(side="left", padx=(0, 7))
+        tk.Label(tools, text="研究觀察用｜非投資建議｜不保證獲利｜不會自動下單",
+                 fg="#fbbf24", bg=BG, font=("Microsoft JhengHei UI", 9)).pack(side="right")
+
+        overview = tk.Frame(self, bg=BG); overview.pack(fill="x", padx=20, pady=(2, 9))
+        tk.Label(overview, text="今日總覽", fg=FG, bg=BG,
+                 font=("Microsoft JhengHei UI", 13, "bold")).pack(anchor="w", pady=(0, 5))
+        cards = tk.Frame(overview, bg=BG); cards.pack(fill="x")
+        self.card_vars, self.card_value_labels = [], []
+        card_colors = (FG, "#fb7185", "#34d399", ACCENT, "#fbbf24")
+        for title, color in zip(layout["cards"], card_colors):
+            box = tk.Frame(cards, bg=PANEL, padx=15, pady=11, highlightthickness=1,
+                           highlightbackground="#20324d")
+            box.pack(side="left", fill="x", expand=True, padx=(0, 8))
+            tk.Label(box, text=title, fg=MUTED, bg=PANEL,
+                     font=("Microsoft JhengHei UI", 9, "bold")).pack(anchor="w")
             var = tk.StringVar(value="—"); self.card_vars.append(var)
-            tk.Label(box, textvariable=var, fg=FG, bg=PANEL, wraplength=250, justify="left",
-                     font=("Microsoft JhengHei UI", 13, "bold")).pack(anchor="w")
-        tk.Label(self, text="門檻｜4碼普通股 · 成交量前100 · 量增≥20% · 偏多：收盤>MA5且法人買超 · 偏空：收盤<MA5且法人賣超",
-                 fg=FG, bg="#16243a", padx=14, pady=9, anchor="w", font=("Microsoft JhengHei UI", 10, "bold")).pack(fill="x", padx=18, pady=4)
-        tk.Label(self, text="風險幅度=5日收盤日報酬絕對值平均（限1.5%–5%）；觸發偏移=波動代理÷3（限0.3%–1%）；目標為1.5R/2R，價格依台股跳動單位四捨五入。",
-                 fg=MUTED, bg=BG, anchor="w", font=("Microsoft JhengHei UI", 9)).pack(fill="x", padx=20, pady=(2, 8))
-        tabs = ttk.Notebook(self); tabs.pack(fill="both", expand=True, padx=18, pady=4)
+            value_label = tk.Label(box, textvariable=var, fg=color, bg=PANEL, anchor="w",
+                                   font=("Microsoft JhengHei UI", 18, "bold"))
+            value_label.pack(fill="x", pady=(3, 0)); self.card_value_labels.append(value_label)
+        tk.Label(self, text="篩選規則｜成交量前 100 · 量增 ≥ 20% · 偏多：收盤高於 MA5 且法人買超 · 偏空：收盤低於 MA5 且法人賣超",
+                 fg=FG, bg="#16243a", padx=14, pady=8, anchor="w",
+                 font=("Microsoft JhengHei UI", 9, "bold")).pack(fill="x", padx=20, pady=(0, 7))
+
+        self.tabs = ttk.Notebook(self); self.tabs.pack(fill="both", expand=True, padx=20, pady=3)
         self.trees = []
-        for label in ("偏多前10", "偏空前10", "全部訊號"):
-            frame = tk.Frame(tabs, bg=PANEL); tabs.add(frame, text=label)
+        for label in layout["tabs"][:3]:
+            frame = tk.Frame(self.tabs, bg=PANEL); self.tabs.add(frame, text=label)
             columns = ("rank", "direction", "code", "name", "price", "change", "quote", "entry", "stop", "target1", "target2", "risk", "score", "reason")
             tree = ttk.Treeview(frame, columns=columns, show="headings")
             heads = ("#", "方向", "代號", "名稱", "現價", "漲跌%", "報價時間/狀態", "進場觸發", "停損/回補", "目標1", "目標2", "風險%", "評分", "原因")
             widths = (35, 55, 60, 80, 70, 70, 145, 80, 80, 75, 75, 60, 60, 390)
             for c, h, w in zip(columns, heads, widths):
-                tree.heading(c, text=h); tree.column(c, width=w, anchor="w" if c == "reason" else "center")
+                tree.heading(c, text=h); tree.column(c, width=w, minwidth=w, stretch=False,
+                                                     anchor="w" if c == "reason" else "center")
+            tree.tag_configure("even", background=PANEL); tree.tag_configure("odd", background="#16243a")
+            tree.tag_configure("long", foreground="#fb7185"); tree.tag_configure("short", foreground="#34d399")
+            tree.tag_configure("gain", foreground="#fb7185"); tree.tag_configure("loss", foreground="#34d399")
+            tree.tag_configure("flat", foreground=FG)
             scroll = ttk.Scrollbar(frame, orient="vertical", command=tree.yview); tree.configure(yscrollcommand=scroll.set)
-            scroll.pack(side="right", fill="y"); tree.pack(fill="both", expand=True); self.trees.append(tree)
-        backtest_frame = tk.Frame(tabs, bg=PANEL); tabs.add(backtest_frame, text="100日回測")
+            xscroll = ttk.Scrollbar(frame, orient="horizontal", command=tree.xview); tree.configure(xscrollcommand=xscroll.set)
+            scroll.pack(side="right", fill="y"); xscroll.pack(side="bottom", fill="x")
+            tree.pack(fill="both", expand=True); self.trees.append(tree)
+        backtest_frame = tk.Frame(self.tabs, bg=PANEL); self.tabs.add(backtest_frame, text=layout["tabs"][3])
         self.backtest_text = tk.Text(backtest_frame, bg=PANEL, fg=FG, insertbackground=FG, relief="flat",
                                      padx=24, pady=20, font=("Microsoft JhengHei UI", 12), state="disabled")
         self.backtest_text.pack(fill="both", expand=True)
-        global_frame = tk.Frame(tabs, bg=PANEL); tabs.add(global_frame, text="美股連動與台股夜盤")
-        self.global_scenario = tk.StringVar(value="情境：讀取中…")
-        tk.Label(global_frame, textvariable=self.global_scenario, fg=FG, bg=PANEL, anchor="w",
-                 font=("Microsoft JhengHei UI", 13, "bold"), padx=18, pady=12).pack(fill="x")
+        global_frame = tk.Frame(self.tabs, bg=PANEL); self.tabs.add(global_frame, text=layout["tabs"][4])
+        tk.Label(global_frame, text="市場情境", fg=MUTED, bg=PANEL, anchor="w",
+                 font=("Microsoft JhengHei UI", 9, "bold"), padx=18).pack(fill="x", pady=(12, 0))
+        self.global_scenario = tk.StringVar(value="讀取中…")
+        tk.Label(global_frame, textvariable=self.global_scenario, fg=ACCENT, bg=PANEL, anchor="w",
+                 font=("Microsoft JhengHei UI", 20, "bold"), padx=18).pack(fill="x", pady=(1, 2))
+        self.global_basis = tk.StringVar(value="依據｜讀取中…")
+        tk.Label(global_frame, textvariable=self.global_basis, fg=FG, bg=PANEL, anchor="w",
+                 font=("Microsoft JhengHei UI", 11), padx=18).pack(fill="x", pady=(0, 2))
+        self.global_fetched_at = tk.StringVar(value="抓取時間｜—")
+        tk.Label(global_frame, textvariable=self.global_fetched_at, fg=MUTED, bg=PANEL, anchor="w",
+                 font=("Microsoft JhengHei UI", 9), padx=18).pack(fill="x", pady=(0, 9))
         market_columns = ("contract", "name", "price", "change", "volume")
         self.global_tree = ttk.Treeview(global_frame, columns=market_columns, show="headings", height=7)
         for column, heading, width in zip(market_columns, ("契約", "商品", "價格", "漲跌幅", "成交量"),
@@ -168,7 +223,7 @@ class Dashboard(tk.Tk):
         self.global_market_status = tk.StringVar(value="期交所行情讀取中…")
         tk.Label(global_frame, textvariable=self.global_market_status, fg="#fbbf24", bg=PANEL, anchor="w",
                  font=("Microsoft JhengHei UI", 10), padx=18, pady=12).pack(fill="x")
-        bottom = tk.Frame(self, bg=BG); bottom.pack(fill="x", padx=18, pady=(7, 14))
+        bottom = tk.Frame(self, bg=BG); bottom.pack(fill="x", padx=20, pady=(7, 14))
         self.progress = ttk.Progressbar(bottom, maximum=100); self.progress.pack(fill="x")
         self.status = tk.StringVar(value="就緒｜可離線開啟上次結果")
         tk.Label(bottom, textvariable=self.status, fg=MUTED, bg=BG, anchor="w", font=("Microsoft JhengHei UI", 9)).pack(fill="x", pady=(5, 0))
@@ -248,12 +303,15 @@ class Dashboard(tk.Tk):
         self.refresh_global_market(); self.after(60000, self._auto_refresh_global_market)
 
     def _render_global_market(self, payload):
-        scenario, rows, status = format_global_market(payload)
-        self.global_scenario.set(scenario)
+        _, rows, status = format_global_market(payload)
+        layers = global_market_layers(payload)
+        self.global_scenario.set(layers["scenario"])
+        self.global_basis.set(layers["basis"])
+        self.global_fetched_at.set(layers["fetched_at"])
         self.global_tree.delete(*self.global_tree.get_children())
         for row in rows:
             self.global_tree.insert("", "end", values=row)
-        self.global_market_status.set(status)
+        self.global_market_status.set(layers["notice"])
 
     def open_mobile(self):
         root = self.data_dir.parent
@@ -305,17 +363,23 @@ class Dashboard(tk.Tk):
         signals = result.get("signals", result.get("qualified", []))
         optimization = result.get("optimization", {})
         strategy_gate = result.get("strategy_gate", {})
-        self.card_vars[0].set(result.get("data_date", "—")); self.card_vars[1].set(f"{result.get('top100_count', 0)} 檔")
-        self.card_vars[2].set(f"{result.get('long_count', len([x for x in signals if x.get('signal_direction', 'long') == 'long']))} 檔")
-        self.card_vars[3].set(f"{result.get('short_count', len([x for x in signals if x.get('signal_direction') == 'short']))} 檔")
-        self.card_vars[4].set(optimization.get("status", "尚無學習狀態"))
-        self.card_vars[5].set(strategy_gate.get("status", "未啟用｜保留基準訊號"))
+        long_count = result.get("long_count", len([x for x in signals if x.get("signal_direction", "long") == "long"]))
+        short_count = result.get("short_count", len([x for x in signals if x.get("signal_direction") == "short"]))
+        self.card_vars[0].set(result.get("data_date", "—"))
+        self.card_vars[1].set(f"{long_count} 檔")
+        self.card_vars[2].set(f"{short_count} 檔")
+        self.card_vars[3].set(f"{len(self.quotes)} 檔已更新" if self.quotes else "等待更新")
+        self.card_vars[4].set("已啟用" if strategy_gate.get("enabled") else "基準策略")
         for tree, rows in zip(self.trees, (longs, shorts, signals)):
             tree.delete(*tree.get_children())
             for i, x in enumerate(rows, 1):
-                direction = "偏多" if x.get("signal_direction", "long") == "long" else "偏空"
+                direction_key = x.get("signal_direction", "long")
+                direction = "偏多" if direction_key == "long" else "偏空"
                 price, change, quote = display_quote_values(self.quotes.get(str(x.get("code"))))
                 tree.insert("", "end", values=(i, direction, x.get("code"), x.get("name"), price, change, quote, x.get("entry_trigger", "—"),
                             x.get("stop_loss", "—"), x.get("target1", "—"), x.get("target2", "—"),
-                            x.get("risk_pct", "—"), x.get("score", "—"), x.get("reason", "")))
-        self.status.set(f"{prefix}｜資料 {result.get('data_date')}｜TWSE / TPEx 官方公開資料｜非投資建議")
+                            x.get("risk_pct", "—"), x.get("score", "—"), x.get("reason", "")),
+                            tags=signal_row_tags(direction_key, change, i - 1))
+        gate_status = strategy_gate.get("status", "未啟用｜保留基準訊號")
+        learning_status = optimization.get("status", "尚無學習狀態")
+        self.status.set(f"{prefix}｜資料 {result.get('data_date')}｜策略：{gate_status}｜學習：{learning_status}｜非投資建議｜不會自動下單")

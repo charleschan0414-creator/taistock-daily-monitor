@@ -1,6 +1,7 @@
 import unittest
 from taistock.ui import (format_backtest_summary, display_quote_values, visible_signal_rows,
-                         format_global_market, BackgroundRefreshGate)
+                         format_global_market, BackgroundRefreshGate, dashboard_structure,
+                         signal_row_tags, global_market_layers)
 
 
 class BacktestUiTests(unittest.TestCase):
@@ -50,6 +51,24 @@ class BacktestUiTests(unittest.TestCase):
         self.assertFalse(gate.try_start())
         gate.finish()
         self.assertTrue(gate.try_start())
+    def test_dashboard_structure_has_one_primary_action_and_beginner_labels(self):
+        structure = dashboard_structure()
+        self.assertEqual(structure["primary_action"], "更新全部資料")
+        self.assertEqual(structure["tool_actions"], ("更新現價", "更新夜盤", "執行回測", "開啟手機版"))
+        self.assertEqual(structure["cards"], ("資料日", "今日偏多", "今日偏空", "即時報價", "策略狀態"))
+        self.assertEqual(structure["tabs"], ("今日偏多", "今日偏空", "所有訊號", "回測摘要", "夜盤脈動"))
+    def test_signal_rows_get_direction_change_and_zebra_tags(self):
+        self.assertEqual(signal_row_tags("long", "+1.25%", 0), ("even", "long", "gain"))
+        self.assertEqual(signal_row_tags("short", "-0.80%", 1), ("odd", "short", "loss"))
+        self.assertEqual(signal_row_tags("long", "—", 2), ("even", "long", "flat"))
+    def test_global_market_layers_separate_scenario_basis_and_fetch_time(self):
+        payload = {"status": "ok", "fetched_at": "2026-10-17T22:01:02+08:00",
+                   "scenario": {"bias": "偏多", "basis": "TX 上漲"}}
+        layers = global_market_layers(payload)
+        self.assertEqual(layers["scenario"], "偏多")
+        self.assertEqual(layers["basis"], "依據｜TX 上漲")
+        self.assertEqual(layers["fetched_at"], "抓取時間｜2026-10-17T22:01:02+08:00")
+        self.assertIn("非投資建議", layers["notice"])
 
 
 if __name__ == "__main__": unittest.main()

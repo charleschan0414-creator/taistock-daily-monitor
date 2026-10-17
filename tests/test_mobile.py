@@ -59,6 +59,33 @@ class MobileTests(unittest.TestCase):
         self.assertIn("setInterval(load,60000)", html)
         self.assertIn("if(loading)return", html)
 
+    def test_mobile_page_has_at_a_glance_summary_and_clear_sections(self):
+        html = (Path(__file__).resolve().parent.parent / "mobile" / "index.html").read_text(encoding="utf-8")
+        for marker in ('id="freshness"', 'id="today-summary"', 'id="summary-date"',
+                       'id="summary-long"', 'id="summary-short"', 'id="summary-night"',
+                       'id="night-pulse"', 'id="stock-heading"'):
+            self.assertIn(marker, html)
+        self.assertIn("今日重點", html)
+        self.assertIn("夜盤脈動", html)
+        self.assertIn('aria-pressed="true"', html)
+        self.assertIn("el('details')", html)
+
+    def test_mobile_page_builds_api_content_without_innerhtml(self):
+        html = (Path(__file__).resolve().parent.parent / "mobile" / "index.html").read_text(encoding="utf-8")
+        script = html.split("<script>", 1)[1].split("</script>", 1)[0]
+        self.assertNotIn("innerHTML", script)
+        self.assertIn("document.createElement", script)
+        self.assertIn("textContent", script)
+        self.assertIn("replaceChildren", script)
+
+    def test_mobile_page_supports_small_touch_screens_and_keyboard_focus(self):
+        html = (Path(__file__).resolve().parent.parent / "mobile" / "index.html").read_text(encoding="utf-8")
+        self.assertIn("min-height:44px", html)
+        self.assertIn(":focus-visible", html)
+        self.assertIn("@media(max-width:360px)", html)
+        self.assertIn("同一 Wi‑Fi", html)
+        self.assertIn("目前離線", html)
+
     def test_http_static_api_download_whitelist_and_traversal(self):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td); data = root / "data"; mobile = root / "mobile"

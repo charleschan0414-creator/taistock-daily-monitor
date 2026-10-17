@@ -8,29 +8,100 @@
 <link rel="icon" href="/icon.svg">
 <title>TaiStock Monitor</title>
 <style>
-:root{color-scheme:dark;--bg:#08111f;--panel:#101d30;--muted:#91a4c1;--line:#243752;--blue:#4da3ff;--green:#38e8a1;--red:#ff6b7a}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#edf4ff;font:15px system-ui,-apple-system,"Noto Sans TC",sans-serif}.wrap{max-width:760px;margin:auto;padding:20px 14px 80px}header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}h1{font-size:23px;margin:4px 0}h2{font-size:19px;margin:24px 0 8px}.eyebrow{color:var(--blue);font-size:11px;font-weight:800;letter-spacing:.16em}button,.download{border:0;border-radius:10px;background:#0b5cff;color:#fff;padding:11px 14px;font-weight:700;text-decoration:none;display:inline-block}.meta,.notice{color:var(--muted);font-size:13px}.notice{border:1px solid #725a1e;background:#28200d;color:#ffd978;padding:10px;border-radius:10px;margin:14px 0}.tabs{display:flex;background:#0d192a;border-radius:12px;padding:4px;margin:16px 0}.tabs button{flex:1;background:transparent}.tabs button.active{background:#1b3558}.stock,.market{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px;margin:10px 0}.top,.grid,.market-row{display:flex;justify-content:space-between;gap:10px}.name{font-weight:800;font-size:17px}.code,.small{color:var(--muted);font-size:12px}.price{font-size:22px;font-weight:800;text-align:right}.up{color:var(--red)}.down{color:var(--green)}.grid{margin-top:13px;border-top:1px solid var(--line);padding-top:12px}.grid div{flex:1}.grid b{display:block;margin-top:4px}.status{margin-top:10px;color:var(--muted);font-size:12px}.market-row{padding:9px 0;border-bottom:1px solid var(--line);align-items:center}.market-row:last-child{border:0}.scenario{font-weight:800;margin-bottom:6px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.offline{position:sticky;top:0;z-index:5;text-align:center;background:#9a3412;padding:8px;display:none}footer{margin-top:22px;color:var(--muted);font-size:12px;line-height:1.7}.empty{text-align:center;color:var(--muted);padding:40px}
+:root{color-scheme:dark;--bg:#07101d;--panel:#101e31;--panel2:#142640;--muted:#9eb0ca;--line:#29405f;--blue:#65b2ff;--green:#45e3a4;--red:#ff7785;--amber:#ffd978}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f2f6fc;font:15px/1.5 system-ui,-apple-system,"Noto Sans TC",sans-serif}.wrap{max-width:760px;margin:auto;padding:18px 14px 80px}header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}h1{font-size:24px;line-height:1.2;margin:4px 0 8px}h2{font-size:19px;margin:24px 0 10px}.eyebrow{color:var(--blue);font-size:11px;font-weight:800;letter-spacing:.16em}.freshness{display:flex;align-items:center;gap:7px;color:#dbe9fc;font-weight:700}.freshness::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px #45e3a422}.meta,.small,.status{color:var(--muted);font-size:12px}button,.download{min-height:44px;border:0;border-radius:11px;background:#0b5cff;color:#fff;padding:11px 14px;font:inherit;font-weight:800;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}button:focus-visible,.download:focus-visible,summary:focus-visible{outline:3px solid var(--amber);outline-offset:3px}.summary{background:linear-gradient(145deg,#132a49,#0f1d30);border:1px solid #355982;border-radius:18px;padding:16px;margin:16px 0}.summary h2{margin:0 0 12px}.summary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.summary-item{background:#091729;border:1px solid var(--line);border-radius:12px;padding:11px}.summary-item span{display:block;color:var(--muted);font-size:12px}.summary-item b{display:block;font-size:17px;margin-top:2px;overflow-wrap:anywhere}.notice{border:1px solid #725a1e;background:#28200d;color:var(--amber);padding:10px 12px;border-radius:11px;margin:14px 0;font-size:13px}.tabs{display:flex;background:#0d192a;border:1px solid var(--line);border-radius:14px;padding:4px;margin:10px 0 14px;gap:4px}.tabs button{flex:1;background:transparent;color:var(--muted)}.tabs button.active{background:#245386;color:#fff}.stock,.market{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:15px;margin:10px 0}.stock{border-left:4px solid var(--blue)}.stock.short{border-left-color:var(--green)}.top,.market-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.identity{min-width:0}.name{font-weight:900;font-size:19px;line-height:1.25}.code{color:var(--muted);font-size:12px}.direction{display:inline-block;margin-top:7px;border-radius:999px;padding:3px 8px;background:#17385d;color:#a9d5ff;font-size:12px;font-weight:800}.short .direction{background:#123c30;color:#80ecc1}.quote{text-align:right;flex:0 0 auto}.price{font-size:26px;line-height:1.1;font-weight:900}.change{font-size:15px;font-weight:800;margin-top:3px}.up{color:var(--red)}.down{color:var(--green)}details{margin-top:13px;border-top:1px solid var(--line);padding-top:10px}summary{min-height:44px;display:flex;align-items:center;color:#cfe0f7;font-weight:700;cursor:pointer}.levels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:3px 0 5px}.levels div{min-width:0}.levels b{display:block;margin-top:3px;overflow-wrap:anywhere}.status{margin-top:9px}.market-row{padding:11px 0;border-bottom:1px solid var(--line);align-items:center}.market-row:last-of-type{border:0}.scenario{font-size:18px;font-weight:900;margin-bottom:3px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.offline{position:sticky;top:0;z-index:5;text-align:center;background:#9a3412;padding:9px;display:none}.empty{text-align:center;color:var(--muted);padding:34px 12px}footer{margin-top:22px;color:var(--muted);font-size:12px;line-height:1.7}@media(max-width:360px){.wrap{padding:14px 10px 64px}header{align-items:stretch}h1{font-size:21px}#refresh{padding:9px 10px}.summary{padding:12px}.summary-grid{gap:7px}.summary-item{padding:9px}.stock,.market{padding:12px}.name{font-size:17px}.price{font-size:23px}.levels{grid-template-columns:1fr}.tabs button{padding-inline:7px}}
 </style>
 </head>
 <body>
-<div id="offline" class="offline">目前離線：顯示本機上次資料，並非即時報價</div>
+<div id="offline" class="offline" role="status">目前離線：顯示本機上次資料，並非即時報價</div>
 <main class="wrap">
-<header><div><div class="eyebrow">TAISTOCK / MOBILE MONITOR</div><h1>台股多空觀察</h1><div id="meta" class="meta">讀取中…</div><div id="gate" class="meta">策略閘門讀取中…</div></div><button id="refresh">更新現價</button></header>
+<header><div><div class="eyebrow">TAISTOCK / MOBILE MONITOR</div><h1>台股多空觀察</h1><div id="freshness" class="freshness" aria-live="polite">資料讀取中…</div><div id="meta" class="meta">每 60 秒自動更新</div></div><button id="refresh" type="button">立即更新</button></header>
+<section id="today-summary" class="summary" aria-labelledby="summary-heading"><h2 id="summary-heading">今日重點</h2><div class="summary-grid"><div class="summary-item"><span>資料日</span><b id="summary-date">—</b></div><div class="summary-item"><span>偏多</span><b id="summary-long">—</b></div><div class="summary-item"><span>偏空</span><b id="summary-short">—</b></div><div class="summary-item"><span>夜盤情境</span><b id="summary-night">讀取中</b></div></div><div id="gate" class="status">策略閘門讀取中…</div></section>
 <div class="notice">僅供研究、非投資建議。報價狀態為「非即時」時，不可視為目前成交價。</div>
-<h2>美股連動與台股夜盤</h2>
-<section id="global-market" class="market"><div class="empty">期交所行情讀取中…</div></section>
+<h2 id="night-pulse">夜盤脈動</h2>
+<section id="global-market" class="market" aria-labelledby="night-pulse"><div class="empty">期交所行情讀取中…</div></section>
 <div class="notice">期交所行情，可能延遲，非投資建議。顯示系統抓取時間，並非交易所報價時間；情境僅供參考，不加入現有策略分數。</div>
-<nav class="tabs"><button data-side="long" class="active">偏多前 10</button><button data-side="short">偏空前 10</button></nav>
-<section id="list"></section>
+<h2 id="stock-heading">個股觀察</h2>
+<nav class="tabs" aria-label="多空方向"><button data-side="long" class="active" type="button" aria-pressed="true">偏多前 10</button><button data-side="short" type="button" aria-pressed="false">偏空前 10</button></nav>
+<section id="list" aria-live="polite"></section>
 <div class="actions"><a class="download" href="/download/latest.csv">下載 latest.csv</a><a class="download" href="/download/backtest_100d.csv">下載 100 日回測</a></div>
 <footer id="footer">手機使用區網網址時需同一 Wi‑Fi；Cloudflare 公開網址可使用 4G／5G。電腦關機或伺服器關閉後無法連線。Android：瀏覽器選單 → 加入主畫面。iPhone Safari：分享 → 加入主畫面。</footer>
 </main>
 <script>
-let data=null,side='long',loading=false;const list=document.querySelector('#list'),meta=document.querySelector('#meta'),gate=document.querySelector('#gate'),offline=document.querySelector('#offline'),globalMarket=document.querySelector('#global-market');
-const fmt=x=>x==null?'—':Number(x).toLocaleString('zh-TW',{maximumFractionDigits:2});
-function renderGlobal(){const market=data?.global_market||{},rows=market.items||[],scenario=market.scenario||{};if(market.status!=='ok'){globalMarket.innerHTML=`<div class="empty">${market.message||'期交所行情暫時無法更新'}</div>`;return}globalMarket.innerHTML=`<div class="scenario">情境：${scenario.bias||'中性'}</div><div class="small">${scenario.basis||'TX / UNF / SXF 透明情境判讀'}</div>${rows.map(r=>{const pct=r.change_pct,cls=pct>0?'up':pct<0?'down':'';return `<div class="market-row"><div><b>${r.contract_name||r.symbol}</b> <span class="code">${r.contract||r.symbol}</span><div class="small">成交量 ${fmt(r.volume)}</div></div><div><div class="price ${cls}">${fmt(r.price)}</div><div class="${cls}">${pct==null?'—':(pct>0?'+':'')+fmt(pct)+'%'}</div></div></div>`}).join('')}<div class="status">系統抓取時間 ${market.fetched_at||'—'}</div>`}
-function render(){renderGlobal();const rows=data?.[side+'_top10']||[];list.innerHTML=rows.length?rows.map((r,i)=>{const q=r.realtime||{},pct=q.change_pct,cls=pct>0?'up':pct<0?'down':'';return `<article class="stock"><div class="top"><div><div class="name">${i+1}. ${r.name||''} <span class="code">${r.code||''}</span></div><div class="small">${r.market||''} · ${side==='long'?'偏多':'偏空'}</div></div><div><div class="price ${cls}">${fmt(q.price)}</div><div class="${cls}">${pct==null?'—':(pct>0?'+':'')+fmt(pct)+'%'}</div></div></div><div class="grid"><div><span class="small">觸發</span><b>${fmt(r.entry_trigger)}</b></div><div><span class="small">停損/回補</span><b>${fmt(r.stop_loss)}</b></div><div><span class="small">目標</span><b>${fmt(r.target1)} / ${fmt(r.target2)}</b></div></div><div class="status">${q.status||'無報價'} · ${q.quote_time||'—'}</div></article>`}).join(''):'<div class="empty">本方向目前沒有訊號</div>'}
-async function load(){if(loading)return;loading=true;meta.textContent='更新中…';try{const r=await fetch('/api/dashboard',{cache:'no-store'});if(!r.ok)throw Error((await r.json()).error||r.status);data=await r.json();localStorage.setItem('dashboard',JSON.stringify(data));offline.style.display='none';meta.textContent=`資料 ${data.data_date||'—'} · 報價更新 ${data.generated_at||'—'}`;gate.textContent=`策略閘門：${data.strategy_gate?.status||'未啟用｜保留基準訊號'}`;render()}catch(e){const saved=localStorage.getItem('dashboard');if(saved){data=JSON.parse(saved);render()}offline.style.display='block';meta.textContent='更新失敗：'+e.message}finally{loading=false}}
-document.querySelectorAll('[data-side]').forEach(b=>b.onclick=()=>{side=b.dataset.side;document.querySelectorAll('[data-side]').forEach(x=>x.classList.toggle('active',x===b));render()});document.querySelector('#refresh').onclick=load;window.addEventListener('online',load);window.addEventListener('offline',()=>offline.style.display='block');if('serviceWorker'in navigator)navigator.serviceWorker.register('/service-worker.js').catch(console.error);load();setInterval(load,60000);
+let data=null,side='long',loading=false;
+const $=selector=>document.querySelector(selector);
+const list=$('#list'),meta=$('#meta'),gate=$('#gate'),offline=$('#offline'),globalMarket=$('#global-market'),freshness=$('#freshness');
+const fmt=value=>value==null?'—':Number(value).toLocaleString('zh-TW',{maximumFractionDigits:2});
+const pctText=value=>value==null?'—':(value>0?'+':'')+fmt(value)+'%';
+function el(tag,className,text){const node=document.createElement(tag);if(className)node.className=className;if(text!==undefined)node.textContent=String(text);return node}
+function trendClass(value){return value>0?'up':value<0?'down':''}
+function renderSummary(){
+  const longs=data?.long_top10||[],shorts=data?.short_top10||[],scenario=data?.global_market?.scenario||{};
+  $('#summary-date').textContent=data?.data_date||'—';
+  $('#summary-long').textContent=longs.length+' 檔訊號';
+  $('#summary-short').textContent=shorts.length+' 檔訊號';
+  $('#summary-night').textContent=scenario.bias||'中性';
+  gate.textContent='策略閘門：'+(data?.strategy_gate?.status||'未啟用｜保留基準訊號');
+}
+function renderGlobal(){
+  const market=data?.global_market||{},rows=market.items||[],scenario=market.scenario||{};
+  if(market.status!=='ok'){
+    globalMarket.replaceChildren(el('div','empty',market.message||'期交所行情暫時無法更新'));
+    return;
+  }
+  const content=[el('div','scenario','情境：'+(scenario.bias||'中性')),el('div','small',scenario.basis||'TX / UNF / SXF 透明情境判讀')];
+  rows.forEach(row=>{
+    const change=row.change_pct,cls=trendClass(change),marketRow=el('div','market-row');
+    const identity=el('div');
+    const title=el('b','',row.contract_name||row.symbol||'—');
+    const code=el('span','code',' '+(row.contract||row.symbol||''));
+    const volume=el('div','small','成交量 '+fmt(row.volume));
+    identity.append(title,code,volume);
+    const quote=el('div','quote');
+    quote.append(el('div','price '+cls,fmt(row.price)),el('div','change '+cls,pctText(change)));
+    marketRow.append(identity,quote);content.push(marketRow);
+  });
+  content.push(el('div','status','系統抓取時間 '+(market.fetched_at||'—')));
+  globalMarket.replaceChildren(...content);
+}
+function level(label,value){const box=el('div');box.append(el('span','small',label),el('b','',value));return box}
+function stockCard(row,index){
+  const quoteData=row.realtime||{},change=quoteData.change_pct,cls=trendClass(change),article=el('article','stock '+(side==='short'?'short':''));
+  const top=el('div','top'),identity=el('div','identity'),name=el('div','name',(index+1)+'. '+(row.name||'未命名'));
+  name.append(el('span','code',' '+(row.code||'')));
+  identity.append(name,el('div','direction',side==='long'?'偏多觀察':'偏空觀察'),el('div','small',row.market||''));
+  const quote=el('div','quote');quote.append(el('div','price '+cls,fmt(quoteData.price)),el('div','change '+cls,pctText(change)));top.append(identity,quote);
+  const details=el('details'),summary=el('summary','','查看技術價位'),levels=el('div','levels');
+  levels.append(level('觸發',fmt(row.entry_trigger)),level('停損 / 回補',fmt(row.stop_loss)),level('目標',fmt(row.target1)+' / '+fmt(row.target2)));
+  details.append(summary,levels);
+  article.append(top,details,el('div','status',(quoteData.status||'無報價')+' · '+(quoteData.quote_time||'—')));
+  return article;
+}
+function render(){
+  renderSummary();renderGlobal();
+  const rows=data?.[side+'_top10']||[];
+  list.replaceChildren(...(rows.length?rows.map(stockCard):[el('div','empty','本方向目前沒有訊號')]));
+}
+function updateFreshness(){
+  const stamp=data?.generated_at;
+  if(!stamp){freshness.textContent='更新時間未知';return}
+  const age=Math.max(0,Math.floor((Date.now()-new Date(stamp).getTime())/60000));
+  freshness.textContent=(Number.isFinite(age)?(age<1?'剛剛更新':age+' 分鐘前更新'):'已更新');
+  meta.textContent='資料 '+(data?.data_date||'—')+' · '+stamp+' · 每 60 秒更新';
+}
+async function load(){
+  if(loading)return;loading=true;freshness.textContent='更新中…';
+  try{
+    const response=await fetch('/api/dashboard',{cache:'no-store'});
+    if(!response.ok)throw Error((await response.json()).error||response.status);
+    data=await response.json();localStorage.setItem('dashboard',JSON.stringify(data));offline.style.display='none';updateFreshness();render();
+  }catch(error){
+    const saved=localStorage.getItem('dashboard');
+    if(saved){try{data=JSON.parse(saved);render()}catch(parseError){localStorage.removeItem('dashboard')}}
+    offline.style.display='block';freshness.textContent='更新失敗';meta.textContent='更新失敗：'+error.message;
+  }finally{loading=false}
+}
+document.querySelectorAll('[data-side]').forEach(button=>button.onclick=()=>{side=button.dataset.side;document.querySelectorAll('[data-side]').forEach(item=>{const active=item===button;item.classList.toggle('active',active);item.setAttribute('aria-pressed',String(active))});render()});
+$('#refresh').onclick=load;window.addEventListener('online',load);window.addEventListener('offline',()=>offline.style.display='block');if('serviceWorker'in navigator)navigator.serviceWorker.register('/service-worker.js').catch(console.error);load();setInterval(load,60000);
 </script>
 </body>
 </html>

@@ -40,7 +40,13 @@ function missedTradingDays(dataDate, now = new Date()) {
   return count;
 }
 
-function card(row) {
+export function resolveDataHealth(data, now = new Date()) {
+  if (data?.daily_status?.status !== 'success') return { state: 'error', label: '更新失敗' };
+  if (missedTradingDays(data?.data_date, now) > 0) return { state: 'stale', label: '資料過期' };
+  return { state: 'success', label: '資料成功' };
+}
+
+function card(row, direction) {
   const node = document.createElement('article'); node.className = 'card';
   const head = document.createElement('div'); head.className = 'card-head';
   const title = document.createElement('div');
@@ -50,20 +56,23 @@ function card(row) {
   const score = document.createElement('span'); score.className = 'score'; score.textContent = `SCORE ${fmt(row.score)}`;
   head.append(title, score);
   const price = document.createElement('div'); price.className = 'price'; price.textContent = fmt(row.current_price ?? row.close);
+  const directionLabel = document.createElement('span');
+  directionLabel.className = `card-direction ${direction === '偏多' ? 'card-direction-long' : 'card-direction-short'}`;
+  directionLabel.textContent = direction;
   const status = document.createElement('div'); status.className = 'status';
-  status.textContent = `${row.price_status}現價${row.current_price == null ? '（顯示盤後收盤）' : ''}`;
+  status.textContent = `${row.price_status ?? ''}現價${row.current_price == null ? '（顯示盤後收盤）' : ''}`;
   const levels = document.createElement('div'); levels.className = 'levels';
   for (const [label, key] of [['進場', 'entry_trigger'], ['停損', 'stop_loss'], ['目標1', 'target1']]) {
     const box = document.createElement('div'); const small = document.createElement('span'); small.textContent = label;
     const strong = document.createElement('strong'); strong.textContent = fmt(row[key]); box.append(small, strong); levels.append(box);
   }
   const reason = document.createElement('p'); reason.className = 'reason'; reason.textContent = row.reason ?? '';
-  node.append(head, price, status, levels, reason); return node;
+  node.append(head, price, directionLabel, status, levels, reason); return node;
 }
-function renderList(id, rows) {
+function renderList(id, rows, direction) {
   const box = $(id); box.replaceChildren();
   if (!rows.length) { const empty = document.createElement('p'); empty.className = 'empty'; empty.textContent = '目前沒有符合規則的觀察標的。'; box.append(empty); return; }
-  box.append(...rows.map(card));
+  box.append(...rows.map(row => card(row, direction)));
 }
 function renderMarket(market) {
   $('market-risk').textContent = market?.risk?.status ?? '中性';
@@ -101,8 +110,16 @@ async function load() {
   try {
     const response = await fetch('/api/dashboard', { cache: 'no-store' }); const data = await response.json();
     if (!response.ok) throw new Error(data.error ?? `HTTP ${response.status}`);
+    const health = resolveDataHealth(data);
     $('data-date').textContent = data.data_date ?? '—';
-    $('updated-at').textContent = data.updated_at ? new Date(data.updated_at).toLocaleString('zh-TW') : '—';
+    $('summary-date').textContent = data.data_date ?? '—';
+    $('summary-long').textContent = String(data.long?.length ?? 0);
+    $('summary-short').textContent = String(data.short?.length ?? 0);
+    $('summary-night').textContent = data.global_market?.risk?.status ?? '中性';
+    $('summary-source').textContent = data.data_source === 'github' ? 'GitHub 公開成果' : 'Cloudflare KV 備援';
+    $('data-health').textContent = health.label;
+    $('data-health').className = `status-badge status-${health.state}`;
+    $('updated-at').textContent = data.updated_at ? `更新 ${new Date(data.updated_at).toLocaleString('zh-TW')}` : '更新 —';
     $('price-status').textContent = data.realtime_status === 'available' ? 'MIS 已連線（逐檔標示）' : 'MIS 無法使用，保留盤後清單';
     $('gate').textContent = data.strategy_gate?.status ?? '未啟用';
     const daily = data.daily_status;
@@ -114,12 +131,16 @@ async function load() {
     $('test-metrics').textContent = `${percent(testMetrics?.win_rate)} / ${pf}`;
     renderV2Analysis(data);
     const warnings = [];
-    if (daily?.status !== 'success') warnings.push('每日收盤後回測/優化尚未成功');
-    if (missedTradingDays(data.data_date) > 0) warnings.push('盤後資料已過期，07:40 備援可能尚未完成');
+    if (daily?.status !== 'success') warnings.push('每日收盤後回測／優化尚未成功');
+    if (health.state === 'stale') warnings.push('盤後資料已過期，07:40 備援可能尚未完成');
     $('message').textContent = warnings.length ? `注意：${warnings.join('；')}。` : '';
     renderMarket(data.global_market);
-    renderList('long-list', data.long ?? []); renderList('short-list', data.short ?? []);
-  } catch (error) { $('message').textContent = `資料載入失敗：${error.message}`; }
+    renderList('long-list', data.long ?? [], '偏多'); renderList('short-list', data.short ?? [], '偏空');
+  } catch (error) {
+    $('data-health').textContent = '載入失敗';
+    $('data-health').className = 'status-badge status-error';
+    $('message').textContent = `資料載入失敗：${error.message}`;
+  }
   finally { $('refresh').disabled = false; }
 }
 if (typeof document !== 'undefined') {

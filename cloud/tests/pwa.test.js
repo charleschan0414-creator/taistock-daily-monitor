@@ -4,6 +4,24 @@ import { readFile } from 'node:fs/promises';
 
 const read = name => readFile(new URL(`../public/${name}`, import.meta.url), 'utf8');
 
+test('資料健康狀態以明確文字區分成功與過期', async () => {
+  const { resolveDataHealth } = await import('../public/app.js');
+  const fresh = resolveDataHealth({ data_date: '2026-10-16', daily_status: { status: 'success' } }, new Date('2026-10-17T08:00:00+08:00'));
+  const stale = resolveDataHealth({ data_date: '2026-10-15', daily_status: { status: 'success' } }, new Date('2026-10-19T08:00:00+08:00'));
+  const failed = resolveDataHealth({ data_date: '2026-10-16', daily_status: { status: 'failed' } }, new Date('2026-10-17T08:00:00+08:00'));
+  assert.deepEqual(fresh, { state: 'success', label: '資料成功' });
+  assert.deepEqual(stale, { state: 'stale', label: '資料過期' });
+  assert.deepEqual(failed, { state: 'error', label: '更新失敗' });
+});
+
+test('API載入失敗時頂部狀態不會停在載入中', async () => {
+  const app = await read('app.js');
+  const catchBlock = app.match(/catch \(error\) \{[\s\S]*?\}\s*finally/)?.[0] ?? '';
+  assert.match(catchBlock, /data-health/);
+  assert.match(catchBlock, /載入失敗/);
+  assert.match(catchBlock, /status-error/);
+});
+
 test('PWA提供五項TAIFEX市場情境卡與非選股分數聲明', async () => {
   const [html, app, sw] = await Promise.all([read('index.html'), read('app.js'), read('sw.js')]);
   assert.match(html, /id="market-risk"/);
@@ -15,6 +33,40 @@ test('PWA提供五項TAIFEX市場情境卡與非選股分數聲明', async () =>
   assert.match(app, /volume/);
   assert.match(app, /createRefreshController/);
   assert.match(sw, /\/refresh\.js/);
+});
+
+test('手機首屏依序顯示精簡狀態列與四張今日重點卡', async () => {
+  const html = await read('index.html');
+  const header = html.match(/<header[\s\S]*?<\/header>/)?.[0] ?? '';
+  assert.match(header, /id="data-date"/);
+  assert.match(header, /id="data-health"/);
+  assert.match(header, /id="refresh"/);
+  assert.doesNotMatch(header, /更新時間|資料來源|策略閘門/);
+  assert.match(html, /<section[^>]*class="today-summary"/);
+  assert.match(html, /id="summary-date"/);
+  assert.match(html, /id="summary-long"/);
+  assert.match(html, /id="summary-short"/);
+  assert.match(html, /id="summary-night"/);
+  assert.ok(html.indexOf('today-summary') < html.indexOf('market-context'));
+});
+
+test('研究與技術資訊預設收合且手機操作符合無障礙需求', async () => {
+  const [html, styles] = await Promise.all([read('index.html'), read('styles.css')]);
+  assert.match(html, /<details class="v2-analysis"/);
+  assert.match(html, /<summary[\s\S]*V2 成本後績效檢驗/);
+  assert.match(html, /<details class="system-details"/);
+  assert.match(styles, /:focus-visible/);
+  assert.match(styles, /min-height:\s*44px/);
+  assert.match(styles, /@media\s*\(max-width:\s*420px\)/);
+});
+
+test('訊號卡明列偏多偏空方向且動態內容不用 innerHTML', async () => {
+  const app = await read('app.js');
+  assert.match(app, /function card\(row, direction\)/);
+  assert.match(app, /directionLabel\.textContent = direction/);
+  assert.match(app, /renderList\('long-list',[^\n]*'偏多'/);
+  assert.match(app, /renderList\('short-list',[^\n]*'偏空'/);
+  assert.doesNotMatch(app, /\.innerHTML\s*=/);
 });
 
 test('PWA顯示V2成本後績效檢驗、方法限制與新版快取', async () => {
@@ -35,5 +87,5 @@ test('PWA顯示V2成本後績效檢驗、方法限制與新版快取', async () 
   assert.match(app, /v2-quality/);
   assert.doesNotMatch(app, /\.innerHTML\s*=/);
   assert.match(styles, /\.v2-analysis/);
-  assert.match(sw, /taistock-monitor-v3/);
+  assert.match(sw, /taistock-monitor-v4/);
 });
