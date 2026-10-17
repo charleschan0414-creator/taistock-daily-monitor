@@ -16802,18 +16802,17 @@
   "long_count": 7,
   "short_count": 2,
   "optimization": {
-    "version": 2,
-    "status": "自我優化已啟用（已結算 51 筆）",
-    "settled_count": 51,
+    "version": 1,
+    "status": "100日回測優化已啟用（回測 1457 筆）；即時學習 0/30",
+    "settled_count": 0,
+    "backtest_sample_count": 1457,
     "minimum_samples": 30,
     "weights": {
       "volume_growth_pct": 0.25,
-      "ma5_distance_pct": 0.4,
-      "institutional_lots": 0.25,
+      "ma5_distance_pct": 0.2,
+      "institutional_lots": 0.45,
       "volume_rank": 0.1
-    },
-    "evaluation_days": 1,
-    "current_metric": 0.01569444
+    }
   },
   "strategy_gate": {
     "version": 1,
@@ -16829,13 +16828,13 @@
       "long": true,
       "short": true
     },
-    "updated_at": "2026-10-17T16:05:21+08:00"
+    "updated_at": "2026-10-17T08:08:15+00:00"
   },
   "errors": [],
   "sources": [
     "官方逐日批次資料"
   ],
-  "updated_at": "2026-10-17T16:05:22+08:00",
+  "updated_at": "2026-10-17T08:08:18+00:00",
   "data_collection": {
     "complete_trading_days": 6,
     "latest_complete_date": "2026-10-16",
