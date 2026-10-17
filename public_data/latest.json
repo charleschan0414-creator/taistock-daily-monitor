@@ -16222,13 +16222,13 @@
       "long": true,
       "short": true
     },
-    "updated_at": "2026-10-17T21:25:56+00:00"
+    "updated_at": "2026-10-17T21:31:55+00:00"
   },
   "errors": [],
   "sources": [
     "官方逐日批次資料"
   ],
-  "updated_at": "2026-10-17T21:25:59+00:00",
+  "updated_at": "2026-10-17T21:31:57+00:00",
   "data_collection": {
     "complete_trading_days": 6,
     "latest_complete_date": "2026-10-16",

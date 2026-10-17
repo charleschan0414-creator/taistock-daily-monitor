@@ -54510,11 +54510,11 @@
       "baseline": 0.002686261874956711,
       "selected": 0.003349201163688031
     },
-    "updated_at": "2026-10-17T21:25:55+00:00"
+    "updated_at": "2026-10-17T21:31:53+00:00"
   },
   "cost_rate": 0.0,
   "cost_assumption": "gross 未扣成本；standard 每筆已成交扣雙邊總成本 0.435%；stress 扣 0.535%；未觸發不扣成本；未另計固定滑價、借券費與融券限制",
-  "completed_at": "2026-10-17T21:25:55+00:00",
+  "completed_at": "2026-10-17T21:31:54+00:00",
   "data_collection": {
     "complete_trading_days": 110,
     "latest_complete_date": "2026-10-16",
