@@ -34,6 +34,12 @@ def signal_row_tags(direction, change, index):
     return zebra, direction if direction in ("long", "short") else "flat", movement
 
 
+def strategy_card_label(strategy_gate):
+    if strategy_gate.get("applied_mode") == "incumbent_protective":
+        return "保護性篩選"
+    return "已啟用" if strategy_gate.get("enabled") and strategy_gate.get("cost_validated") else "基準策略"
+
+
 class BackgroundRefreshGate:
     def __init__(self):
         self._lock = threading.Lock()
@@ -369,7 +375,7 @@ class Dashboard(tk.Tk):
         self.card_vars[1].set(f"{long_count} 檔")
         self.card_vars[2].set(f"{short_count} 檔")
         self.card_vars[3].set(f"{len(self.quotes)} 檔已更新" if self.quotes else "等待更新")
-        self.card_vars[4].set("已啟用" if strategy_gate.get("enabled") else "基準策略")
+        self.card_vars[4].set(strategy_card_label(strategy_gate))
         for tree, rows in zip(self.trees, (longs, shorts, signals)):
             tree.delete(*tree.get_children())
             for i, x in enumerate(rows, 1):

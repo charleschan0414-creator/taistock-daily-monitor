@@ -28,6 +28,11 @@ export function resolveV2Analysis(data) {
     short: v2Metrics(directions?.short),
   };
 }
+
+export function resolveStrategyTestMetrics(data) {
+  const metrics = data?.daily_status?.strategy?.candidate?.test;
+  return metrics?.standard ?? metrics;
+}
 function missedTradingDays(dataDate, now = new Date()) {
   if (!dataDate) return Infinity;
   const cursor = new Date(`${dataDate}T12:00:00+08:00`); cursor.setDate(cursor.getDate() + 1);
@@ -126,7 +131,7 @@ async function load() {
     $('daily-status').textContent = daily?.status === 'success' ? '成功' : (daily?.status ?? '未知');
     $('data-source').textContent = data.data_source === 'github' ? 'GitHub 公開成果' : 'Cloudflare KV 備援';
     $('completed-at').textContent = daily?.completed_at ? new Date(daily.completed_at).toLocaleString('zh-TW') : '—';
-    const testMetrics = daily?.strategy?.candidate?.test;
+    const testMetrics = resolveStrategyTestMetrics(data);
     const pf = testMetrics?.profit_factor == null ? (testMetrics ? '無虧損樣本' : '—') : fmt(testMetrics.profit_factor);
     $('test-metrics').textContent = `${percent(testMetrics?.win_rate)} / ${pf}`;
     renderV2Analysis(data);

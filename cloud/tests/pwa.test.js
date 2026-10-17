@@ -69,6 +69,16 @@ test('訊號卡明列偏多偏空方向且動態內容不用 innerHTML', async (
   assert.doesNotMatch(app, /\.innerHTML\s*=/);
 });
 
+test('策略保留期指標相容成本後巢狀與舊版扁平格式', async () => {
+  const { resolveStrategyTestMetrics } = await import('../public/app.js');
+  assert.deepEqual(resolveStrategyTestMetrics({ daily_status: { strategy: { candidate: { test: {
+    standard: { win_rate: 0.4573, profit_factor: 1.1122 },
+  } } } } }), { win_rate: 0.4573, profit_factor: 1.1122 });
+  assert.deepEqual(resolveStrategyTestMetrics({ daily_status: { strategy: { candidate: { test: {
+    win_rate: 0.42, profit_factor: 1.17,
+  } } } } }), { win_rate: 0.42, profit_factor: 1.17 });
+});
+
 test('PWA顯示V2成本後績效檢驗、方法限制與新版快取', async () => {
   const [html, app, styles, sw] = await Promise.all([
     read('index.html'), read('app.js'), read('styles.css'), read('sw.js'),
@@ -87,5 +97,5 @@ test('PWA顯示V2成本後績效檢驗、方法限制與新版快取', async () 
   assert.match(app, /v2-quality/);
   assert.doesNotMatch(app, /\.innerHTML\s*=/);
   assert.match(styles, /\.v2-analysis/);
-  assert.match(sw, /taistock-monitor-v4/);
+  assert.match(sw, /taistock-monitor-v5/);
 });

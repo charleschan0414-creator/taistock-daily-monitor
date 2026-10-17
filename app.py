@@ -101,11 +101,12 @@ def run_strategy_optimization():
           f"測試成交門檻 {report['minimum_samples']['test_trades']}")
     for split in ("train", "test"):
         for label, section in (("基準", report["baseline"]), ("候選", report["candidate"])):
-            values = section[split]
-            pf = "無虧損樣本" if values["profit_factor"] is None else f"{values['profit_factor']:.4f}"
-            print(f"{split} {label}: 訊號 {values['signals']}｜成交 {values['trades']}｜勝率 {values['win_rate']:.2%}｜"
-                  f"平均 {values['average_return']:.4%}｜中位數 {values['median_return']:.4%}｜"
-                  f"批次累積 {values['cumulative_signal_batch_metric']:.4%}｜最大回撤 {values['max_drawdown']:.4%}｜PF {pf}")
+            for scenario in ("gross", "standard", "stress"):
+                values = section[split][scenario]
+                pf = "無虧損樣本" if values["profit_factor"] is None else f"{values['profit_factor']:.4f}"
+                print(f"{split} {label} {scenario}: 訊號 {values['signals']}｜成交 {values['trades']}｜勝率 {values['win_rate']:.2%}｜"
+                      f"平均 {values['average_return']:.4%}｜中位數 {values['median_return']:.4%}｜"
+                      f"批次累積 {values['cumulative_signal_batch_metric']:.4%}｜最大回撤 {values['max_drawdown']:.4%}｜PF {pf}")
     print("決策：" + report["decision"]["status"])
     print("限制：保留測試只作最終啟用判定；歷史結果不保證提高未來勝率或報酬。")
     return report

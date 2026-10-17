@@ -4,6 +4,10 @@ import unittest
 from pathlib import Path
 
 from taistock.strategy_optimize import (
+    BASELINE_GATE,
+    STANDARD_COST,
+    STRESS_COST,
+    VERSION,
     _train_robust,
     apply_strategy_gate,
     load_strategy_gate,
@@ -33,6 +37,39 @@ def fixture_backtest(test_high_return=0.04):
 
 
 class StrategyOptimizationTests(unittest.TestCase):
+    def test_v2_report_preserves_gross_standard_and_stress_metrics(self):
+        report = optimize_strategy(fixture_backtest())
+        self.assertGreaterEqual(VERSION, 2)
+        self.assertEqual(STANDARD_COST, 0.00435)
+        self.assertEqual(STRESS_COST, 0.00535)
+        self.assertEqual(BASELINE_GATE, {"long_score_min": 55, "short_score_min": 70,
+                                         "short_enabled": True, "volume_growth_min": 20})
+        self.assertEqual(report["costs"], {"standard": STANDARD_COST, "stress": STRESS_COST})
+        self.assertEqual(report["method"]["selection_metric"], "standard_cost_after")
+        self.assertEqual(report["baseline"]["train"]["gross"]["signals"], 210)
+        for subject in ("baseline", "candidate"):
+            for split in ("train", "test"):
+                self.assertEqual(set(report[subject][split]), {"gross", "standard", "stress"})
+                gross = report[subject][split]["gross"]["average_return"]
+                standard = report[subject][split]["standard"]["average_return"]
+                stress = report[subject][split]["stress"]["average_return"]
+                self.assertAlmostEqual(gross - standard, STANDARD_COST)
+                self.assertAlmostEqual(gross - stress, STRESS_COST)
+
+    def test_gross_positive_candidate_fails_cost_gate_and_keeps_protective_incumbent(self):
+        report = optimize_strategy(fixture_backtest(test_high_return=0.004))
+        decision = report["decision"]
+        self.assertGreater(report["candidate"]["test"]["gross"]["average_return"], 0)
+        self.assertLess(report["candidate"]["test"]["standard"]["average_return"], 0)
+        self.assertFalse(decision["upgrade_approved"])
+        self.assertFalse(decision["cost_validated"])
+        self.assertEqual(decision["applied_mode"], "incumbent_protective")
+        self.assertEqual(decision["applied_gate"], BASELINE_GATE)
+        self.assertIn("保留既有保護性篩選｜成本後升級未通過", decision["status"])
+        rows = [{"code": "low", "signal_direction": "long", "score": 40, "volume_growth_pct": 30},
+                {"code": "kept", "signal_direction": "long", "score": 60, "volume_growth_pct": 30}]
+        self.assertEqual([row["code"] for row in apply_strategy_gate(rows, decision)], ["kept"])
+
     def test_training_candidate_requires_pf_above_one_and_drawdown_within_five_points(self):
         baseline = {"max_drawdown": -0.10}
         self.assertTrue(_train_robust({"profit_factor": 1.1, "max_drawdown": -0.15}, baseline))
@@ -46,12 +83,20 @@ class StrategyOptimizationTests(unittest.TestCase):
         self.assertEqual(report["test_dates"], {"from": "2026-03-15", "to": "2026-04-16", "days": 30})
         self.assertEqual(report["minimum_samples"], {"train_trades": 100, "test_trades": 30})
         self.assertGreater(report["candidate_count"], 1)
-        self.assertGreaterEqual(report["candidate"]["train"]["trades"], 100)
-        self.assertGreaterEqual(report["candidate"]["test"]["trades"], 30)
+        self.assertGreaterEqual(report["candidate"]["train"]["standard"]["trades"], 100)
+        self.assertGreaterEqual(report["candidate"]["test"]["standard"]["trades"], 30)
         self.assertTrue(report["decision"]["enabled"])
+        self.assertTrue(report["decision"]["upgrade_approved"])
+        self.assertTrue(report["decision"]["cost_validated"])
+        self.assertEqual(report["decision"]["applied_mode"], "candidate")
+        self.assertTrue(all(report["decision"]["checks"].values()))
         self.assertFalse(report["selected_gate"]["short_enabled"])
-        self.assertGreater(report["candidate"]["test"]["average_return"],
-                           report["baseline"]["test"]["average_return"])
+        self.assertGreater(report["candidate"]["test"]["standard"]["average_return"], 0)
+        standard_pf = report["candidate"]["test"]["standard"]["profit_factor"]
+        stress_pf = report["candidate"]["test"]["stress"]["profit_factor"]
+        self.assertTrue(standard_pf is None or standard_pf > 1)
+        self.assertGreater(report["candidate"]["test"]["stress"]["average_return"], 0)
+        self.assertTrue(stress_pf is None or stress_pf > 1)
 
     def test_holdout_outcomes_do_not_change_training_selected_gate(self):
         good = optimize_strategy(fixture_backtest(test_high_return=0.04))
@@ -80,8 +125,24 @@ class StrategyOptimizationTests(unittest.TestCase):
             self.assertEqual(loaded["version"], report["version"])
             state = load_strategy_gate(Path(directory))
             self.assertEqual(state["enabled"], report["decision"]["enabled"])
+            self.assertEqual(state["applied_mode"], report["decision"]["applied_mode"])
+            self.assertEqual(state["cost_validated"], report["decision"]["cost_validated"])
             self.assertIn("status", state)
             self.assertIn("applied_gate", state)
+
+    def test_load_rejects_legacy_gross_enabled_report_and_uses_incumbent(self):
+        legacy = {"version": 1, "decision": {"enabled": True,
+                  "applied_gate": {"long_score_min": 0, "short_score_min": 0,
+                                   "short_enabled": True, "volume_growth_min": 20},
+                  "status": "已啟用"}}
+        with tempfile.TemporaryDirectory() as directory:
+            (Path(directory) / "strategy_optimization.json").write_text(
+                json.dumps(legacy), encoding="utf-8")
+            state = load_strategy_gate(Path(directory))
+        self.assertFalse(state["enabled"])
+        self.assertFalse(state["cost_validated"])
+        self.assertEqual(state["applied_mode"], "incumbent_protective")
+        self.assertEqual(state["applied_gate"], BASELINE_GATE)
 
 
 if __name__ == "__main__":

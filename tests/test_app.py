@@ -1,8 +1,14 @@
 import unittest
+import json
+import tempfile
+from contextlib import redirect_stdout
 from datetime import datetime, timezone
+from io import StringIO
+from pathlib import Path
 from unittest.mock import patch
 
 import app
+from tests.test_strategy_optimize import fixture_backtest
 
 
 class AppCliTests(unittest.TestCase):
@@ -24,6 +30,18 @@ class AppCliTests(unittest.TestCase):
         with patch("app.run_strategy_optimization", return_value={}) as runner:
             self.assertEqual(app.main(["--optimize-strategy"]), 0)
         runner.assert_called_once_with()
+
+    def test_strategy_optimization_output_discloses_all_cost_scenarios(self):
+        with tempfile.TemporaryDirectory() as directory, patch.object(app, "DATA", Path(directory)):
+            (Path(directory) / "backtest_100d.json").write_text(
+                json.dumps(fixture_backtest()), encoding="utf-8")
+            output = StringIO()
+            with redirect_stdout(output):
+                app.run_strategy_optimization()
+        text = output.getvalue()
+        self.assertIn("gross", text)
+        self.assertIn("standard", text)
+        self.assertIn("stress", text)
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 import unittest
 from taistock.ui import (format_backtest_summary, display_quote_values, visible_signal_rows,
                          format_global_market, BackgroundRefreshGate, dashboard_structure,
-                         signal_row_tags, global_market_layers)
+                         signal_row_tags, global_market_layers, strategy_card_label)
 
 
 class BacktestUiTests(unittest.TestCase):
@@ -57,6 +57,11 @@ class BacktestUiTests(unittest.TestCase):
         self.assertEqual(structure["tool_actions"], ("更新現價", "更新夜盤", "執行回測", "開啟手機版"))
         self.assertEqual(structure["cards"], ("資料日", "今日偏多", "今日偏空", "即時報價", "策略狀態"))
         self.assertEqual(structure["tabs"], ("今日偏多", "今日偏空", "所有訊號", "回測摘要", "夜盤脈動"))
+    def test_strategy_card_distinguishes_protective_incumbent_from_cost_validated_candidate(self):
+        self.assertEqual(strategy_card_label({"applied_mode": "incumbent_protective",
+                                              "enabled": False}), "保護性篩選")
+        self.assertEqual(strategy_card_label({"applied_mode": "candidate", "enabled": True,
+                                              "cost_validated": True}), "已啟用")
     def test_signal_rows_get_direction_change_and_zebra_tags(self):
         self.assertEqual(signal_row_tags("long", "+1.25%", 0), ("even", "long", "gain"))
         self.assertEqual(signal_row_tags("short", "-0.80%", 1), ("odd", "short", "loss"))

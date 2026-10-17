@@ -1,8 +1,8 @@
 {
-  "version": "2026.10.17.4",
+  "version": "2026.10.17.5",
   "files": {
-    "README.md": "7cf2a2c22f41c2f4511529ffa0c616cd3b67234e536f0ab37790c2756497f0f3",
-    "app.py": "f6a25b677bbe1ca3992576561bbedf17d3bb09696d485584535114cb637e7ce7",
+    "README.md": "67c95cf7aaedd04288de6437f231ded38122f9930ee37a7743d448795e3cc2e5",
+    "app.py": "3d1b1e284b28358d41e899abfef3c7c57edcba1f5d93677bb8114e10e729e57a",
     "build_software_manifest.py": "a2f723d75828dc907a8c21c89a1f212bb2184284544e65c2dbc6d9e9bd97ef6a",
     "daily_pipeline.py": "d198bf0201f3d18288f8d80a6aea274e3a7860157cd3df5ba7e86340101ed6ad",
     "install_daily_task.bat": "b13bfc9f59a0511afe42e25909dfdac57c962ded1ade540c02b2fa8a9adeb821",
@@ -26,9 +26,9 @@
     "taistock/realtime.py": "e1441b8f9ab5f9850daea1f7c906e62cbff23e3f50845a7e1efd5497bf1c677d",
     "taistock/scanner.py": "14c194112f0204bddbf5e6801caf9d49db9e0f16019b2cfd864a0819e8d905e1",
     "taistock/storage.py": "ca052865fd3997db1b85b224f1ccb5eb96d66cf92e865930c91c1e38903bae44",
-    "taistock/strategy_optimize.py": "2f777e728d78e6891cf946448c1047c90dd41a864f9e6a9545439c87fc572500",
+    "taistock/strategy_optimize.py": "99d50282113c15dca124a77e40962efd35b0bbe32530aa65376f7feb86d5d5f4",
     "taistock/v2_optimize.py": "e2e2cacc20747428e0f151a01d88bca7ef38461c4813b812e717c148a6c15dbb",
-    "taistock/ui.py": "83d8df68d1715f2ae0bb6f75ffb73d7c1c7643c7aa1938a69d2c9e7735b44bd8",
+    "taistock/ui.py": "c51dd6369c0a8f67c01946afcc522f070fab699a5383821faf2f8df8f7c7c076",
     "mobile/icon.svg": "e353005663862afae7d651ea24718b49274c5aa7cb775ae723636c1c76d54c27",
     "mobile/index.html": "a542bc8d3fc6fa41bbc4889498871c2b39d82bb20305070d2555fd531ba7a048",
     "mobile/manifest.json": "16dcaafec98aea81b5efac4f9d41440fdbfa830deb714b1c205ba40155beba77",

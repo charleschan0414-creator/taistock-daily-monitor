@@ -1,8 +1,15 @@
 {
-  "version": 1,
+  "version": 2,
   "method": {
     "split": "first_70_signal_days_train_last_30_holdout",
     "selection_uses_holdout_outcomes": false,
+    "selection_metric": "standard_cost_after",
+    "incumbent": {
+      "long_score_min": 55,
+      "short_score_min": 70,
+      "short_enabled": true,
+      "volume_growth_min": 20
+    },
     "grid": {
       "long_score_min": [
         0,
@@ -23,7 +30,7 @@
         50
       ]
     },
-    "objective": "100*平均逐筆報酬 + 100*平均訊號日批次報酬 + 0.25*最大回撤 + 0.05*min(PF,3) + 0.01*勝率 - 交易過少懲罰",
+    "objective": "標準成本後：100*平均逐筆報酬 + 100*平均訊號日批次報酬 + 0.25*最大回撤 + 0.05*min(PF,3) + 0.01*勝率 - 交易過少懲罰",
     "sparse_trade_penalty": "交易數低於基準50%時，每少1比例扣0.20；另硬性要求訓練成交>=100",
     "training_robustness_constraints": "訓練 PF>1，且最大回撤不得比訓練基準惡化超過 5 個百分點"
   },
@@ -38,101 +45,228 @@
     "days": 30
   },
   "candidate_count": 36,
-  "eligible_train_candidate_count": 11,
+  "eligible_train_candidate_count": 24,
   "minimum_samples": {
     "train_trades": 100,
     "test_trades": 30
   },
   "baseline_gate": {
-    "long_score_min": 0,
-    "short_score_min": 0,
-    "short_enabled": true,
-    "volume_growth_min": 20
-  },
-  "selected_gate": {
     "long_score_min": 55,
     "short_score_min": 70,
     "short_enabled": true,
     "volume_growth_min": 20
   },
+  "selected_gate": {
+    "long_score_min": 70,
+    "short_score_min": 70,
+    "short_enabled": true,
+    "volume_growth_min": 20
+  },
+  "costs": {
+    "standard": 0.00435,
+    "stress": 0.00535
+  },
   "baseline": {
     "train": {
-      "signals": 1143,
-      "trades": 1011,
-      "win_rate": 0.4520276953511375,
-      "average_return": 0.005373902218179335,
-      "median_return": -0.014563106796116538,
-      "cumulative_return": 0.525403770149659,
-      "max_drawdown": -0.04349435758267817,
-      "profit_factor": 1.3003743947033777,
-      "signal_days": 70,
-      "average_signal_batch_return": 0.006207491186236042,
-      "cumulative_signal_batch_metric": 0.525403770149659
+      "gross": {
+        "signals": 670,
+        "trades": 600,
+        "win_rate": 0.47333333333333333,
+        "average_return": 0.007582221433643676,
+        "median_return": -0.014332399626517266,
+        "cumulative_return": 0.585804711827876,
+        "max_drawdown": -0.09287526216820241,
+        "profit_factor": 1.412144071933337,
+        "signal_days": 70,
+        "average_signal_batch_return": 0.006887577337235209,
+        "cumulative_signal_batch_metric": 0.585804711827876
+      },
+      "standard": {
+        "signals": 670,
+        "trades": 600,
+        "win_rate": 0.4683333333333333,
+        "average_return": 0.003232221433643685,
+        "median_return": -0.018682399626517267,
+        "cumulative_return": 0.17099197841767255,
+        "max_drawdown": -0.2009713354150119,
+        "profit_factor": 1.1561860952266074,
+        "signal_days": 70,
+        "average_signal_batch_return": 0.00253757733723521,
+        "cumulative_signal_batch_metric": 0.17099197841767255
+      },
+      "stress": {
+        "signals": 670,
+        "trades": 600,
+        "win_rate": 0.4683333333333333,
+        "average_return": 0.0022322214336436812,
+        "median_return": -0.019682399626517265,
+        "cumulative_return": 0.09193845631872044,
+        "max_drawdown": -0.22492571554285534,
+        "profit_factor": 1.1051627655274137,
+        "signal_days": 70,
+        "average_signal_batch_return": 0.0015375773372352092,
+        "cumulative_signal_batch_metric": 0.09193845631872044
+      }
     },
     "test": {
-      "signals": 509,
-      "trades": 446,
-      "win_rate": 0.38789237668161436,
-      "average_return": 0.00032189693208300134,
-      "median_return": -0.014788922822421544,
-      "cumulative_return": -0.00013018866948721897,
-      "max_drawdown": -0.1015071248444549,
-      "profit_factor": 1.0195463255144424,
-      "signal_days": 30,
-      "average_signal_batch_return": 8.945102496533539e-05,
-      "cumulative_signal_batch_metric": -0.00013018866948721897
+      "gross": {
+        "signals": 325,
+        "trades": 290,
+        "win_rate": 0.4206896551724138,
+        "average_return": 0.0030396852009084013,
+        "median_return": -0.014876311614383611,
+        "cumulative_return": 0.08790067271180413,
+        "max_drawdown": -0.09408737436049497,
+        "profit_factor": 1.1754167622888727,
+        "signal_days": 30,
+        "average_signal_batch_return": 0.0029971617970152168,
+        "cumulative_signal_batch_metric": 0.08790067271180413
+      },
+      "standard": {
+        "signals": 325,
+        "trades": 290,
+        "win_rate": 0.41724137931034483,
+        "average_return": -0.0013103147990915973,
+        "median_return": -0.01922631161438361,
+        "cumulative_return": -0.04514078416884981,
+        "max_drawdown": -0.1250631654499369,
+        "profit_factor": 0.9340103950609557,
+        "signal_days": 30,
+        "average_signal_batch_return": -0.0013528382029847849,
+        "cumulative_signal_batch_metric": -0.04514078416884981
+      },
+      "stress": {
+        "signals": 325,
+        "trades": 290,
+        "win_rate": 0.41379310344827586,
+        "average_return": -0.002310314799091596,
+        "median_return": -0.02022631161438361,
+        "cumulative_return": -0.0734230958333264,
+        "max_drawdown": -0.13389077166823404,
+        "profit_factor": 0.8869670048382627,
+        "signal_days": 30,
+        "average_signal_batch_return": -0.0023528382029847843,
+        "cumulative_signal_batch_metric": -0.0734230958333264
+      }
     }
   },
   "candidate": {
     "train": {
-      "signals": 670,
-      "trades": 600,
-      "win_rate": 0.47333333333333333,
-      "average_return": 0.007582221433643676,
-      "median_return": -0.014332399626517266,
-      "cumulative_return": 0.585804711827876,
-      "max_drawdown": -0.09287526216820241,
-      "profit_factor": 1.412144071933337,
-      "signal_days": 70,
-      "average_signal_batch_return": 0.006887577337235209,
-      "cumulative_signal_batch_metric": 0.585804711827876
+      "gross": {
+        "signals": 361,
+        "trades": 320,
+        "win_rate": 0.471875,
+        "average_return": 0.008384396220470549,
+        "median_return": -0.01435439560439565,
+        "cumulative_return": 0.7412657614900637,
+        "max_drawdown": -0.12378086113455777,
+        "profit_factor": 1.4506162071075448,
+        "signal_days": 70,
+        "average_signal_batch_return": 0.008422164037865715,
+        "cumulative_signal_batch_metric": 0.7412657614900637
+      },
+      "standard": {
+        "signals": 361,
+        "trades": 320,
+        "win_rate": 0.465625,
+        "average_return": 0.004034396220470537,
+        "median_return": -0.01870439560439565,
+        "cumulative_return": 0.28623613872293974,
+        "max_drawdown": -0.22832513106228625,
+        "profit_factor": 1.1929616088416608,
+        "signal_days": 70,
+        "average_signal_batch_return": 0.004072164037865716,
+        "cumulative_signal_batch_metric": 0.28623613872293974
+      },
+      "stress": {
+        "signals": 361,
+        "trades": 320,
+        "win_rate": 0.465625,
+        "average_return": 0.0030343962204705454,
+        "median_return": -0.01970439560439565,
+        "cumulative_return": 0.19949907166088643,
+        "max_drawdown": -0.2505970493674393,
+        "profit_factor": 1.1415155408001842,
+        "signal_days": 70,
+        "average_signal_batch_return": 0.0030721640378657163,
+        "cumulative_signal_batch_metric": 0.19949907166088643
+      }
     },
     "test": {
-      "signals": 325,
-      "trades": 290,
-      "win_rate": 0.4206896551724138,
-      "average_return": 0.0030396852009084013,
-      "median_return": -0.014876311614383611,
-      "cumulative_return": 0.08790067271180413,
-      "max_drawdown": -0.09408737436049497,
-      "profit_factor": 1.1754167622888727,
-      "signal_days": 30,
-      "average_signal_batch_return": 0.0029971617970152168,
-      "cumulative_signal_batch_metric": 0.08790067271180413
-    },
-    "train_sparse_trade_penalty": 0.0
+      "gross": {
+        "signals": 193,
+        "trades": 164,
+        "win_rate": 0.4573170731707317,
+        "average_return": 0.006381059885333727,
+        "median_return": -0.013986260210948013,
+        "cumulative_return": 0.1714286452161271,
+        "max_drawdown": -0.07982702770810779,
+        "profit_factor": 1.40552469887835,
+        "signal_days": 30,
+        "average_signal_batch_return": 0.005520029094483015,
+        "cumulative_signal_batch_metric": 0.1714286452161271
+      },
+      "standard": {
+        "signals": 193,
+        "trades": 164,
+        "win_rate": 0.4573170731707317,
+        "average_return": 0.0020310598853337256,
+        "median_return": -0.018336260210948013,
+        "cumulative_return": 0.028497269865487063,
+        "max_drawdown": -0.11473577986953276,
+        "profit_factor": 1.1122381304010456,
+        "signal_days": 30,
+        "average_signal_batch_return": 0.0011700290944830147,
+        "cumulative_signal_batch_metric": 0.028497269865487063
+      },
+      "stress": {
+        "signals": 193,
+        "trades": 164,
+        "win_rate": 0.4573170731707317,
+        "average_return": 0.0010310598853337275,
+        "median_return": -0.019336260210948013,
+        "cumulative_return": -0.0018932856553661725,
+        "max_drawdown": -0.12365722813472657,
+        "profit_factor": 1.0553183152022412,
+        "signal_days": 30,
+        "average_signal_batch_return": 0.0001700290944830161,
+        "cumulative_signal_batch_metric": -0.0018932856553661725
+      }
+    }
   },
+  "train_sparse_trade_penalty": 0.0,
   "holdout_thresholds": {
-    "average_return": "候選 >= 基準",
-    "max_drawdown": "候選不可比基準惡化超過 2 個百分點",
-    "profit_factor": "> 1（無虧損樣本視為通過）",
-    "test_trades": ">= 30"
+    "standard": {
+      "average_return": "> 0",
+      "profit_factor": "> 1",
+      "test_trades": ">= 30",
+      "max_drawdown": "不可比 incumbent 惡化超過 2 個百分點"
+    },
+    "stress": {
+      "average_return": "> 0",
+      "profit_factor": "> 1"
+    }
   },
   "decision": {
     "enabled": true,
+    "upgrade_approved": true,
+    "cost_validated": true,
+    "applied_mode": "candidate",
     "checks": {
-      "minimum_test_trades_30": true,
-      "average_return_not_below_baseline": true,
-      "max_drawdown_not_worse_by_more_than_2pp": true,
-      "profit_factor_above_1": true
+      "standard_minimum_test_trades_30": true,
+      "standard_average_return_above_0": true,
+      "standard_profit_factor_above_1": true,
+      "standard_max_drawdown_not_worse_than_incumbent_by_more_than_2pp": true,
+      "stress_average_return_above_0": true,
+      "stress_profit_factor_above_1": true
     },
     "applied_gate": {
-      "long_score_min": 55,
+      "long_score_min": 70,
       "short_score_min": 70,
       "short_enabled": true,
       "volume_growth_min": 20
     },
-    "status": "已啟用｜偏多分數≥55、偏空分數≥70、偏空啟用、量增≥20%"
+    "status": "已啟用｜偏多分數≥70、偏空分數≥70、偏空啟用、量增≥20%｜成本後驗證通過"
   },
-  "updated_at": "2026-10-17T08:08:15+00:00"
+  "updated_at": "2026-10-17T17:35:15+08:00"
 }
