@@ -1,6 +1,6 @@
 {
-  "started_at": "2026-10-19T00:45:57+08:00",
-  "completed_at": "2026-10-19T00:46:20+08:00",
+  "started_at": "2026-10-19T07:53:14+08:00",
+  "completed_at": "2026-10-19T07:54:04+08:00",
   "status": "success",
   "data_date": "2026-10-16",
   "backtest": {
@@ -509,7 +509,7 @@
     "regime": {
       "snapshot_count": 2,
       "first": "2026-10-17T23:32:49+00:00",
-      "last": "2026-10-18T16:46:19+00:00",
+      "last": "2026-10-18T23:53:37+00:00",
       "first_snapshot": {
         "snapshot_id": "2026-10-18:morning_backup",
         "fetched_at": "2026-10-17T23:32:49+00:00",
@@ -518,7 +518,7 @@
       },
       "last_snapshot": {
         "snapshot_id": "2026-10-19:morning_backup",
-        "fetched_at": "2026-10-18T16:46:19+00:00",
+        "fetched_at": "2026-10-18T23:53:37+00:00",
         "market_date": "2026-10-19",
         "phase": "morning_backup"
       },
@@ -529,7 +529,7 @@
       },
       "latest": {
         "snapshot_id": "2026-10-19:morning_backup",
-        "fetched_at": "2026-10-18T16:46:19+00:00",
+        "fetched_at": "2026-10-18T23:53:37+00:00",
         "market_date": "2026-10-19",
         "phase": "morning_backup",
         "scenario": {
@@ -583,7 +583,7 @@
   },
   "health": {
     "overall": "ok",
-    "generated_at": "2026-10-19T00:46:20+08:00",
+    "generated_at": "2026-10-19T07:54:04+08:00",
     "sources": {
       "daily_status": {
         "status": "ok",
@@ -608,13 +608,13 @@
       "market_regime": {
         "status": "ok",
         "message": "可正常讀取",
-        "date": "2026-10-18T16:46:19+00:00"
+        "date": "2026-10-18T23:53:37+00:00"
       }
     },
     "latest_data_date": "2026-10-16",
     "pipeline": {
       "status": "success",
-      "completed_at": "2026-10-19T00:46:20+08:00",
+      "completed_at": "2026-10-19T07:54:04+08:00",
       "data_date": "2026-10-16",
       "freshness": "fresh"
     },
