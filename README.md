@@ -94,7 +94,7 @@ python app.py --optimize-strategy
 
 安裝會建立：
 
-- `TaiStockScannerDaily`：每天 08:30 執行 `run.bat --update --notify`，並啟用「錯過後在可用時儘快執行」；電腦開機且使用者重新登入後可補跑。
+- `TaiStockScannerDaily`：每天 06:30 執行 `run.bat --update --notify`，並啟用「錯過後在可用時儘快執行」；建議 06:15 前開機登入，更新成功後約 07:00 可關機；電腦開機且使用者重新登入後可補跑。
 - `TaiStockScannerSoftwareUpdate`：以安裝時保存的 Python 每 2 小時執行 `updater.py --check-only`。工作使用不需要密碼的目前使用者互動權杖，並啟用「錯過後在可用時儘快執行」；因此不儲存 Windows 密碼，但使用者登出時不會執行，登入後 Task Scheduler 才能補跑。電腦關機期間無法執行。
 
 若本機未登入或關機，固定 Cloudflare **公開雲端版不需要登入**，仍可直接唯讀查看；公開網址沒有存取驗證，請勿在公開資料放入個資或憑證。
@@ -110,7 +110,7 @@ python app.py --help
 
 ### 系統健康與匿名診斷
 
-桌面版新增「系統健康」分頁：集中顯示資料來源可讀狀態、最新資料日、每日流程結果、桌面版本、策略啟用日與前瞻進度、成交量前 100 候選／入選數、夜盤研究快照的 `60` 筆門檻，以及下一次本機每日排程（台北時間 08:30）。最新成功流程超過 48 小時會標示需注意；最近流程失敗會標示需處理並顯示錯誤。檔案缺少或 JSON 損壞只會顯示警告，不會讓健康頁崩潰。
+桌面版新增「系統健康」分頁：集中顯示資料來源可讀狀態、最新資料日、每日流程結果、桌面版本、策略啟用日與前瞻進度、成交量前 100 候選／入選數、夜盤研究快照的 `60` 筆門檻，以及下一次本機每日排程（台北時間 06:30）。最新成功流程超過 48 小時會標示需注意；最近流程失敗會標示需處理並顯示錯誤。檔案缺少或 JSON 損壞只會顯示警告，不會讓健康頁崩潰。
 
 按「匯出診斷」會原子建立 `diagnostics/health-年月日-時分秒.json`。也可使用：
 
@@ -155,13 +155,13 @@ python app.py --restore D:\我的備份\TaiStockScanner.zip
 - 若網路、GitHub 或驗證失敗，會顯示警告並繼續啟動目前可用版本。只檢查不安裝可執行 `run.bat --check-only` 或 `python updater.py --check-only`。
 - **先前下載舊 ZIP 的使用者**：舊版沒有更新器，需只做一次換成新版 ZIP。請解壓到新的固定資料夾；若要沿用舊資料，再複製自己的 `data/` 與 `python_path.txt` 到新版。之後由桌面版自動更新，不必再次整包替換。
 
-每日結果寫入 `data/latest.json`、`latest.csv`、`scanner.db`。日更會重用最近 6 個完整交易日的官方逐日批次快取，只需補抓尚未快取的新交易日，避免逐檔大量請求觸發交易所 307/429 限流。現有 `TaiStockScannerDaily` 每天 08:30 只執行 `run.bat --update --notify`，不會每日重跑 100 日回測；本功能不重建或刪除排程。
+每日結果寫入 `data/latest.json`、`latest.csv`、`scanner.db`。日更會重用最近 6 個完整交易日的官方逐日批次快取，只需補抓尚未快取的新交易日，避免逐檔大量請求觸發交易所 307/429 限流。現有 `TaiStockScannerDaily` 每天 06:30 只執行 `run.bat --update --notify`，不會每日重跑 100 日回測；本功能不重建或刪除排程。
 
 ## 429 故障排除
 
 兩種 429 必須分開：
 
-1. **Hermes `provider=openai-codex HTTP 429 usage limit`**：這是 AI 模型供應商的帳號/期間配額，不是台股 API，也不是 TaiStockScanner 邏輯錯誤。稍後重試、等待配額重置或調整模型方案/配額。TaiStockScanner 的 GUI、08:30 日更與回測本身不依賴 LLM，不受此 Hermes 429 影響。
+1. **Hermes `provider=openai-codex HTTP 429 usage limit`**：這是 AI 模型供應商的帳號/期間配額，不是台股 API，也不是 TaiStockScanner 邏輯錯誤。稍後重試、等待配額重置或調整模型方案/配額。TaiStockScanner 的 GUI、06:30 日更與回測本身不依賴 LLM，不受此 Hermes 429 影響。
 2. **TWSE/TPEx HTTP 429**：官方市場資料端限流。程式會節流、尊重 `Retry-After`、指數退避，且保留已完成快取以便續跑；仍失敗時稍後再次執行相同命令。
 
 ## 即時現價與同 Wi-Fi 手機版

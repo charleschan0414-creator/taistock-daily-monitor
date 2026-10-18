@@ -10,6 +10,7 @@ from pathlib import Path
 
 
 TAIPEI = timezone(timedelta(hours=8))
+DAILY_UPDATE_TIME = time(6, 30)
 SOURCE_FILES = {
     "daily_status": "daily_status.json",
     "latest": "latest.json",
@@ -59,7 +60,7 @@ def _parse_moment(value):
 
 def _next_update(now):
     local = now.astimezone(TAIPEI)
-    candidate = datetime.combine(local.date(), time(8, 30), TAIPEI)
+    candidate = datetime.combine(local.date(), DAILY_UPDATE_TIME, TAIPEI)
     if local >= candidate:
         candidate += timedelta(days=1)
     return candidate.isoformat(timespec="seconds")

@@ -61,7 +61,7 @@ class HealthReportTests(unittest.TestCase):
         self.assertEqual(report["universe"], {"total": 100, "selected": 7})
         self.assertEqual(report["night_market"], {"count": 17, "threshold": 60, "remaining": 43})
         self.assertEqual(report["desktop_version"], "2026.10.17.6")
-        self.assertEqual(report["next_update"], "2026-10-17T08:30:00+08:00")
+        self.assertEqual(report["next_update"], "2026-10-18T06:30:00+08:00")
         self.assertEqual(set(report["sources"]), {
             "daily_status", "latest", "backtest_100d", "strategy_registry", "market_regime"})
         for source in report["sources"].values():
@@ -108,11 +108,11 @@ class HealthReportTests(unittest.TestCase):
         self.assertEqual(report["overall"], "warning")
         self.assertEqual(report["pipeline"]["freshness"], "stale")
 
-    def test_next_schedule_rolls_to_next_day_at_or_after_0830(self):
+    def test_next_schedule_rolls_to_next_day_at_or_after_0630(self):
         self.write_healthy_files()
-        now = datetime(2026, 10, 17, 8, 30, tzinfo=TAIPEI)
+        now = datetime(2026, 10, 17, 6, 30, tzinfo=TAIPEI)
         report = build_health_report(self.data, "test", now)
-        self.assertEqual(report["next_update"], "2026-10-18T08:30:00+08:00")
+        self.assertEqual(report["next_update"], "2026-10-18T06:30:00+08:00")
 
     def test_export_is_atomic_anonymous_and_contains_only_safe_summaries(self):
         self.write_healthy_files()

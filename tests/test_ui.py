@@ -111,7 +111,7 @@ class BacktestUiTests(unittest.TestCase):
     def test_health_text_contains_status_progress_schedule_and_error(self):
         text = format_health_report({
             "overall": "error", "latest_data_date": "2026-10-16",
-            "desktop_version": "2026.10.17.6", "next_update": "2026-10-18T08:30:00+08:00",
+            "desktop_version": "2026.10.17.6", "next_update": "2026-10-18T06:30:00+08:00",
             "pipeline": {"status": "error", "completed_at": "2026-10-17T07:00:00+08:00"},
             "strategy": {"version": 3, "activated_on": "2026-10-01", "progress": "8/20"},
             "universe": {"total": 100, "selected": 7},
@@ -119,7 +119,7 @@ class BacktestUiTests(unittest.TestCase):
             "recent_error": "RuntimeError: offline",
             "sources": {"latest": {"status": "ok", "message": "可正常讀取", "date": "2026-10-16"}},
         })
-        for expected in ("需處理", "2026.10.17.6", "8/20", "17/60", "08:30", "RuntimeError: offline", "100 / 7"):
+        for expected in ("需處理", "2026.10.17.6", "8/20", "17/60", "06:30", "RuntimeError: offline", "100 / 7"):
             self.assertIn(expected, text)
 
     def test_restore_button_cancels_without_selected_file_or_confirmation(self):

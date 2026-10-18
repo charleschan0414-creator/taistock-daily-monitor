@@ -9,7 +9,7 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from tkinter import ttk, messagebox, filedialog
 from .backup import create_backup, restore_backup
-from .health import build_health_report, export_diagnostics
+from .health import DAILY_UPDATE_TIME, build_health_report, export_diagnostics
 from .backtest import OfficialHistoryFetcher
 from .global_market import GlobalMarketClient
 from .net import HttpClient
@@ -65,7 +65,7 @@ def format_health_report(report):
         f"策略版本｜v{strategy.get('version') or '—'}｜啟用日 {strategy.get('activated_on') or '—'}｜前瞻進度 {strategy.get('progress', '0/0')}",
         f"候選宇宙｜總數 / 入選 {universe.get('total', 0)} / {universe.get('selected', 0)}",
         f"夜盤研究快照｜{night.get('count', 0)}/{night.get('threshold', 60)}｜尚需 {night.get('remaining', 60)} 筆",
-        f"下次本機更新｜{report.get('next_update', '—')}（台北 08:30）",
+        f"下次本機更新｜{report.get('next_update', '—')}（台北 {DAILY_UPDATE_TIME.strftime('%H:%M')}）",
         f"最近錯誤｜{report.get('recent_error') or '無'}",
         "",
         "資料來源",

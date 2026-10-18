@@ -26,7 +26,7 @@ if not exist "%PYTHON_EXE%" (
 )
 
  echo [PLAN] Python: %PYTHON_EXE%
- echo [PLAN] TaiStockScannerDaily: every day at 08:30, run.bat --update --notify, missed run starts when available
+ echo [PLAN] TaiStockScannerDaily: every day at 06:30, run.bat --update --notify, missed run starts when available
  echo [PLAN] TaiStockScannerSoftwareUpdate: every 2 hours, updater.py --check-only, missed run starts when available
  echo [PLAN] Shortcuts: Desktop and Start Menu, Unicode name documented in README
  echo [PLAN] Preserve forever: data, public_data, backups, diagnostics, user_settings, python_path
@@ -54,7 +54,7 @@ if errorlevel 1 (
 )
 
 echo [1/4] Creating TaiStockScannerDaily...
-schtasks /Create /TN "%DAILY_TASK%" /TR "\"%ROOT%run.bat\" --update --notify" /SC DAILY /ST 08:30 /RL LIMITED /IT /F
+schtasks /Create /TN "%DAILY_TASK%" /TR "\"%ROOT%run.bat\" --update --notify" /SC DAILY /ST 06:30 /RL LIMITED /IT /F
 if errorlevel 1 (
   echo [ERROR] Could not create %DAILY_TASK%.
   exit /b 1
