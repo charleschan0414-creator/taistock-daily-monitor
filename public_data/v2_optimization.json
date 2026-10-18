@@ -119,8 +119,8 @@
             "from": "2026-09-11",
             "to": "2026-10-13",
             "days": 20,
-            "trades": 3,
-            "profit_factor": 0.4049958672045954,
+            "trades": 1,
+            "profit_factor": 0.0,
             "data_sufficient": true,
             "profit_factor_above_1": false
           },
@@ -128,8 +128,8 @@
             "from": "2026-09-14",
             "to": "2026-10-14",
             "days": 20,
-            "trades": 3,
-            "profit_factor": 0.4049958672045954,
+            "trades": 1,
+            "profit_factor": 0.0,
             "data_sufficient": true,
             "profit_factor_above_1": false
           },
@@ -137,16 +137,16 @@
             "from": "2026-09-15",
             "to": "2026-10-15",
             "days": 20,
-            "trades": 3,
-            "profit_factor": 0.4049958672045954,
-            "data_sufficient": true,
+            "trades": 0,
+            "profit_factor": null,
+            "data_sufficient": false,
             "profit_factor_above_1": false
           }
         ],
         "profitable_windows": 0,
-        "data_sufficient": true,
+        "data_sufficient": false,
         "passed": false,
-        "reason": "不通過：三個窗口中少於兩個 standard PF>1"
+        "reason": "資料不足：至少一個20日窗口沒有已成交樣本"
       },
       "passed": false
     },
@@ -209,8 +209,8 @@
             "from": "2026-09-11",
             "to": "2026-10-13",
             "days": 20,
-            "trades": 4,
-            "profit_factor": 0.08344671250483326,
+            "trades": 3,
+            "profit_factor": 0.18231801439079934,
             "data_sufficient": true,
             "profit_factor_above_1": false
           },
@@ -218,8 +218,8 @@
             "from": "2026-09-14",
             "to": "2026-10-14",
             "days": 20,
-            "trades": 4,
-            "profit_factor": 0.08344671250483326,
+            "trades": 3,
+            "profit_factor": 0.18231801439079934,
             "data_sufficient": true,
             "profit_factor_above_1": false
           },
@@ -227,8 +227,8 @@
             "from": "2026-09-15",
             "to": "2026-10-15",
             "days": 20,
-            "trades": 4,
-            "profit_factor": 0.08344671250483326,
+            "trades": 2,
+            "profit_factor": 0.2762054476081903,
             "data_sufficient": true,
             "profit_factor_above_1": false
           }
@@ -256,5 +256,5 @@
     ],
     "notice": "日 OHLC 只能保守模擬次一交易日當沖，不能重建盤中先後；不跨日持有，也不保證勝率或獲利。"
   },
-  "updated_at": "2026-10-17T23:32:46+00:00"
+  "updated_at": "2026-10-18T16:46:16+00:00"
 }
