@@ -133,7 +133,9 @@ def _holdout_checks(candidate_standard: dict, baseline_standard: dict,
     }
 
 
-def optimize_strategy(backtest: dict, output_path: Path | None = None) -> dict:
+def optimize_strategy(backtest: dict, output_path: Path | None = None,
+                      incumbent_gate: dict | None = None) -> dict:
+    incumbent = dict(incumbent_gate or BASELINE_GATE)
     dates = sorted(dict.fromkeys(backtest.get("signal_dates", [])))
     if len(dates) != TRAIN_DAYS + TEST_DAYS:
         raise ValueError("策略優化需要恰好 100 個唯一訊號日（前70訓練、後30保留測試）")
@@ -142,8 +144,8 @@ def optimize_strategy(backtest: dict, output_path: Path | None = None) -> dict:
     trades = list(backtest.get("trades", []))
     train = [row for row in trades if row.get("signal_date") in train_set]
     test = [row for row in trades if row.get("signal_date") in test_set]
-    baseline_train_rows = [row for row in train if _passes(row, BASELINE_GATE)]
-    baseline_test_rows = [row for row in test if _passes(row, BASELINE_GATE)]
+    baseline_train_rows = [row for row in train if _passes(row, incumbent)]
+    baseline_test_rows = [row for row in test if _passes(row, incumbent)]
     baseline_train = _metric_set(baseline_train_rows, train_dates)
     baseline_test = _metric_set(baseline_test_rows, test_dates)
 
@@ -158,7 +160,7 @@ def optimize_strategy(backtest: dict, output_path: Path | None = None) -> dict:
         evaluated.append((objective, -penalty, standard["trades"], gate, metrics, penalty))
     no_robust_candidate = not evaluated
     if no_robust_candidate:
-        selected_gate = dict(BASELINE_GATE)
+        selected_gate = dict(incumbent)
         candidate_train = baseline_train
         sparse_penalty = 0.0
     else:
@@ -168,9 +170,9 @@ def optimize_strategy(backtest: dict, output_path: Path | None = None) -> dict:
     candidate_test = _metric_set(candidate_test_rows, test_dates)
     checks = _holdout_checks(candidate_test["standard"], baseline_test["standard"],
                              candidate_test["stress"])
-    upgrade_approved = selected_gate != BASELINE_GATE and all(checks.values())
+    upgrade_approved = selected_gate != incumbent and all(checks.values())
     enabled = upgrade_approved
-    applied_gate = dict(selected_gate if upgrade_approved else BASELINE_GATE)
+    applied_gate = dict(selected_gate if upgrade_approved else incumbent)
     applied_mode = "candidate" if upgrade_approved else "incumbent_protective"
     direction_text = "偏空啟用" if applied_gate["short_enabled"] else "偏空停用"
     status = ("保留既有保護性篩選｜沒有符合訓練穩健條件的候選" if no_robust_candidate else
@@ -183,7 +185,7 @@ def optimize_strategy(backtest: dict, output_path: Path | None = None) -> dict:
             "split": "first_70_signal_days_train_last_30_holdout",
             "selection_uses_holdout_outcomes": False,
             "selection_metric": "standard_cost_after",
-            "incumbent": dict(BASELINE_GATE),
+            "incumbent": dict(incumbent),
             "grid": {key: list(values) for key, values in GRID.items()},
             "objective": ("標準成本後：100*平均逐筆報酬 + 100*平均訊號日批次報酬 + 0.25*最大回撤 "
                           "+ 0.05*min(PF,3) + 0.01*勝率 - 交易過少懲罰"),
@@ -195,7 +197,7 @@ def optimize_strategy(backtest: dict, output_path: Path | None = None) -> dict:
         "candidate_count": math.prod(len(values) for values in GRID.values()),
         "eligible_train_candidate_count": len(evaluated),
         "minimum_samples": {"train_trades": MIN_TRAIN_TRADES, "test_trades": MIN_TEST_TRADES},
-        "baseline_gate": dict(BASELINE_GATE),
+        "baseline_gate": dict(incumbent),
         "selected_gate": dict(selected_gate),
         "costs": {"standard": STANDARD_COST, "stress": STRESS_COST},
         "baseline": {"train": baseline_train, "test": baseline_test},

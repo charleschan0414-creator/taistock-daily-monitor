@@ -94,7 +94,7 @@ python app.py --optimize-strategy
 
 安裝會建立：
 
-- `TaiStockScannerDaily`：每天 08:30 執行 `run.bat --update --notify`。
+- `TaiStockScannerDaily`：每天 08:30 執行 `run.bat --update --notify`，並啟用「錯過後在可用時儘快執行」；電腦開機且使用者重新登入後可補跑。
 - `TaiStockScannerSoftwareUpdate`：以安裝時保存的 Python 每 2 小時執行 `updater.py --check-only`。工作使用不需要密碼的目前使用者互動權杖，並啟用「錯過後在可用時儘快執行」；因此不儲存 Windows 密碼，但使用者登出時不會執行，登入後 Task Scheduler 才能補跑。電腦關機期間無法執行。
 
 若本機未登入或關機，固定 Cloudflare **公開雲端版不需要登入**，仍可直接唯讀查看；公開網址沒有存取驗證，請勿在公開資料放入個資或憑證。

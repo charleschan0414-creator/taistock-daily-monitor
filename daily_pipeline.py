@@ -137,19 +137,28 @@ def record_market_history(client=None, clock=None):
 def main():
     started = taipei_now()
     status = {"started_at": started, "completed_at": None, "status": "running", "data_date": None}
+    strategy_report_path = DATA / "strategy_optimization.json"
+    previous_strategy_report = None
+    strategy_report_staged = False
     atomic_json(DATA / "daily_status.json", status)
     try:
         backtest = run_backtest(100)
         v2_report = optimize_v2(backtest, DATA / "v2_optimization.json")
-        strategy = run_strategy_optimization()
+        registry_path = DATA / "strategy_registry.json"
+        existing_registry = load_registry(registry_path)
+        incumbent_gate = existing_registry["active_gate"] if existing_registry else None
+        strategy = run_strategy_optimization(
+            backtest=backtest, incumbent_gate=incumbent_gate, write_output=False)
         expected = backtest.get("data_collection", {}).get("latest_complete_date")
         if not expected:
             raise ValueError("backtest did not report latest_complete_date")
-        registry_path = DATA / "strategy_registry.json"
-        proposed_registry = build_registry_update(load_registry(registry_path), strategy, expected)
+        proposed_registry = build_registry_update(existing_registry, strategy, expected)
         effective_strategy = apply_active_gate_to_report(strategy, proposed_registry)
         # app.update reads this report; publish the optimizer decision separately inside it.
-        atomic_json(DATA / "strategy_optimization.json", effective_strategy)
+        if strategy_report_path.exists():
+            previous_strategy_report = json.loads(strategy_report_path.read_text(encoding="utf-8"))
+        atomic_json(strategy_report_path, effective_strategy)
+        strategy_report_staged = True
         latest = update(False)
         validate_outputs(backtest, latest, expected)
         market_history = record_market_history()
@@ -168,16 +177,10 @@ def main():
             },
             "strategy": {"decision": strategy["decision"], "baseline": strategy["baseline"], "candidate": strategy["candidate"]},
             "strategy_freeze": {
+                **effective_strategy["strategy_freeze"],
                 "active_gate": proposed_registry["active_gate"],
-                "strategy_version": proposed_registry["strategy_version"],
-                "execution_model": proposed_registry.get("execution_model"),
-                "activated_on": proposed_registry["activated_on"],
-                "minimum_forward_signal_days": proposed_registry["minimum_forward_signal_days"],
-                "forward_signal_days": proposed_registry["forward_signal_days"],
                 "last_observed_date": proposed_registry["last_observed_date"],
-                "status": proposed_registry["status"],
                 "pending_candidate": proposed_registry.get("pending_candidate"),
-                "not_holdout_reuse": True,
             },
             "v2_analysis": {
                 "version": v2_report["version"],
@@ -200,6 +203,11 @@ def main():
         write_status_with_health(status)
         return 0
     except Exception as exc:
+        if strategy_report_staged:
+            if previous_strategy_report is None:
+                strategy_report_path.unlink(missing_ok=True)
+            else:
+                atomic_json(strategy_report_path, previous_strategy_report)
         status.update({"completed_at": taipei_now(), "status": "error", "error": f"{type(exc).__name__}: {exc}"})
         write_status_with_health(status)
         print(status["error"], file=sys.stderr)

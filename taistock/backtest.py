@@ -17,8 +17,15 @@ from .data import _number
 from .portfolio import simulate_portfolio
 from .storage import CANDIDATE_WEIGHTS, MIN_SAMPLES
 
+INDICATOR_WARMUP_DAYS = 5
 NEXT_DAY_EXECUTION_DAYS = 1
 COST_SCENARIOS = {"gross": 0.0, "standard": 0.00435, "stress": 0.00535}
+
+
+def required_history_days(signal_days: int) -> int:
+    if signal_days < 1:
+        raise ValueError("signal_days must be positive")
+    return INDICATOR_WARMUP_DAYS + signal_days + NEXT_DAY_EXECUTION_DAYS
 
 
 def _table_with_security_code(payload: dict) -> dict:
@@ -296,8 +303,9 @@ def summarize_trade_scenarios(trades: list[dict], signal_dates: list[str]) -> di
 
 def build_backtest(days: list[dict], signal_days: int = 100, weights: dict | None = None) -> dict:
     del weights  # Walk-forward always starts at the fixed baseline; no full-period fitted weights.
-    if signal_days < 1 or len(days) < signal_days + 6:
-        raise ValueError(f"回測需要至少 {signal_days + 6} 個完整交易日")
+    required_days = required_history_days(signal_days)
+    if len(days) < required_days:
+        raise ValueError(f"回測需要至少 {required_days} 個完整交易日")
     ordered = sorted(days, key=lambda row: row["date"])
     future_buffer = NEXT_DAY_EXECUTION_DAYS
     selected = list(range(len(ordered) - signal_days - future_buffer,

@@ -59,6 +59,14 @@ class WindowsInstallerTests(unittest.TestCase):
         self.assertIn("/st 00:00", lowered)
         self.assertNotIn("$t.repetition.interval", lowered)
         self.assertIn("startwhenavailable", lowered)
+        self.assertRegex(
+            lowered,
+            r"set-scheduledtask\s+-taskname\s+'taistockscannerdaily'\s+-settings\s+\(new-scheduledtasksettingsset\s+-startwhenavailable\)",
+        )
+        self.assertRegex(
+            lowered,
+            r"set-scheduledtask\s+-taskname\s+'taistockscannersoftwareupdate'\s+-settings\s+\(new-scheduledtasksettingsset\s+-startwhenavailable\)",
+        )
         self.assertIn("interactivetoken", lowered)
         self.assertNotRegex(lowered, r"/rp\s+")
 
@@ -101,7 +109,7 @@ class WindowsInstallerTests(unittest.TestCase):
         self.assertIn("install.bat", RELEASE_FILES)
         self.assertIn("uninstall.bat", RELEASE_FILES)
         manifest = json.loads((ROOT / "software_manifest.json").read_text(encoding="utf-8"))
-        self.assertEqual(len(RELEASE_FILES), 37)
+        self.assertEqual(len(RELEASE_FILES), 39)
         self.assertEqual(len(manifest["files"]), len(RELEASE_FILES))
         for name in ("install.bat", "uninstall.bat", "install_daily_task.bat"):
             self.assertIn(name, manifest["files"])

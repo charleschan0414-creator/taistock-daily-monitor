@@ -71,6 +71,19 @@ class StrategyOptimizationTests(unittest.TestCase):
         self.assertEqual(report["decision"]["applied_mode"], "incumbent_protective")
         self.assertIn("沒有符合訓練穩健條件", report["decision"]["status"])
 
+    def test_explicit_incumbent_is_used_as_baseline_and_protective_fallback(self):
+        backtest = fixture_backtest()
+        for row in backtest["trades"]:
+            row["return"] = -0.02
+        incumbent = {"long_score_min": 70, "short_score_min": 70,
+                     "short_enabled": False, "volume_growth_min": 50}
+
+        report = optimize_strategy(backtest, incumbent_gate=incumbent)
+
+        self.assertEqual(report["method"]["incumbent"], incumbent)
+        self.assertEqual(report["baseline_gate"], incumbent)
+        self.assertEqual(report["decision"]["applied_gate"], incumbent)
+
     def test_v2_report_preserves_gross_standard_and_stress_metrics(self):
         report = optimize_strategy(fixture_backtest())
         self.assertGreaterEqual(VERSION, 2)

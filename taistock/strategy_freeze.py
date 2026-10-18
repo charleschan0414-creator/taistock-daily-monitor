@@ -39,6 +39,25 @@ def _initial_gate(report: dict) -> dict:
     return copy.deepcopy(gate)
 
 
+def _new_registry_state(gate: dict, version: int, data_date: str,
+                        cost_validated: bool) -> dict:
+    return {
+        "active_gate": copy.deepcopy(gate),
+        "strategy_version": version,
+        "execution_model": EXECUTION_MODEL,
+        "cost_validated": cost_validated,
+        "activated_on": data_date,
+        "minimum_forward_signal_days": MINIMUM_FORWARD_SIGNAL_DAYS,
+        "forward_signal_days": 0,
+        "last_observed_date": data_date,
+        "status": "forward_observation",
+        "forward_observation": {
+            "not_holdout_reuse": True,
+            "description": "Counts new unique live signal dates after activation regardless of outcome.",
+        },
+    }
+
+
 def _validate(registry: dict) -> dict:
     if not isinstance(registry, dict) or not _REQUIRED_FIELDS.issubset(registry):
         raise ValueError("strategy registry is missing required fields")
@@ -82,39 +101,17 @@ def build_registry_update(existing: dict | None, optimization_report: dict,
         raise ValueError("data_date is required for strategy forward observation")
     if existing is None:
         gate = _initial_gate(optimization_report)
-        return {
-            "active_gate": gate,
-            "strategy_version": 1,
-            "execution_model": EXECUTION_MODEL,
-            "cost_validated": bool(optimization_report.get("decision", {}).get("cost_validated")),
-            "activated_on": data_date,
-            "minimum_forward_signal_days": MINIMUM_FORWARD_SIGNAL_DAYS,
-            "forward_signal_days": 0,
-            "last_observed_date": data_date,
-            "status": "forward_observation",
-            "forward_observation": {
-                "not_holdout_reuse": True,
-                "description": "Counts new unique live signal dates after activation regardless of outcome.",
-            },
-        }
+        return _new_registry_state(
+            gate, 1, data_date,
+            bool(optimization_report.get("decision", {}).get("cost_validated")),
+        )
 
     current = copy.deepcopy(_validate(existing))
     if current.get("execution_model") != EXECUTION_MODEL:
-        return {
-            "active_gate": copy.deepcopy(current["active_gate"]),
-            "strategy_version": int(current["strategy_version"]) + 1,
-            "execution_model": EXECUTION_MODEL,
-            "cost_validated": False,
-            "activated_on": data_date,
-            "minimum_forward_signal_days": MINIMUM_FORWARD_SIGNAL_DAYS,
-            "forward_signal_days": 0,
-            "last_observed_date": data_date,
-            "status": "forward_observation",
-            "forward_observation": {
-                "not_holdout_reuse": True,
-                "description": "Counts new unique live signal dates after activation regardless of outcome.",
-            },
-        }
+        return _new_registry_state(
+            current["active_gate"], int(current["strategy_version"]) + 1,
+            data_date, False,
+        )
     last_date = current["last_observed_date"]
     is_new_date = data_date > last_date
     if is_new_date:

@@ -62,14 +62,17 @@ class DailyPipelineTests(unittest.TestCase):
              patch.object(daily_pipeline, "DATA", Path(tmp)), \
              patch.object(daily_pipeline, "run_backtest", side_effect=lambda days: order.append(("backtest", days)) or backtest), \
              patch.object(daily_pipeline, "optimize_v2", side_effect=lambda source, output: order.append(("v2", source, output.name)) or v2), \
-             patch.object(daily_pipeline, "run_strategy_optimization", side_effect=lambda: order.append(("optimize",)) or report), \
+             patch.object(daily_pipeline, "run_strategy_optimization",
+                          side_effect=lambda **kwargs: order.append(("optimize", kwargs)) or report), \
              patch.object(daily_pipeline, "update", side_effect=run_update), \
              patch.object(daily_pipeline, "record_market_history", return_value=market_history):
             self.assertEqual(daily_pipeline.main(), 0)
             status = json.loads((Path(tmp) / "daily_status.json").read_text(encoding="utf-8"))
             history = [json.loads(line) for line in (Path(tmp) / "strategy_history.jsonl").read_text(encoding="utf-8").splitlines()]
         self.assertEqual(order, [("backtest", 100), ("v2", backtest, "v2_optimization.json"),
-                                 ("optimize",), ("update", False)])
+                                 ("optimize", {"backtest": backtest, "incumbent_gate": None,
+                                               "write_output": False}),
+                                 ("update", False)])
         self.assertEqual(status["status"], "success")
         self.assertIn("health", status)
         self.assertIn(status["health"]["overall"], {"ok", "warning"})
@@ -84,6 +87,9 @@ class DailyPipelineTests(unittest.TestCase):
         self.assertEqual(status["strategy_freeze"]["forward_signal_days"], 0)
         self.assertEqual(status["strategy_freeze"]["minimum_forward_signal_days"], 20)
         self.assertTrue(status["strategy_freeze"]["not_holdout_reuse"])
+        self.assertFalse(status["strategy_freeze"]["cost_validated"])
+        self.assertEqual(status["strategy_freeze"]["execution_model"],
+                         "next_day_intraday_forced_close_v1")
         self.assertEqual(status["v2_analysis"]["decision"],
                          {"enabled": False, "status": "research only"})
         self.assertEqual(status["v2_analysis"]["costs"],
@@ -132,6 +138,8 @@ class DailyPipelineTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             data = Path(tmp)
             (data / "strategy_registry.json").write_text(json.dumps(registry), encoding="utf-8")
+            old_report = {"decision": {"applied_gate": gate_a}, "marker": "previous"}
+            (data / "strategy_optimization.json").write_text(json.dumps(old_report), encoding="utf-8")
             def failing_update(notify):
                 effective = json.loads((data / "strategy_optimization.json").read_text(encoding="utf-8"))
                 seen.append(effective["decision"]["applied_gate"])
@@ -143,8 +151,11 @@ class DailyPipelineTests(unittest.TestCase):
                  patch.object(daily_pipeline, "update", side_effect=failing_update):
                 self.assertEqual(daily_pipeline.main(), 1)
             unchanged = json.loads((data / "strategy_registry.json").read_text(encoding="utf-8"))
+            restored_report = json.loads(
+                (data / "strategy_optimization.json").read_text(encoding="utf-8"))
         self.assertEqual(seen, [gate_a])
         self.assertEqual(unchanged, registry)
+        self.assertEqual(restored_report, old_report)
 
     def test_history_is_idempotent_by_data_date(self):
         record = {"data_date": "2026-10-15", "applied_gate": {}}

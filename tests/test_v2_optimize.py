@@ -48,6 +48,18 @@ class V2OptimizationTests(unittest.TestCase):
             {"trades", "win_rate", "average_return", "profit_factor", "max_drawdown", "cumulative_return"},
         )
 
+    def test_net_metrics_excludes_trades_outside_requested_signal_dates(self):
+        trades = [
+            {"signal_date": "2026-01-01", "triggered": True, "return": 0.02},
+            {"signal_date": "2026-01-02", "triggered": True, "return": -0.50},
+        ]
+
+        metrics = _net_metrics(trades, ["2026-01-01"], 0.0)
+
+        self.assertEqual(metrics["trades"], 1)
+        self.assertAlmostEqual(metrics["average_return"], 0.02)
+        self.assertIsNone(metrics["profit_factor"])
+
     def test_selects_each_direction_by_score_then_volume_rank_and_daily_limit(self):
         rows = [
             {"signal_date": "2026-01-01", "code": "A", "direction": "long", "score": 80,

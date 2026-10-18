@@ -43,7 +43,10 @@ def _select_rows(rows: list[dict], direction: str, parameters: dict) -> list[dic
 
 def _net_metrics(trades: list[dict], signal_dates: list[str], cost: float) -> dict:
     """每筆已成交毛報酬扣一次指定雙邊總成本，再按訊號日等權複利。"""
-    executed = [row for row in trades if row.get("triggered") and row.get("return") is not None]
+    requested_dates = set(signal_dates)
+    executed = [row for row in trades
+                if row.get("signal_date") in requested_dates
+                and row.get("triggered") and row.get("return") is not None]
     returns = [float(row["return"]) - cost for row in executed]
     daily_returns = []
     for day in signal_dates:

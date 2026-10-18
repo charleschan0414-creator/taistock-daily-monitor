@@ -6,7 +6,8 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from taistock.backup import create_backup, restore_backup
 from taistock.health import export_diagnostics
-from taistock.backtest import OfficialHistoryFetcher, build_backtest, write_backtest_outputs
+from taistock.backtest import (OfficialHistoryFetcher, build_backtest,
+                               required_history_days, write_backtest_outputs)
 from taistock.net import HttpClient
 from taistock.notify import notify, build_summary
 from taistock.scanner import Scanner
@@ -74,7 +75,7 @@ def run_backtest(days=100):
     if days < 1:
         raise ValueError("回測交易日數須大於 0")
     end_date = data_end_date()
-    total = days + 6
+    total = required_history_days(days)
     print(f"抓取截至 {end_date} 的 {total} 個四源完整交易日（可續跑快取）…", flush=True)
     fetcher = OfficialHistoryFetcher(
         HttpClient(timeout=35, retries=6), DATA / "backtest_cache", throttle=0.35,
@@ -110,12 +111,14 @@ def run_backtest(days=100):
     return result
 
 
-def run_strategy_optimization():
-    source = DATA / "backtest_100d.json"
-    if not source.exists():
-        raise FileNotFoundError("找不到 data/backtest_100d.json，請先執行 python app.py --backtest 100")
-    backtest = json.loads(source.read_text(encoding="utf-8"))
-    report = optimize_strategy(backtest, DATA / "strategy_optimization.json")
+def run_strategy_optimization(backtest=None, incumbent_gate=None, write_output=True):
+    if backtest is None:
+        source = DATA / "backtest_100d.json"
+        if not source.exists():
+            raise FileNotFoundError("找不到 data/backtest_100d.json，請先執行 python app.py --backtest 100")
+        backtest = json.loads(source.read_text(encoding="utf-8"))
+    output_path = DATA / "strategy_optimization.json" if write_output else None
+    report = optimize_strategy(backtest, output_path, incumbent_gate=incumbent_gate)
     print(f"時間切分: {report['train_dates']['from']} ~ {report['train_dates']['to']}（70日訓練）｜"
           f"{report['test_dates']['from']} ~ {report['test_dates']['to']}（30日保留測試）")
     print(f"有限網格: {report['candidate_count']} 組｜訓練成交門檻 {report['minimum_samples']['train_trades']}｜"
