@@ -30,23 +30,12 @@
       </div>
       <div class="summary-grid" aria-live="polite">
         <article class="summary-card"><span>資料日</span><strong id="summary-date">—</strong><small id="summary-source">等待資料</small></article>
-        <article class="summary-card summary-long"><span>偏多數</span><strong id="summary-long">—</strong><small>符合規則</small></article>
-        <article class="summary-card summary-short"><span>偏空數</span><strong id="summary-short">—</strong><small>符合規則</small></article>
+        <article class="summary-card summary-long"><span>偏多數</span><strong id="summary-long">—</strong><small id="summary-long-note">通過策略閘門</small></article>
+        <article class="summary-card summary-short"><span>偏空數</span><strong id="summary-short">—</strong><small id="summary-short-note">通過策略閘門</small></article>
         <article class="summary-card summary-night"><span>夜盤情境</span><strong id="summary-night">—</strong><small>台指期多數方向</small></article>
       </div>
     </section>
 
-    <section class="settlement-summary" aria-labelledby="settlement-title">
-      <div class="section-title">
-        <div><p class="eyebrow">SETTLED RESULT</p><h2 id="settlement-title">最新完整結算</h2></div>
-        <span id="today-result-dates" class="timestamp">—</span>
-      </div>
-      <div class="summary-grid" aria-live="polite">
-        <article class="summary-card"><span>訊號與成交</span><strong id="today-result-counts">尚未完成</strong><small>未觸發不扣成本</small></article>
-        <article class="summary-card"><span>Standard 成本後</span><strong id="today-result-performance">尚未完成</strong><small>每筆成交成本 0.435%</small></article>
-        <article class="summary-card"><span>策略驗證</span><strong id="strategy-validation">未通過成本驗證｜僅供研究</strong><small>不代表可交易策略</small></article>
-      </div>
-    </section>
 
     <section class="market-context" aria-labelledby="market-title">
       <div class="section-title">
@@ -70,6 +59,15 @@
         <div id="short-list" class="cards"></div>
       </section>
     </section>
+
+    <details class="settlement-summary">
+      <summary><span><span class="eyebrow">SETTLED RESULT</span><strong id="settlement-title">最新完整結算</strong></span><span id="today-result-dates" class="timestamp">—</span></summary>
+      <div class="summary-grid" aria-live="polite">
+        <article class="summary-card"><span>訊號與成交</span><strong id="today-result-counts">尚未完成</strong><small>未觸發不扣成本</small></article>
+        <article class="summary-card"><span>Standard 成本後</span><strong id="today-result-performance">尚未完成</strong><small>每筆成交成本 0.435%</small></article>
+        <article class="summary-card"><span>策略驗證</span><strong id="strategy-validation">未通過成本驗證｜僅供研究</strong><small>不代表可交易策略</small></article>
+      </div>
+    </details>
 
     <details class="v2-analysis">
       <summary><span><span class="eyebrow">RESEARCH</span><strong id="v2-title">V2 成本後績效檢驗</strong></span><span id="v2-quality" class="status-badge">尚未完成</span></summary>

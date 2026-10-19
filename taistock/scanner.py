@@ -63,7 +63,12 @@ class Scanner:
                 except Exception as exc:
                     errors.append(f"{quote.code} 歷史資料失敗：{exc}")
                 self.progress(f"個股歷史 {done}/{len(leaders)}（失敗 {len(errors)}）", 15 + int(75 * done / max(1, len(leaders))))
-        signals = apply_strategy_gate(evaluate_candidates(rows, self.weights), self.strategy_gate)
+        evaluated = evaluate_candidates(rows, self.weights)
+        pre_gate_counts = {
+            "long": sum(x["signal_direction"] == "long" for x in evaluated),
+            "short": sum(x["signal_direction"] == "short" for x in evaluated),
+        }
+        signals = apply_strategy_gate(evaluated, self.strategy_gate)
         long_signals = [x for x in signals if x["signal_direction"] == "long"]
         short_signals = [x for x in signals if x["signal_direction"] == "short"]
         universe = [{"code":q.code, "name":q.name, "market":q.market,
@@ -73,6 +78,9 @@ class Scanner:
                 "qualified_count":len(long_signals), "qualified":long_signals, "top10":long_signals[:10],
                 "long_top10":long_signals[:10], "short_top10":short_signals[:10], "signals":signals,
                 "universe":universe, "long_count":len(long_signals), "short_count":len(short_signals),
+                "pre_gate_counts": pre_gate_counts,
+                "filtered_out_counts": {"long": pre_gate_counts["long"] - len(long_signals),
+                                        "short": pre_gate_counts["short"] - len(short_signals)},
                 "optimization":self.optimization, "strategy_gate": self.strategy_gate, "errors":errors,
                 "sources":[TWSE_QUOTES,TWSE_INST,TPEX_QUOTES,TPEX_INST],
                 "updated_at":datetime.now().astimezone().isoformat(timespec="seconds")}
@@ -98,7 +106,12 @@ class Scanner:
                          "institutional_net": current["institutions"].get(quote["code"], 0),
                          "volume_rank": rank,
                          "technical_research": calculate_technical_research(history, data_date)})
-        signals = apply_strategy_gate(evaluate_candidates(rows, self.weights), self.strategy_gate)
+        evaluated = evaluate_candidates(rows, self.weights)
+        pre_gate_counts = {
+            "long": sum(row["signal_direction"] == "long" for row in evaluated),
+            "short": sum(row["signal_direction"] == "short" for row in evaluated),
+        }
+        signals = apply_strategy_gate(evaluated, self.strategy_gate)
         long_signals = [row for row in signals if row["signal_direction"] == "long"]
         short_signals = [row for row in signals if row["signal_direction"] == "short"]
         universe = [{"code": q["code"], "name": q["name"], "market": q["market"],
@@ -109,7 +122,10 @@ class Scanner:
                 "qualified": long_signals, "top10": long_signals[:10],
                 "long_top10": long_signals[:10], "short_top10": short_signals[:10],
                 "signals": signals, "universe": universe, "long_count": len(long_signals),
-                "short_count": len(short_signals), "optimization": self.optimization,
+                "short_count": len(short_signals), "pre_gate_counts": pre_gate_counts,
+                "filtered_out_counts": {"long": pre_gate_counts["long"] - len(long_signals),
+                                        "short": pre_gate_counts["short"] - len(short_signals)},
+                "optimization": self.optimization,
                 "strategy_gate": self.strategy_gate,
                 "errors": errors, "sources": ["官方逐日批次資料"],
                 "updated_at": datetime.now().astimezone().isoformat(timespec="seconds")}

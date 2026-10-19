@@ -68,6 +68,8 @@ export async function dashboard(env, fetcher = fetch) {
   return json({ data_date: latest.data_date, updated_at: latest.updated_at, data_source: loaded.source,
     daily_status: dailyStatus ?? null, realtime_status: status, global_market: globalMarket,
     strategy_gate: latest.strategy_gate ?? { enabled: false, status: '未提供策略閘門' },
+    pre_gate_counts: latest.pre_gate_counts ?? null,
+    filtered_out_counts: latest.filtered_out_counts ?? null,
     long: long.map(merge), short: short.map(merge), disclaimer: '規則式研究觀察，非投資建議、獲利保證或下單服務。' });
 }
 

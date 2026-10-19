@@ -15951,6 +15951,14 @@
   ],
   "long_count": 1,
   "short_count": 1,
+  "pre_gate_counts": {
+    "long": 12,
+    "short": 10
+  },
+  "filtered_out_counts": {
+    "long": 11,
+    "short": 9
+  },
   "optimization": {
     "version": 1,
     "status": "舊權重研究完成（60 筆／2日）｜不得啟用",
@@ -15989,7 +15997,7 @@
   "sources": [
     "官方逐日批次資料"
   ],
-  "updated_at": "2026-10-19T18:22:03+08:00",
+  "updated_at": "2026-10-19T18:49:58+08:00",
   "data_collection": {
     "complete_trading_days": 6,
     "latest_complete_date": "2026-10-19",

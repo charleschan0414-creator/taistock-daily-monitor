@@ -12,6 +12,8 @@ const latest = {
   data_date: '2026-10-15', updated_at: '2026-10-15T09:00:00Z',
   long_top10: [{ code: '2330', market: '上市', close: 100 }],
   short_top10: [{ code: '6488', market: '上櫃', close: 200 }],
+  pre_gate_counts: { long: 10, short: 8 },
+  filtered_out_counts: { long: 9, short: 7 },
 };
 
 function env(fetcher) {
@@ -38,6 +40,8 @@ test('dashboard加入TAIFEX全球市場情境與系統抓取時間', async () =>
   assert.equal(body.global_market.items.length, 5);
   assert.equal(body.global_market.risk.status, '風險偏多');
   assert.equal(body.global_market.notice, '期交所行情，可能延遲');
+  assert.deepEqual(body.pre_gate_counts, { long: 10, short: 8 });
+  assert.deepEqual(body.filtered_out_counts, { long: 9, short: 7 });
 });
 
 test('dashboard優先讀固定GitHub Raw latest且不接受請求URL覆寫', async () => {

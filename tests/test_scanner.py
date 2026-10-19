@@ -96,6 +96,8 @@ class ScannerTests(unittest.TestCase):
         result = Scanner(FakeClient(), workers=1, strategy_gate=gate).run_from_days(days)
         self.assertEqual([row["code"] for row in result["signals"]], ["1111"])
         self.assertEqual(result["short_top10"], [])
+        self.assertEqual(result["pre_gate_counts"], {"long": 1, "short": 1})
+        self.assertEqual(result["filtered_out_counts"], {"long": 0, "short": 1})
         self.assertEqual(result["strategy_gate"], gate)
 
     def test_universe_keeps_non_leaders_for_next_update_settlement(self):

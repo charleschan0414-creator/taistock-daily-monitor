@@ -55,9 +55,18 @@ test('研究與技術資訊預設收合且手機操作符合無障礙需求', as
   assert.match(html, /<details class="v2-analysis"/);
   assert.match(html, /<summary[\s\S]*V2 成本後績效檢驗/);
   assert.match(html, /<details class="system-details"/);
+  assert.match(html, /<details class="settlement-summary"/);
+  assert.ok(html.indexOf('signals') < html.indexOf('settlement-summary'));
   assert.match(styles, /:focus-visible/);
   assert.match(styles, /min-height:\s*44px/);
   assert.match(styles, /@media\s*\(max-width:\s*420px\)/);
+});
+
+test('首屏說明通過閘門數與基礎候選數不同', async () => {
+  const [html, app] = await Promise.all([read('index.html'), read('app.js')]);
+  assert.match(html, /通過策略閘門/);
+  assert.match(app, /pre_gate_counts/);
+  assert.match(app, /基礎候選/);
 });
 
 test('訊號卡明列偏多偏空方向且動態內容不用 innerHTML', async () => {
@@ -94,7 +103,7 @@ test('PWA顯示核心100日成本後三情境且保留研究限制', async () =>
   assert.match(app, /renderBacktestPerformance\(data\)/);
   assert.doesNotMatch(app, /\.innerHTML\s*=/);
   assert.match(styles, /\.backtest-performance/);
-  assert.match(sw, /taistock-monitor-v7/);
+  assert.match(sw, /taistock-monitor-v8/);
 });
 
 test('PWA顯示V2成本後績效檢驗、方法限制與新版快取', async () => {
@@ -115,5 +124,5 @@ test('PWA顯示V2成本後績效檢驗、方法限制與新版快取', async () 
   assert.match(app, /v2-quality/);
   assert.doesNotMatch(app, /\.innerHTML\s*=/);
   assert.match(styles, /\.v2-analysis/);
-  assert.match(sw, /taistock-monitor-v7/);
+  assert.match(sw, /taistock-monitor-v8/);
 });

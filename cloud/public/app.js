@@ -197,6 +197,11 @@ async function load() {
     $('summary-date').textContent = data.data_date ?? '—';
     $('summary-long').textContent = String(data.long?.length ?? 0);
     $('summary-short').textContent = String(data.short?.length ?? 0);
+    const preGate = data.pre_gate_counts ?? {};
+    $('summary-long-note').textContent = Number.isFinite(preGate.long)
+      ? `通過策略閘門｜基礎候選 ${preGate.long}` : '通過策略閘門';
+    $('summary-short-note').textContent = Number.isFinite(preGate.short)
+      ? `通過策略閘門｜基礎候選 ${preGate.short}` : '通過策略閘門';
     $('summary-night').textContent = data.global_market?.risk?.status ?? '中性';
     $('summary-source').textContent = data.data_source === 'github' ? 'GitHub 公開成果' : 'Cloudflare KV 備援';
     $('data-health').textContent = health.label;
