@@ -56669,11 +56669,11 @@
       "baseline": -0.006837053502742347,
       "selected": -0.006436507823149276
     },
-    "updated_at": "2026-10-19T18:21:26+08:00"
+    "updated_at": "2026-10-19T23:59:42+00:00"
   },
   "cost_rate": 0.0,
   "cost_assumption": "gross 未扣成本；standard 每筆已成交扣雙邊總成本 0.435%；stress 扣 0.535%；未觸發不扣成本；未另計固定滑價、借券費與融券限制",
-  "completed_at": "2026-10-19T18:21:26+08:00",
+  "completed_at": "2026-10-19T23:59:42+00:00",
   "data_collection": {
     "complete_trading_days": 106,
     "latest_complete_date": "2026-10-19",

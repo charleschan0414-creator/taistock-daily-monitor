@@ -15961,8 +15961,9 @@
   },
   "optimization": {
     "version": 1,
-    "status": "舊權重研究完成（60 筆／2日）｜不得啟用",
-    "settled_count": 60,
+    "status": "舊權重研究累積 0 筆｜不得啟用",
+    "settled_count": 0,
+    "backtest_sample_count": 1263,
     "minimum_samples": 30,
     "weights": {
       "volume_growth_pct": 0.35,
@@ -15970,8 +15971,6 @@
       "institutional_lots": 0.25,
       "volume_rank": 0.1
     },
-    "evaluation_days": 2,
-    "current_metric": 0.01787113,
     "approved": false,
     "cost_validated": false
   },
@@ -15991,13 +15990,13 @@
       "long": true,
       "short": true
     },
-    "updated_at": "2026-10-19T18:21:28+08:00"
+    "updated_at": "2026-10-19T23:59:44+00:00"
   },
   "errors": [],
   "sources": [
     "官方逐日批次資料"
   ],
-  "updated_at": "2026-10-19T18:49:58+08:00",
+  "updated_at": "2026-10-19T23:59:44+00:00",
   "data_collection": {
     "complete_trading_days": 6,
     "latest_complete_date": "2026-10-19",
