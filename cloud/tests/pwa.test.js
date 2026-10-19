@@ -94,7 +94,7 @@ test('PWA顯示核心100日成本後三情境且保留研究限制', async () =>
   assert.match(app, /renderBacktestPerformance\(data\)/);
   assert.doesNotMatch(app, /\.innerHTML\s*=/);
   assert.match(styles, /\.backtest-performance/);
-  assert.match(sw, /taistock-monitor-v6/);
+  assert.match(sw, /taistock-monitor-v7/);
 });
 
 test('PWA顯示V2成本後績效檢驗、方法限制與新版快取', async () => {
@@ -115,5 +115,5 @@ test('PWA顯示V2成本後績效檢驗、方法限制與新版快取', async () 
   assert.match(app, /v2-quality/);
   assert.doesNotMatch(app, /\.innerHTML\s*=/);
   assert.match(styles, /\.v2-analysis/);
-  assert.match(sw, /taistock-monitor-v6/);
+  assert.match(sw, /taistock-monitor-v7/);
 });

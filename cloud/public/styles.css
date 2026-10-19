@@ -257,6 +257,18 @@ footer { padding: 20px 0 max(28px, env(safe-area-inset-bottom)); border-top: 1px
   .v2-costs, .v2-directions, .meta, .backtest-metrics { grid-template-columns: 1fr; }
 }
 
+.settlement-summary { margin-top: 18px; }
+.settlement-summary .summary-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.metric-failure { color: #fb7185 !important; }
+.metric-success { color: #34d399 !important; }
+.technical-research { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 10px; color: var(--muted); }
+.technical-research summary { cursor: pointer; font-size: 12px; font-weight: 700; }
+.technical-research p { margin: 8px 0 0; font-size: 12px; line-height: 1.6; }
+
+@media (max-width: 720px) {
+  .settlement-summary .summary-grid { grid-template-columns: 1fr; }
+}
+
 @media (max-width: 420px) {
   .section-heading { align-items: flex-start; }
   .timestamp { margin-top: 4px; font-size: 10px; }

@@ -39,6 +39,7 @@ RELEASE_FILES = (
     "taistock/realtime.py",
     "taistock/scanner.py",
     "taistock/storage.py",
+    "taistock/technical.py",
     "taistock/strategy_freeze.py",
     "taistock/strategy_optimize.py",
     "taistock/v2_optimize.py",

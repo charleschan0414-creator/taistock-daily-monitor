@@ -4,6 +4,7 @@ from urllib.parse import urlencode
 from .core import BASELINE_WEIGHTS, evaluate_candidates, is_common_stock
 from .data import parse_twse_quotes, parse_tpex_quotes, ensure_same_date, _date, _number
 from .strategy_optimize import apply_strategy_gate
+from .technical import calculate_technical_research
 
 TWSE_QUOTES = "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL"
 TWSE_INST = "https://www.twse.com.tw/rwd/zh/fund/T86?response=json&selectType=ALLBUT0999"
@@ -50,9 +51,13 @@ class Scanner:
                 try:
                     history = future.result()
                     if history and history[-1][0] == data_date:
+                        bars = [{"date": x[0], "open": x[3], "high": x[4], "low": x[5], "close": x[2]}
+                                for x in history[-6:]]
                         rows.append({"code":quote.code, "name":quote.name, "market":quote.market, "date":data_date,
                                      "close":quote.close, "volume":quote.volume, "prev_volume":history[-2][1] if len(history) >= 2 else 0,
-                                     "closes":[x[2] for x in history], "institutional_net":institutions.get(quote.code, 0), "volume_rank":rank})
+                                     "closes":[x[2] for x in history], "institutional_net":institutions.get(quote.code, 0),
+                                     "volume_rank":rank,
+                                     "technical_research": calculate_technical_research(bars, data_date)})
                     else:
                         errors.append(f"{quote.code} 歷史資料缺少目標日期 {data_date}")
                 except Exception as exc:
@@ -75,23 +80,24 @@ class Scanner:
     def run_from_days(self, days, limit=100):
         """以官方逐日批次資料產生當日訊號，避免逐檔請求造成交易所限流。"""
         ordered = sorted(days, key=lambda row: row["date"])
-        if len(ordered) < 5:
-            raise ValueError("批次日更至少需要 5 個完整交易日")
+        if len(ordered) < 6:
+            raise ValueError("批次日更至少需要 6 個完整交易日")
         current = ordered[-1]
         data_date = current["date"]
         leaders = sorted(current["quotes"].values(),
                          key=lambda row: (-row["volume"], row["code"]))[:limit]
         rows, errors = [], []
         for rank, quote in enumerate(leaders, 1):
-            history = [day["quotes"].get(quote["code"]) for day in ordered[-5:]]
+            history = [day["quotes"].get(quote["code"]) for day in ordered[-6:]]
             previous = ordered[-2]["quotes"].get(quote["code"])
             if any(item is None for item in history) or previous is None:
-                errors.append(f"{quote['code']} 批次歷史不足 5 個交易日")
+                errors.append(f"{quote['code']} 批次歷史不足 6 個交易日")
                 continue
             rows.append({**quote, "date": data_date, "prev_volume": previous["volume"],
                          "closes": [item["close"] for item in history],
                          "institutional_net": current["institutions"].get(quote["code"], 0),
-                         "volume_rank": rank})
+                         "volume_rank": rank,
+                         "technical_research": calculate_technical_research(history, data_date)})
         signals = apply_strategy_gate(evaluate_candidates(rows, self.weights), self.strategy_gate)
         long_signals = [row for row in signals if row["signal_direction"] == "long"]
         short_signals = [row for row in signals if row["signal_direction"] == "short"]
@@ -123,10 +129,11 @@ class Scanner:
                 tables = self.client.json(url).get("tables", [])
                 rows = tables[0].get("data", []) if tables else []
                 multiplier = 1000
-            return [(_date(r[0]), int(_number(r[1]) * multiplier), _number(r[6])) for r in rows if len(r) > 6]
+            return [(_date(r[0]), int(_number(r[1]) * multiplier), _number(r[6]),
+                     _number(r[3]), _number(r[4]), _number(r[5])) for r in rows if len(r) > 6]
 
         parsed = fetch(current_month, current=True)
-        if len([x for x in parsed if x[0] <= data_date]) < 5:
+        if len([x for x in parsed if x[0] <= data_date]) < 6:
             previous_month = (current_month - timedelta(days=1)).replace(day=1)
             parsed = fetch(previous_month) + parsed
         return sorted({x[0]: x for x in parsed if x[0] <= data_date}.values(), key=lambda x: x[0])

@@ -4,6 +4,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from taistock.storage import save_result, load_result, load_optimizer_state, seed_backtest_history
+from taistock.core import BASELINE_WEIGHTS
 
 
 class StorageTests(unittest.TestCase):
@@ -26,14 +27,15 @@ class StorageTests(unittest.TestCase):
             day1 = {"data_date":"2026-10-14","signals":[signal],"qualified":[signal],
                     "universe":[{"code":"2330","close":100.0}],"optimization":{}}
             saved1 = save_result(day1, path)
-            self.assertEqual(saved1["optimization"]["status"], "學習中 0/30")
+            self.assertIn("研究累積 0 筆", saved1["optimization"]["status"])
+            self.assertFalse(saved1["optimization"]["approved"])
             db = sqlite3.connect(path / "scanner.db")
             self.assertIsNone(db.execute("SELECT directional_return FROM signals").fetchone()[0])
             db.close()
             day2 = {"data_date":"2026-10-15","signals":[],"qualified":[],
                     "universe":[{"code":"2330","close":110.0}],"optimization":{}}
             saved2 = save_result(day2, path)
-            self.assertEqual(saved2["optimization"]["status"], "學習中 1/30")
+            self.assertIn("研究累積 1 筆", saved2["optimization"]["status"])
             db = sqlite3.connect(path / "scanner.db")
             settled = db.execute("SELECT settled_date, directional_return FROM signals").fetchone()
             db.close()
@@ -71,7 +73,7 @@ class StorageTests(unittest.TestCase):
             state = load_optimizer_state(path)
             self.assertEqual(state["weights"]["volume_growth_pct"], 0.35)
 
-    def test_optimizer_uses_settled_history_and_writes_auditable_update(self):
+    def test_legacy_optimizer_is_research_only_and_cannot_change_active_weights(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory)
             save_result({"data_date":"2026-01-01","signals":[],"qualified":[],"universe":[]}, path)
@@ -87,6 +89,9 @@ class StorageTests(unittest.TestCase):
             db.commit(); db.close()
             saved = save_result({"data_date":"2026-03-02","signals":[],"qualified":[],"universe":[]}, path)
             self.assertEqual(saved["optimization"]["settled_count"], 40)
+            self.assertEqual(saved["optimization"]["weights"], BASELINE_WEIGHTS)
+            self.assertFalse(saved["optimization"]["approved"])
+            self.assertIn("研究", saved["optimization"]["status"])
             audit = json.loads((path / "optimizer.json").read_text(encoding="utf-8"))
             self.assertEqual(audit["sample_count"], 40)
             self.assertIn("evaluation_period", audit)
@@ -112,7 +117,7 @@ class StorageTests(unittest.TestCase):
             db.close()
             self.assertAlmostEqual(value, .1)
 
-    def test_backtest_optimizer_state_is_not_mislabelled_as_untrained(self):
+    def test_unapproved_backtest_optimizer_cannot_be_loaded_as_active(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory)
             audit = {
@@ -126,10 +131,12 @@ class StorageTests(unittest.TestCase):
             state = load_optimizer_state(path)
             self.assertEqual(state["settled_count"], 0)
             self.assertEqual(state["backtest_sample_count"], 1455)
-            self.assertIn("100日回測優化已啟用", state["status"])
-            self.assertIn("即時學習 0/30", state["status"])
+            self.assertEqual(state["weights"], BASELINE_WEIGHTS)
+            self.assertFalse(state["approved"])
+            self.assertIn("未通過成本與前瞻驗證", state["status"])
             saved = save_result({"data_date": "2026-10-15", "signals": [], "universe": []}, path)
-            self.assertIn("100日回測優化已啟用", saved["optimization"]["status"])
+            self.assertEqual(saved["optimization"]["weights"], BASELINE_WEIGHTS)
+            self.assertIn("研究", saved["optimization"]["status"])
 
     def test_backtest_seed_is_idempotent_settled_and_produces_optimizer_audit(self):
         signals = []

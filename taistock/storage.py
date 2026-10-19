@@ -45,7 +45,6 @@ def load_optimizer_state(directory: Path):
     if audit_path.exists():
         try:
             audit = json.loads(audit_path.read_text(encoding="utf-8"))
-            weights = dict(audit.get("new_weights", weights))
             version = int(audit.get("version", version))
         except (OSError, ValueError, TypeError):
             audit = None
@@ -63,18 +62,11 @@ def load_optimizer_state(directory: Path):
     backtest_samples = 0
     if audit and str(audit.get("source", "")).startswith("walk_forward_backtest"):
         backtest_samples = int(audit.get("sample_count", 0) or 0)
-    if backtest_samples:
-        prefix = (f"100日回測優化已啟用（回測 {backtest_samples} 筆）" if audit.get("changed")
-                  else f"100日回測完成並維持基準權重（回測 {backtest_samples} 筆）")
-        live = (f"即時學習 {settled}/{MIN_SAMPLES}" if settled < MIN_SAMPLES
-                else f"即時已結算 {settled} 筆")
-        status = f"{prefix}；{live}"
-    else:
-        status = (f"學習中 {settled}/{MIN_SAMPLES}" if settled < MIN_SAMPLES
-                  else f"自我優化已啟用（已結算 {settled} 筆）")
+    status = "舊權重優化僅供研究｜未通過成本與前瞻驗證｜維持基準權重"
     return {"version": version, "status": status, "settled_count": settled,
             "backtest_sample_count": backtest_samples,
-            "minimum_samples": MIN_SAMPLES, "weights": weights, "audit": audit}
+            "minimum_samples": MIN_SAMPLES, "weights": weights, "audit": audit,
+            "approved": False, "cost_validated": False}
 
 
 def _settle_prior_signals(db, data_date, universe):
@@ -141,9 +133,9 @@ def _metric(rows, weights):
                      + weights["ma5_distance_pct"] * pct("ma5_distance_pct")
                      + weights["institutional_lots"] * pct("institutional_abs_lots")
                      + weights["volume_rank"] * max(0, 101 - row["volume_rank"]))
-            scored.append((score, row["directional_return"]))
-        top = sorted(scored, reverse=True)[:3]
-        daily.append(sum(value for _, value in top) / len(top))
+            scored.append((score, row["volume_rank"], row["code"], row["directional_return"]))
+        top = sorted(scored, key=lambda item: (-item[0], item[1], item[2]))[:3]
+        daily.append(sum(item[3] for item in top) / len(top))
     return sum(daily) / len(daily) if daily else 0.0
 
 
@@ -153,16 +145,12 @@ def _optimize(db, directory, old_weights, source="live_update"):
         state = load_optimizer_state(directory)
         backtest_samples = state.get("backtest_sample_count", 0)
         audit = state.get("audit") or {}
-        if backtest_samples:
-            prefix = (f"100日回測優化已啟用（回測 {backtest_samples} 筆）" if audit.get("changed")
-                      else f"100日回測完成並維持基準權重（回測 {backtest_samples} 筆）")
-            status = f"{prefix}；即時學習 {settled_count}/{MIN_SAMPLES}"
-        else:
-            status = f"學習中 {settled_count}/{MIN_SAMPLES}"
+        status = f"舊權重研究累積 {settled_count} 筆｜不得啟用"
         return {"version": state.get("version", 1), "status": status,
                 "settled_count": settled_count,
                 "backtest_sample_count": backtest_samples,
-                "minimum_samples": MIN_SAMPLES, "weights": old_weights}
+                "minimum_samples": MIN_SAMPLES, "weights": old_weights,
+                "approved": False, "cost_validated": False}
     dates = [row[0] for row in db.execute("SELECT DISTINCT signal_date FROM signals WHERE directional_return IS NOT NULL "
                                           "ORDER BY signal_date DESC LIMIT 60").fetchall()]
     placeholders = ",".join("?" for _ in dates)
@@ -175,22 +163,24 @@ def _optimize(db, directory, old_weights, source="live_update"):
     best_weights, best_metric = max(metrics, key=lambda item: item[1])
     state = load_optimizer_state(directory)
     version = state.get("version", 1)
-    changed = best_weights != old_weights and best_metric > current_metric
-    selected_weights = best_weights if changed else old_weights
-    selected_metric = best_metric if changed else current_metric
-    if changed:
-        version += 1
-    audit = {"version": version, "source": source, "changed": changed,
+    research_changed = best_weights != old_weights and best_metric > current_metric
+    selected_weights = best_weights if research_changed else old_weights
+    selected_metric = best_metric if research_changed else current_metric
+    audit = {"version": version, "source": source, "changed": False,
+             "research_changed": research_changed, "approved": False,
+             "cost_validated": False, "research_only": True,
              "sample_count": settled_count,
              "evaluation_period": {"from": min(dates), "to": max(dates), "trading_days": len(dates)},
-             "old_weights": old_weights, "new_weights": selected_weights,
+             "old_weights": old_weights, "new_weights": old_weights,
+             "research_weights": selected_weights,
              "performance": {"old_daily_top3_mean_directional_return": round(current_metric, 8),
                              "new_daily_top3_mean_directional_return": round(selected_metric, 8)},
              "updated_at": datetime.now().astimezone().isoformat(timespec="seconds")}
     (directory / "optimizer.json").write_text(json.dumps(audit, ensure_ascii=False, indent=2), encoding="utf-8")
-    return {"version": version, "status": f"自我優化已啟用（已結算 {settled_count} 筆）",
-            "settled_count": settled_count, "minimum_samples": MIN_SAMPLES, "weights": selected_weights,
-            "evaluation_days": len(dates), "current_metric": round(selected_metric, 8)}
+    return {"version": version, "status": f"舊權重研究完成（{settled_count} 筆／{len(dates)}日）｜不得啟用",
+            "settled_count": settled_count, "minimum_samples": MIN_SAMPLES, "weights": old_weights,
+            "evaluation_days": len(dates), "current_metric": round(selected_metric, 8),
+            "approved": False, "cost_validated": False}
 
 
 def save_result(payload: dict, directory: Path):

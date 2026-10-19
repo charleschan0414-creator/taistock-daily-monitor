@@ -117,7 +117,8 @@ def run_strategy_optimization(backtest=None, incumbent_gate=None, write_output=T
         if not source.exists():
             raise FileNotFoundError("找不到 data/backtest_100d.json，請先執行 python app.py --backtest 100")
         backtest = json.loads(source.read_text(encoding="utf-8"))
-    output_path = DATA / "strategy_optimization.json" if write_output else None
+    # Standalone research must never overwrite the active scanner report.
+    output_path = DATA / "strategy_optimization_candidate.json" if write_output else None
     report = optimize_strategy(backtest, output_path, incumbent_gate=incumbent_gate)
     print(f"時間切分: {report['train_dates']['from']} ~ {report['train_dates']['to']}（70日訓練）｜"
           f"{report['test_dates']['from']} ~ {report['test_dates']['to']}（30日保留測試）")
@@ -143,7 +144,7 @@ def main(argv=None):
     parser.add_argument("--backtest", nargs="?", const=100, type=int, metavar="DAYS",
                         help="以官方逐日資料執行次一交易日限定當沖回測（預設 100 信號日；收盤強制沖銷）")
     parser.add_argument("--optimize-strategy", action="store_true",
-                        help="以 backtest_100d.json 執行前70日訓練、後30日保留測試的品質閘門優化")
+                        help="產生研究候選報告；不修改正式策略（前70日訓練、後30日描述）")
     parser.add_argument("--backup", nargs="?", const="", metavar="PATH",
                         help="安全備份白名單內的個人資料；未指定路徑時存入 backups 資料夾")
     parser.add_argument("--restore", type=Path, metavar="PATH",

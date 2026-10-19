@@ -121,23 +121,22 @@ def build_registry_update(existing: dict | None, optimization_report: dict,
     candidate = _approved_candidate(optimization_report)
     differs = candidate is not None and candidate != current["active_gate"]
     mature = current["forward_signal_days"] >= current["minimum_forward_signal_days"]
-    if differs and mature and is_new_date:
-        current.update({
-            "active_gate": candidate,
-            "strategy_version": int(current["strategy_version"]) + 1,
-            "cost_validated": True,
-            "activated_on": data_date,
-            "forward_signal_days": 0,
-            "last_observed_date": data_date,
-            "status": "forward_observation",
-        })
-        current.pop("pending_candidate", None)
-    elif differs:
-        current["pending_candidate"] = {
-            "gate": candidate,
-            "observed_on": data_date,
-            "eligible_after_forward_signal_days": current["minimum_forward_signal_days"],
-        }
+    if differs:
+        pending = current.get("pending_candidate")
+        if not isinstance(pending, dict) or pending.get("gate") != candidate:
+            pending = {
+                "gate": candidate,
+                "proposed_on": data_date,
+                "last_observed_date": data_date,
+                "forward_signal_days": 0,
+                "minimum_forward_signal_days": current["minimum_forward_signal_days"],
+                "auto_promotion_allowed": False,
+                "requires_outcome_validation": True,
+            }
+        elif is_new_date and data_date > pending.get("last_observed_date", ""):
+            pending["forward_signal_days"] = int(pending.get("forward_signal_days", 0)) + 1
+            pending["last_observed_date"] = data_date
+        current["pending_candidate"] = pending
         current["status"] = "pending_candidate"
     elif mature:
         current.pop("pending_candidate", None)

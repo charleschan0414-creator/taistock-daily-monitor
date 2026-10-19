@@ -128,6 +128,8 @@ class AppCliTests(unittest.TestCase):
             output = StringIO()
             with redirect_stdout(output):
                 app.run_strategy_optimization()
+            self.assertTrue((Path(directory) / "strategy_optimization_candidate.json").exists())
+            self.assertFalse((Path(directory) / "strategy_optimization.json").exists())
         text = output.getvalue()
         self.assertIn("gross", text)
         self.assertIn("standard", text)

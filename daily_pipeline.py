@@ -18,6 +18,7 @@ from taistock.strategy_freeze import (
     load_registry,
     write_registry,
 )
+from taistock.strategy_optimize import apply_strategy_gate
 from taistock.v2_optimize import optimize_v2
 
 ROOT = Path(__file__).resolve().parent
@@ -77,6 +78,58 @@ def validate_outputs(backtest, latest, expected_data_date):
             valid = stop < entry < target if direction == "long" else target < entry < stop
             if not valid:
                 raise ValueError(f"invalid {direction} price direction")
+
+
+def build_today_result(backtest, active_gate):
+    """Summarize the newest fully settled signal date under the active gate."""
+    gated = apply_strategy_gate(
+        backtest.get("trades", []),
+        {"enabled": True, "applied_mode": "incumbent_protective", "applied_gate": active_gate},
+    )
+    groups = {}
+    for row in gated:
+        if row.get("status") in {"settled", "untriggered"}:
+            groups.setdefault(row.get("signal_date"), []).append(row)
+    complete_dates = [day for day, rows in groups.items() if day and rows and all(
+        row.get("status") == "untriggered" or row.get("exit_date") for row in rows)]
+    if not complete_dates:
+        return {"status": "unavailable", "signals": 0, "triggered": 0, "untriggered": 0,
+                "unresolved": 0, "items": []}
+    signal_date = max(complete_dates)
+    rows = groups[signal_date]
+    cost = float(backtest.get("costs", {}).get("standard", 0.00435))
+    items, net_returns, trade_dates = [], [], []
+    for row in rows:
+        triggered = bool(row.get("triggered"))
+        gross = row.get("gross_return", row.get("return")) if triggered else None
+        net = float(gross) - cost if gross is not None else None
+        if net is not None:
+            net_returns.append(net)
+        trade_date = row.get("exit_date") or row.get("trade_date")
+        if trade_date:
+            trade_dates.append(trade_date)
+        items.append({
+            "code": row.get("code"), "name": row.get("name"),
+            "direction": row.get("direction", row.get("signal_direction")),
+            "status": "triggered" if triggered else "untriggered",
+            "exit_reason": row.get("exit_reason") if triggered else None,
+            "net_return_standard": net,
+        })
+    gains = sum(value for value in net_returns if value > 0)
+    losses = -sum(value for value in net_returns if value < 0)
+    profit_factor = gains / losses if losses else (None if gains else 0.0)
+    return {
+        "status": "complete", "signal_date": signal_date,
+        "trade_date": max(trade_dates) if trade_dates else None,
+        "signals": len(rows), "triggered": len(net_returns),
+        "untriggered": len(rows) - len(net_returns), "unresolved": 0,
+        "standard": {
+            "cost_rate": cost,
+            "average_return": sum(net_returns) / len(net_returns) if net_returns else None,
+            "profit_factor": profit_factor,
+        },
+        "items": items,
+    }
 
 
 def history_record(data_date, report):
@@ -196,6 +249,7 @@ def main():
                 "limitations": v2_report["limitations"],
             },
             "gate": proposed_registry["active_gate"],
+            "today_result": build_today_result(backtest, proposed_registry["active_gate"]),
             "weights": latest.get("optimization", {}).get("new_weights") or latest.get("optimization", {}).get("weights"),
             "market_history": market_history,
         })

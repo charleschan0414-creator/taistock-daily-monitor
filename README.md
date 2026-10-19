@@ -11,7 +11,9 @@ Windows 本機 Tkinter 工具，合併 TWSE 上市與 TPEx 上櫃官方資料，
 - 多空分開排名：量增 35%、距 MA5 絕對值 30%、法人買賣超絕對張數 25%、成交量名次 10%。先完成既有評分，再套用已通過保留測試的 `strategy_gate`；未通過或檔案無效時完全保留基準訊號。每方向最多顯示 10 名。
 - 風險幅度是最近 5 日相鄰收盤報酬絕對值平均，限制 1.5%–5%；觸發偏移限制 0.3%–1%；目標是 1.5R、2R，價格按台股跳動單位四捨五入。
 
-`top10`、`qualified` 保持偏多舊介面相容；完整欄位另有 `long_top10`、`short_top10`、`signals`、`universe`、`optimization`、`strategy_gate`。桌面 UI 與手機 `/api/dashboard` 會顯示閘門是否啟用、方向與門檻。
+`top10`、`qualified` 保持偏多舊介面相容；完整欄位另有 `long_top10`、`short_top10`、`signals`、`universe`、`optimization`、`strategy_gate`。桌面與雲端介面會將「待驗證觀察」、「最新完整結算」及「策略成本驗證」分開顯示。
+
+技術面首版只顯示由 T 日以前 6 根完整日 K 計算的 RSI(5)、ATR(5)% 與收盤距前 5 日高／低；欄位固定標示「研究不計分、未啟用」，不改變排序、資格或交易價位。
 
 ## 100 個交易日無前視回測
 
@@ -54,7 +56,7 @@ python app.py --optimize-strategy
 - 訓練目標是成本後的 `100×平均逐筆報酬 + 100×平均訊號日批次報酬 + 0.25×最大回撤 + 0.05×min(PF,3) + 0.01×勝率 - 交易過少懲罰`。勝率只有輔助權重，不直接最大化勝率。
 - 選中候選只有在保留期 standard 成交至少 30、平均報酬>0、PF>1、最大回撤不比既有篩選惡化超過 2 個百分點，且 stress 平均報酬>0、PF>1 時才啟用。
 - 稽核報告寫入 `data/strategy_optimization.json`，含版本、成本、方法、日期、候選數、門檻、train/test 基準與候選、逐項檢查、決策與更新時間。
-- 目前成本後通過的設定為偏多與偏空分數皆至少 70、偏空啟用、量增至少 20%。30 日保留期 standard 成本後勝率 45.73%、平均報酬 0.2031%、PF 1.1122；這只是歷史保留測試，不保證未來勝率或獲利。
+- 現行策略尚未通過成本與真正前瞻驗證；正式介面必須顯示「未通過成本驗證」，不得把保護性篩選描述成已驗證策略。
 
 ## 成本敏感 V2.1 研究稽核
 
@@ -75,12 +77,12 @@ python app.py --optimize-strategy
 
 每一來源每日成功回應以 gzip 原文存入 `data/backtest_cache/YYYYMMDD_<source>.json.gz`。中斷後重跑會先讀成功快取，不重抓；損壞快取會刪除後重抓。HTTP 429、5xx 或網路錯誤會依 `Retry-After` 或指數退避重試，請求間另有節流。CLI 完成時列出本次網路請求與快取命中數。
 
-## 嚴格時間順序 walk-forward
+## 權重研究與正式啟用隔離
 
-- 每個訊號日先只取 `exit_date < 當日` 的已觸發、已結算樣本；當天或未來結果絕不參與當天權重。
-- 前 30 筆已結算樣本固定使用基準權重。之後只在固定候選權重中比較；候選未嚴格優於基準就保留基準。
-- 最終建議寫入 `data/optimizer.json`，`source=walk_forward_backtest_100d`，包含樣本數、期間、舊/新權重、指標與更新時間。
-- 每日即時學習另以「下一次成功更新交易日」結算：只結算上一個成功 `runs.data_date` 的訊號，欄位 `settlement_basis=next_successful_update_trading_day`。若中間漏跑，不會把更後面的任一日偽稱為隔日。
+- `data/optimizer.json` 與舊版 close-to-close 即時學習只保留為研究稽核，固定 `approved=false`、`cost_validated=false`，掃描器不得載入其中候選權重。
+- 核心回測與正式掃描固定使用基準權重；回測仍可計算 walk-forward 研究候選，但標記 `research_only=true`、`applied=false`。
+- 正式策略變更只能經時間切分、standard/stress 成本門檻、registry 與候選提出後的新前瞻訊號日核准；研究命令不可直接修改 active state。
+- 舊版每日 close-to-close 結算並非 `next_day_intraday_forced_close_v1` 的成交結果，不能作為正式權重升級依據。
 
 ## 執行、資料與排程
 

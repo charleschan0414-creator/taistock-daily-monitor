@@ -27,8 +27,8 @@ def dashboard_structure():
         "primary_action": "更新全部資料",
         "tool_actions": ("更新現價", "更新夜盤", "執行回測", "開啟手機版",
                          "匯出診斷", "建立備份", "還原備份"),
-        "cards": ("資料日", "今日偏多", "今日偏空", "即時報價", "策略狀態"),
-        "tabs": ("今日偏多", "今日偏空", "所有訊號", "回測摘要", "夜盤脈動", "系統健康"),
+        "cards": ("資料日", "待驗證偏多", "待驗證偏空", "即時報價", "策略驗證"),
+        "tabs": ("待驗證偏多", "待驗證偏空", "所有觀察", "回測摘要", "夜盤脈動", "系統健康"),
     }
 
 
@@ -40,8 +40,22 @@ def signal_row_tags(direction, change, index):
 
 def strategy_card_label(strategy_gate):
     if strategy_gate.get("applied_mode") == "incumbent_protective":
-        return "保護性篩選"
+        return "未通過成本驗證"
     return "已啟用" if strategy_gate.get("enabled") and strategy_gate.get("cost_validated") else "基準策略"
+
+
+def technical_research_text(row, direction):
+    research = row.get("technical_research") or {}
+    values = research.get("indicators") or {}
+    if research.get("status") != "available":
+        return "技術研究資料不足｜不計分"
+    distance_key = "close_vs_prior5_high_pct" if direction == "long" else "close_vs_prior5_low_pct"
+    distance_label = "距前5日高" if direction == "long" else "距前5日低"
+    distance = values.get(distance_key)
+    distance_text = "—" if distance is None else f"{float(distance):+g}%"
+    rsi = "—" if values.get("rsi_5") is None else f"{float(values['rsi_5']):g}"
+    atr = "—" if values.get("atr_5_pct") is None else f"{float(values['atr_5_pct']):g}%"
+    return f"研究不計分｜RSI5 {rsi}｜ATR5 {atr}｜{distance_label} {distance_text}"
 
 
 def _desktop_version(root):
@@ -254,10 +268,10 @@ class Dashboard(tk.Tk):
         self.trees = []
         for label in layout["tabs"][:3]:
             frame = tk.Frame(self.tabs, bg=PANEL); self.tabs.add(frame, text=label)
-            columns = ("rank", "direction", "code", "name", "price", "change", "quote", "entry", "stop", "target1", "target2", "risk", "score", "reason")
+            columns = ("rank", "direction", "code", "name", "price", "change", "quote", "entry", "stop", "target1", "target2", "risk", "score", "technical", "reason")
             tree = ttk.Treeview(frame, columns=columns, show="headings")
-            heads = ("#", "方向", "代號", "名稱", "現價", "漲跌%", "報價時間/狀態", "進場觸發", "停損/回補", "目標1", "目標2", "風險%", "評分", "原因")
-            widths = (35, 55, 60, 80, 70, 70, 145, 80, 80, 75, 75, 60, 60, 390)
+            heads = ("#", "方向", "代號", "名稱", "現價", "漲跌%", "報價時間/狀態", "觸發價（待驗證）", "停損/回補", "目標1", "目標2", "風險%", "研究排序", "技術研究（不計分）", "原因")
+            widths = (35, 55, 60, 80, 70, 70, 145, 115, 80, 75, 75, 60, 80, 300, 390)
             for c, h, w in zip(columns, heads, widths):
                 tree.heading(c, text=h); tree.column(c, width=w, minwidth=w, stretch=False,
                                                      anchor="w" if c == "reason" else "center")
@@ -503,7 +517,8 @@ class Dashboard(tk.Tk):
                 price, change, quote = display_quote_values(self.quotes.get(str(x.get("code"))))
                 tree.insert("", "end", values=(i, direction, x.get("code"), x.get("name"), price, change, quote, x.get("entry_trigger", "—"),
                             x.get("stop_loss", "—"), x.get("target1", "—"), x.get("target2", "—"),
-                            x.get("risk_pct", "—"), x.get("score", "—"), x.get("reason", "")),
+                            x.get("risk_pct", "—"), x.get("score", "—"),
+                            technical_research_text(x, direction_key), x.get("reason", "")),
                             tags=signal_row_tags(direction_key, change, i - 1))
         gate_status = strategy_gate.get("status", "未啟用｜保留基準訊號")
         learning_status = optimization.get("status", "尚無學習狀態")

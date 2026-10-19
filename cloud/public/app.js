@@ -34,6 +34,24 @@ export function resolveStrategyTestMetrics(data) {
   return metrics?.standard ?? metrics;
 }
 
+export function resolveTodayResult(data) {
+  const result = data?.daily_status?.today_result;
+  const validated = data?.daily_status?.strategy_freeze?.cost_validated === true;
+  if (!result || result.status !== 'complete') {
+    return { available: false, counts: '尚未完成', performance: '尚未完成',
+      validation: validated ? '已通過成本驗證' : '未通過成本驗證｜僅供研究', dates: '—' };
+  }
+  const standard = result.standard ?? {};
+  const pf = Number.isFinite(standard.profit_factor) ? standard.profit_factor.toFixed(3) : '—';
+  return {
+    available: true,
+    counts: `${result.signals ?? 0} 筆訊號｜${result.triggered ?? 0} 已觸發｜${result.untriggered ?? 0} 未觸發`,
+    performance: `平均 ${percent(standard.average_return)}｜PF ${pf}｜成本 ${percent(standard.cost_rate)}`,
+    validation: validated ? '已通過成本驗證' : '未通過成本驗證｜僅供研究',
+    dates: `訊號日 ${result.signal_date ?? '—'}｜結算日 ${result.trade_date ?? '—'}`,
+  };
+}
+
 const backtestMetricText = (metrics, unavailable = '尚未完成') => {
   if (!metrics) return unavailable;
   const pf = Number.isFinite(metrics.profit_factor)
@@ -92,7 +110,7 @@ function card(row, direction) {
   const code = document.createElement('span'); code.className = 'symbol'; code.textContent = row.code;
   const name = document.createElement('span'); name.className = 'name'; name.textContent = `${row.name ?? ''} · ${row.market ?? ''}`;
   title.append(code, name);
-  const score = document.createElement('span'); score.className = 'score'; score.textContent = `SCORE ${fmt(row.score)}`;
+  const score = document.createElement('span'); score.className = 'score'; score.textContent = `研究排序 ${fmt(row.score)}`;
   head.append(title, score);
   const price = document.createElement('div'); price.className = 'price'; price.textContent = fmt(row.current_price ?? row.close);
   const directionLabel = document.createElement('span');
@@ -101,12 +119,20 @@ function card(row, direction) {
   const status = document.createElement('div'); status.className = 'status';
   status.textContent = `${row.price_status ?? ''}現價${row.current_price == null ? '（顯示盤後收盤）' : ''}`;
   const levels = document.createElement('div'); levels.className = 'levels';
-  for (const [label, key] of [['進場', 'entry_trigger'], ['停損', 'stop_loss'], ['目標1', 'target1']]) {
+  for (const [label, key] of [['觸發價（尚未觸發）', 'entry_trigger'], ['停損', 'stop_loss'], ['目標1', 'target1']]) {
     const box = document.createElement('div'); const small = document.createElement('span'); small.textContent = label;
     const strong = document.createElement('strong'); strong.textContent = fmt(row[key]); box.append(small, strong); levels.append(box);
   }
   const reason = document.createElement('p'); reason.className = 'reason'; reason.textContent = row.reason ?? '';
-  node.append(head, price, directionLabel, status, levels, reason); return node;
+  const research = document.createElement('details'); research.className = 'technical-research';
+  const researchTitle = document.createElement('summary'); researchTitle.textContent = '技術研究｜不計分｜未啟用';
+  const indicators = row.technical_research?.indicators;
+  const researchText = document.createElement('p');
+  researchText.textContent = indicators
+    ? `RSI5 ${fmt(indicators.rsi_5)}｜ATR5 ${fmt(indicators.atr_5_pct)}%｜距前5日高 ${fmt(indicators.close_vs_prior5_high_pct)}%｜距前5日低 ${fmt(indicators.close_vs_prior5_low_pct)}%`
+    : '資料不足；不以日K假裝盤中確認。';
+  research.append(researchTitle, researchText);
+  node.append(head, price, directionLabel, status, levels, reason, research); return node;
 }
 function renderList(id, rows, direction) {
   const box = $(id); box.replaceChildren();
@@ -185,6 +211,13 @@ async function load() {
     const testMetrics = resolveStrategyTestMetrics(data);
     const pf = testMetrics?.profit_factor == null ? (testMetrics ? '無虧損樣本' : '—') : fmt(testMetrics.profit_factor);
     $('test-metrics').textContent = `${percent(testMetrics?.win_rate)} / ${pf}`;
+    const today = resolveTodayResult(data);
+    $('today-result-counts').textContent = today.counts;
+    $('today-result-performance').textContent = today.performance;
+    $('today-result-performance').className = today.available && daily?.today_result?.standard?.average_return < 0 ? 'metric-failure' : '';
+    $('strategy-validation').textContent = today.validation;
+    $('strategy-validation').className = daily?.strategy_freeze?.cost_validated === true ? 'metric-success' : 'metric-failure';
+    $('today-result-dates').textContent = today.dates;
     renderBacktestPerformance(data);
     renderV2Analysis(data);
     const warnings = [];

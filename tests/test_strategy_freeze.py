@@ -81,19 +81,21 @@ class StrategyFreezeTests(unittest.TestCase):
         self.assertEqual(pending["pending_candidate"]["gate"], GATE_B)
         self.assertEqual(pending["status"], "pending_candidate")
 
-    def test_new_gate_can_activate_after_twenty_new_signal_dates(self):
+    def test_new_gate_never_inherits_incumbent_days_or_auto_activates(self):
         current = build_registry_update(None, approved_report(GATE_A), "2026-09-01")
         for day in range(2, 21):
             current = build_registry_update(current, approved_report(GATE_A), f"2026-09-{day:02d}")
 
-        activated = build_registry_update(current, approved_report(GATE_B), "2026-09-21")
+        pending = build_registry_update(current, approved_report(GATE_B), "2026-09-21")
+        rerun = build_registry_update(pending, approved_report(GATE_B), "2026-09-21")
 
         self.assertEqual(current["forward_signal_days"], MINIMUM_FORWARD_SIGNAL_DAYS - 1)
-        self.assertEqual(activated["active_gate"], GATE_B)
-        self.assertEqual(activated["strategy_version"], 2)
-        self.assertEqual(activated["activated_on"], "2026-09-21")
-        self.assertEqual(activated["forward_signal_days"], 0)
-        self.assertNotIn("pending_candidate", activated)
+        self.assertEqual(pending["active_gate"], GATE_A)
+        self.assertEqual(pending["strategy_version"], 1)
+        self.assertEqual(pending["pending_candidate"]["gate"], GATE_B)
+        self.assertEqual(pending["pending_candidate"]["forward_signal_days"], 0)
+        self.assertFalse(pending["pending_candidate"]["auto_promotion_allowed"])
+        self.assertEqual(rerun, pending)
 
     def test_effective_report_uses_frozen_active_gate_for_scanner(self):
         registry = build_registry_update(None, approved_report(GATE_A), "2026-10-15")

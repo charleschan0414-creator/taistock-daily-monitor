@@ -8,6 +8,23 @@ import daily_pipeline
 
 
 class DailyPipelineTests(unittest.TestCase):
+    def test_today_result_separates_triggered_from_untriggered_and_applies_cost(self):
+        backtest = {"costs": {"standard": .00435}, "trades": [
+            {"signal_date": "2026-10-16", "code": "A", "name": "甲", "direction": "long",
+             "status": "settled", "triggered": True, "exit_date": "2026-10-19", "gross_return": .10},
+            {"signal_date": "2026-10-16", "code": "B", "name": "乙", "direction": "short",
+             "status": "settled", "triggered": True, "exit_date": "2026-10-19", "gross_return": -.05},
+            {"signal_date": "2026-10-16", "code": "C", "name": "丙", "direction": "long",
+             "status": "untriggered", "triggered": False},
+        ]}
+        gate = {"long_score_min": 0, "short_score_min": 0, "short_enabled": True,
+                "volume_growth_min": 0}
+        result = daily_pipeline.build_today_result(backtest, gate)
+        self.assertEqual((result["signals"], result["triggered"], result["untriggered"]), (3, 2, 1))
+        self.assertEqual(result["trade_date"], "2026-10-19")
+        self.assertAlmostEqual(result["standard"]["average_return"], .02065)
+        self.assertIsNone(result["items"][2]["net_return_standard"])
+
     def test_validate_outputs_accepts_complete_daily_result(self):
         backtest = {"period": {"from": "2026-01-01", "to": "2026-10-15"}, "metrics": {"signal_days": 100}}
         latest = {

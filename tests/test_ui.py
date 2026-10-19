@@ -4,7 +4,7 @@ from unittest.mock import Mock, patch
 from taistock.ui import (format_backtest_summary, display_quote_values, visible_signal_rows,
                          format_global_market, BackgroundRefreshGate, dashboard_structure,
                          signal_row_tags, global_market_layers, strategy_card_label,
-                         format_health_report, Dashboard)
+                         technical_research_text, format_health_report, Dashboard)
 
 
 class BacktestUiTests(unittest.TestCase):
@@ -89,13 +89,19 @@ class BacktestUiTests(unittest.TestCase):
         self.assertEqual(structure["primary_action"], "更新全部資料")
         self.assertEqual(structure["tool_actions"], ("更新現價", "更新夜盤", "執行回測", "開啟手機版",
                                                      "匯出診斷", "建立備份", "還原備份"))
-        self.assertEqual(structure["cards"], ("資料日", "今日偏多", "今日偏空", "即時報價", "策略狀態"))
-        self.assertEqual(structure["tabs"], ("今日偏多", "今日偏空", "所有訊號", "回測摘要", "夜盤脈動", "系統健康"))
+        self.assertEqual(structure["cards"], ("資料日", "待驗證偏多", "待驗證偏空", "即時報價", "策略驗證"))
+        self.assertEqual(structure["tabs"], ("待驗證偏多", "待驗證偏空", "所有觀察", "回測摘要", "夜盤脈動", "系統健康"))
     def test_strategy_card_distinguishes_protective_incumbent_from_cost_validated_candidate(self):
         self.assertEqual(strategy_card_label({"applied_mode": "incumbent_protective",
-                                              "enabled": False}), "保護性篩選")
+                                              "enabled": False}), "未通過成本驗證")
         self.assertEqual(strategy_card_label({"applied_mode": "candidate", "enabled": True,
                                               "cost_validated": True}), "已啟用")
+    def test_technical_research_is_explicitly_non_scoring(self):
+        row = {"technical_research": {"status": "available", "score_effect": "none", "indicators": {
+            "rsi_5": 68.4, "atr_5_pct": 4.3,
+            "close_vs_prior5_high_pct": 1.2, "close_vs_prior5_low_pct": 9.8}}}
+        self.assertEqual(technical_research_text(row, "long"),
+                         "研究不計分｜RSI5 68.4｜ATR5 4.3%｜距前5日高 +1.2%")
     def test_signal_rows_get_direction_change_and_zebra_tags(self):
         self.assertEqual(signal_row_tags("long", "+1.25%", 0), ("even", "long", "gain"))
         self.assertEqual(signal_row_tags("short", "-0.80%", 1), ("odd", "short", "loss"))

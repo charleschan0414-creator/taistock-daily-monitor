@@ -75,6 +75,10 @@ class ScannerTests(unittest.TestCase):
         self.assertEqual([row["code"] for row in result["short_top10"]], ["2222"])
         self.assertEqual(result["errors"], [])
         self.assertIn("官方逐日批次資料", result["sources"])
+        research = result["long_top10"][0]["technical_research"]
+        self.assertEqual(research["status"], "available")
+        self.assertEqual(research["score_effect"], "none")
+        self.assertIn("rsi_5", research["indicators"])
 
     def test_strategy_gate_runs_after_scoring_and_filters_daily_lists(self):
         days = []

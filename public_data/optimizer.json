@@ -1,11 +1,16 @@
 {
-  "source": "walk_forward_backtest_100d",
-  "minimum_samples": 30,
-  "sample_count": 1267,
-  "changed": true,
-  "period": {
-    "from": "2026-05-25",
-    "to": "2026-10-19"
+  "version": 1,
+  "source": "live_update",
+  "changed": false,
+  "research_changed": true,
+  "approved": false,
+  "cost_validated": false,
+  "research_only": true,
+  "sample_count": 60,
+  "evaluation_period": {
+    "from": "2026-10-15",
+    "to": "2026-10-16",
+    "trading_days": 2
   },
   "old_weights": {
     "volume_growth_pct": 0.35,
@@ -14,14 +19,20 @@
     "volume_rank": 0.1
   },
   "new_weights": {
-    "volume_growth_pct": 0.25,
-    "ma5_distance_pct": 0.2,
-    "institutional_lots": 0.45,
+    "volume_growth_pct": 0.35,
+    "ma5_distance_pct": 0.3,
+    "institutional_lots": 0.25,
     "volume_rank": 0.1
   },
-  "metrics": {
-    "baseline": -0.007230272968915064,
-    "selected": -0.005104790479669829
+  "research_weights": {
+    "volume_growth_pct": 0.25,
+    "ma5_distance_pct": 0.4,
+    "institutional_lots": 0.25,
+    "volume_rank": 0.1
   },
-  "updated_at": "2026-10-19T08:49:17+00:00"
+  "performance": {
+    "old_daily_top3_mean_directional_return": 0.01587173,
+    "new_daily_top3_mean_directional_return": 0.01787113
+  },
+  "updated_at": "2026-10-19T18:22:03+08:00"
 }

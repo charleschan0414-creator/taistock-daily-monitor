@@ -13,6 +13,7 @@ from pathlib import Path
 from urllib.parse import urlencode
 
 from .core import BASELINE_WEIGHTS, audit_candidates, evaluate_candidates, is_common_stock
+from .technical import calculate_technical_research
 from .data import _number
 from .portfolio import simulate_portfolio
 from .storage import CANDIDATE_WEIGHTS, MIN_SAMPLES
@@ -229,9 +230,9 @@ def _metric(rows: list[dict], weights: dict) -> float:
                      weights["ma5_distance_pct"] * pct("ma5_distance_pct") +
                      weights["institutional_lots"] * pct("institutional_abs_lots") +
                      weights["volume_rank"] * max(0, 101 - row["volume_rank"]))
-            scored.append((score, row["return"]))
-        top = sorted(scored, reverse=True)[:3]
-        daily.append(sum(value for _, value in top) / len(top))
+            scored.append((score, row["volume_rank"], str(row.get("code", "")), row["return"]))
+        top = sorted(scored, key=lambda item: (-item[0], item[1], item[2]))[:3]
+        daily.append(sum(item[3] for item in top) / len(top))
     return sum(daily) / len(daily) if daily else 0.0
 
 
@@ -316,18 +317,23 @@ def build_backtest(days: list[dict], signal_days: int = 100, weights: dict | Non
     for i in selected:
         current = ordered[i]
         wf = walk_forward_weights(all_samples, current["date"])
-        current_weights = wf["weights"]
-        weight_history.append({"signal_date": current["date"], **wf})
+        current_weights = dict(BASELINE_WEIGHTS)
+        weight_history.append({"signal_date": current["date"], **wf,
+                               "applied": False, "research_only": True})
         leaders = sorted(current["quotes"].values(), key=lambda row: (-row["volume"], row["code"]))[:100]
         rows = []
         for rank, quote in enumerate(leaders, 1):
-            history = [ordered[j]["quotes"].get(quote["code"]) for j in range(i - 4, i + 1)]
+            history = [ordered[j]["quotes"].get(quote["code"]) for j in range(i - 5, i + 1)]
             previous = ordered[i - 1]["quotes"].get(quote["code"])
             rows.append({**quote, "date": current["date"],
                          "prev_volume": previous["volume"] if previous is not None else None,
                          "closes": [item["close"] for item in history if item is not None],
                          "institutional_net": current["institutions"].get(quote["code"], 0),
-                         "volume_rank": rank})
+                         "volume_rank": rank,
+                         "technical_research": calculate_technical_research(
+                             [{**item, "date": ordered[j]["date"]} for j, item in
+                              zip(range(i - 5, i + 1), history) if item is not None],
+                             current["date"])})
         evaluated = evaluate_candidates(rows, current_weights)
         signals = ([row for row in evaluated if row["signal_direction"] == "long"][:10] +
                    [row for row in evaluated if row["signal_direction"] == "short"][:10])
@@ -357,6 +363,10 @@ def build_backtest(days: list[dict], signal_days: int = 100, weights: dict | Non
                     "institutional_lots": audited.get("institutional_lots"),
                     "institutional_abs_lots": audited.get("institutional_abs_lots"),
                     "volatility_proxy_pct": audited.get("volatility_proxy_pct"),
+                    "technical_rsi_5": (audited.get("technical_research", {}).get("indicators", {}).get("rsi_5")),
+                    "technical_atr_5_pct": (audited.get("technical_research", {}).get("indicators", {}).get("atr_5_pct")),
+                    "technical_close_vs_prior5_high_pct": (audited.get("technical_research", {}).get("indicators", {}).get("close_vs_prior5_high_pct")),
+                    "technical_close_vs_prior5_low_pct": (audited.get("technical_research", {}).get("indicators", {}).get("close_vs_prior5_low_pct")),
                     "eligible": audited.get("eligible"), "signal_direction": direction,
                     "rejection_reasons": audited.get("rejection_reasons", []),
                     "score": audited.get("score"), "reason": audited.get("reason"),
@@ -389,9 +399,12 @@ def build_backtest(days: list[dict], signal_days: int = 100, weights: dict | Non
     last_settle_date = max((row["exit_date"] for row in trades if row.get("exit_date")), default=signal_dates[-1])
     final_wf = walk_forward_weights(all_samples, "9999-12-31")
     optimization = {"source": "walk_forward_backtest_100d", "minimum_samples": MIN_SAMPLES,
-                    "sample_count": final_wf["sample_count"], "changed": final_wf["changed"],
+                    "sample_count": final_wf["sample_count"], "changed": False,
+                    "research_changed": final_wf["changed"], "approved": False,
+                    "cost_validated": False, "research_only": True,
                     "period": {"from": signal_dates[0], "to": last_settle_date},
-                    "old_weights": dict(BASELINE_WEIGHTS), "new_weights": final_wf["weights"],
+                    "old_weights": dict(BASELINE_WEIGHTS), "new_weights": dict(BASELINE_WEIGHTS),
+                    "research_weights": final_wf["weights"],
                     "metrics": {"baseline": final_wf["baseline_metric"], "selected": final_wf["selected_metric"]},
                     "updated_at": datetime.now().astimezone().isoformat(timespec="seconds")}
     metrics_scenarios = summarize_trade_scenarios(trades, signal_dates)
@@ -415,6 +428,8 @@ CANDIDATE_AUDIT_FIELDS = [
     "signal_date", "code", "name", "market", "volume_rank", "close", "volume", "prev_volume",
     "institutional_net", "history_count", "ma5", "volume_growth_pct", "above_ma5_pct",
     "ma5_distance_pct", "institutional_lots", "institutional_abs_lots", "volatility_proxy_pct",
+    "technical_rsi_5", "technical_atr_5_pct", "technical_close_vs_prior5_high_pct",
+    "technical_close_vs_prior5_low_pct",
     "eligible", "signal_direction", "rejection_reasons", "score", "reason", "action_text",
     "entry_trigger", "stop_loss", "target1", "target2", "risk_pct", "entry_offset_pct",
     "selected_signal", "selected_rank",

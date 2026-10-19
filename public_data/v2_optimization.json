@@ -70,38 +70,38 @@
       },
       "selection": {
         "standard": {
-          "trades": 6,
-          "win_rate": 0.6666666666666666,
-          "average_return": 0.004020880490068267,
-          "profit_factor": 2.7940381665293614,
-          "max_drawdown": -0.013402289060044925,
-          "cumulative_return": 0.016472327129221975
+          "trades": 2,
+          "win_rate": 1.0,
+          "average_return": 0.006381544742543013,
+          "profit_factor": null,
+          "max_drawdown": 0.0,
+          "cumulative_return": 0.012780298937260737
         },
         "stress": {
-          "trades": 6,
-          "win_rate": 0.6666666666666666,
-          "average_return": 0.003020880490068266,
-          "profit_factor": 2.1733492520110786,
-          "max_drawdown": -0.01538784158529738,
-          "cumulative_return": 0.0114164607759768
+          "trades": 2,
+          "win_rate": 1.0,
+          "average_return": 0.005381544742543012,
+          "profit_factor": null,
+          "max_drawdown": 0.0,
+          "cumulative_return": 0.010768535847775373
         }
       },
       "holdout": {
         "standard": {
-          "trades": 3,
-          "win_rate": 0.3333333333333333,
-          "average_return": -0.005684402715791706,
-          "profit_factor": 0.4049958672045954,
-          "max_drawdown": -0.028495289903624488,
-          "cumulative_return": -0.017218600656963345
+          "trades": 0,
+          "win_rate": 0.0,
+          "average_return": 0.0,
+          "profit_factor": null,
+          "max_drawdown": 0.0,
+          "cumulative_return": 0.0
         },
         "stress": {
-          "trades": 3,
-          "win_rate": 0.3333333333333333,
-          "average_return": -0.006684402715791707,
-          "profit_factor": 0.3459628251181367,
-          "max_drawdown": -0.03046562924866858,
-          "cumulative_return": -0.02018134498190094
+          "trades": 0,
+          "win_rate": 0.0,
+          "average_return": 0.0,
+          "profit_factor": null,
+          "max_drawdown": 0.0,
+          "cumulative_return": 0.0
         }
       },
       "activation_checks": {
@@ -119,9 +119,9 @@
             "from": "2026-09-14",
             "to": "2026-10-14",
             "days": 20,
-            "trades": 1,
-            "profit_factor": 0.0,
-            "data_sufficient": true,
+            "trades": 0,
+            "profit_factor": null,
+            "data_sufficient": false,
             "profit_factor_above_1": false
           },
           {
@@ -160,38 +160,38 @@
       },
       "selection": {
         "standard": {
-          "trades": 10,
-          "win_rate": 0.7,
-          "average_return": 0.014333567704704217,
-          "profit_factor": 2.537096340951704,
-          "max_drawdown": -0.05990422862540179,
-          "cumulative_return": 0.14467901316557352
+          "trades": 7,
+          "win_rate": 0.7142857142857143,
+          "average_return": 0.014214401434904812,
+          "profit_factor": 2.5028520609308673,
+          "max_drawdown": -0.03310399361022376,
+          "cumulative_return": 0.0986936336347981
         },
         "stress": {
-          "trades": 10,
-          "win_rate": 0.7,
-          "average_return": 0.01333356770470422,
-          "profit_factor": 2.3852922216093195,
-          "max_drawdown": -0.06184308168006425,
-          "cumulative_return": 0.13342774303137883
+          "trades": 7,
+          "win_rate": 0.7142857142857143,
+          "average_return": 0.013214401434904812,
+          "profit_factor": 2.3561580368201223,
+          "max_drawdown": -0.03410399361022376,
+          "cumulative_return": 0.09112288079378206
         }
       },
       "holdout": {
         "standard": {
-          "trades": 4,
-          "win_rate": 0.25,
-          "average_return": -0.015698760204304746,
-          "profit_factor": 0.08344671250483326,
-          "max_drawdown": -0.06713464146033299,
-          "cumulative_return": -0.06180134377125901
+          "trades": 2,
+          "win_rate": 0.5,
+          "average_return": -0.007490829874000982,
+          "profit_factor": 0.2762054476081903,
+          "max_drawdown": -0.020698773841961726,
+          "cumulative_return": -0.015099996999661469
         },
         "stress": {
-          "trades": 4,
-          "win_rate": 0.25,
-          "average_return": -0.016698760204304747,
-          "profit_factor": 0.06596241016395879,
-          "max_drawdown": -0.06999607237350303,
-          "cumulative_return": -0.06560913773905819
+          "trades": 2,
+          "win_rate": 0.5,
+          "average_return": -0.008490829874000983,
+          "profit_factor": 0.21739081333884608,
+          "max_drawdown": -0.021698773841961727,
+          "cumulative_return": -0.01708401533991355
         }
       },
       "activation_checks": {
@@ -209,8 +209,8 @@
             "from": "2026-09-14",
             "to": "2026-10-14",
             "days": 20,
-            "trades": 3,
-            "profit_factor": 0.18231801439079934,
+            "trades": 2,
+            "profit_factor": 0.2762054476081903,
             "data_sufficient": true,
             "profit_factor_above_1": false
           },
@@ -256,5 +256,5 @@
     ],
     "notice": "日 OHLC 只能保守模擬次一交易日當沖，不能重建盤中先後；不跨日持有，也不保證勝率或獲利。"
   },
-  "updated_at": "2026-10-19T08:49:18+00:00"
+  "updated_at": "2026-10-19T18:21:27+08:00"
 }
