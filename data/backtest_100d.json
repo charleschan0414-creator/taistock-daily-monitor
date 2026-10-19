@@ -1,10 +1,9 @@
 {
   "period": {
-    "from": "2026-05-22",
-    "to": "2026-10-15"
+    "from": "2026-05-25",
+    "to": "2026-10-16"
   },
   "signal_dates": [
-    "2026-05-22",
     "2026-05-25",
     "2026-05-26",
     "2026-05-27",
@@ -103,167 +102,168 @@
     "2026-10-12",
     "2026-10-13",
     "2026-10-14",
-    "2026-10-15"
+    "2026-10-15",
+    "2026-10-16"
   ],
   "metrics": {
-    "signals": 1659,
-    "trades": 1270,
-    "triggered": 1270,
-    "untriggered": 389,
+    "signals": 1661,
+    "trades": 1267,
+    "triggered": 1267,
+    "untriggered": 394,
     "unresolved": 0,
-    "win_rate": 0.3968503937007874,
-    "average_return": -0.005582524763671443,
-    "median_return": -0.007997373229785311,
-    "cumulative_return": -0.4367386034294296,
-    "max_drawdown": -0.43799781941387406,
-    "profit_factor": 0.6632714647591785,
+    "win_rate": 0.3930544593528019,
+    "average_return": -0.00574851592825485,
+    "median_return": -0.008215962441314588,
+    "cumulative_return": -0.4469545212318474,
+    "max_drawdown": -0.4469545212318474,
+    "profit_factor": 0.6567604198614955,
     "signal_days": 100,
     "long": {
       "signals": 977,
-      "trades": 786,
-      "triggered": 786,
-      "untriggered": 191,
+      "trades": 781,
+      "triggered": 781,
+      "untriggered": 196,
       "unresolved": 0,
-      "win_rate": 0.4071246819338422,
-      "average_return": -0.004652487174460572,
-      "median_return": -0.008186767169179234,
-      "cumulative_return": -0.39872493083003846,
-      "max_drawdown": -0.412388921363656,
-      "profit_factor": 0.7283590312965295
+      "win_rate": 0.4020486555697823,
+      "average_return": -0.004883117020352305,
+      "median_return": -0.008368200836820055,
+      "cumulative_return": -0.4153110476609545,
+      "max_drawdown": -0.4160220666754151,
+      "profit_factor": 0.7180959150103267
     },
     "short": {
-      "signals": 682,
-      "trades": 484,
-      "triggered": 484,
+      "signals": 684,
+      "trades": 486,
+      "triggered": 486,
       "untriggered": 198,
       "unresolved": 0,
-      "win_rate": 0.38016528925619836,
-      "average_return": -0.007092875063505629,
-      "median_return": -0.007945526695526752,
-      "cumulative_return": -0.5675789278575833,
-      "max_drawdown": -0.5703505290456721,
-      "profit_factor": 0.5478718458910652
+      "win_rate": 0.3786008230452675,
+      "average_return": -0.00713920841194186,
+      "median_return": -0.008020399411908807,
+      "cumulative_return": -0.5737994484161122,
+      "max_drawdown": -0.5766343858135753,
+      "profit_factor": 0.5488728837259189
     }
   },
   "metrics_scenarios": {
     "gross": {
-      "signals": 1659,
-      "trades": 1270,
-      "triggered": 1270,
-      "untriggered": 389,
+      "signals": 1661,
+      "trades": 1267,
+      "triggered": 1267,
+      "untriggered": 394,
       "unresolved": 0,
-      "win_rate": 0.3968503937007874,
-      "average_return": -0.005582524763671443,
-      "median_return": -0.007997373229785311,
-      "cumulative_return": -0.4367386034294296,
-      "max_drawdown": -0.43799781941387406,
-      "profit_factor": 0.6632714647591785,
+      "win_rate": 0.3930544593528019,
+      "average_return": -0.00574851592825485,
+      "median_return": -0.008215962441314588,
+      "cumulative_return": -0.4469545212318474,
+      "max_drawdown": -0.4469545212318474,
+      "profit_factor": 0.6567604198614955,
       "signal_days": 100,
       "long": {
         "signals": 977,
-        "trades": 786,
-        "triggered": 786,
-        "untriggered": 191,
+        "trades": 781,
+        "triggered": 781,
+        "untriggered": 196,
         "unresolved": 0,
-        "win_rate": 0.4071246819338422,
-        "average_return": -0.004652487174460572,
-        "median_return": -0.008186767169179234,
-        "cumulative_return": -0.39872493083003846,
-        "max_drawdown": -0.412388921363656,
-        "profit_factor": 0.7283590312965295
+        "win_rate": 0.4020486555697823,
+        "average_return": -0.004883117020352305,
+        "median_return": -0.008368200836820055,
+        "cumulative_return": -0.4153110476609545,
+        "max_drawdown": -0.4160220666754151,
+        "profit_factor": 0.7180959150103267
       },
       "short": {
-        "signals": 682,
-        "trades": 484,
-        "triggered": 484,
+        "signals": 684,
+        "trades": 486,
+        "triggered": 486,
         "untriggered": 198,
         "unresolved": 0,
-        "win_rate": 0.38016528925619836,
-        "average_return": -0.007092875063505629,
-        "median_return": -0.007945526695526752,
-        "cumulative_return": -0.5675789278575833,
-        "max_drawdown": -0.5703505290456721,
-        "profit_factor": 0.5478718458910652
+        "win_rate": 0.3786008230452675,
+        "average_return": -0.00713920841194186,
+        "median_return": -0.008020399411908807,
+        "cumulative_return": -0.5737994484161122,
+        "max_drawdown": -0.5766343858135753,
+        "profit_factor": 0.5488728837259189
       }
     },
     "standard": {
-      "signals": 1659,
-      "trades": 1270,
-      "triggered": 1270,
-      "untriggered": 389,
+      "signals": 1661,
+      "trades": 1267,
+      "triggered": 1267,
+      "untriggered": 394,
       "unresolved": 0,
-      "win_rate": 0.3535433070866142,
-      "average_return": -0.009932524763671447,
-      "median_return": -0.01234737322978531,
-      "cumulative_return": -0.6366981770490041,
-      "max_drawdown": -0.6366981770490041,
-      "profit_factor": 0.484490495983759,
+      "win_rate": 0.35043409629044986,
+      "average_return": -0.010098515928254852,
+      "median_return": -0.012565962441314587,
+      "cumulative_return": -0.6433160805252239,
+      "max_drawdown": -0.6433160805252239,
+      "profit_factor": 0.48081731705672925,
       "signal_days": 100,
       "long": {
         "signals": 977,
-        "trades": 786,
-        "triggered": 786,
-        "untriggered": 191,
+        "trades": 781,
+        "triggered": 781,
+        "untriggered": 196,
         "unresolved": 0,
-        "win_rate": 0.37404580152671757,
-        "average_return": -0.00900248717446056,
-        "median_return": -0.012536767169179234,
-        "cumulative_return": -0.6103813022951576,
-        "max_drawdown": -0.614043597618106,
-        "profit_factor": 0.5442529143977793
+        "win_rate": 0.3687580025608195,
+        "average_return": -0.009233117020352295,
+        "median_return": -0.012718200836820055,
+        "cumulative_return": -0.6211756868867386,
+        "max_drawdown": -0.6211756868867386,
+        "profit_factor": 0.5376553229501545
       },
       "short": {
-        "signals": 682,
-        "trades": 484,
-        "triggered": 484,
+        "signals": 684,
+        "trades": 486,
+        "triggered": 486,
         "untriggered": 198,
         "unresolved": 0,
-        "win_rate": 0.3202479338842975,
-        "average_return": -0.011442875063505626,
-        "median_return": -0.012295526695526752,
-        "cumulative_return": -0.7152806423491234,
-        "max_drawdown": -0.7152806423491234,
-        "profit_factor": 0.3807423961777185
+        "win_rate": 0.32098765432098764,
+        "average_return": -0.011489208411941858,
+        "median_return": -0.012370399411908806,
+        "cumulative_return": -0.7193942822786563,
+        "max_drawdown": -0.7193942822786563,
+        "profit_factor": 0.38283512036421835
       }
     },
     "stress": {
-      "signals": 1659,
-      "trades": 1270,
-      "triggered": 1270,
-      "untriggered": 389,
+      "signals": 1661,
+      "trades": 1267,
+      "triggered": 1267,
+      "untriggered": 394,
       "unresolved": 0,
-      "win_rate": 0.3417322834645669,
-      "average_return": -0.010932524763671425,
-      "median_return": -0.01334737322978531,
-      "cumulative_return": -0.6716255341900004,
-      "max_drawdown": -0.6716255341900004,
-      "profit_factor": 0.451132397909791,
+      "win_rate": 0.3378058405682715,
+      "average_return": -0.011098515928254832,
+      "median_return": -0.013565962441314586,
+      "cumulative_return": -0.6776131899903699,
+      "max_drawdown": -0.6776131899903699,
+      "profit_factor": 0.44798154212343894,
       "signal_days": 100,
       "long": {
         "signals": 977,
-        "trades": 786,
-        "triggered": 786,
-        "untriggered": 191,
+        "trades": 781,
+        "triggered": 781,
+        "untriggered": 196,
         "unresolved": 0,
-        "win_rate": 0.3638676844783715,
-        "average_return": -0.010002487174460561,
-        "median_return": -0.013536767169179233,
-        "cumulative_return": -0.6474629753496253,
-        "max_drawdown": -0.6500805160069547,
-        "profit_factor": 0.5092735335819716
+        "win_rate": 0.35723431498079383,
+        "average_return": -0.010233117020352294,
+        "median_return": -0.013718200836820054,
+        "cumulative_return": -0.6572397968905253,
+        "max_drawdown": -0.6572397968905253,
+        "profit_factor": 0.5033931125043201
       },
       "short": {
-        "signals": 682,
-        "trades": 484,
-        "triggered": 484,
+        "signals": 684,
+        "trades": 486,
+        "triggered": 486,
         "untriggered": 198,
         "unresolved": 0,
-        "win_rate": 0.30578512396694213,
-        "average_return": -0.01244287506350563,
-        "median_return": -0.013295526695526753,
-        "cumulative_return": -0.7414276685397547,
-        "max_drawdown": -0.7414276685397547,
-        "profit_factor": 0.35070545832183153
+        "win_rate": 0.3065843621399177,
+        "average_return": -0.012489208411941862,
+        "median_return": -0.013370399411908807,
+        "cumulative_return": -0.7451672830831102,
+        "max_drawdown": -0.7451672830831102,
+        "profit_factor": 0.3529126528335089
       }
     }
   },
@@ -274,15 +274,15 @@
   },
   "portfolio_standard": {
     "initial_capital": 1000000.0,
-    "final_capital": 549137.1204999986,
-    "total_return": -0.4508628795000015,
-    "net_return": -0.4508628795000015,
-    "max_drawdown": -0.4523619416887482,
+    "final_capital": 542818.340499999,
+    "total_return": -0.457181659500001,
+    "net_return": -0.457181659500001,
+    "max_drawdown": -0.457181659500001,
     "peak_positions": 1,
     "open_positions": 0,
-    "gross_pnl": -161219.9999999999,
-    "net_pnl": -450862.87950000004,
-    "costs": 289642.8795000001,
+    "gross_pnl": -174329.99999999985,
+    "net_pnl": -457181.65950000007,
+    "costs": 282851.65950000024,
     "realized_only_equity": true,
     "model": {
       "risk_per_trade": 0.005,
@@ -299,487 +299,25 @@
       "by_direction": {
         "long": {
           "peak_notional": 192000.0,
-          "realized_trades": 397,
-          "gross_pnl": -67959.9999999999,
-          "net_pnl": -236353.58949999989
+          "realized_trades": 391,
+          "gross_pnl": -75219.99999999988,
+          "net_pnl": -240558.14949999997
         },
         "short": {
           "peak_notional": 191450.0,
-          "realized_trades": 252,
-          "gross_pnl": -93260.00000000003,
-          "net_pnl": -214509.29000000007
+          "realized_trades": 250,
+          "gross_pnl": -99110.00000000006,
+          "net_pnl": -216623.51000000004
         }
       }
     },
     "borrow_fees_included": false,
     "short_availability_mode": "assumed_available",
-    "realized_trade_count": 649,
-    "skipped_count": 621,
+    "realized_trade_count": 641,
+    "skipped_count": 626,
     "equity_curve_points": 100
   },
   "trades": [
-    {
-      "signal_date": "2026-05-22",
-      "code": "1802",
-      "name": "台玻",
-      "direction": "long",
-      "entry_trigger": 71.2,
-      "stop_loss": 68.9,
-      "target1": 74.7,
-      "target2": 75.8,
-      "score": 75.1,
-      "volume_growth_pct": 163.04,
-      "ma5_distance_pct": 6.95,
-      "institutional_abs_lots": 37461.67,
-      "volume_rank": 10,
-      "weights_used": {
-        "volume_growth_pct": 0.35,
-        "ma5_distance_pct": 0.3,
-        "institutional_lots": 0.25,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-05-25",
-      "entry": 73.0,
-      "exit": 74.7,
-      "exit_date": "2026-05-25",
-      "exit_reason": "target1",
-      "return": 0.023287671232876752,
-      "mfe": 0.052054794520547905,
-      "mae": -0.015068493150684854,
-      "trade_date": "2026-05-25",
-      "gross_return": 0.023287671232876752
-    },
-    {
-      "signal_date": "2026-05-22",
-      "code": "2377",
-      "name": "微星",
-      "direction": "long",
-      "entry_trigger": 125.0,
-      "stop_loss": 120.0,
-      "target1": 132.5,
-      "target2": 135.0,
-      "score": 74.81,
-      "volume_growth_pct": 169.42,
-      "ma5_distance_pct": 8.58,
-      "institutional_abs_lots": 23424.96,
-      "volume_rank": 30,
-      "weights_used": {
-        "volume_growth_pct": 0.35,
-        "ma5_distance_pct": 0.3,
-        "institutional_lots": 0.25,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-05-25",
-      "entry": 131.5,
-      "exit": 132.5,
-      "exit_date": "2026-05-25",
-      "exit_reason": "target1",
-      "return": 0.0076045627376425855,
-      "mfe": 0.034220532319391636,
-      "mae": -0.034220532319391636,
-      "trade_date": "2026-05-25",
-      "gross_return": 0.0076045627376425855
-    },
-    {
-      "signal_date": "2026-05-22",
-      "code": "2356",
-      "name": "英業達",
-      "direction": "long",
-      "entry_trigger": 60.1,
-      "stop_loss": 57.7,
-      "target1": 63.7,
-      "target2": 64.9,
-      "score": 73.71,
-      "volume_growth_pct": 132.9,
-      "ma5_distance_pct": 10.76,
-      "institutional_abs_lots": 19127.54,
-      "volume_rank": 11,
-      "weights_used": {
-        "volume_growth_pct": 0.35,
-        "ma5_distance_pct": 0.3,
-        "institutional_lots": 0.25,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-05-25",
-      "entry": 65.4,
-      "exit": 63.7,
-      "exit_date": "2026-05-25",
-      "exit_reason": "target1",
-      "return": -0.02599388379204897,
-      "mfe": 0.0,
-      "mae": -0.03822629969418971,
-      "trade_date": "2026-05-25",
-      "gross_return": -0.02599388379204897
-    },
-    {
-      "signal_date": "2026-05-22",
-      "code": "2327",
-      "name": "國巨*",
-      "direction": "long",
-      "entry_trigger": 635.0,
-      "stop_loss": 603.0,
-      "target1": 683.0,
-      "target2": 699.0,
-      "score": 73.06,
-      "volume_growth_pct": 199.57,
-      "ma5_distance_pct": 15.67,
-      "institutional_abs_lots": 3225.31,
-      "volume_rank": 19,
-      "weights_used": {
-        "volume_growth_pct": 0.35,
-        "ma5_distance_pct": 0.3,
-        "institutional_lots": 0.25,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-05-25",
-      "entry": 679.0,
-      "exit": 683.0,
-      "exit_date": "2026-05-25",
-      "exit_reason": "target1",
-      "return": 0.005891016200294551,
-      "mfe": 0.017673048600883652,
-      "mae": -0.025036818851251842,
-      "trade_date": "2026-05-25",
-      "gross_return": 0.005891016200294551
-    },
-    {
-      "signal_date": "2026-05-22",
-      "code": "4927",
-      "name": "泰鼎-KY",
-      "direction": "long",
-      "entry_trigger": 56.9,
-      "stop_loss": 54.1,
-      "target1": 61.1,
-      "target2": 62.5,
-      "score": 71.81,
-      "volume_growth_pct": 200.07,
-      "ma5_distance_pct": 11.24,
-      "institutional_abs_lots": 10732.07,
-      "volume_rank": 80,
-      "weights_used": {
-        "volume_growth_pct": 0.35,
-        "ma5_distance_pct": 0.3,
-        "institutional_lots": 0.25,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-05-25",
-      "entry": 58.1,
-      "exit": 61.1,
-      "exit_date": "2026-05-25",
-      "exit_reason": "target1",
-      "return": 0.05163511187607573,
-      "mfe": 0.06540447504302921,
-      "mae": -0.01721170395869191,
-      "trade_date": "2026-05-25",
-      "gross_return": 0.05163511187607573
-    },
-    {
-      "signal_date": "2026-05-22",
-      "code": "9105",
-      "name": "泰金寶-DR",
-      "direction": "long",
-      "entry_trigger": 6.82,
-      "stop_loss": 6.48,
-      "target1": 7.33,
-      "target2": 7.5,
-      "score": 71.2,
-      "volume_growth_pct": 102.92,
-      "ma5_distance_pct": 13.41,
-      "institutional_abs_lots": 17949.01,
-      "volume_rank": 9,
-      "weights_used": {
-        "volume_growth_pct": 0.35,
-        "ma5_distance_pct": 0.3,
-        "institutional_lots": 0.25,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-05-25",
-      "entry": 7.42,
-      "exit": 7.33,
-      "exit_date": "2026-05-25",
-      "exit_reason": "target1",
-      "return": -0.012129380053908336,
-      "mfe": 0.0,
-      "mae": 0.0,
-      "trade_date": "2026-05-25",
-      "gross_return": -0.012129380053908336
-    },
-    {
-      "signal_date": "2026-05-22",
-      "code": "3048",
-      "name": "益登",
-      "direction": "long",
-      "entry_trigger": 75.2,
-      "stop_loss": 71.4,
-      "target1": 80.9,
-      "target2": 82.8,
-      "score": 70.4,
-      "volume_growth_pct": 510.71,
-      "ma5_distance_pct": 17.36,
-      "institutional_abs_lots": 3780.17,
-      "volume_rank": 97,
-      "weights_used": {
-        "volume_growth_pct": 0.35,
-        "ma5_distance_pct": 0.3,
-        "institutional_lots": 0.25,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-05-25",
-      "entry": 79.1,
-      "exit": 80.9,
-      "exit_date": "2026-05-25",
-      "exit_reason": "target1",
-      "return": 0.02275600505689016,
-      "mfe": 0.03539823008849572,
-      "mae": -0.07711757269279386,
-      "trade_date": "2026-05-25",
-      "gross_return": 0.02275600505689016
-    },
-    {
-      "signal_date": "2026-05-22",
-      "code": "6770",
-      "name": "力積電",
-      "direction": "long",
-      "entry_trigger": 64.4,
-      "stop_loss": 61.7,
-      "target1": 68.5,
-      "target2": 69.8,
-      "score": 69.94,
-      "volume_growth_pct": 127.14,
-      "ma5_distance_pct": 5.91,
-      "institutional_abs_lots": 98774.2,
-      "volume_rank": 3,
-      "weights_used": {
-        "volume_growth_pct": 0.35,
-        "ma5_distance_pct": 0.3,
-        "institutional_lots": 0.25,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-05-25",
-      "entry": 65.0,
-      "exit": 67.6,
-      "exit_date": "2026-05-25",
-      "exit_reason": "forced_close",
-      "return": 0.03999999999999991,
-      "mfe": 0.04923076923076927,
-      "mae": -0.04153846153846158,
-      "trade_date": "2026-05-25",
-      "gross_return": 0.03999999999999991
-    },
-    {
-      "signal_date": "2026-05-22",
-      "code": "3714",
-      "name": "富采",
-      "direction": "long",
-      "entry_trigger": 82.2,
-      "stop_loss": 78.1,
-      "target1": 88.4,
-      "target2": 90.4,
-      "score": 63.59,
-      "volume_growth_pct": 65.51,
-      "ma5_distance_pct": 13.81,
-      "institutional_abs_lots": 17487.1,
-      "volume_rank": 18,
-      "weights_used": {
-        "volume_growth_pct": 0.35,
-        "ma5_distance_pct": 0.3,
-        "institutional_lots": 0.25,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-05-25",
-      "entry": 85.1,
-      "exit": 79.7,
-      "exit_date": "2026-05-25",
-      "exit_reason": "forced_close",
-      "return": -0.06345475910693292,
-      "mfe": 0.023501762632197415,
-      "mae": -0.07403055229142183,
-      "trade_date": "2026-05-25",
-      "gross_return": -0.06345475910693292
-    },
-    {
-      "signal_date": "2026-05-22",
-      "code": "2375",
-      "name": "凱美",
-      "direction": "long",
-      "entry_trigger": 136.0,
-      "stop_loss": 129.0,
-      "target1": 146.5,
-      "target2": 150.0,
-      "score": 63.44,
-      "volume_growth_pct": 163.88,
-      "ma5_distance_pct": 17.36,
-      "institutional_abs_lots": 2007.24,
-      "volume_rank": 78,
-      "weights_used": {
-        "volume_growth_pct": 0.35,
-        "ma5_distance_pct": 0.3,
-        "institutional_lots": 0.25,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-05-25",
-      "entry": 142.0,
-      "exit": 138.0,
-      "exit_date": "2026-05-25",
-      "exit_reason": "forced_close",
-      "return": -0.028169014084507043,
-      "mfe": 0.02112676056338028,
-      "mae": -0.05985915492957746,
-      "trade_date": "2026-05-25",
-      "gross_return": -0.028169014084507043
-    },
-    {
-      "signal_date": "2026-05-22",
-      "code": "2890",
-      "name": "永豐金",
-      "direction": "short",
-      "entry_trigger": 29.0,
-      "stop_loss": 29.45,
-      "target1": 28.35,
-      "target2": 28.1,
-      "score": 96.7,
-      "volume_growth_pct": 107.79,
-      "ma5_distance_pct": 2.15,
-      "institutional_abs_lots": 22920.46,
-      "volume_rank": 34,
-      "weights_used": {
-        "volume_growth_pct": 0.35,
-        "ma5_distance_pct": 0.3,
-        "institutional_lots": 0.25,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-05-25",
-      "entry": 29.0,
-      "exit": 28.95,
-      "exit_date": "2026-05-25",
-      "exit_reason": "forced_close",
-      "return": 0.0017241379310345072,
-      "mfe": 0.012068965517241428,
-      "mae": -0.0051724137931034,
-      "trade_date": "2026-05-25",
-      "gross_return": 0.0017241379310345072
-    },
-    {
-      "signal_date": "2026-05-22",
-      "code": "2884",
-      "name": "玉山金",
-      "direction": "short",
-      "entry_trigger": 31.2,
-      "stop_loss": 31.65,
-      "target1": 30.55,
-      "target2": 30.3,
-      "score": 64.35,
-      "volume_growth_pct": 42.62,
-      "ma5_distance_pct": 1.11,
-      "institutional_abs_lots": 20325.19,
-      "volume_rank": 45,
-      "weights_used": {
-        "volume_growth_pct": 0.35,
-        "ma5_distance_pct": 0.3,
-        "institutional_lots": 0.25,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-05-25",
-      "entry": 31.2,
-      "exit": 30.9,
-      "exit_date": "2026-05-25",
-      "exit_reason": "forced_close",
-      "return": 0.009615384615384638,
-      "mfe": 0.009615384615384638,
-      "mae": -0.0048076923076923765,
-      "trade_date": "2026-05-25",
-      "gross_return": 0.009615384615384638
-    },
-    {
-      "signal_date": "2026-05-22",
-      "code": "2881",
-      "name": "富邦金",
-      "direction": "short",
-      "entry_trigger": 94.7,
-      "stop_loss": 96.1,
-      "target1": 92.6,
-      "target2": 91.9,
-      "score": 41.95,
-      "volume_growth_pct": 29.91,
-      "ma5_distance_pct": 0.81,
-      "institutional_abs_lots": 12688.81,
-      "volume_rank": 44,
-      "weights_used": {
-        "volume_growth_pct": 0.35,
-        "ma5_distance_pct": 0.3,
-        "institutional_lots": 0.25,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-05-25",
-      "entry": 94.7,
-      "exit": 96.1,
-      "exit_date": "2026-05-25",
-      "exit_reason": "stop",
-      "return": -0.014783526927138241,
-      "mfe": 0.0,
-      "mae": -0.03167898627243928,
-      "trade_date": "2026-05-25",
-      "gross_return": -0.014783526927138241
-    },
-    {
-      "signal_date": "2026-05-22",
-      "code": "2801",
-      "name": "彰銀",
-      "direction": "short",
-      "entry_trigger": 20.25,
-      "stop_loss": 20.55,
-      "target1": 19.8,
-      "target2": 19.65,
-      "score": 41.7,
-      "volume_growth_pct": 48.75,
-      "ma5_distance_pct": 0.15,
-      "institutional_abs_lots": 4923.01,
-      "volume_rank": 84,
-      "weights_used": {
-        "volume_growth_pct": 0.35,
-        "ma5_distance_pct": 0.3,
-        "institutional_lots": 0.25,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-05-25",
-      "entry": 20.25,
-      "exit": 20.2,
-      "exit_date": "2026-05-25",
-      "exit_reason": "forced_close",
-      "return": 0.002469135802469171,
-      "mfe": 0.004938271604938342,
-      "mae": -0.004938271604938342,
-      "trade_date": "2026-05-25",
-      "gross_return": 0.002469135802469171
-    },
     {
       "signal_date": "2026-05-25",
       "code": "2002",
@@ -2340,15 +1878,15 @@
       "stop_loss": 77.4,
       "target1": 87.6,
       "target2": 89.7,
-      "score": 93.58,
+      "score": 90.95,
       "volume_growth_pct": 79.05,
       "ma5_distance_pct": 12.8,
       "institutional_abs_lots": 131170.31,
       "volume_rank": 2,
       "weights_used": {
-        "volume_growth_pct": 0.25,
-        "ma5_distance_pct": 0.2,
-        "institutional_lots": 0.45,
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
         "volume_rank": 0.1
       },
       "status": "settled",
@@ -2366,39 +1904,6 @@
     },
     {
       "signal_date": "2026-05-28",
-      "code": "2356",
-      "name": "英業達",
-      "direction": "long",
-      "entry_trigger": 64.5,
-      "stop_loss": 61.6,
-      "target1": 68.9,
-      "target2": 70.3,
-      "score": 81.07,
-      "volume_growth_pct": 70.77,
-      "ma5_distance_pct": 1.95,
-      "institutional_abs_lots": 35654.36,
-      "volume_rank": 14,
-      "weights_used": {
-        "volume_growth_pct": 0.25,
-        "ma5_distance_pct": 0.2,
-        "institutional_lots": 0.45,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-05-29",
-      "entry": 68.1,
-      "exit": 68.9,
-      "exit_date": "2026-05-29",
-      "exit_reason": "target1",
-      "return": 0.01174743024963306,
-      "mfe": 0.030837004405286472,
-      "mae": -0.005873715124816322,
-      "trade_date": "2026-05-29",
-      "gross_return": 0.01174743024963306
-    },
-    {
-      "signal_date": "2026-05-28",
       "code": "2329",
       "name": "華泰",
       "direction": "long",
@@ -2406,15 +1911,15 @@
       "stop_loss": 59.0,
       "target1": 62.5,
       "target2": 63.2,
-      "score": 80.1,
+      "score": 81.68,
       "volume_growth_pct": 101.64,
       "ma5_distance_pct": 4.07,
       "institutional_abs_lots": 11959.78,
       "volume_rank": 50,
       "weights_used": {
-        "volume_growth_pct": 0.25,
-        "ma5_distance_pct": 0.2,
-        "institutional_lots": 0.45,
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
         "volume_rank": 0.1
       },
       "status": "settled",
@@ -2432,6 +1937,39 @@
     },
     {
       "signal_date": "2026-05-28",
+      "code": "2356",
+      "name": "英業達",
+      "direction": "long",
+      "entry_trigger": 64.5,
+      "stop_loss": 61.6,
+      "target1": 68.9,
+      "target2": 70.3,
+      "score": 75.28,
+      "volume_growth_pct": 70.77,
+      "ma5_distance_pct": 1.95,
+      "institutional_abs_lots": 35654.36,
+      "volume_rank": 14,
+      "weights_used": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "status": "settled",
+      "triggered": true,
+      "entry_date": "2026-05-29",
+      "entry": 68.1,
+      "exit": 68.9,
+      "exit_date": "2026-05-29",
+      "exit_reason": "target1",
+      "return": 0.01174743024963306,
+      "mfe": 0.030837004405286472,
+      "mae": -0.005873715124816322,
+      "trade_date": "2026-05-29",
+      "gross_return": 0.01174743024963306
+    },
+    {
+      "signal_date": "2026-05-28",
       "code": "2484",
       "name": "希華",
       "direction": "long",
@@ -2439,15 +1977,15 @@
       "stop_loss": 53.0,
       "target1": 60.0,
       "target2": 61.4,
-      "score": 71.74,
+      "score": 73.85,
       "volume_growth_pct": 97.38,
       "ma5_distance_pct": 3.25,
       "institutional_abs_lots": 8228.37,
       "volume_rank": 52,
       "weights_used": {
-        "volume_growth_pct": 0.25,
-        "ma5_distance_pct": 0.2,
-        "institutional_lots": 0.45,
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
         "volume_rank": 0.1
       },
       "status": "settled",
@@ -2465,39 +2003,6 @@
     },
     {
       "signal_date": "2026-05-28",
-      "code": "2353",
-      "name": "宏碁",
-      "direction": "long",
-      "entry_trigger": 32.3,
-      "stop_loss": 31.05,
-      "target1": 34.15,
-      "target2": 34.8,
-      "score": 62.99,
-      "volume_growth_pct": 25.93,
-      "ma5_distance_pct": 1.68,
-      "institutional_abs_lots": 13391.74,
-      "volume_rank": 29,
-      "weights_used": {
-        "volume_growth_pct": 0.25,
-        "ma5_distance_pct": 0.2,
-        "institutional_lots": 0.45,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-05-29",
-      "entry": 33.8,
-      "exit": 34.15,
-      "exit_date": "2026-05-29",
-      "exit_reason": "target1",
-      "return": 0.010355029585798859,
-      "mfe": 0.041420118343195436,
-      "mae": -0.007396449704142012,
-      "trade_date": "2026-05-29",
-      "gross_return": 0.010355029585798859
-    },
-    {
-      "signal_date": "2026-05-28",
       "code": "1409",
       "name": "新纖",
       "direction": "long",
@@ -2505,15 +2010,15 @@
       "stop_loss": 19.95,
       "target1": 22.45,
       "target2": 22.95,
-      "score": 58.82,
+      "score": 65.13,
       "volume_growth_pct": 46.84,
       "ma5_distance_pct": 12.65,
       "institutional_abs_lots": 3325.63,
       "volume_rank": 26,
       "weights_used": {
-        "volume_growth_pct": 0.25,
-        "ma5_distance_pct": 0.2,
-        "institutional_lots": 0.45,
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
         "volume_rank": 0.1
       },
       "status": "settled",
@@ -2531,102 +2036,36 @@
     },
     {
       "signal_date": "2026-05-28",
-      "code": "8150",
-      "name": "南茂",
+      "code": "2426",
+      "name": "鼎元",
       "direction": "long",
-      "entry_trigger": 104.0,
-      "stop_loss": 98.8,
-      "target1": 112.0,
-      "target2": 114.5,
-      "score": 55.77,
-      "volume_growth_pct": 23.69,
-      "ma5_distance_pct": 14.9,
-      "institutional_abs_lots": 7317.04,
-      "volume_rank": 17,
+      "entry_trigger": 81.6,
+      "stop_loss": 79.4,
+      "target1": 84.9,
+      "target2": 86.0,
+      "score": 57.26,
+      "volume_growth_pct": 95.66,
+      "ma5_distance_pct": 1.53,
+      "institutional_abs_lots": 2291.74,
+      "volume_rank": 60,
       "weights_used": {
-        "volume_growth_pct": 0.25,
-        "ma5_distance_pct": 0.2,
-        "institutional_lots": 0.45,
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
         "volume_rank": 0.1
       },
       "status": "settled",
       "triggered": true,
       "entry_date": "2026-05-29",
-      "entry": 113.0,
-      "exit": 112.0,
+      "entry": 84.5,
+      "exit": 84.9,
       "exit_date": "2026-05-29",
       "exit_reason": "target1",
-      "return": -0.008849557522123894,
-      "mfe": 0.0,
-      "mae": 0.0,
+      "return": 0.004733727810650954,
+      "mfe": 0.023668639053254437,
+      "mae": -0.04970414201183435,
       "trade_date": "2026-05-29",
-      "gross_return": -0.008849557522123894
-    },
-    {
-      "signal_date": "2026-05-28",
-      "code": "2618",
-      "name": "長榮航",
-      "direction": "long",
-      "entry_trigger": 35.4,
-      "stop_loss": 34.85,
-      "target1": 36.2,
-      "target2": 36.5,
-      "score": 54.54,
-      "volume_growth_pct": 28.1,
-      "ma5_distance_pct": 0.14,
-      "institutional_abs_lots": 13359.35,
-      "volume_rank": 24,
-      "weights_used": {
-        "volume_growth_pct": 0.25,
-        "ma5_distance_pct": 0.2,
-        "institutional_lots": 0.45,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-05-29",
-      "entry": 35.95,
-      "exit": 36.2,
-      "exit_date": "2026-05-29",
-      "exit_reason": "target1",
-      "return": 0.006954102920723226,
-      "mfe": 0.020862308762169678,
-      "mae": -0.00834492350486799,
-      "trade_date": "2026-05-29",
-      "gross_return": 0.006954102920723226
-    },
-    {
-      "signal_date": "2026-05-28",
-      "code": "2324",
-      "name": "仁寶",
-      "direction": "long",
-      "entry_trigger": 33.85,
-      "stop_loss": 32.65,
-      "target1": 35.65,
-      "target2": 36.25,
-      "score": 52.48,
-      "volume_growth_pct": 26.04,
-      "ma5_distance_pct": 0.51,
-      "institutional_abs_lots": 11227.63,
-      "volume_rank": 13,
-      "weights_used": {
-        "volume_growth_pct": 0.25,
-        "ma5_distance_pct": 0.2,
-        "institutional_lots": 0.45,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-05-29",
-      "entry": 35.25,
-      "exit": 35.65,
-      "exit_date": "2026-05-29",
-      "exit_reason": "target1",
-      "return": 0.011347517730496413,
-      "mfe": 0.04539007092198585,
-      "mae": -0.0070921985815602835,
-      "trade_date": "2026-05-29",
-      "gross_return": 0.011347517730496413
+      "gross_return": 0.004733727810650954
     },
     {
       "signal_date": "2026-05-28",
@@ -2637,15 +2076,15 @@
       "stop_loss": 64.4,
       "target1": 72.9,
       "target2": 74.6,
-      "score": 52.41,
+      "score": 55.57,
       "volume_growth_pct": 42.27,
       "ma5_distance_pct": 3.36,
       "institutional_abs_lots": 5715.97,
       "volume_rank": 69,
       "weights_used": {
-        "volume_growth_pct": 0.25,
-        "ma5_distance_pct": 0.2,
-        "institutional_lots": 0.45,
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
         "volume_rank": 0.1
       },
       "status": "settled",
@@ -2663,6 +2102,105 @@
     },
     {
       "signal_date": "2026-05-28",
+      "code": "8150",
+      "name": "南茂",
+      "direction": "long",
+      "entry_trigger": 104.0,
+      "stop_loss": 98.8,
+      "target1": 112.0,
+      "target2": 114.5,
+      "score": 54.72,
+      "volume_growth_pct": 23.69,
+      "ma5_distance_pct": 14.9,
+      "institutional_abs_lots": 7317.04,
+      "volume_rank": 17,
+      "weights_used": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "status": "settled",
+      "triggered": true,
+      "entry_date": "2026-05-29",
+      "entry": 113.0,
+      "exit": 112.0,
+      "exit_date": "2026-05-29",
+      "exit_reason": "target1",
+      "return": -0.008849557522123894,
+      "mfe": 0.0,
+      "mae": 0.0,
+      "trade_date": "2026-05-29",
+      "gross_return": -0.008849557522123894
+    },
+    {
+      "signal_date": "2026-05-28",
+      "code": "2353",
+      "name": "宏碁",
+      "direction": "long",
+      "entry_trigger": 32.3,
+      "stop_loss": 31.05,
+      "target1": 34.15,
+      "target2": 34.8,
+      "score": 52.46,
+      "volume_growth_pct": 25.93,
+      "ma5_distance_pct": 1.68,
+      "institutional_abs_lots": 13391.74,
+      "volume_rank": 29,
+      "weights_used": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "status": "settled",
+      "triggered": true,
+      "entry_date": "2026-05-29",
+      "entry": 33.8,
+      "exit": 34.15,
+      "exit_date": "2026-05-29",
+      "exit_reason": "target1",
+      "return": 0.010355029585798859,
+      "mfe": 0.041420118343195436,
+      "mae": -0.007396449704142012,
+      "trade_date": "2026-05-29",
+      "gross_return": 0.010355029585798859
+    },
+    {
+      "signal_date": "2026-05-28",
+      "code": "3374",
+      "name": "精材",
+      "direction": "long",
+      "entry_trigger": 256.5,
+      "stop_loss": 252.0,
+      "target1": 263.5,
+      "target2": 265.5,
+      "score": 51.27,
+      "volume_growth_pct": 228.69,
+      "ma5_distance_pct": 0.24,
+      "institutional_abs_lots": 2514.05,
+      "volume_rank": 62,
+      "weights_used": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "status": "settled",
+      "triggered": true,
+      "entry_date": "2026-05-29",
+      "entry": 264.0,
+      "exit": 263.5,
+      "exit_date": "2026-05-29",
+      "exit_reason": "target1",
+      "return": -0.001893939393939394,
+      "mfe": 0.01893939393939394,
+      "mae": -0.02462121212121212,
+      "trade_date": "2026-05-29",
+      "gross_return": -0.001893939393939394
+    },
+    {
+      "signal_date": "2026-05-28",
       "code": "2313",
       "name": "華通",
       "direction": "short",
@@ -2670,147 +2208,15 @@
       "stop_loss": 269.5,
       "target1": 237.0,
       "target2": 230.5,
-      "score": 84.86,
+      "score": 79.41,
       "volume_growth_pct": 41.52,
       "ma5_distance_pct": 7.63,
       "institutional_abs_lots": 39324.59,
       "volume_rank": 16,
       "weights_used": {
-        "volume_growth_pct": 0.25,
-        "ma5_distance_pct": 0.2,
-        "institutional_lots": 0.45,
-        "volume_rank": 0.1
-      },
-      "status": "untriggered",
-      "triggered": false,
-      "entry_date": null,
-      "entry": null,
-      "exit": null,
-      "exit_date": "2026-05-29",
-      "exit_reason": "untriggered",
-      "return": null,
-      "mfe": null,
-      "mae": null,
-      "trade_date": null,
-      "gross_return": null
-    },
-    {
-      "signal_date": "2026-05-28",
-      "code": "2884",
-      "name": "玉山金",
-      "direction": "short",
-      "entry_trigger": 30.6,
-      "stop_loss": 31.05,
-      "target1": 29.95,
-      "target2": 29.7,
-      "score": 59.88,
-      "volume_growth_pct": 30.15,
-      "ma5_distance_pct": 1.1,
-      "institutional_abs_lots": 36157.26,
-      "volume_rank": 34,
-      "weights_used": {
-        "volume_growth_pct": 0.25,
-        "ma5_distance_pct": 0.2,
-        "institutional_lots": 0.45,
-        "volume_rank": 0.1
-      },
-      "status": "untriggered",
-      "triggered": false,
-      "entry_date": null,
-      "entry": null,
-      "exit": null,
-      "exit_date": "2026-05-29",
-      "exit_reason": "untriggered",
-      "return": null,
-      "mfe": null,
-      "mae": null,
-      "trade_date": null,
-      "gross_return": null
-    },
-    {
-      "signal_date": "2026-05-28",
-      "code": "2892",
-      "name": "第一金",
-      "direction": "short",
-      "entry_trigger": 27.15,
-      "stop_loss": 27.55,
-      "target1": 26.55,
-      "target2": 26.35,
-      "score": 59.59,
-      "volume_growth_pct": 42.44,
-      "ma5_distance_pct": 1.05,
-      "institutional_abs_lots": 25767.9,
-      "volume_rank": 46,
-      "weights_used": {
-        "volume_growth_pct": 0.25,
-        "ma5_distance_pct": 0.2,
-        "institutional_lots": 0.45,
-        "volume_rank": 0.1
-      },
-      "status": "untriggered",
-      "triggered": false,
-      "entry_date": null,
-      "entry": null,
-      "exit": null,
-      "exit_date": "2026-05-29",
-      "exit_reason": "untriggered",
-      "return": null,
-      "mfe": null,
-      "mae": null,
-      "trade_date": null,
-      "gross_return": null
-    },
-    {
-      "signal_date": "2026-05-28",
-      "code": "2880",
-      "name": "華南金",
-      "direction": "short",
-      "entry_trigger": 29.4,
-      "stop_loss": 29.95,
-      "target1": 28.55,
-      "target2": 28.3,
-      "score": 55.83,
-      "volume_growth_pct": 22.58,
-      "ma5_distance_pct": 2.76,
-      "institutional_abs_lots": 15069.63,
-      "volume_rank": 20,
-      "weights_used": {
-        "volume_growth_pct": 0.25,
-        "ma5_distance_pct": 0.2,
-        "institutional_lots": 0.45,
-        "volume_rank": 0.1
-      },
-      "status": "untriggered",
-      "triggered": false,
-      "entry_date": null,
-      "entry": null,
-      "exit": null,
-      "exit_date": "2026-05-29",
-      "exit_reason": "untriggered",
-      "return": null,
-      "mfe": null,
-      "mae": null,
-      "trade_date": null,
-      "gross_return": null
-    },
-    {
-      "signal_date": "2026-05-28",
-      "code": "2367",
-      "name": "燿華",
-      "direction": "short",
-      "entry_trigger": 65.1,
-      "stop_loss": 67.1,
-      "target1": 62.1,
-      "target2": 61.1,
-      "score": 53.57,
-      "volume_growth_pct": 53.05,
-      "ma5_distance_pct": 2.23,
-      "institutional_abs_lots": 11103.78,
-      "volume_rank": 38,
-      "weights_used": {
-        "volume_growth_pct": 0.25,
-        "ma5_distance_pct": 0.2,
-        "institutional_lots": 0.45,
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
         "volume_rank": 0.1
       },
       "status": "untriggered",
@@ -2835,48 +2241,15 @@
       "stop_loss": 73.2,
       "target1": 67.9,
       "target2": 66.9,
-      "score": 51.02,
+      "score": 64.65,
       "volume_growth_pct": 55.44,
       "ma5_distance_pct": 3.03,
       "institutional_abs_lots": 2784.09,
       "volume_rank": 59,
       "weights_used": {
-        "volume_growth_pct": 0.25,
-        "ma5_distance_pct": 0.2,
-        "institutional_lots": 0.45,
-        "volume_rank": 0.1
-      },
-      "status": "untriggered",
-      "triggered": false,
-      "entry_date": null,
-      "entry": null,
-      "exit": null,
-      "exit_date": "2026-05-29",
-      "exit_reason": "untriggered",
-      "return": null,
-      "mfe": null,
-      "mae": null,
-      "trade_date": null,
-      "gross_return": null
-    },
-    {
-      "signal_date": "2026-05-28",
-      "code": "1102",
-      "name": "亞泥",
-      "direction": "short",
-      "entry_trigger": 32.25,
-      "stop_loss": 32.75,
-      "target1": 31.5,
-      "target2": 31.25,
-      "score": 50.6,
-      "volume_growth_pct": 37.0,
-      "ma5_distance_pct": 2.79,
-      "institutional_abs_lots": 13555.78,
-      "volume_rank": 95,
-      "weights_used": {
-        "volume_growth_pct": 0.25,
-        "ma5_distance_pct": 0.2,
-        "institutional_lots": 0.45,
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
         "volume_rank": 0.1
       },
       "status": "untriggered",
@@ -2901,15 +2274,15 @@
       "stop_loss": 265.5,
       "target1": 248.0,
       "target2": 244.5,
-      "score": 50.27,
+      "score": 56.64,
       "volume_growth_pct": 54.65,
       "ma5_distance_pct": 2.68,
       "institutional_abs_lots": 8000.8,
       "volume_rank": 71,
       "weights_used": {
-        "volume_growth_pct": 0.25,
-        "ma5_distance_pct": 0.2,
-        "institutional_lots": 0.45,
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
         "volume_rank": 0.1
       },
       "status": "untriggered",
@@ -2927,22 +2300,22 @@
     },
     {
       "signal_date": "2026-05-28",
-      "code": "1101",
-      "name": "台泥",
+      "code": "2367",
+      "name": "燿華",
       "direction": "short",
-      "entry_trigger": 23.6,
-      "stop_loss": 23.95,
-      "target1": 23.1,
-      "target2": 22.9,
-      "score": 45.77,
-      "volume_growth_pct": 20.14,
-      "ma5_distance_pct": 1.34,
-      "institutional_abs_lots": 16443.59,
-      "volume_rank": 66,
+      "entry_trigger": 65.1,
+      "stop_loss": 67.1,
+      "target1": 62.1,
+      "target2": 61.1,
+      "score": 56.3,
+      "volume_growth_pct": 53.05,
+      "ma5_distance_pct": 2.23,
+      "institutional_abs_lots": 11103.78,
+      "volume_rank": 38,
       "weights_used": {
-        "volume_growth_pct": 0.25,
-        "ma5_distance_pct": 0.2,
-        "institutional_lots": 0.45,
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
         "volume_rank": 0.1
       },
       "status": "untriggered",
@@ -2967,15 +2340,15 @@
       "stop_loss": 18.75,
       "target1": 18.0,
       "target2": 17.85,
-      "score": 45.39,
+      "score": 53.57,
       "volume_growth_pct": 56.9,
       "ma5_distance_pct": 1.44,
       "institutional_abs_lots": 6917.89,
       "volume_rank": 88,
       "weights_used": {
-        "volume_growth_pct": 0.25,
-        "ma5_distance_pct": 0.2,
-        "institutional_lots": 0.45,
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
         "volume_rank": 0.1
       },
       "status": "settled",
@@ -2990,6 +2363,171 @@
       "mae": -0.008130081300813123,
       "trade_date": "2026-05-29",
       "gross_return": 0.0
+    },
+    {
+      "signal_date": "2026-05-28",
+      "code": "2880",
+      "name": "華南金",
+      "direction": "short",
+      "entry_trigger": 29.4,
+      "stop_loss": 29.95,
+      "target1": 28.55,
+      "target2": 28.3,
+      "score": 52.19,
+      "volume_growth_pct": 22.58,
+      "ma5_distance_pct": 2.76,
+      "institutional_abs_lots": 15069.63,
+      "volume_rank": 20,
+      "weights_used": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "status": "untriggered",
+      "triggered": false,
+      "entry_date": null,
+      "entry": null,
+      "exit": null,
+      "exit_date": "2026-05-29",
+      "exit_reason": "untriggered",
+      "return": null,
+      "mfe": null,
+      "mae": null,
+      "trade_date": null,
+      "gross_return": null
+    },
+    {
+      "signal_date": "2026-05-28",
+      "code": "1102",
+      "name": "亞泥",
+      "direction": "short",
+      "entry_trigger": 32.25,
+      "stop_loss": 32.75,
+      "target1": 31.5,
+      "target2": 31.25,
+      "score": 51.51,
+      "volume_growth_pct": 37.0,
+      "ma5_distance_pct": 2.79,
+      "institutional_abs_lots": 13555.78,
+      "volume_rank": 95,
+      "weights_used": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "status": "untriggered",
+      "triggered": false,
+      "entry_date": null,
+      "entry": null,
+      "exit": null,
+      "exit_date": "2026-05-29",
+      "exit_reason": "untriggered",
+      "return": null,
+      "mfe": null,
+      "mae": null,
+      "trade_date": null,
+      "gross_return": null
+    },
+    {
+      "signal_date": "2026-05-28",
+      "code": "2892",
+      "name": "第一金",
+      "direction": "short",
+      "entry_trigger": 27.15,
+      "stop_loss": 27.55,
+      "target1": 26.55,
+      "target2": 26.35,
+      "score": 50.5,
+      "volume_growth_pct": 42.44,
+      "ma5_distance_pct": 1.05,
+      "institutional_abs_lots": 25767.9,
+      "volume_rank": 46,
+      "weights_used": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "status": "untriggered",
+      "triggered": false,
+      "entry_date": null,
+      "entry": null,
+      "exit": null,
+      "exit_date": "2026-05-29",
+      "exit_reason": "untriggered",
+      "return": null,
+      "mfe": null,
+      "mae": null,
+      "trade_date": null,
+      "gross_return": null
+    },
+    {
+      "signal_date": "2026-05-28",
+      "code": "2884",
+      "name": "玉山金",
+      "direction": "short",
+      "entry_trigger": 30.6,
+      "stop_loss": 31.05,
+      "target1": 29.95,
+      "target2": 29.7,
+      "score": 47.15,
+      "volume_growth_pct": 30.15,
+      "ma5_distance_pct": 1.1,
+      "institutional_abs_lots": 36157.26,
+      "volume_rank": 34,
+      "weights_used": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "status": "untriggered",
+      "triggered": false,
+      "entry_date": null,
+      "entry": null,
+      "exit": null,
+      "exit_date": "2026-05-29",
+      "exit_reason": "untriggered",
+      "return": null,
+      "mfe": null,
+      "mae": null,
+      "trade_date": null,
+      "gross_return": null
+    },
+    {
+      "signal_date": "2026-05-28",
+      "code": "3048",
+      "name": "益登",
+      "direction": "short",
+      "entry_trigger": 71.6,
+      "stop_loss": 73.3,
+      "target1": 69.0,
+      "target2": 68.2,
+      "score": 42.1,
+      "volume_growth_pct": 108.22,
+      "ma5_distance_pct": 0.55,
+      "institutional_abs_lots": 198.48,
+      "volume_rank": 80,
+      "weights_used": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "status": "settled",
+      "triggered": true,
+      "entry_date": "2026-05-29",
+      "entry": 71.6,
+      "exit": 73.3,
+      "exit_date": "2026-05-29",
+      "exit_reason": "stop",
+      "return": -0.023743016759776577,
+      "mfe": 0.015363128491620033,
+      "mae": -0.046089385474860495,
+      "trade_date": "2026-05-29",
+      "gross_return": -0.023743016759776577
     },
     {
       "signal_date": "2026-05-29",
@@ -55064,22 +54602,537 @@
       "mae": null,
       "trade_date": null,
       "gross_return": null
+    },
+    {
+      "signal_date": "2026-10-16",
+      "code": "1815",
+      "name": "富喬",
+      "direction": "long",
+      "entry_trigger": 141.5,
+      "stop_loss": 134.5,
+      "target1": 152.0,
+      "target2": 155.5,
+      "score": 90.43,
+      "volume_growth_pct": 148.75,
+      "ma5_distance_pct": 5.34,
+      "institutional_abs_lots": 36575.21,
+      "volume_rank": 2,
+      "weights_used": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "status": "settled",
+      "triggered": true,
+      "entry_date": "2026-10-19",
+      "entry": 141.5,
+      "exit": 152.0,
+      "exit_date": "2026-10-19",
+      "exit_reason": "target1",
+      "return": 0.07420494699646643,
+      "mfe": 0.08833922261484099,
+      "mae": -0.038869257950530034,
+      "trade_date": "2026-10-19",
+      "gross_return": 0.07420494699646643
+    },
+    {
+      "signal_date": "2026-10-16",
+      "code": "2610",
+      "name": "華航",
+      "direction": "long",
+      "entry_trigger": 21.1,
+      "stop_loss": 20.8,
+      "target1": 21.55,
+      "target2": 21.7,
+      "score": 81.32,
+      "volume_growth_pct": 171.33,
+      "ma5_distance_pct": 2.04,
+      "institutional_abs_lots": 28676.22,
+      "volume_rank": 22,
+      "weights_used": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "status": "untriggered",
+      "triggered": false,
+      "entry_date": null,
+      "entry": null,
+      "exit": null,
+      "exit_date": "2026-10-19",
+      "exit_reason": "untriggered",
+      "return": null,
+      "mfe": null,
+      "mae": null,
+      "trade_date": null,
+      "gross_return": null
+    },
+    {
+      "signal_date": "2026-10-16",
+      "code": "1802",
+      "name": "台玻",
+      "direction": "long",
+      "entry_trigger": 67.6,
+      "stop_loss": 64.2,
+      "target1": 72.7,
+      "target2": 74.4,
+      "score": 77.96,
+      "volume_growth_pct": 74.29,
+      "ma5_distance_pct": 3.91,
+      "institutional_abs_lots": 18155.48,
+      "volume_rank": 3,
+      "weights_used": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "status": "settled",
+      "triggered": true,
+      "entry_date": "2026-10-19",
+      "entry": 67.6,
+      "exit": 64.2,
+      "exit_date": "2026-10-19",
+      "exit_reason": "stop",
+      "return": -0.050295857988165556,
+      "mfe": 0.031065088757396577,
+      "mae": -0.06213017751479284,
+      "trade_date": "2026-10-19",
+      "gross_return": -0.050295857988165556
+    },
+    {
+      "signal_date": "2026-10-16",
+      "code": "2002",
+      "name": "中鋼",
+      "direction": "long",
+      "entry_trigger": 19.65,
+      "stop_loss": 19.35,
+      "target1": 20.1,
+      "target2": 20.25,
+      "score": 65.15,
+      "volume_growth_pct": 41.53,
+      "ma5_distance_pct": 1.14,
+      "institutional_abs_lots": 44262.67,
+      "volume_rank": 10,
+      "weights_used": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "status": "untriggered",
+      "triggered": false,
+      "entry_date": null,
+      "entry": null,
+      "exit": null,
+      "exit_date": "2026-10-19",
+      "exit_reason": "untriggered",
+      "return": null,
+      "mfe": null,
+      "mae": null,
+      "trade_date": null,
+      "gross_return": null
+    },
+    {
+      "signal_date": "2026-10-16",
+      "code": "2313",
+      "name": "華通",
+      "direction": "long",
+      "entry_trigger": 250.5,
+      "stop_loss": 238.0,
+      "target1": 269.5,
+      "target2": 275.5,
+      "score": 63.6,
+      "volume_growth_pct": 71.59,
+      "ma5_distance_pct": 1.47,
+      "institutional_abs_lots": 16846.86,
+      "volume_rank": 15,
+      "weights_used": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "status": "settled",
+      "triggered": true,
+      "entry_date": "2026-10-19",
+      "entry": 250.5,
+      "exit": 238.0,
+      "exit_date": "2026-10-19",
+      "exit_reason": "stop",
+      "return": -0.0499001996007984,
+      "mfe": 0.005988023952095809,
+      "mae": -0.05389221556886228,
+      "trade_date": "2026-10-19",
+      "gross_return": -0.0499001996007984
+    },
+    {
+      "signal_date": "2026-10-16",
+      "code": "2027",
+      "name": "大成鋼",
+      "direction": "long",
+      "entry_trigger": 51.3,
+      "stop_loss": 50.2,
+      "target1": 52.9,
+      "target2": 53.5,
+      "score": 62.66,
+      "volume_growth_pct": 74.73,
+      "ma5_distance_pct": 2.93,
+      "institutional_abs_lots": 11178.52,
+      "volume_rank": 77,
+      "weights_used": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "status": "untriggered",
+      "triggered": false,
+      "entry_date": null,
+      "entry": null,
+      "exit": null,
+      "exit_date": "2026-10-19",
+      "exit_reason": "untriggered",
+      "return": null,
+      "mfe": null,
+      "mae": null,
+      "trade_date": null,
+      "gross_return": null
+    },
+    {
+      "signal_date": "2026-10-16",
+      "code": "6209",
+      "name": "今國光",
+      "direction": "long",
+      "entry_trigger": 101.5,
+      "stop_loss": 97.6,
+      "target1": 107.5,
+      "target2": 109.5,
+      "score": 56.79,
+      "volume_growth_pct": 32.03,
+      "ma5_distance_pct": 8.41,
+      "institutional_abs_lots": 6368.26,
+      "volume_rank": 12,
+      "weights_used": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "status": "settled",
+      "triggered": true,
+      "entry_date": "2026-10-19",
+      "entry": 101.5,
+      "exit": 97.6,
+      "exit_date": "2026-10-19",
+      "exit_reason": "stop",
+      "return": -0.0384236453201971,
+      "mfe": 0.029556650246305417,
+      "mae": -0.056157635467980326,
+      "trade_date": "2026-10-19",
+      "gross_return": -0.0384236453201971
+    },
+    {
+      "signal_date": "2026-10-16",
+      "code": "2312",
+      "name": "金寶",
+      "direction": "long",
+      "entry_trigger": 33.0,
+      "stop_loss": 31.45,
+      "target1": 35.35,
+      "target2": 36.1,
+      "score": 52.86,
+      "volume_growth_pct": 77.47,
+      "ma5_distance_pct": 2.25,
+      "institutional_abs_lots": 3579.58,
+      "volume_rank": 25,
+      "weights_used": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "status": "settled",
+      "triggered": true,
+      "entry_date": "2026-10-19",
+      "entry": 33.3,
+      "exit": 31.45,
+      "exit_date": "2026-10-19",
+      "exit_reason": "stop",
+      "return": -0.0555555555555555,
+      "mfe": 0.0,
+      "mae": -0.06156156156156148,
+      "trade_date": "2026-10-19",
+      "gross_return": -0.0555555555555555
+    },
+    {
+      "signal_date": "2026-10-16",
+      "code": "4906",
+      "name": "正文",
+      "direction": "long",
+      "entry_trigger": 45.3,
+      "stop_loss": 43.05,
+      "target1": 48.7,
+      "target2": 49.8,
+      "score": 51.53,
+      "volume_growth_pct": 86.56,
+      "ma5_distance_pct": 5.98,
+      "institutional_abs_lots": 3338.51,
+      "volume_rank": 91,
+      "weights_used": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "status": "untriggered",
+      "triggered": false,
+      "entry_date": null,
+      "entry": null,
+      "exit": null,
+      "exit_date": "2026-10-19",
+      "exit_reason": "untriggered",
+      "return": null,
+      "mfe": null,
+      "mae": null,
+      "trade_date": null,
+      "gross_return": null
+    },
+    {
+      "signal_date": "2026-10-16",
+      "code": "1101",
+      "name": "台泥",
+      "direction": "long",
+      "entry_trigger": 27.5,
+      "stop_loss": 26.95,
+      "target1": 28.35,
+      "target2": 28.6,
+      "score": 51.37,
+      "volume_growth_pct": 36.06,
+      "ma5_distance_pct": 1.49,
+      "institutional_abs_lots": 11063.85,
+      "volume_rank": 11,
+      "weights_used": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "status": "untriggered",
+      "triggered": false,
+      "entry_date": null,
+      "entry": null,
+      "exit": null,
+      "exit_date": "2026-10-19",
+      "exit_reason": "untriggered",
+      "return": null,
+      "mfe": null,
+      "mae": null,
+      "trade_date": null,
+      "gross_return": null
+    },
+    {
+      "signal_date": "2026-10-16",
+      "code": "8358",
+      "name": "金居",
+      "direction": "short",
+      "entry_trigger": 467.5,
+      "stop_loss": 488.0,
+      "target1": 437.0,
+      "target2": 426.5,
+      "score": 85.23,
+      "volume_growth_pct": 310.32,
+      "ma5_distance_pct": 3.69,
+      "institutional_abs_lots": 3490.93,
+      "volume_rank": 82,
+      "weights_used": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "status": "settled",
+      "triggered": true,
+      "entry_date": "2026-10-19",
+      "entry": 453.0,
+      "exit": 488.0,
+      "exit_date": "2026-10-19",
+      "exit_reason": "stop",
+      "return": -0.0772626931567329,
+      "mfe": 0.012141280353200883,
+      "mae": -0.10816777041942605,
+      "trade_date": "2026-10-19",
+      "gross_return": -0.0772626931567329
+    },
+    {
+      "signal_date": "2026-10-16",
+      "code": "1709",
+      "name": "和益",
+      "direction": "short",
+      "entry_trigger": 54.4,
+      "stop_loss": 57.1,
+      "target1": 50.3,
+      "target2": 49.0,
+      "score": 78.23,
+      "volume_growth_pct": 293.73,
+      "ma5_distance_pct": 7.26,
+      "institutional_abs_lots": 2538.05,
+      "volume_rank": 27,
+      "weights_used": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "status": "settled",
+      "triggered": true,
+      "entry_date": "2026-10-19",
+      "entry": 53.1,
+      "exit": 51.4,
+      "exit_date": "2026-10-19",
+      "exit_reason": "forced_close",
+      "return": 0.03201506591337105,
+      "mfe": 0.050847457627118696,
+      "mae": -0.02824858757062147,
+      "trade_date": "2026-10-19",
+      "gross_return": 0.03201506591337105
+    },
+    {
+      "signal_date": "2026-10-16",
+      "code": "2402",
+      "name": "毅嘉",
+      "direction": "short",
+      "entry_trigger": 59.8,
+      "stop_loss": 62.5,
+      "target1": 55.7,
+      "target2": 54.4,
+      "score": 61.4,
+      "volume_growth_pct": 100.37,
+      "ma5_distance_pct": 3.27,
+      "institutional_abs_lots": 2878.49,
+      "volume_rank": 87,
+      "weights_used": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "status": "settled",
+      "triggered": true,
+      "entry_date": "2026-10-19",
+      "entry": 58.4,
+      "exit": 59.1,
+      "exit_date": "2026-10-19",
+      "exit_reason": "forced_close",
+      "return": -0.011986301369863063,
+      "mfe": 0.0034246575342465023,
+      "mae": -0.030821917808219253,
+      "trade_date": "2026-10-19",
+      "gross_return": -0.011986301369863063
+    },
+    {
+      "signal_date": "2026-10-16",
+      "code": "3576",
+      "name": "聯合再生",
+      "direction": "short",
+      "entry_trigger": 17.65,
+      "stop_loss": 18.15,
+      "target1": 16.9,
+      "target2": 16.65,
+      "score": 45.03,
+      "volume_growth_pct": 165.43,
+      "ma5_distance_pct": 1.49,
+      "institutional_abs_lots": 1099.55,
+      "volume_rank": 34,
+      "weights_used": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "status": "settled",
+      "triggered": true,
+      "entry_date": "2026-10-19",
+      "entry": 17.5,
+      "exit": 17.45,
+      "exit_date": "2026-10-19",
+      "exit_reason": "forced_close",
+      "return": 0.002857142857142898,
+      "mfe": 0.022857142857142777,
+      "mae": -0.011428571428571389,
+      "trade_date": "2026-10-19",
+      "gross_return": 0.002857142857142898
+    },
+    {
+      "signal_date": "2026-10-16",
+      "code": "9105",
+      "name": "泰金寶-DR",
+      "direction": "short",
+      "entry_trigger": 8.97,
+      "stop_loss": 9.25,
+      "target1": 8.55,
+      "target2": 8.41,
+      "score": 41.37,
+      "volume_growth_pct": 25.86,
+      "ma5_distance_pct": 0.26,
+      "institutional_abs_lots": 2230.87,
+      "volume_rank": 29,
+      "weights_used": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "status": "untriggered",
+      "triggered": false,
+      "entry_date": null,
+      "entry": null,
+      "exit": null,
+      "exit_date": "2026-10-19",
+      "exit_reason": "untriggered",
+      "return": null,
+      "mfe": null,
+      "mae": null,
+      "trade_date": null,
+      "gross_return": null
+    },
+    {
+      "signal_date": "2026-10-16",
+      "code": "6834",
+      "name": "天二科技",
+      "direction": "short",
+      "entry_trigger": 141.0,
+      "stop_loss": 148.0,
+      "target1": 130.5,
+      "target2": 127.0,
+      "score": 30.33,
+      "volume_growth_pct": 24.47,
+      "ma5_distance_pct": 5.75,
+      "institutional_abs_lots": 334.51,
+      "volume_rank": 81,
+      "weights_used": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "status": "settled",
+      "triggered": true,
+      "entry_date": "2026-10-19",
+      "entry": 136.0,
+      "exit": 130.5,
+      "exit_date": "2026-10-19",
+      "exit_reason": "target1",
+      "return": 0.04044117647058824,
+      "mfe": 0.05514705882352941,
+      "mae": -0.014705882352941176,
+      "trade_date": "2026-10-19",
+      "gross_return": 0.04044117647058824
     }
   ],
   "walk_forward": [
-    {
-      "signal_date": "2026-05-22",
-      "weights": {
-        "volume_growth_pct": 0.35,
-        "ma5_distance_pct": 0.3,
-        "institutional_lots": 0.25,
-        "volume_rank": 0.1
-      },
-      "sample_count": 0,
-      "changed": false,
-      "baseline_metric": null,
-      "selected_metric": null
-    },
     {
       "signal_date": "2026-05-25",
       "weights": {
@@ -55101,7 +55154,7 @@
         "institutional_lots": 0.25,
         "volume_rank": 0.1
       },
-      "sample_count": 14,
+      "sample_count": 0,
       "changed": false,
       "baseline_metric": null,
       "selected_metric": null
@@ -55114,7 +55167,7 @@
         "institutional_lots": 0.25,
         "volume_rank": 0.1
       },
-      "sample_count": 26,
+      "sample_count": 12,
       "changed": false,
       "baseline_metric": null,
       "selected_metric": null
@@ -55122,15 +55175,15 @@
     {
       "signal_date": "2026-05-28",
       "weights": {
-        "volume_growth_pct": 0.25,
-        "ma5_distance_pct": 0.2,
-        "institutional_lots": 0.45,
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
         "volume_rank": 0.1
       },
-      "sample_count": 37,
-      "changed": true,
-      "baseline_metric": -0.0016157755267705131,
-      "selected_metric": 0.009405344349911563
+      "sample_count": 23,
+      "changed": false,
+      "baseline_metric": null,
+      "selected_metric": null
     },
     {
       "signal_date": "2026-05-29",
@@ -55140,10 +55193,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 50,
+      "sample_count": 36,
       "changed": true,
-      "baseline_metric": -0.004895951085626663,
-      "selected_metric": 0.00654525918383125
+      "baseline_metric": -0.008350578092730451,
+      "selected_metric": 0.004979888379008326
     },
     {
       "signal_date": "2026-06-01",
@@ -55153,10 +55206,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 61,
+      "sample_count": 48,
       "changed": true,
-      "baseline_metric": -0.0026130569193687663,
-      "selected_metric": 0.006539911296197564
+      "baseline_metric": -0.008925559020729694,
+      "selected_metric": 0.0038806076731859127
     },
     {
       "signal_date": "2026-06-02",
@@ -55166,10 +55219,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 75,
+      "sample_count": 62,
       "changed": true,
-      "baseline_metric": -0.004500006390272007,
-      "selected_metric": 0.003127467122699934
+      "baseline_metric": -0.009927397965541398,
+      "selected_metric": 0.0003175353895910879
     },
     {
       "signal_date": "2026-06-03",
@@ -55179,10 +55232,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 83,
+      "sample_count": 70,
       "changed": true,
-      "baseline_metric": -0.005297181212419569,
-      "selected_metric": 0.0008536664766475526
+      "baseline_metric": -0.00995286999550199,
+      "selected_metric": -0.001866910075285216
     },
     {
       "signal_date": "2026-06-04",
@@ -55192,10 +55245,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 97,
+      "sample_count": 84,
       "changed": true,
-      "baseline_metric": -0.004685304524829028,
-      "selected_metric": 0.0009730439099967271
+      "baseline_metric": -0.008588483954958167,
+      "selected_metric": -0.001341824929752907
     },
     {
       "signal_date": "2026-06-05",
@@ -55205,10 +55258,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 108,
+      "sample_count": 95,
       "changed": true,
-      "baseline_metric": -0.0037985538715195315,
-      "selected_metric": 0.0004758596440061944
+      "baseline_metric": -0.007102992041218842,
+      "selected_metric": -0.0016117986240235522
     },
     {
       "signal_date": "2026-06-08",
@@ -55218,10 +55271,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 115,
+      "sample_count": 102,
       "changed": true,
-      "baseline_metric": -0.0081372710291562,
-      "selected_metric": -0.004290298865183046
+      "baseline_metric": -0.011556629086404107,
+      "selected_metric": -0.006675568271119404
     },
     {
       "signal_date": "2026-06-09",
@@ -55231,10 +55284,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 127,
+      "sample_count": 114,
       "changed": true,
-      "baseline_metric": -0.01122502013876074,
-      "selected_metric": -0.008246534825664833
+      "baseline_metric": -0.014611217301244312,
+      "selected_metric": -0.010788900887055735
     },
     {
       "signal_date": "2026-06-10",
@@ -55244,10 +55297,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 136,
+      "sample_count": 123,
       "changed": true,
-      "baseline_metric": -0.010495191373375313,
-      "selected_metric": -0.00784113254707672
+      "baseline_metric": -0.013507204360598067,
+      "selected_metric": -0.010115519668469528
     },
     {
       "signal_date": "2026-06-11",
@@ -55257,10 +55310,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 149,
+      "sample_count": 136,
       "changed": true,
-      "baseline_metric": -0.009041659455330777,
-      "selected_metric": -0.0065917590002859214
+      "baseline_metric": -0.011681543700447924,
+      "selected_metric": -0.008572499399330096
     },
     {
       "signal_date": "2026-06-12",
@@ -55270,10 +55323,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 165,
+      "sample_count": 152,
       "changed": true,
-      "baseline_metric": -0.011800149964643939,
-      "selected_metric": -0.008081880679877177
+      "baseline_metric": -0.014449157768545395,
+      "selected_metric": -0.010024881177424973
     },
     {
       "signal_date": "2026-06-15",
@@ -55283,10 +55336,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 177,
+      "sample_count": 164,
       "changed": true,
-      "baseline_metric": -0.0131580062124648,
-      "selected_metric": -0.009172127313277992
+      "baseline_metric": -0.015714788905217648,
+      "selected_metric": -0.011054216820529579
     },
     {
       "signal_date": "2026-06-16",
@@ -55296,10 +55349,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 189,
+      "sample_count": 176,
       "changed": true,
-      "baseline_metric": -0.012093471236961546,
-      "selected_metric": -0.008862171310691135
+      "baseline_metric": -0.014408832751830651,
+      "selected_metric": -0.010598124450620158
     },
     {
       "signal_date": "2026-06-17",
@@ -55309,10 +55362,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 201,
+      "sample_count": 188,
       "changed": true,
-      "baseline_metric": -0.012406379197762829,
-      "selected_metric": -0.009372851698903202
+      "baseline_metric": -0.014596587365502695,
+      "selected_metric": -0.011032225291849915
     },
     {
       "signal_date": "2026-06-18",
@@ -55322,10 +55375,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 213,
+      "sample_count": 200,
       "changed": true,
-      "baseline_metric": -0.012842401577880632,
-      "selected_metric": -0.009977403384513207
+      "baseline_metric": -0.014929422346348612,
+      "selected_metric": -0.011574728629969526
     },
     {
       "signal_date": "2026-06-22",
@@ -55335,10 +55388,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 224,
+      "sample_count": 211,
       "changed": true,
-      "baseline_metric": -0.011916095040714586,
-      "selected_metric": -0.009278280851351045
+      "baseline_metric": -0.013835708736647344,
+      "selected_metric": -0.010748025664661893
     },
     {
       "signal_date": "2026-06-23",
@@ -55348,10 +55401,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 238,
+      "sample_count": 225,
       "changed": true,
-      "baseline_metric": -0.011397299902621335,
-      "selected_metric": -0.00889137642272597
+      "baseline_metric": -0.013188576291500092,
+      "selected_metric": -0.010263402854882295
     },
     {
       "signal_date": "2026-06-24",
@@ -55361,10 +55414,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 251,
+      "sample_count": 238,
       "changed": true,
-      "baseline_metric": -0.011774601641112246,
-      "selected_metric": -0.009508077463809241
+      "baseline_metric": -0.01349517929747161,
+      "selected_metric": -0.010842337626411914
     },
     {
       "signal_date": "2026-06-25",
@@ -55374,10 +55427,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 268,
+      "sample_count": 255,
       "changed": true,
-      "baseline_metric": -0.011940866509537325,
-      "selected_metric": -0.009539630492209572
+      "baseline_metric": -0.013587429271233152,
+      "selected_metric": -0.01081185698175499
     },
     {
       "signal_date": "2026-06-26",
@@ -55387,10 +55440,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 281,
+      "sample_count": 268,
       "changed": true,
-      "baseline_metric": -0.011017494098801126,
-      "selected_metric": -0.008294125397380482
+      "baseline_metric": -0.012547241625386406,
+      "selected_metric": -0.009451909542181605
     },
     {
       "signal_date": "2026-06-29",
@@ -55400,10 +55453,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 292,
+      "sample_count": 279,
       "changed": true,
-      "baseline_metric": -0.01060668644775882,
-      "selected_metric": -0.008249988622121878
+      "baseline_metric": -0.012052062010099422,
+      "selected_metric": -0.009355515335616056
     },
     {
       "signal_date": "2026-06-30",
@@ -55413,10 +55466,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 307,
+      "sample_count": 294,
       "changed": true,
-      "baseline_metric": -0.011319397806028163,
-      "selected_metric": -0.008677309696651484
+      "baseline_metric": -0.012734245693199128,
+      "selected_metric": -0.009754577841855471
     },
     {
       "signal_date": "2026-07-01",
@@ -55426,10 +55479,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 319,
+      "sample_count": 306,
       "changed": true,
-      "baseline_metric": -0.01035100117959036,
-      "selected_metric": -0.007710104742902808
+      "baseline_metric": -0.011670519286216976,
+      "selected_metric": -0.008705593964148687
     },
     {
       "signal_date": "2026-07-02",
@@ -55439,10 +55492,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 335,
+      "sample_count": 322,
       "changed": true,
-      "baseline_metric": -0.010589718819185039,
-      "selected_metric": -0.008193892574857259
+      "baseline_metric": -0.011867667677079658,
+      "selected_metric": -0.009169700973438085
     },
     {
       "signal_date": "2026-07-03",
@@ -55452,10 +55505,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 350,
+      "sample_count": 337,
       "changed": true,
-      "baseline_metric": -0.011513621997541804,
-      "selected_metric": -0.00858243718457023
+      "baseline_metric": -0.012778458052490576,
+      "selected_metric": -0.009536495072452248
     },
     {
       "signal_date": "2026-07-06",
@@ -55465,10 +55518,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 359,
+      "sample_count": 346,
       "changed": true,
-      "baseline_metric": -0.010472598541025929,
-      "selected_metric": -0.007620214170880254
+      "baseline_metric": -0.011676582178375056,
+      "selected_metric": -0.008521935623939327
     },
     {
       "signal_date": "2026-07-07",
@@ -55478,10 +55531,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 368,
+      "sample_count": 355,
       "changed": true,
-      "baseline_metric": -0.010379429865904607,
-      "selected_metric": -0.007166933633113843
+      "baseline_metric": -0.011558586342761024,
+      "selected_metric": -0.008036364326733774
     },
     {
       "signal_date": "2026-07-08",
@@ -55491,10 +55544,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 384,
+      "sample_count": 371,
       "changed": true,
-      "baseline_metric": -0.011666223368455861,
-      "selected_metric": -0.007783807368052975
+      "baseline_metric": -0.012849091466887962,
+      "selected_metric": -0.00864452920102874
     },
     {
       "signal_date": "2026-07-09",
@@ -55504,10 +55557,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 402,
+      "sample_count": 389,
       "changed": true,
-      "baseline_metric": -0.012005280081154155,
-      "selected_metric": -0.008248103306570715
+      "baseline_metric": -0.013160021133395127,
+      "selected_metric": -0.009095610943064547
     },
     {
       "signal_date": "2026-07-13",
@@ -55517,10 +55570,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 419,
+      "sample_count": 406,
       "changed": true,
-      "baseline_metric": -0.011543894668009378,
-      "selected_metric": -0.0073029152705187915
+      "baseline_metric": -0.012646502608463714,
+      "selected_metric": -0.008092594014349858
     },
     {
       "signal_date": "2026-07-14",
@@ -55530,10 +55583,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 433,
+      "sample_count": 420,
       "changed": true,
-      "baseline_metric": -0.01132364881110272,
-      "selected_metric": -0.007906984596467296
+      "baseline_metric": -0.012384917570389524,
+      "selected_metric": -0.008690863045989532
     },
     {
       "signal_date": "2026-07-15",
@@ -55543,10 +55596,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 450,
+      "sample_count": 437,
       "changed": true,
-      "baseline_metric": -0.010239169660716516,
-      "selected_metric": -0.007044788992238462
+      "baseline_metric": -0.011235415756073836,
+      "selected_metric": -0.007778786409828848
     },
     {
       "signal_date": "2026-07-16",
@@ -55556,10 +55609,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 462,
+      "sample_count": 449,
       "changed": true,
-      "baseline_metric": -0.010163592455226236,
-      "selected_metric": -0.006826125841502539
+      "baseline_metric": -0.011128314335852743,
+      "selected_metric": -0.007532103830612739
     },
     {
       "signal_date": "2026-07-17",
@@ -55569,10 +55622,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 468,
+      "sample_count": 455,
       "changed": true,
-      "baseline_metric": -0.011136098851363479,
-      "selected_metric": -0.007713967058234913
+      "baseline_metric": -0.012101043146718865,
+      "selected_metric": -0.00842514113956289
     },
     {
       "signal_date": "2026-07-20",
@@ -55582,10 +55635,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 483,
+      "sample_count": 470,
       "changed": true,
-      "baseline_metric": -0.010862390600973904,
-      "selected_metric": -0.007225299038767692
+      "baseline_metric": -0.011792927881169708,
+      "selected_metric": -0.007903144172851357
     },
     {
       "signal_date": "2026-07-21",
@@ -55595,10 +55648,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 502,
+      "sample_count": 489,
       "changed": true,
-      "baseline_metric": -0.00974518080893139,
-      "selected_metric": -0.006499640333980475
+      "baseline_metric": -0.010620373573661293,
+      "selected_metric": -0.00713955293187844
     },
     {
       "signal_date": "2026-07-22",
@@ -55608,10 +55661,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 514,
+      "sample_count": 501,
       "changed": true,
-      "baseline_metric": -0.009500721845238983,
-      "selected_metric": -0.006322916103637536
+      "baseline_metric": -0.010346450090799878,
+      "selected_metric": -0.006941338258687056
     },
     {
       "signal_date": "2026-07-23",
@@ -55621,10 +55674,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 525,
+      "sample_count": 512,
       "changed": true,
-      "baseline_metric": -0.009652654247027331,
-      "selected_metric": -0.0063549045936718606
+      "baseline_metric": -0.010480592855568417,
+      "selected_metric": -0.0069582899880799645
     },
     {
       "signal_date": "2026-07-24",
@@ -55634,10 +55687,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 543,
+      "sample_count": 530,
       "changed": true,
-      "baseline_metric": -0.008770697912403683,
-      "selected_metric": -0.005783113821530055
+      "baseline_metric": -0.00955588914736565,
+      "selected_metric": -0.006357119811774413
     },
     {
       "signal_date": "2026-07-27",
@@ -55647,10 +55700,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 556,
+      "sample_count": 543,
       "changed": true,
-      "baseline_metric": -0.008610486316059231,
-      "selected_metric": -0.005494768481180874
+      "baseline_metric": -0.00937261894537958,
+      "selected_metric": -0.0060477415121424636
     },
     {
       "signal_date": "2026-07-28",
@@ -55660,10 +55713,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 570,
+      "sample_count": 557,
       "changed": true,
-      "baseline_metric": -0.007899402456668734,
-      "selected_metric": -0.004759912221799578
+      "baseline_metric": -0.008626458502924537,
+      "selected_metric": -0.005282222650610145
     },
     {
       "signal_date": "2026-07-29",
@@ -55673,10 +55726,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 583,
+      "sample_count": 570,
       "changed": true,
-      "baseline_metric": -0.008062715511166177,
-      "selected_metric": -0.005051163890031084
+      "baseline_metric": -0.008776661255288065,
+      "selected_metric": -0.005568100859293302
     },
     {
       "signal_date": "2026-07-30",
@@ -55686,10 +55739,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 601,
+      "sample_count": 588,
       "changed": true,
-      "baseline_metric": -0.007909054090443932,
-      "selected_metric": -0.005198761522548633
+      "baseline_metric": -0.008603281489910271,
+      "selected_metric": -0.005707304415975745
     },
     {
       "signal_date": "2026-07-31",
@@ -55699,10 +55752,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 619,
+      "sample_count": 606,
       "changed": true,
-      "baseline_metric": -0.008415827953588558,
-      "selected_metric": -0.005155451261966593
+      "baseline_metric": -0.009105889718914415,
+      "selected_metric": -0.005651730751971279
     },
     {
       "signal_date": "2026-08-03",
@@ -55712,10 +55765,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 622,
+      "sample_count": 609,
       "changed": true,
-      "baseline_metric": -0.00834218345531025,
-      "selected_metric": -0.005116864577576694
+      "baseline_metric": -0.009023043563912125,
+      "selected_metric": -0.005606842387814519
     },
     {
       "signal_date": "2026-08-04",
@@ -55725,10 +55778,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 636,
+      "sample_count": 623,
       "changed": true,
-      "baseline_metric": -0.008762293310304028,
-      "selected_metric": -0.005302110228985172
+      "baseline_metric": -0.009437545886570245,
+      "selected_metric": -0.005785534659463226
     },
     {
       "signal_date": "2026-08-05",
@@ -55738,10 +55791,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 646,
+      "sample_count": 633,
       "changed": true,
-      "baseline_metric": -0.007822717329148162,
-      "selected_metric": -0.004463665622405288
+      "baseline_metric": -0.008463973514731809,
+      "selected_metric": -0.0049192612310505444
     },
     {
       "signal_date": "2026-08-06",
@@ -55751,10 +55804,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 659,
+      "sample_count": 646,
       "changed": true,
-      "baseline_metric": -0.007949888559693247,
-      "selected_metric": -0.004658696483389623
+      "baseline_metric": -0.008580545055482284,
+      "selected_metric": -0.005108919623010942
     },
     {
       "signal_date": "2026-08-07",
@@ -55764,10 +55817,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 669,
+      "sample_count": 656,
       "changed": true,
-      "baseline_metric": -0.007777917590976293,
-      "selected_metric": -0.004712095841050937
+      "baseline_metric": -0.008392359390512683,
+      "selected_metric": -0.005154302338612457
     },
     {
       "signal_date": "2026-08-10",
@@ -55777,10 +55830,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 678,
+      "sample_count": 665,
       "changed": true,
-      "baseline_metric": -0.007834586278562813,
-      "selected_metric": -0.004798821604617118
+      "baseline_metric": -0.00844401703385557,
+      "selected_metric": -0.005238340552474347
     },
     {
       "signal_date": "2026-08-11",
@@ -55790,10 +55843,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 687,
+      "sample_count": 674,
       "changed": true,
-      "baseline_metric": -0.007639068104595976,
-      "selected_metric": -0.004339030503890507
+      "baseline_metric": -0.008232715547550309,
+      "selected_metric": -0.0047609159213833465
     },
     {
       "signal_date": "2026-08-12",
@@ -55803,10 +55856,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 705,
+      "sample_count": 692,
       "changed": true,
-      "baseline_metric": -0.007587205831613588,
-      "selected_metric": -0.0043810699298054605
+      "baseline_metric": -0.008168439626184524,
+      "selected_metric": -0.004795650616691034
     },
     {
       "signal_date": "2026-08-13",
@@ -55816,10 +55869,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 717,
+      "sample_count": 704,
       "changed": true,
-      "baseline_metric": -0.00739522486655816,
-      "selected_metric": -0.004279583927156863
+      "baseline_metric": -0.007961869703400296,
+      "selected_metric": -0.0046844275066927335
     },
     {
       "signal_date": "2026-08-14",
@@ -55829,10 +55882,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 728,
+      "sample_count": 715,
       "changed": true,
-      "baseline_metric": -0.007418187204871092,
-      "selected_metric": -0.004359194282549817
+      "baseline_metric": -0.00797476384729602,
+      "selected_metric": -0.00475801502460156
     },
     {
       "signal_date": "2026-08-17",
@@ -55842,10 +55895,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 746,
+      "sample_count": 733,
       "changed": true,
-      "baseline_metric": -0.007559096075451354,
-      "selected_metric": -0.004493075090492452
+      "baseline_metric": -0.008108115122024561,
+      "selected_metric": -0.00488707874283312
     },
     {
       "signal_date": "2026-08-18",
@@ -55855,10 +55908,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 757,
+      "sample_count": 744,
       "changed": true,
-      "baseline_metric": -0.007619896992805953,
-      "selected_metric": -0.0046076658496884354
+      "baseline_metric": -0.008160197858500256,
+      "selected_metric": -0.004996679986080091
     },
     {
       "signal_date": "2026-08-19",
@@ -55868,10 +55921,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 766,
+      "sample_count": 753,
       "changed": true,
-      "baseline_metric": -0.007155431697946207,
-      "selected_metric": -0.004247790168118233
+      "baseline_metric": -0.007678105087139562,
+      "selected_metric": -0.00462366588665091
     },
     {
       "signal_date": "2026-08-20",
@@ -55881,10 +55934,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 785,
+      "sample_count": 772,
       "changed": true,
-      "baseline_metric": -0.00707515240544059,
-      "selected_metric": -0.004380768182180998
+      "baseline_metric": -0.007587430058742584,
+      "selected_metric": -0.004752456009257297
     },
     {
       "signal_date": "2026-08-21",
@@ -55894,10 +55947,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 800,
+      "sample_count": 787,
       "changed": true,
-      "baseline_metric": -0.007408022320298279,
-      "selected_metric": -0.004459572554449833
+      "baseline_metric": -0.007917259164474097,
+      "selected_metric": -0.004826296255173463
     },
     {
       "signal_date": "2026-08-24",
@@ -55907,10 +55960,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 816,
+      "sample_count": 803,
       "changed": true,
-      "baseline_metric": -0.0075092721682124405,
-      "selected_metric": -0.004181186633232194
+      "baseline_metric": -0.008011709229117233,
+      "selected_metric": -0.00453715850692347
     },
     {
       "signal_date": "2026-08-25",
@@ -55920,10 +55973,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 826,
+      "sample_count": 813,
       "changed": true,
-      "baseline_metric": -0.007411948663570205,
-      "selected_metric": -0.004250828327937279
+      "baseline_metric": -0.007904553584056192,
+      "selected_metric": -0.004602106264268125
     },
     {
       "signal_date": "2026-08-26",
@@ -55933,10 +55986,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 839,
+      "sample_count": 826,
       "changed": true,
-      "baseline_metric": -0.007364417958244332,
-      "selected_metric": -0.004418645119779276
+      "baseline_metric": -0.00784831101379787,
+      "selected_metric": -0.004766964005392559
     },
     {
       "signal_date": "2026-08-27",
@@ -55946,10 +55999,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 855,
+      "sample_count": 842,
       "changed": true,
-      "baseline_metric": -0.007498103252185979,
-      "selected_metric": -0.004592791459713502
+      "baseline_metric": -0.007976437454380599,
+      "selected_metric": -0.0049383457017445785
     },
     {
       "signal_date": "2026-08-28",
@@ -55959,10 +56012,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 867,
+      "sample_count": 854,
       "changed": true,
-      "baseline_metric": -0.007546167708710739,
-      "selected_metric": -0.004437325691445908
+      "baseline_metric": -0.008017778946129268,
+      "selected_metric": -0.004775051495816068
     },
     {
       "signal_date": "2026-08-31",
@@ -55972,10 +56025,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 879,
+      "sample_count": 866,
       "changed": true,
-      "baseline_metric": -0.007549415927224175,
-      "selected_metric": -0.004574639359961505
+      "baseline_metric": -0.008013821579736471,
+      "selected_metric": -0.004909281900703133
     },
     {
       "signal_date": "2026-09-01",
@@ -55985,10 +56038,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 891,
+      "sample_count": 878,
       "changed": true,
-      "baseline_metric": -0.007318867468682713,
-      "selected_metric": -0.0044677203477410336
+      "baseline_metric": -0.007772743513451772,
+      "selected_metric": -0.00479567256192263
     },
     {
       "signal_date": "2026-09-02",
@@ -55998,10 +56051,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 906,
+      "sample_count": 893,
       "changed": true,
-      "baseline_metric": -0.007242914278337368,
-      "selected_metric": -0.004433695791527185
+      "baseline_metric": -0.007688882424074868,
+      "selected_metric": -0.0047562453673446695
     },
     {
       "signal_date": "2026-09-03",
@@ -56011,10 +56064,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 911,
+      "sample_count": 898,
       "changed": true,
-      "baseline_metric": -0.007165504019287895,
-      "selected_metric": -0.004443599291613143
+      "baseline_metric": -0.007603775423778527,
+      "selected_metric": -0.004761551131022812
     },
     {
       "signal_date": "2026-09-04",
@@ -56024,10 +56077,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 926,
+      "sample_count": 913,
       "changed": true,
-      "baseline_metric": -0.006860301938864598,
-      "selected_metric": -0.004194522075868901
+      "baseline_metric": -0.007287798365312999,
+      "selected_metric": -0.004504256102885035
     },
     {
       "signal_date": "2026-09-07",
@@ -56037,10 +56090,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 942,
+      "sample_count": 929,
       "changed": true,
-      "baseline_metric": -0.007109571585591561,
-      "selected_metric": -0.004481337917849322
+      "baseline_metric": -0.0075345219151867985,
+      "selected_metric": -0.00479074454222209
     },
     {
       "signal_date": "2026-09-08",
@@ -56050,10 +56103,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 951,
+      "sample_count": 938,
       "changed": true,
-      "baseline_metric": -0.007548176173165299,
-      "selected_metric": -0.004675306657833042
+      "baseline_metric": -0.00797331881625319,
+      "selected_metric": -0.004983087396510189
     },
     {
       "signal_date": "2026-09-09",
@@ -56063,10 +56116,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 962,
+      "sample_count": 949,
       "changed": true,
-      "baseline_metric": -0.007688824526557592,
-      "selected_metric": -0.004813789064771841
+      "baseline_metric": -0.008110015860066377,
+      "selected_metric": -0.0051192184377304
     },
     {
       "signal_date": "2026-09-10",
@@ -56076,10 +56129,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 972,
+      "sample_count": 959,
       "changed": true,
-      "baseline_metric": -0.007915483803313368,
-      "selected_metric": -0.004948540311464009
+      "baseline_metric": -0.008334010314126906,
+      "selected_metric": -0.005251631627898369
     },
     {
       "signal_date": "2026-09-11",
@@ -56089,10 +56142,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 984,
+      "sample_count": 971,
       "changed": true,
-      "baseline_metric": -0.007825488007633724,
-      "selected_metric": -0.004880000548896321
+      "baseline_metric": -0.008237142595386543,
+      "selected_metric": -0.005178069823722547
     },
     {
       "signal_date": "2026-09-14",
@@ -56102,10 +56155,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 996,
+      "sample_count": 983,
       "changed": true,
-      "baseline_metric": -0.007762569845929927,
-      "selected_metric": -0.004774817800528064
+      "baseline_metric": -0.008167896797023325,
+      "selected_metric": -0.005067510381711696
     },
     {
       "signal_date": "2026-09-15",
@@ -56115,10 +56168,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 1015,
+      "sample_count": 1002,
       "changed": true,
-      "baseline_metric": -0.00787565961315064,
-      "selected_metric": -0.004864321276450555
+      "baseline_metric": -0.00827714133814045,
+      "selected_metric": -0.005154340316775488
     },
     {
       "signal_date": "2026-09-16",
@@ -56128,10 +56181,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 1032,
+      "sample_count": 1019,
       "changed": true,
-      "baseline_metric": -0.007978088954940291,
-      "selected_metric": -0.0049351096993885705
+      "baseline_metric": -0.008375686882745682,
+      "selected_metric": -0.005222281588838349
     },
     {
       "signal_date": "2026-09-17",
@@ -56141,10 +56194,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 1042,
+      "sample_count": 1029,
       "changed": true,
-      "baseline_metric": -0.007907594940967877,
-      "selected_metric": -0.004903134410169975
+      "baseline_metric": -0.008299191690032529,
+      "selected_metric": -0.005186214669124006
     },
     {
       "signal_date": "2026-09-18",
@@ -56154,10 +56207,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 1054,
+      "sample_count": 1041,
       "changed": true,
-      "baseline_metric": -0.007682324012738438,
-      "selected_metric": -0.004867764257127682
+      "baseline_metric": -0.008066112310191772,
+      "selected_metric": -0.005146813498208341
     },
     {
       "signal_date": "2026-09-21",
@@ -56167,10 +56220,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 1063,
+      "sample_count": 1050,
       "changed": true,
-      "baseline_metric": -0.007619128625064137,
-      "selected_metric": -0.004894105380774908
+      "baseline_metric": -0.007997329626453376,
+      "selected_metric": -0.00516999577038765
     },
     {
       "signal_date": "2026-09-22",
@@ -56180,10 +56233,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 1077,
+      "sample_count": 1064,
       "changed": true,
-      "baseline_metric": -0.007555521133100629,
-      "selected_metric": -0.004859974140697115
+      "baseline_metric": -0.007928267708646006,
+      "selected_metric": -0.0051320371027828125
     },
     {
       "signal_date": "2026-09-23",
@@ -56193,10 +56246,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 1087,
+      "sample_count": 1074,
       "changed": true,
-      "baseline_metric": -0.007382957138553369,
-      "selected_metric": -0.004703746794588664
+      "baseline_metric": -0.007751299575665373,
+      "selected_metric": -0.004972223758795204
     },
     {
       "signal_date": "2026-09-24",
@@ -56206,10 +56259,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 1101,
+      "sample_count": 1088,
       "changed": true,
-      "baseline_metric": -0.0072688759494275446,
-      "selected_metric": -0.004677010083361878
+      "baseline_metric": -0.007631370827433636,
+      "selected_metric": -0.004941908699987408
     },
     {
       "signal_date": "2026-09-29",
@@ -56219,10 +56272,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 1114,
+      "sample_count": 1101,
       "changed": true,
-      "baseline_metric": -0.007278964043111999,
-      "selected_metric": -0.004786338216450654
+      "baseline_metric": -0.0076372384805872915,
+      "selected_metric": -0.00504937371351287
     },
     {
       "signal_date": "2026-09-30",
@@ -56232,10 +56285,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 1122,
+      "sample_count": 1109,
       "changed": true,
-      "baseline_metric": -0.007271209642418534,
-      "selected_metric": -0.0046672205279553935
+      "baseline_metric": -0.007625152377666977,
+      "selected_metric": -0.004925733502111604
     },
     {
       "signal_date": "2026-10-01",
@@ -56245,10 +56298,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 1134,
+      "sample_count": 1121,
       "changed": true,
-      "baseline_metric": -0.007042611462158473,
-      "selected_metric": -0.004641195742265843
+      "baseline_metric": -0.00738974085336588,
+      "selected_metric": -0.004896380789406314
     },
     {
       "signal_date": "2026-10-02",
@@ -56258,10 +56311,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 1142,
+      "sample_count": 1129,
       "changed": true,
-      "baseline_metric": -0.007221939261688557,
-      "selected_metric": -0.004853264137210466
+      "baseline_metric": -0.0075671287501020085,
+      "selected_metric": -0.005107950725944048
     },
     {
       "signal_date": "2026-10-05",
@@ -56271,10 +56324,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 1159,
+      "sample_count": 1146,
       "changed": true,
-      "baseline_metric": -0.006922574895778281,
-      "selected_metric": -0.004580664461972258
+      "baseline_metric": -0.007260398054428032,
+      "selected_metric": -0.004829324921974734
     },
     {
       "signal_date": "2026-10-06",
@@ -56284,10 +56337,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 1170,
+      "sample_count": 1157,
       "changed": true,
-      "baseline_metric": -0.007069789648038096,
-      "selected_metric": -0.004722130833523484
+      "baseline_metric": -0.007405459039384006,
+      "selected_metric": -0.004969580060888093
     },
     {
       "signal_date": "2026-10-07",
@@ -56297,10 +56350,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 1186,
+      "sample_count": 1173,
       "changed": true,
-      "baseline_metric": -0.007171127394931436,
-      "selected_metric": -0.00476985601427925
+      "baseline_metric": -0.0075041785556130705,
+      "selected_metric": -0.005015073688050463
     },
     {
       "signal_date": "2026-10-08",
@@ -56310,10 +56363,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 1198,
+      "sample_count": 1185,
       "changed": true,
-      "baseline_metric": -0.007222193722380285,
-      "selected_metric": -0.004847165744795336
+      "baseline_metric": -0.007552129028551061,
+      "selected_metric": -0.0050905280821769905
     },
     {
       "signal_date": "2026-10-12",
@@ -56323,10 +56376,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 1211,
+      "sample_count": 1198,
       "changed": true,
-      "baseline_metric": -0.007088875602739987,
-      "selected_metric": -0.004870358519513843
+      "baseline_metric": -0.00741374802994015,
+      "selected_metric": -0.005111314632166938
     },
     {
       "signal_date": "2026-10-13",
@@ -56336,10 +56389,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 1229,
+      "sample_count": 1216,
       "changed": true,
-      "baseline_metric": -0.007118025192202144,
-      "selected_metric": -0.0049372684047081445
+      "baseline_metric": -0.007439700615751085,
+      "selected_metric": -0.005176342936523848
     },
     {
       "signal_date": "2026-10-14",
@@ -56349,10 +56402,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 1240,
+      "sample_count": 1227,
       "changed": true,
-      "baseline_metric": -0.006987595817317855,
-      "selected_metric": -0.004778619114539881
+      "baseline_metric": -0.007304435895429008,
+      "selected_metric": -0.005013439915639177
     },
     {
       "signal_date": "2026-10-15",
@@ -56362,20 +56415,33 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 1253,
+      "sample_count": 1240,
       "changed": true,
-      "baseline_metric": -0.006966644435912203,
-      "selected_metric": -0.00469435773562436
+      "baseline_metric": -0.0072799100012242365,
+      "selected_metric": -0.004925802005718209
+    },
+    {
+      "signal_date": "2026-10-16",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1244,
+      "changed": true,
+      "baseline_metric": -0.00729604226429452,
+      "selected_metric": -0.005067561950423533
     }
   ],
   "optimization": {
     "source": "walk_forward_backtest_100d",
     "minimum_samples": 30,
-    "sample_count": 1270,
+    "sample_count": 1267,
     "changed": true,
     "period": {
-      "from": "2026-05-22",
-      "to": "2026-10-16"
+      "from": "2026-05-25",
+      "to": "2026-10-19"
     },
     "old_weights": {
       "volume_growth_pct": 0.35,
@@ -56390,29 +56456,29 @@
       "volume_rank": 0.1
     },
     "metrics": {
-      "baseline": -0.006873623151317863,
-      "selected": -0.0048044275249368605
+      "baseline": -0.007230272968915064,
+      "selected": -0.005104790479669829
     },
-    "updated_at": "2026-10-18T23:53:33+00:00"
+    "updated_at": "2026-10-19T08:49:17+00:00"
   },
   "cost_rate": 0.0,
   "cost_assumption": "gross 未扣成本；standard 每筆已成交扣雙邊總成本 0.435%；stress 扣 0.535%；未觸發不扣成本；未另計固定滑價、借券費與融券限制",
-  "completed_at": "2026-10-18T23:53:33+00:00",
+  "completed_at": "2026-10-19T08:49:17+00:00",
   "data_collection": {
     "complete_trading_days": 106,
-    "latest_complete_date": "2026-10-16",
-    "network_requests": 10,
-    "cache_hits": 434
+    "latest_complete_date": "2026-10-19",
+    "network_requests": 14,
+    "cache_hits": 430
   },
   "candidate_universe_summary": {
     "signal_dates": 100,
     "total_rows": 10000,
-    "eligible": 3085,
-    "selected": 1659,
+    "eligible": 3071,
+    "selected": 1661,
     "rejection_reasons": {
       "insufficient_history": 12,
-      "ma5_institutional_misaligned": 3301,
-      "volume_growth_below_20": 5624
+      "ma5_institutional_misaligned": 3295,
+      "volume_growth_below_20": 5644
     },
     "artifact": "candidate_universe_100d.csv.gz"
   }
