@@ -1,6 +1,6 @@
 {
-  "started_at": "2026-10-20T17:52:28+08:00",
-  "completed_at": "2026-10-20T17:52:42+08:00",
+  "started_at": "2026-10-21T07:56:32+08:00",
+  "completed_at": "2026-10-21T07:56:55+08:00",
   "status": "success",
   "data_date": "2026-10-20",
   "strategy_campaign": {
@@ -583,11 +583,11 @@
   },
   "market_history": {
     "status": "ok",
-    "snapshot_id": "2026-10-20:post_close",
+    "snapshot_id": "2026-10-21:morning_backup",
     "regime": {
-      "snapshot_count": 5,
+      "snapshot_count": 6,
       "first": "2026-10-17T23:32:49+00:00",
-      "last": "2026-10-20T17:52:42+08:00",
+      "last": "2026-10-20T23:56:55+00:00",
       "first_snapshot": {
         "snapshot_id": "2026-10-18:morning_backup",
         "fetched_at": "2026-10-17T23:32:49+00:00",
@@ -595,57 +595,57 @@
         "phase": "morning_backup"
       },
       "last_snapshot": {
-        "snapshot_id": "2026-10-20:post_close",
-        "fetched_at": "2026-10-20T17:52:42+08:00",
-        "market_date": "2026-10-20",
-        "phase": "post_close"
+        "snapshot_id": "2026-10-21:morning_backup",
+        "fetched_at": "2026-10-20T23:56:55+00:00",
+        "market_date": "2026-10-21",
+        "phase": "morning_backup"
       },
       "bias_counts": {
-        "偏多": 0,
+        "偏多": 1,
         "中性": 0,
         "偏空": 5
       },
       "latest": {
-        "snapshot_id": "2026-10-20:post_close",
-        "fetched_at": "2026-10-20T17:52:42+08:00",
-        "market_date": "2026-10-20",
-        "phase": "post_close",
+        "snapshot_id": "2026-10-21:morning_backup",
+        "fetched_at": "2026-10-20T23:56:55+00:00",
+        "market_date": "2026-10-21",
+        "phase": "morning_backup",
         "scenario": {
-          "bias": "偏空",
-          "positive": 1,
-          "negative": 2,
-          "basis": "TX / UNF / SXF 上漲 1、下跌 2；僅供情境參考，不加入策略分數"
+          "bias": "偏多",
+          "positive": 3,
+          "negative": 0,
+          "basis": "TX / UNF / SXF 上漲 3、下跌 0；僅供情境參考，不加入策略分數"
         },
         "products": {
           "TX": {
-            "price": 46332.0,
-            "updown": -9.0,
-            "change_pct": -0.019421246844047387,
-            "volume": 5735
+            "price": 46975.0,
+            "updown": 634.0,
+            "change_pct": 1.3681189443473383,
+            "volume": 30319
           },
           "ZEF": {
-            "price": 2895.05,
-            "updown": 4.45,
-            "change_pct": 0.15394727738185843,
-            "volume": 35
+            "price": 2931.3,
+            "updown": 40.7,
+            "change_pct": 1.4080121774026153,
+            "volume": 268
           },
           "CDF": {
-            "price": 2407.0,
-            "updown": -1.0,
-            "change_pct": -0.04152823920265781,
-            "volume": 16
+            "price": 2425.0,
+            "updown": 17.0,
+            "change_pct": 0.7059800664451827,
+            "volume": 2235
           },
           "UNF": {
-            "price": 29625.0,
-            "updown": -19.0,
-            "change_pct": -0.06409391445149103,
-            "volume": 35
+            "price": 29672.0,
+            "updown": 28.0,
+            "change_pct": 0.09445418971798678,
+            "volume": 250
           },
           "SXF": {
-            "price": 11253.0,
-            "updown": 3.0,
-            "change_pct": 0.02666666666666667,
-            "volume": 18
+            "price": 11387.0,
+            "updown": 137.0,
+            "change_pct": 1.2177777777777776,
+            "volume": 94
           }
         }
       },
@@ -656,12 +656,12 @@
     "affects_stock_scores": false,
     "history_snapshot": {
       "status": "ok",
-      "snapshot_id": "2026-10-20:post_close"
+      "snapshot_id": "2026-10-21:morning_backup"
     }
   },
   "health": {
     "overall": "ok",
-    "generated_at": "2026-10-20T17:52:42+08:00",
+    "generated_at": "2026-10-21T07:56:55+08:00",
     "sources": {
       "daily_status": {
         "status": "ok",
@@ -686,13 +686,13 @@
       "market_regime": {
         "status": "ok",
         "message": "可正常讀取",
-        "date": "2026-10-20T17:52:42+08:00"
+        "date": "2026-10-20T23:56:55+00:00"
       }
     },
     "latest_data_date": "2026-10-20",
     "pipeline": {
       "status": "success",
-      "completed_at": "2026-10-20T17:52:42+08:00",
+      "completed_at": "2026-10-21T07:56:55+08:00",
       "data_date": "2026-10-20",
       "freshness": "fresh"
     },
@@ -709,12 +709,12 @@
       "selected": 4
     },
     "night_market": {
-      "count": 5,
+      "count": 6,
       "threshold": 60,
-      "remaining": 55
+      "remaining": 54
     },
     "desktop_version": "2026.10.20.2",
-    "next_update": "2026-10-21T06:30:00+08:00",
+    "next_update": "2026-10-22T06:30:00+08:00",
     "recent_error": null
   }
 }

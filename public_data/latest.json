@@ -58,15 +58,37 @@
       "reason": "量增244.3%；收盤高於MA5 3.3%；法人買超42702.8張；5日波動代理3.99%",
       "broker_risk_research": {
         "version": "broker-risk-v1",
-        "status": "stale",
-        "data_date": "2026-10-19",
-        "risk_level": "unknown",
-        "warning": false,
-        "watched_buyers": [],
-        "watched_sellers": [],
+        "status": "available",
+        "data_date": "2026-10-20",
+        "risk_level": "high",
+        "warning": true,
+        "summary": "HIGH｜短線觀察分點達門檻：凱基-台北、國泰-敦南；隔日勿追價，先看開盤賣壓。",
+        "watched_buyers": [
+          {
+            "branch": "凱基-台北",
+            "buy_lots": 3908,
+            "sell_lots": 1797,
+            "net_lots": 2111,
+            "share_pct": 2.53,
+            "side": "buy",
+            "turnover_share_pct": 6.84
+          }
+        ],
+        "watched_sellers": [
+          {
+            "branch": "國泰-敦南",
+            "buy_lots": 474,
+            "sell_lots": 1655,
+            "net_lots": -1181,
+            "share_pct": 1.42,
+            "side": "sell",
+            "turnover_share_pct": 2.55
+          }
+        ],
         "score_effect": "none",
         "filter_effect": "none",
-        "notice": "分點資料不可用或日期不一致，不據此調整排序或名單。"
+        "source": "MoneyDJ公開彙整頁（原始資訊來自市場買賣日報表）",
+        "notice": "分點為多人彙總，短線型標籤是觀察名單、非官方認定；只能提示可能賣壓，不能保證避免倒貨。"
       }
     },
     {
@@ -123,15 +145,46 @@
       "reason": "量增525.5%；收盤高於MA5 19.8%；法人買超1747.5張；5日波動代理9.95%",
       "broker_risk_research": {
         "version": "broker-risk-v1",
-        "status": "stale",
-        "data_date": "2026-10-19",
-        "risk_level": "unknown",
-        "warning": false,
-        "watched_buyers": [],
-        "watched_sellers": [],
+        "status": "available",
+        "data_date": "2026-10-20",
+        "risk_level": "high",
+        "warning": true,
+        "summary": "HIGH｜短線觀察分點達門檻：國泰-敦南、凱基-城中、富邦-南屯；隔日勿追價，先看開盤賣壓。",
+        "watched_buyers": [
+          {
+            "branch": "國泰-敦南",
+            "buy_lots": 908,
+            "sell_lots": 843,
+            "net_lots": 65,
+            "share_pct": 0.27,
+            "side": "buy",
+            "turnover_share_pct": 7.33
+          }
+        ],
+        "watched_sellers": [
+          {
+            "branch": "凱基-城中",
+            "buy_lots": 11,
+            "sell_lots": 1000,
+            "net_lots": -989,
+            "share_pct": 4.14,
+            "side": "sell",
+            "turnover_share_pct": 4.23
+          },
+          {
+            "branch": "富邦-南屯",
+            "buy_lots": 103,
+            "sell_lots": 608,
+            "net_lots": -505,
+            "share_pct": 2.11,
+            "side": "sell",
+            "turnover_share_pct": 2.98
+          }
+        ],
         "score_effect": "none",
         "filter_effect": "none",
-        "notice": "分點資料不可用或日期不一致，不據此調整排序或名單。"
+        "source": "MoneyDJ公開彙整頁（原始資訊來自市場買賣日報表）",
+        "notice": "分點為多人彙總，短線型標籤是觀察名單、非官方認定；只能提示可能賣壓，不能保證避免倒貨。"
       }
     },
     {
@@ -188,15 +241,46 @@
       "reason": "量增540.0%；收盤高於MA5 8.5%；法人買超2366.4張；5日波動代理5.24%",
       "broker_risk_research": {
         "version": "broker-risk-v1",
-        "status": "stale",
-        "data_date": "2026-10-19",
-        "risk_level": "unknown",
-        "warning": false,
-        "watched_buyers": [],
-        "watched_sellers": [],
+        "status": "available",
+        "data_date": "2026-10-20",
+        "risk_level": "high",
+        "warning": true,
+        "summary": "HIGH｜短線觀察分點達門檻：凱基-台北、凱基-信義、國泰-敦南；隔日勿追價，先看開盤賣壓。",
+        "watched_buyers": [
+          {
+            "branch": "凱基-台北",
+            "buy_lots": 1189,
+            "sell_lots": 424,
+            "net_lots": 765,
+            "share_pct": 4.44,
+            "side": "buy",
+            "turnover_share_pct": 9.36
+          },
+          {
+            "branch": "凱基-信義",
+            "buy_lots": 212,
+            "sell_lots": 12,
+            "net_lots": 200,
+            "share_pct": 1.16,
+            "side": "buy",
+            "turnover_share_pct": 1.3
+          }
+        ],
+        "watched_sellers": [
+          {
+            "branch": "國泰-敦南",
+            "buy_lots": 194,
+            "sell_lots": 330,
+            "net_lots": -136,
+            "share_pct": 0.79,
+            "side": "sell",
+            "turnover_share_pct": 3.04
+          }
+        ],
         "score_effect": "none",
         "filter_effect": "none",
-        "notice": "分點資料不可用或日期不一致，不據此調整排序或名單。"
+        "source": "MoneyDJ公開彙整頁（原始資訊來自市場買賣日報表）",
+        "notice": "分點為多人彙總，短線型標籤是觀察名單、非官方認定；只能提示可能賣壓，不能保證避免倒貨。"
       }
     }
   ],
@@ -255,15 +339,37 @@
       "reason": "量增244.3%；收盤高於MA5 3.3%；法人買超42702.8張；5日波動代理3.99%",
       "broker_risk_research": {
         "version": "broker-risk-v1",
-        "status": "stale",
-        "data_date": "2026-10-19",
-        "risk_level": "unknown",
-        "warning": false,
-        "watched_buyers": [],
-        "watched_sellers": [],
+        "status": "available",
+        "data_date": "2026-10-20",
+        "risk_level": "high",
+        "warning": true,
+        "summary": "HIGH｜短線觀察分點達門檻：凱基-台北、國泰-敦南；隔日勿追價，先看開盤賣壓。",
+        "watched_buyers": [
+          {
+            "branch": "凱基-台北",
+            "buy_lots": 3908,
+            "sell_lots": 1797,
+            "net_lots": 2111,
+            "share_pct": 2.53,
+            "side": "buy",
+            "turnover_share_pct": 6.84
+          }
+        ],
+        "watched_sellers": [
+          {
+            "branch": "國泰-敦南",
+            "buy_lots": 474,
+            "sell_lots": 1655,
+            "net_lots": -1181,
+            "share_pct": 1.42,
+            "side": "sell",
+            "turnover_share_pct": 2.55
+          }
+        ],
         "score_effect": "none",
         "filter_effect": "none",
-        "notice": "分點資料不可用或日期不一致，不據此調整排序或名單。"
+        "source": "MoneyDJ公開彙整頁（原始資訊來自市場買賣日報表）",
+        "notice": "分點為多人彙總，短線型標籤是觀察名單、非官方認定；只能提示可能賣壓，不能保證避免倒貨。"
       }
     },
     {
@@ -320,15 +426,46 @@
       "reason": "量增525.5%；收盤高於MA5 19.8%；法人買超1747.5張；5日波動代理9.95%",
       "broker_risk_research": {
         "version": "broker-risk-v1",
-        "status": "stale",
-        "data_date": "2026-10-19",
-        "risk_level": "unknown",
-        "warning": false,
-        "watched_buyers": [],
-        "watched_sellers": [],
+        "status": "available",
+        "data_date": "2026-10-20",
+        "risk_level": "high",
+        "warning": true,
+        "summary": "HIGH｜短線觀察分點達門檻：國泰-敦南、凱基-城中、富邦-南屯；隔日勿追價，先看開盤賣壓。",
+        "watched_buyers": [
+          {
+            "branch": "國泰-敦南",
+            "buy_lots": 908,
+            "sell_lots": 843,
+            "net_lots": 65,
+            "share_pct": 0.27,
+            "side": "buy",
+            "turnover_share_pct": 7.33
+          }
+        ],
+        "watched_sellers": [
+          {
+            "branch": "凱基-城中",
+            "buy_lots": 11,
+            "sell_lots": 1000,
+            "net_lots": -989,
+            "share_pct": 4.14,
+            "side": "sell",
+            "turnover_share_pct": 4.23
+          },
+          {
+            "branch": "富邦-南屯",
+            "buy_lots": 103,
+            "sell_lots": 608,
+            "net_lots": -505,
+            "share_pct": 2.11,
+            "side": "sell",
+            "turnover_share_pct": 2.98
+          }
+        ],
         "score_effect": "none",
         "filter_effect": "none",
-        "notice": "分點資料不可用或日期不一致，不據此調整排序或名單。"
+        "source": "MoneyDJ公開彙整頁（原始資訊來自市場買賣日報表）",
+        "notice": "分點為多人彙總，短線型標籤是觀察名單、非官方認定；只能提示可能賣壓，不能保證避免倒貨。"
       }
     },
     {
@@ -385,15 +522,46 @@
       "reason": "量增540.0%；收盤高於MA5 8.5%；法人買超2366.4張；5日波動代理5.24%",
       "broker_risk_research": {
         "version": "broker-risk-v1",
-        "status": "stale",
-        "data_date": "2026-10-19",
-        "risk_level": "unknown",
-        "warning": false,
-        "watched_buyers": [],
-        "watched_sellers": [],
+        "status": "available",
+        "data_date": "2026-10-20",
+        "risk_level": "high",
+        "warning": true,
+        "summary": "HIGH｜短線觀察分點達門檻：凱基-台北、凱基-信義、國泰-敦南；隔日勿追價，先看開盤賣壓。",
+        "watched_buyers": [
+          {
+            "branch": "凱基-台北",
+            "buy_lots": 1189,
+            "sell_lots": 424,
+            "net_lots": 765,
+            "share_pct": 4.44,
+            "side": "buy",
+            "turnover_share_pct": 9.36
+          },
+          {
+            "branch": "凱基-信義",
+            "buy_lots": 212,
+            "sell_lots": 12,
+            "net_lots": 200,
+            "share_pct": 1.16,
+            "side": "buy",
+            "turnover_share_pct": 1.3
+          }
+        ],
+        "watched_sellers": [
+          {
+            "branch": "國泰-敦南",
+            "buy_lots": 194,
+            "sell_lots": 330,
+            "net_lots": -136,
+            "share_pct": 0.79,
+            "side": "sell",
+            "turnover_share_pct": 3.04
+          }
+        ],
         "score_effect": "none",
         "filter_effect": "none",
-        "notice": "分點資料不可用或日期不一致，不據此調整排序或名單。"
+        "source": "MoneyDJ公開彙整頁（原始資訊來自市場買賣日報表）",
+        "notice": "分點為多人彙總，短線型標籤是觀察名單、非官方認定；只能提示可能賣壓，不能保證避免倒貨。"
       }
     }
   ],
@@ -452,15 +620,37 @@
       "reason": "量增244.3%；收盤高於MA5 3.3%；法人買超42702.8張；5日波動代理3.99%",
       "broker_risk_research": {
         "version": "broker-risk-v1",
-        "status": "stale",
-        "data_date": "2026-10-19",
-        "risk_level": "unknown",
-        "warning": false,
-        "watched_buyers": [],
-        "watched_sellers": [],
+        "status": "available",
+        "data_date": "2026-10-20",
+        "risk_level": "high",
+        "warning": true,
+        "summary": "HIGH｜短線觀察分點達門檻：凱基-台北、國泰-敦南；隔日勿追價，先看開盤賣壓。",
+        "watched_buyers": [
+          {
+            "branch": "凱基-台北",
+            "buy_lots": 3908,
+            "sell_lots": 1797,
+            "net_lots": 2111,
+            "share_pct": 2.53,
+            "side": "buy",
+            "turnover_share_pct": 6.84
+          }
+        ],
+        "watched_sellers": [
+          {
+            "branch": "國泰-敦南",
+            "buy_lots": 474,
+            "sell_lots": 1655,
+            "net_lots": -1181,
+            "share_pct": 1.42,
+            "side": "sell",
+            "turnover_share_pct": 2.55
+          }
+        ],
         "score_effect": "none",
         "filter_effect": "none",
-        "notice": "分點資料不可用或日期不一致，不據此調整排序或名單。"
+        "source": "MoneyDJ公開彙整頁（原始資訊來自市場買賣日報表）",
+        "notice": "分點為多人彙總，短線型標籤是觀察名單、非官方認定；只能提示可能賣壓，不能保證避免倒貨。"
       }
     },
     {
@@ -517,15 +707,46 @@
       "reason": "量增525.5%；收盤高於MA5 19.8%；法人買超1747.5張；5日波動代理9.95%",
       "broker_risk_research": {
         "version": "broker-risk-v1",
-        "status": "stale",
-        "data_date": "2026-10-19",
-        "risk_level": "unknown",
-        "warning": false,
-        "watched_buyers": [],
-        "watched_sellers": [],
+        "status": "available",
+        "data_date": "2026-10-20",
+        "risk_level": "high",
+        "warning": true,
+        "summary": "HIGH｜短線觀察分點達門檻：國泰-敦南、凱基-城中、富邦-南屯；隔日勿追價，先看開盤賣壓。",
+        "watched_buyers": [
+          {
+            "branch": "國泰-敦南",
+            "buy_lots": 908,
+            "sell_lots": 843,
+            "net_lots": 65,
+            "share_pct": 0.27,
+            "side": "buy",
+            "turnover_share_pct": 7.33
+          }
+        ],
+        "watched_sellers": [
+          {
+            "branch": "凱基-城中",
+            "buy_lots": 11,
+            "sell_lots": 1000,
+            "net_lots": -989,
+            "share_pct": 4.14,
+            "side": "sell",
+            "turnover_share_pct": 4.23
+          },
+          {
+            "branch": "富邦-南屯",
+            "buy_lots": 103,
+            "sell_lots": 608,
+            "net_lots": -505,
+            "share_pct": 2.11,
+            "side": "sell",
+            "turnover_share_pct": 2.98
+          }
+        ],
         "score_effect": "none",
         "filter_effect": "none",
-        "notice": "分點資料不可用或日期不一致，不據此調整排序或名單。"
+        "source": "MoneyDJ公開彙整頁（原始資訊來自市場買賣日報表）",
+        "notice": "分點為多人彙總，短線型標籤是觀察名單、非官方認定；只能提示可能賣壓，不能保證避免倒貨。"
       }
     },
     {
@@ -582,15 +803,46 @@
       "reason": "量增540.0%；收盤高於MA5 8.5%；法人買超2366.4張；5日波動代理5.24%",
       "broker_risk_research": {
         "version": "broker-risk-v1",
-        "status": "stale",
-        "data_date": "2026-10-19",
-        "risk_level": "unknown",
-        "warning": false,
-        "watched_buyers": [],
-        "watched_sellers": [],
+        "status": "available",
+        "data_date": "2026-10-20",
+        "risk_level": "high",
+        "warning": true,
+        "summary": "HIGH｜短線觀察分點達門檻：凱基-台北、凱基-信義、國泰-敦南；隔日勿追價，先看開盤賣壓。",
+        "watched_buyers": [
+          {
+            "branch": "凱基-台北",
+            "buy_lots": 1189,
+            "sell_lots": 424,
+            "net_lots": 765,
+            "share_pct": 4.44,
+            "side": "buy",
+            "turnover_share_pct": 9.36
+          },
+          {
+            "branch": "凱基-信義",
+            "buy_lots": 212,
+            "sell_lots": 12,
+            "net_lots": 200,
+            "share_pct": 1.16,
+            "side": "buy",
+            "turnover_share_pct": 1.3
+          }
+        ],
+        "watched_sellers": [
+          {
+            "branch": "國泰-敦南",
+            "buy_lots": 194,
+            "sell_lots": 330,
+            "net_lots": -136,
+            "share_pct": 0.79,
+            "side": "sell",
+            "turnover_share_pct": 3.04
+          }
+        ],
         "score_effect": "none",
         "filter_effect": "none",
-        "notice": "分點資料不可用或日期不一致，不據此調整排序或名單。"
+        "source": "MoneyDJ公開彙整頁（原始資訊來自市場買賣日報表）",
+        "notice": "分點為多人彙總，短線型標籤是觀察名單、非官方認定；只能提示可能賣壓，不能保證避免倒貨。"
       }
     }
   ],
@@ -649,15 +901,37 @@
       "reason": "量增255.4%；收盤低於MA5 5.8%；法人賣超1796.3張；5日波動代理4.16%",
       "broker_risk_research": {
         "version": "broker-risk-v1",
-        "status": "stale",
-        "data_date": "2026-10-19",
-        "risk_level": "unknown",
-        "warning": false,
-        "watched_buyers": [],
-        "watched_sellers": [],
+        "status": "available",
+        "data_date": "2026-10-20",
+        "risk_level": "high",
+        "warning": true,
+        "summary": "HIGH｜短線觀察分點達門檻：國泰-敦南、凱基-台北；隔日勿追價，先看開盤賣壓。",
+        "watched_buyers": [
+          {
+            "branch": "國泰-敦南",
+            "buy_lots": 1170,
+            "sell_lots": 1104,
+            "net_lots": 66,
+            "share_pct": 0.18,
+            "side": "buy",
+            "turnover_share_pct": 6.34
+          }
+        ],
+        "watched_sellers": [
+          {
+            "branch": "凱基-台北",
+            "buy_lots": 2153,
+            "sell_lots": 2889,
+            "net_lots": -736,
+            "share_pct": 2.05,
+            "side": "sell",
+            "turnover_share_pct": 14.05
+          }
+        ],
         "score_effect": "none",
         "filter_effect": "none",
-        "notice": "分點資料不可用或日期不一致，不據此調整排序或名單。"
+        "source": "MoneyDJ公開彙整頁（原始資訊來自市場買賣日報表）",
+        "notice": "分點為多人彙總，短線型標籤是觀察名單、非官方認定；只能提示可能賣壓，不能保證避免倒貨。"
       }
     }
   ],
@@ -716,15 +990,37 @@
       "reason": "量增244.3%；收盤高於MA5 3.3%；法人買超42702.8張；5日波動代理3.99%",
       "broker_risk_research": {
         "version": "broker-risk-v1",
-        "status": "stale",
-        "data_date": "2026-10-19",
-        "risk_level": "unknown",
-        "warning": false,
-        "watched_buyers": [],
-        "watched_sellers": [],
+        "status": "available",
+        "data_date": "2026-10-20",
+        "risk_level": "high",
+        "warning": true,
+        "summary": "HIGH｜短線觀察分點達門檻：凱基-台北、國泰-敦南；隔日勿追價，先看開盤賣壓。",
+        "watched_buyers": [
+          {
+            "branch": "凱基-台北",
+            "buy_lots": 3908,
+            "sell_lots": 1797,
+            "net_lots": 2111,
+            "share_pct": 2.53,
+            "side": "buy",
+            "turnover_share_pct": 6.84
+          }
+        ],
+        "watched_sellers": [
+          {
+            "branch": "國泰-敦南",
+            "buy_lots": 474,
+            "sell_lots": 1655,
+            "net_lots": -1181,
+            "share_pct": 1.42,
+            "side": "sell",
+            "turnover_share_pct": 2.55
+          }
+        ],
         "score_effect": "none",
         "filter_effect": "none",
-        "notice": "分點資料不可用或日期不一致，不據此調整排序或名單。"
+        "source": "MoneyDJ公開彙整頁（原始資訊來自市場買賣日報表）",
+        "notice": "分點為多人彙總，短線型標籤是觀察名單、非官方認定；只能提示可能賣壓，不能保證避免倒貨。"
       }
     },
     {
@@ -781,15 +1077,46 @@
       "reason": "量增525.5%；收盤高於MA5 19.8%；法人買超1747.5張；5日波動代理9.95%",
       "broker_risk_research": {
         "version": "broker-risk-v1",
-        "status": "stale",
-        "data_date": "2026-10-19",
-        "risk_level": "unknown",
-        "warning": false,
-        "watched_buyers": [],
-        "watched_sellers": [],
+        "status": "available",
+        "data_date": "2026-10-20",
+        "risk_level": "high",
+        "warning": true,
+        "summary": "HIGH｜短線觀察分點達門檻：國泰-敦南、凱基-城中、富邦-南屯；隔日勿追價，先看開盤賣壓。",
+        "watched_buyers": [
+          {
+            "branch": "國泰-敦南",
+            "buy_lots": 908,
+            "sell_lots": 843,
+            "net_lots": 65,
+            "share_pct": 0.27,
+            "side": "buy",
+            "turnover_share_pct": 7.33
+          }
+        ],
+        "watched_sellers": [
+          {
+            "branch": "凱基-城中",
+            "buy_lots": 11,
+            "sell_lots": 1000,
+            "net_lots": -989,
+            "share_pct": 4.14,
+            "side": "sell",
+            "turnover_share_pct": 4.23
+          },
+          {
+            "branch": "富邦-南屯",
+            "buy_lots": 103,
+            "sell_lots": 608,
+            "net_lots": -505,
+            "share_pct": 2.11,
+            "side": "sell",
+            "turnover_share_pct": 2.98
+          }
+        ],
         "score_effect": "none",
         "filter_effect": "none",
-        "notice": "分點資料不可用或日期不一致，不據此調整排序或名單。"
+        "source": "MoneyDJ公開彙整頁（原始資訊來自市場買賣日報表）",
+        "notice": "分點為多人彙總，短線型標籤是觀察名單、非官方認定；只能提示可能賣壓，不能保證避免倒貨。"
       }
     },
     {
@@ -846,15 +1173,46 @@
       "reason": "量增540.0%；收盤高於MA5 8.5%；法人買超2366.4張；5日波動代理5.24%",
       "broker_risk_research": {
         "version": "broker-risk-v1",
-        "status": "stale",
-        "data_date": "2026-10-19",
-        "risk_level": "unknown",
-        "warning": false,
-        "watched_buyers": [],
-        "watched_sellers": [],
+        "status": "available",
+        "data_date": "2026-10-20",
+        "risk_level": "high",
+        "warning": true,
+        "summary": "HIGH｜短線觀察分點達門檻：凱基-台北、凱基-信義、國泰-敦南；隔日勿追價，先看開盤賣壓。",
+        "watched_buyers": [
+          {
+            "branch": "凱基-台北",
+            "buy_lots": 1189,
+            "sell_lots": 424,
+            "net_lots": 765,
+            "share_pct": 4.44,
+            "side": "buy",
+            "turnover_share_pct": 9.36
+          },
+          {
+            "branch": "凱基-信義",
+            "buy_lots": 212,
+            "sell_lots": 12,
+            "net_lots": 200,
+            "share_pct": 1.16,
+            "side": "buy",
+            "turnover_share_pct": 1.3
+          }
+        ],
+        "watched_sellers": [
+          {
+            "branch": "國泰-敦南",
+            "buy_lots": 194,
+            "sell_lots": 330,
+            "net_lots": -136,
+            "share_pct": 0.79,
+            "side": "sell",
+            "turnover_share_pct": 3.04
+          }
+        ],
         "score_effect": "none",
         "filter_effect": "none",
-        "notice": "分點資料不可用或日期不一致，不據此調整排序或名單。"
+        "source": "MoneyDJ公開彙整頁（原始資訊來自市場買賣日報表）",
+        "notice": "分點為多人彙總，短線型標籤是觀察名單、非官方認定；只能提示可能賣壓，不能保證避免倒貨。"
       }
     },
     {
@@ -911,15 +1269,37 @@
       "reason": "量增255.4%；收盤低於MA5 5.8%；法人賣超1796.3張；5日波動代理4.16%",
       "broker_risk_research": {
         "version": "broker-risk-v1",
-        "status": "stale",
-        "data_date": "2026-10-19",
-        "risk_level": "unknown",
-        "warning": false,
-        "watched_buyers": [],
-        "watched_sellers": [],
+        "status": "available",
+        "data_date": "2026-10-20",
+        "risk_level": "high",
+        "warning": true,
+        "summary": "HIGH｜短線觀察分點達門檻：國泰-敦南、凱基-台北；隔日勿追價，先看開盤賣壓。",
+        "watched_buyers": [
+          {
+            "branch": "國泰-敦南",
+            "buy_lots": 1170,
+            "sell_lots": 1104,
+            "net_lots": 66,
+            "share_pct": 0.18,
+            "side": "buy",
+            "turnover_share_pct": 6.34
+          }
+        ],
+        "watched_sellers": [
+          {
+            "branch": "凱基-台北",
+            "buy_lots": 2153,
+            "sell_lots": 2889,
+            "net_lots": -736,
+            "share_pct": 2.05,
+            "side": "sell",
+            "turnover_share_pct": 14.05
+          }
+        ],
         "score_effect": "none",
         "filter_effect": "none",
-        "notice": "分點資料不可用或日期不一致，不據此調整排序或名單。"
+        "source": "MoneyDJ公開彙整頁（原始資訊來自市場買賣日報表）",
+        "notice": "分點為多人彙總，短線型標籤是觀察名單、非官方認定；只能提示可能賣壓，不能保證避免倒貨。"
       }
     }
   ],
@@ -16569,8 +16949,9 @@
   },
   "optimization": {
     "version": 1,
-    "status": "舊權重研究完成（62 筆／3日）｜不得啟用",
-    "settled_count": 62,
+    "status": "舊權重研究累積 0 筆｜不得啟用",
+    "settled_count": 0,
+    "backtest_sample_count": 1270,
     "minimum_samples": 30,
     "weights": {
       "volume_growth_pct": 0.35,
@@ -16578,8 +16959,6 @@
       "institutional_lots": 0.25,
       "volume_rank": 0.1
     },
-    "evaluation_days": 3,
-    "current_metric": 0.03178646,
     "approved": false,
     "cost_validated": false
   },
@@ -16599,7 +16978,7 @@
       "long": true,
       "short": true
     },
-    "updated_at": "2026-10-20T17:52:41+08:00"
+    "updated_at": "2026-10-20T23:56:53+00:00"
   },
   "errors": [],
   "history_skipped": [
@@ -16613,7 +16992,7 @@
   "sources": [
     "官方逐日批次資料"
   ],
-  "updated_at": "2026-10-20T17:52:42+08:00",
+  "updated_at": "2026-10-20T23:56:54+00:00",
   "broker_risk_research": {
     "version": "broker-risk-v1",
     "score_effect": "none",
