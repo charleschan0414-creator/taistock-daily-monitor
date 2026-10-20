@@ -52,6 +52,27 @@ export function resolveTodayResult(data) {
   };
 }
 
+export function resolveStrategyCampaign(data) {
+  const campaign = data?.daily_status?.strategy_campaign;
+  if (!campaign) return { status: '等待資料', period: '—', baseline: '—', current: '—', candidate: '尚未發現' };
+  const status = { active: '進行中', complete: '已完成', not_started: '尚未開始' }[campaign.status] ?? '等待資料';
+  const metricText = metrics => {
+    const pf = Number.isFinite(metrics?.profit_factor) ? Number(metrics.profit_factor).toFixed(3) : '—';
+    return `勝率 ${percent(metrics?.win_rate)}｜PF ${pf}`;
+  };
+  const progress = campaign.candidate_found
+    ? `候選觀察日 ${campaign.candidate_forward_signal_days ?? 0}（非績效核准）`
+    : `研究新訊號日 ${campaign.unique_signal_days ?? 0}/${campaign.minimum_unique_signal_days ?? 20}`;
+  return {
+    status,
+    period: `${campaign.start_date ?? '—'} ～ ${campaign.end_date ?? '—'}`,
+    baseline: metricText(campaign.baseline),
+    current: metricText(campaign.current),
+    candidate: `${campaign.candidate_found ? '發現歷史候選｜待人工審核｜不自動啟用'
+      : '尚未發現合格候選'}｜${progress}`,
+  };
+}
+
 const backtestMetricText = (metrics, unavailable = '尚未完成') => {
   if (!metrics) return unavailable;
   const pf = Number.isFinite(metrics.profit_factor)
@@ -223,6 +244,12 @@ async function load() {
     $('strategy-validation').textContent = today.validation;
     $('strategy-validation').className = daily?.strategy_freeze?.cost_validated === true ? 'metric-success' : 'metric-failure';
     $('today-result-dates').textContent = today.dates;
+    const campaign = resolveStrategyCampaign(data);
+    $('campaign-status').textContent = campaign.status;
+    $('campaign-period').textContent = campaign.period;
+    $('campaign-baseline').textContent = campaign.baseline;
+    $('campaign-current').textContent = campaign.current;
+    $('campaign-candidate').textContent = campaign.candidate;
     renderBacktestPerformance(data);
     renderV2Analysis(data);
     const warnings = [];

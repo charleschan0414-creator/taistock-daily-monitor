@@ -694,5 +694,47 @@
     "desktop_version": "2026.10.19.4",
     "next_update": "2026-10-21T06:30:00+08:00",
     "recent_error": null
+  },
+  "strategy_campaign": {
+    "id": "one_month_winrate_pf_20261020",
+    "status": "not_started",
+    "start_date": "2026-10-20",
+    "end_date": "2026-11-20",
+    "as_of_date": "2026-10-19",
+    "objective": "improve_standard_win_rate_and_profit_factor",
+    "baseline": {
+      "data_date": "2026-10-16",
+      "trades": 1263,
+      "win_rate": 0.3570863024544735,
+      "profit_factor": 0.491830746851796,
+      "average_return": -0.010334771401578664,
+      "standard_round_trip_cost": 0.00435,
+      "stress_round_trip_cost": 0.00535
+    },
+    "current": {
+      "win_rate": 0.3570863024544735,
+      "profit_factor": 0.491830746851796,
+      "average_return": -0.010334771401578664
+    },
+    "metric_checks": {
+      "win_rate_above_baseline": false,
+      "profit_factor_above_baseline": false
+    },
+    "objective_met": false,
+    "candidate_found": false,
+    "candidate_proposed_on": null,
+    "candidate_forward_signal_days": 0,
+    "manual_review_recommended": false,
+    "forward_outcome_validated": false,
+    "unique_signal_dates": [],
+    "unique_signal_days": 0,
+    "minimum_unique_signal_days": 20,
+    "minimum_unique_signal_days_met": false,
+    "ready_for_manual_review": false,
+    "eligible_for_activation": false,
+    "auto_activation": false,
+    "guaranteed_improvement": false,
+    "execution_model": "next_day_intraday_forced_close_v1",
+    "notice": "自動研究只能尋找及驗證可能改善勝率與PF的候選；前瞻日數僅為觀察進度，不代表績效核准；不保證未來績效，候選不會自動啟用。"
   }
 }

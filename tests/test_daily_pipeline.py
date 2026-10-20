@@ -8,6 +8,35 @@ import daily_pipeline
 
 
 class DailyPipelineTests(unittest.TestCase):
+    def test_campaign_id_is_only_attached_inside_campaign_window(self):
+        config = {"id": "campaign-a", "start_date": "2026-10-20", "end_date": "2026-11-20"}
+        self.assertIsNone(daily_pipeline.campaign_id_for_date(config, "2026-10-19"))
+        self.assertEqual(daily_pipeline.campaign_id_for_date(config, "2026-10-20"), "campaign-a")
+        self.assertEqual(daily_pipeline.campaign_id_for_date(config, "2026-11-20"), "campaign-a")
+        self.assertIsNone(daily_pipeline.campaign_id_for_date(config, "2026-11-21"))
+
+    def test_campaign_rejects_cross_campaign_and_out_of_window_pending_candidate(self):
+        config = {
+            "id": "campaign-a", "start_date": "2026-10-20", "end_date": "2026-11-20",
+            "objective": "improve_standard_win_rate_and_profit_factor",
+            "baseline": {"win_rate": .35, "profit_factor": .49, "average_return": -.01},
+        }
+        backtest = {"metrics_scenarios": {"standard": {
+            "win_rate": .40, "profit_factor": .60, "average_return": -.005,
+        }}}
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "campaign.json"
+            path.write_text(json.dumps(config), encoding="utf-8")
+            with patch.object(daily_pipeline, "CAMPAIGN_CONFIG", path):
+                wrong_id = daily_pipeline.load_campaign_status(
+                    backtest, "2026-10-21",
+                    {"campaign_id": "campaign-b", "proposed_on": "2026-10-20", "forward_signal_days": 20})
+                too_early = daily_pipeline.load_campaign_status(
+                    backtest, "2026-10-21",
+                    {"campaign_id": "campaign-a", "proposed_on": "2026-10-19", "forward_signal_days": 20})
+        self.assertFalse(wrong_id["candidate_found"])
+        self.assertFalse(too_early["candidate_found"])
+
     def test_today_result_separates_triggered_from_untriggered_and_applies_cost(self):
         backtest = {"costs": {"standard": .00435}, "trades": [
             {"signal_date": "2026-10-16", "code": "A", "name": "甲", "direction": "long",
@@ -100,7 +129,10 @@ class DailyPipelineTests(unittest.TestCase):
         self.assertEqual(status["backtest"]["costs"],
                          {"gross": 0.0, "standard": .00435, "stress": .00535})
         self.assertEqual(status["backtest"]["portfolio_standard"], portfolio)
-        self.assertEqual(effective_gates, [{"long_score_min": 0}])
+        self.assertEqual(effective_gates, [{
+            "long_score_min": 55, "short_score_min": 70,
+            "short_enabled": True, "volume_growth_min": 20,
+        }])
         self.assertEqual(status["strategy_freeze"]["forward_signal_days"], 0)
         self.assertEqual(status["strategy_freeze"]["minimum_forward_signal_days"], 20)
         self.assertTrue(status["strategy_freeze"]["not_holdout_reuse"])
@@ -116,7 +148,10 @@ class DailyPipelineTests(unittest.TestCase):
         self.assertTrue(status["v2_analysis"]["limitations"]["source_is_daily_ohlc"])
         self.assertEqual(status["market_history"], market_history)
         self.assertFalse(status["market_history"]["affects_stock_scores"])
-        self.assertEqual(history[0]["applied_gate"], {"long_score_min": 0})
+        self.assertEqual(history[0]["applied_gate"], {
+            "long_score_min": 55, "short_score_min": 70,
+            "short_enabled": True, "volume_growth_min": 20,
+        })
 
     def test_market_history_exception_is_isolated_and_keeps_old_regime_summary(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -157,6 +192,9 @@ class DailyPipelineTests(unittest.TestCase):
             (data / "strategy_registry.json").write_text(json.dumps(registry), encoding="utf-8")
             old_report = {"decision": {"applied_gate": gate_a}, "marker": "previous"}
             (data / "strategy_optimization.json").write_text(json.dumps(old_report), encoding="utf-8")
+            prior_campaign = {"id": "campaign-a", "unique_signal_dates": ["2026-10-20"]}
+            (data / "daily_status.json").write_text(
+                json.dumps({"strategy_campaign": prior_campaign}), encoding="utf-8")
             def failing_update(notify):
                 effective = json.loads((data / "strategy_optimization.json").read_text(encoding="utf-8"))
                 seen.append(effective["decision"]["applied_gate"])
@@ -170,9 +208,11 @@ class DailyPipelineTests(unittest.TestCase):
             unchanged = json.loads((data / "strategy_registry.json").read_text(encoding="utf-8"))
             restored_report = json.loads(
                 (data / "strategy_optimization.json").read_text(encoding="utf-8"))
+            failed_status = json.loads((data / "daily_status.json").read_text(encoding="utf-8"))
         self.assertEqual(seen, [gate_a])
         self.assertEqual(unchanged, registry)
         self.assertEqual(restored_report, old_report)
+        self.assertEqual(failed_status["strategy_campaign"], prior_campaign)
 
     def test_history_is_idempotent_by_data_date(self):
         record = {"data_date": "2026-10-15", "applied_gate": {}}

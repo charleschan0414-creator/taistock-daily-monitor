@@ -8,6 +8,7 @@ from taistock.strategy_optimize import (
     STANDARD_COST,
     STRESS_COST,
     VERSION,
+    _holdout_checks,
     _train_robust,
     apply_strategy_gate,
     load_strategy_gate,
@@ -37,6 +38,25 @@ def fixture_backtest(test_high_return=0.04):
 
 
 class StrategyOptimizationTests(unittest.TestCase):
+    def test_holdout_requires_win_rate_and_pf_to_improve_over_incumbent(self):
+        candidate = {"trades": 40, "average_return": 0.01, "profit_factor": 1.30,
+                     "win_rate": 0.55, "max_drawdown": -0.10}
+        baseline = {"profit_factor": 1.10, "win_rate": 0.50, "max_drawdown": -0.10}
+        stress = {"average_return": 0.002, "profit_factor": 1.05}
+        checks = _holdout_checks(candidate, baseline, stress)
+        self.assertTrue(checks["standard_win_rate_above_incumbent"])
+        self.assertTrue(checks["standard_profit_factor_above_incumbent"])
+
+        candidate["win_rate"] = 0.49
+        checks = _holdout_checks(candidate, baseline, stress)
+        self.assertFalse(checks["standard_win_rate_above_incumbent"])
+
+        candidate.update({"win_rate": 0.55, "profit_factor": 1.10})
+        self.assertFalse(_holdout_checks(candidate, baseline, stress)["standard_profit_factor_above_incumbent"])
+        candidate["profit_factor"] = None
+        self.assertTrue(_holdout_checks(candidate, baseline, stress)["standard_profit_factor_above_incumbent"])
+        baseline["profit_factor"] = None
+        self.assertFalse(_holdout_checks(candidate, baseline, stress)["standard_profit_factor_above_incumbent"])
     def test_frozen_protective_gate_is_applied_without_claiming_cost_validation(self):
         frozen_gate = {"long_score_min": 70, "short_score_min": 70,
                        "short_enabled": True, "volume_growth_min": 20}

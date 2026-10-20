@@ -185,8 +185,8 @@ h3 { margin-bottom: 0; font-size: 16px; }
 .reason { margin: 12px 0 0; color: var(--muted); font-size: 12px; }
 .empty { grid-column: 1 / -1; margin: 0; padding: 18px; color: var(--muted); text-align: center; }
 
-.v2-analysis, .system-details, .settlement-summary { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface-soft); }
-.v2-analysis summary, .system-details summary, .settlement-summary > summary {
+.v2-analysis, .system-details, .settlement-summary, .strategy-campaign { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface-soft); }
+.v2-analysis summary, .system-details summary, .settlement-summary > summary, .strategy-campaign > summary {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -195,9 +195,9 @@ h3 { margin-bottom: 0; font-size: 16px; }
   cursor: pointer;
   list-style: none;
 }
-.v2-analysis summary::-webkit-details-marker, .system-details summary::-webkit-details-marker, .settlement-summary > summary::-webkit-details-marker { display: none; }
-.v2-analysis summary::after, .system-details summary::after, .settlement-summary > summary::after { color: var(--muted); content: "+"; font-size: 20px; }
-.v2-analysis[open] summary::after, .system-details[open] summary::after, .settlement-summary[open] > summary::after { content: "−"; }
+.v2-analysis summary::-webkit-details-marker, .system-details summary::-webkit-details-marker, .settlement-summary > summary::-webkit-details-marker, .strategy-campaign > summary::-webkit-details-marker { display: none; }
+.v2-analysis summary::after, .system-details summary::after, .settlement-summary > summary::after, .strategy-campaign > summary::after { color: var(--muted); content: "+"; font-size: 20px; }
+.v2-analysis[open] summary::after, .system-details[open] summary::after, .settlement-summary[open] > summary::after, .strategy-campaign[open] > summary::after { content: "−"; }
 .v2-analysis summary > span:first-child { flex: 1; }
 .v2-analysis summary strong { display: block; font-size: 16px; }
 .v2-analysis summary .status-badge { margin-left: auto; }
@@ -262,6 +262,9 @@ footer { padding: 20px 0 max(28px, env(safe-area-inset-bottom)); border-top: 1px
 .settlement-summary > summary strong { display: block; font-size: 16px; }
 .settlement-summary > .summary-grid { padding: 0 18px 18px; }
 .settlement-summary .summary-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.strategy-campaign > summary > span:first-child { flex: 1; }
+.strategy-campaign > summary strong { display: block; font-size: 16px; }
+.strategy-campaign .backtest-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .metric-failure { color: #fb7185 !important; }
 .metric-success { color: #34d399 !important; }
 .technical-research { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 10px; color: var(--muted); }

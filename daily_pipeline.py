@@ -5,13 +5,14 @@ from __future__ import annotations
 import json
 import os
 import sys
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 from app import run_backtest, run_strategy_optimization, update
 from taistock.global_market import GlobalMarketClient
 from taistock.health import build_health_report
 from taistock.market_history import capture_market_history
+from taistock.strategy_campaign import build_campaign_status, update_unique_signal_dates
 from taistock.strategy_freeze import (
     apply_active_gate_to_report,
     build_registry_update,
@@ -24,6 +25,7 @@ from taistock.v2_optimize import optimize_v2
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / "data"
 TAIPEI = timezone(timedelta(hours=8))
+CAMPAIGN_CONFIG = ROOT / "strategy_campaign.json"
 
 
 def taipei_now():
@@ -35,6 +37,57 @@ def atomic_json(path, value):
     temporary = path.with_name(path.name + ".tmp")
     temporary.write_text(json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False), encoding="utf-8")
     os.replace(temporary, path)
+
+
+def load_campaign_status(backtest, data_date, pending_candidate=None, previous_campaign=None):
+    """Read the bounded campaign config and compare like-for-like Standard metrics."""
+    if not CAMPAIGN_CONFIG.exists():
+        return None
+    config = json.loads(CAMPAIGN_CONFIG.read_text(encoding="utf-8"))
+    scenarios = backtest.get("metrics_scenarios") or {}
+    current_standard = scenarios.get("standard") or backtest.get("metrics", {})
+    previous = previous_campaign if isinstance(previous_campaign, dict) else {}
+    previous_dates = (previous.get("unique_signal_dates", [])
+                      if previous.get("id") == config["id"] else [])
+    dates = update_unique_signal_dates(config, previous_dates, data_date)
+    pending = pending_candidate if isinstance(pending_candidate, dict) else None
+    if pending:
+        try:
+            proposed = date.fromisoformat(pending.get("proposed_on", ""))
+            inside = (date.fromisoformat(config["start_date"]) <= proposed
+                      <= date.fromisoformat(config["end_date"]))
+        except (TypeError, ValueError):
+            inside = False
+        if pending.get("campaign_id") != config["id"] or not inside:
+            pending = None
+    return build_campaign_status(
+        config, data_date, current_standard,
+        candidate_found=pending is not None,
+        unique_signal_dates=dates,
+        candidate_proposed_on=pending.get("proposed_on") if pending else None,
+        candidate_forward_signal_days=pending.get("forward_signal_days", 0) if pending else 0,
+    )
+
+
+def previous_campaign_state(path):
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        campaign = payload.get("strategy_campaign", {})
+        return campaign if isinstance(campaign, dict) else {}
+    except (OSError, ValueError, TypeError):
+        return {}
+
+
+def campaign_id_for_date(config, data_date):
+    """Attach a campaign only while its configured calendar window is active."""
+    try:
+        current = date.fromisoformat(data_date)
+        start = date.fromisoformat(config["start_date"])
+        end = date.fromisoformat(config["end_date"])
+        campaign_id = config["id"]
+    except (KeyError, TypeError, ValueError):
+        return None
+    return campaign_id if start <= current <= end else None
 
 
 def _app_version():
@@ -189,7 +242,10 @@ def record_market_history(client=None, clock=None):
 
 def main():
     started = taipei_now()
+    prior_campaign = previous_campaign_state(DATA / "daily_status.json")
     status = {"started_at": started, "completed_at": None, "status": "running", "data_date": None}
+    if prior_campaign:
+        status["strategy_campaign"] = prior_campaign
     strategy_report_path = DATA / "strategy_optimization.json"
     previous_strategy_report = None
     strategy_report_staged = False
@@ -205,7 +261,11 @@ def main():
         expected = backtest.get("data_collection", {}).get("latest_complete_date")
         if not expected:
             raise ValueError("backtest did not report latest_complete_date")
-        proposed_registry = build_registry_update(existing_registry, strategy, expected)
+        campaign_config = (json.loads(CAMPAIGN_CONFIG.read_text(encoding="utf-8"))
+                           if CAMPAIGN_CONFIG.exists() else {})
+        proposed_registry = build_registry_update(
+            existing_registry, strategy, expected,
+            campaign_id=campaign_id_for_date(campaign_config, expected))
         effective_strategy = apply_active_gate_to_report(strategy, proposed_registry)
         # app.update reads this report; publish the optimizer decision separately inside it.
         if strategy_report_path.exists():
@@ -235,6 +295,12 @@ def main():
                 "last_observed_date": proposed_registry["last_observed_date"],
                 "pending_candidate": proposed_registry.get("pending_candidate"),
             },
+            "strategy_campaign": load_campaign_status(
+                backtest,
+                latest["data_date"],
+                pending_candidate=proposed_registry.get("pending_candidate"),
+                previous_campaign=prior_campaign,
+            ),
             "v2_analysis": {
                 "version": v2_report["version"],
                 "costs": v2_report["costs"],

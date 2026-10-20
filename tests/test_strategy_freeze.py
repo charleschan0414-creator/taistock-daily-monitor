@@ -6,6 +6,7 @@ from pathlib import Path
 from taistock.strategy_freeze import (
     EXECUTION_MODEL,
     MINIMUM_FORWARD_SIGNAL_DAYS,
+    PROTECTIVE_BASELINE_GATE,
     apply_active_gate_to_report,
     build_registry_update,
     load_registry,
@@ -17,9 +18,10 @@ GATE_A = {"long_score_min": 55, "short_score_min": 70, "short_enabled": True, "v
 GATE_B = {"long_score_min": 70, "short_score_min": 70, "short_enabled": False, "volume_growth_min": 50}
 
 
-def approved_report(gate):
+def approved_report(gate, baseline_gate=None):
     return {
         "version": 2,
+        "baseline_gate": dict(baseline_gate or gate),
         "decision": {
             "upgrade_approved": True,
             "cost_validated": True,
@@ -31,6 +33,25 @@ def approved_report(gate):
 
 
 class StrategyFreezeTests(unittest.TestCase):
+    def test_missing_baseline_gate_uses_immutable_protective_gate(self):
+        report = approved_report(GATE_B)
+        report.pop("baseline_gate")
+        registry = build_registry_update(None, report, "2026-10-15", campaign_id="campaign-a")
+
+        self.assertEqual(registry["active_gate"], PROTECTIVE_BASELINE_GATE)
+        self.assertEqual(registry["pending_candidate"]["gate"], GATE_B)
+        self.assertFalse(registry["cost_validated"])
+
+    def test_missing_registry_keeps_baseline_active_and_new_candidate_pending(self):
+        registry = build_registry_update(
+            None, approved_report(GATE_B, baseline_gate=GATE_A), "2026-10-15")
+
+        self.assertEqual(registry["active_gate"], GATE_A)
+        self.assertFalse(registry["cost_validated"])
+        self.assertEqual(registry["pending_candidate"]["gate"], GATE_B)
+        self.assertEqual(registry["pending_candidate"]["forward_signal_days"], 0)
+        self.assertFalse(registry["pending_candidate"]["auto_promotion_allowed"])
+
     def test_first_adoption_starts_zero_day_forward_observation(self):
         registry = build_registry_update(None, approved_report(GATE_A), "2026-10-15")
 
@@ -97,12 +118,26 @@ class StrategyFreezeTests(unittest.TestCase):
         self.assertFalse(pending["pending_candidate"]["auto_promotion_allowed"])
         self.assertEqual(rerun, pending)
 
+    def test_pending_candidate_resets_when_campaign_changes(self):
+        current = build_registry_update(None, approved_report(GATE_A), "2026-09-01")
+        pending = build_registry_update(
+            current, approved_report(GATE_B), "2026-09-02", campaign_id="campaign-a")
+        observed = build_registry_update(
+            pending, approved_report(GATE_B), "2026-09-03", campaign_id="campaign-a")
+        reset = build_registry_update(
+            observed, approved_report(GATE_B), "2026-09-04", campaign_id="campaign-b")
+
+        self.assertEqual(observed["pending_candidate"]["forward_signal_dates"], ["2026-09-03"])
+        self.assertEqual(reset["pending_candidate"]["campaign_id"], "campaign-b")
+        self.assertEqual(reset["pending_candidate"]["forward_signal_days"], 0)
+        self.assertEqual(reset["pending_candidate"]["forward_signal_dates"], [])
+
     def test_effective_report_uses_frozen_active_gate_for_scanner(self):
         registry = build_registry_update(None, approved_report(GATE_A), "2026-10-15")
         report = apply_active_gate_to_report(approved_report(GATE_B), registry)
 
         self.assertEqual(report["decision"]["applied_gate"], GATE_A)
-        self.assertTrue(report["decision"]["cost_validated"])
+        self.assertFalse(report["decision"]["cost_validated"])
         self.assertEqual(report["strategy_freeze"]["strategy_version"], 1)
 
     def test_execution_model_migration_applies_protective_gate_without_false_cost_validation(self):

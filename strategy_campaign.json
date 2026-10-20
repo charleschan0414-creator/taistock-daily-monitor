@@ -1,0 +1,19 @@
+{
+  "id": "one_month_winrate_pf_20261020",
+  "start_date": "2026-10-20",
+  "end_date": "2026-11-20",
+  "objective": "improve_standard_win_rate_and_profit_factor",
+  "execution_model": "next_day_intraday_forced_close_v1",
+  "candidate_policy": "finite_predefined_candidates_only",
+  "auto_activation": false,
+  "minimum_new_unique_signal_days": 20,
+  "baseline": {
+    "data_date": "2026-10-16",
+    "trades": 1263,
+    "win_rate": 0.3570863024544735,
+    "profit_factor": 0.491830746851796,
+    "average_return": -0.010334771401578664,
+    "standard_round_trip_cost": 0.00435,
+    "stress_round_trip_cost": 0.00535
+  }
+}

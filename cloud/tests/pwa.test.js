@@ -69,6 +69,28 @@ test('首屏說明通過閘門數與基礎候選數不同', async () => {
   assert.match(app, /基礎候選/);
 });
 
+test('PWA顯示一個月研究週期且明列不自動啟用與不保證改善', async () => {
+  const [html, app] = await Promise.all([read('index.html'), read('app.js')]);
+  for (const id of ['campaign-status', 'campaign-period', 'campaign-baseline',
+    'campaign-current', 'campaign-candidate']) {
+    assert.match(html, new RegExp(`id="${id}"`));
+    assert.match(app, new RegExp(id));
+  }
+  assert.match(html, /候選不會自動啟用/);
+  assert.match(html, /不保證未來勝率或PF提高/);
+
+  const { resolveStrategyCampaign } = await import('../public/app.js');
+  const view = resolveStrategyCampaign({ daily_status: { strategy_campaign: {
+    status: 'complete', start_date: '2026-10-20', end_date: '2026-11-20',
+    baseline: { win_rate: 0.35, profit_factor: 0.49 },
+    current: { win_rate: 0.42, profit_factor: 1.1 }, candidate_found: true,
+    ready_for_manual_review: false, unique_signal_days: 20,
+    candidate_forward_signal_days: 1, minimum_unique_signal_days: 20,
+  } } });
+  assert.match(view.candidate, /候選觀察日 1（非績效核准）/);
+  assert.doesNotMatch(view.candidate, /符合月期比較/);
+});
+
 test('訊號卡明列偏多偏空方向且動態內容不用 innerHTML', async () => {
   const app = await read('app.js');
   assert.match(app, /function card\(row, direction\)/);
@@ -103,7 +125,7 @@ test('PWA顯示核心100日成本後三情境且保留研究限制', async () =>
   assert.match(app, /renderBacktestPerformance\(data\)/);
   assert.doesNotMatch(app, /\.innerHTML\s*=/);
   assert.match(styles, /\.backtest-performance/);
-  assert.match(sw, /taistock-monitor-v8/);
+  assert.match(sw, /taistock-monitor-v9/);
 });
 
 test('PWA顯示V2成本後績效檢驗、方法限制與新版快取', async () => {
@@ -124,5 +146,5 @@ test('PWA顯示V2成本後績效檢驗、方法限制與新版快取', async () 
   assert.match(app, /v2-quality/);
   assert.doesNotMatch(app, /\.innerHTML\s*=/);
   assert.match(styles, /\.v2-analysis/);
-  assert.match(sw, /taistock-monitor-v8/);
+  assert.match(sw, /taistock-monitor-v9/);
 });

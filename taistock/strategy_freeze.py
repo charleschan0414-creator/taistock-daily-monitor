@@ -12,6 +12,12 @@ from pathlib import Path
 
 MINIMUM_FORWARD_SIGNAL_DAYS = 20
 EXECUTION_MODEL = "next_day_intraday_forced_close_v1"
+PROTECTIVE_BASELINE_GATE = {
+    "long_score_min": 55,
+    "short_score_min": 70,
+    "short_enabled": True,
+    "volume_growth_min": 20,
+}
 _REQUIRED_FIELDS = {
     "active_gate",
     "strategy_version",
@@ -32,11 +38,10 @@ def _approved_candidate(report: dict) -> dict | None:
 
 
 def _initial_gate(report: dict) -> dict:
-    decision = report.get("decision", {})
-    gate = decision.get("applied_gate")
-    if not isinstance(gate, dict) or not gate:
-        raise ValueError("optimization report has no usable applied_gate")
-    return copy.deepcopy(gate)
+    baseline = report.get("baseline_gate")
+    if isinstance(baseline, dict) and baseline:
+        return copy.deepcopy(baseline)
+    return copy.deepcopy(PROTECTIVE_BASELINE_GATE)
 
 
 def _new_registry_state(gate: dict, version: int, data_date: str,
@@ -95,40 +100,41 @@ def write_registry(path: Path, registry: dict) -> None:
 
 
 def build_registry_update(existing: dict | None, optimization_report: dict,
-                          data_date: str) -> dict:
+                          data_date: str, campaign_id: str | None = None) -> dict:
     """Return the registry state for one successful unique signal date."""
     if not isinstance(data_date, str) or not data_date:
         raise ValueError("data_date is required for strategy forward observation")
     if existing is None:
-        gate = _initial_gate(optimization_report)
-        return _new_registry_state(
-            gate, 1, data_date,
-            bool(optimization_report.get("decision", {}).get("cost_validated")),
-        )
-
-    current = copy.deepcopy(_validate(existing))
-    if current.get("execution_model") != EXECUTION_MODEL:
-        return _new_registry_state(
-            current["active_gate"], int(current["strategy_version"]) + 1,
-            data_date, False,
-        )
-    last_date = current["last_observed_date"]
-    is_new_date = data_date > last_date
-    if is_new_date:
-        current["forward_signal_days"] += 1
-        current["last_observed_date"] = data_date
+        current = _new_registry_state(
+            _initial_gate(optimization_report), 1, data_date, False)
+        is_new_date = False
+    else:
+        current = copy.deepcopy(_validate(existing))
+        if current.get("execution_model") != EXECUTION_MODEL:
+            return _new_registry_state(
+                current["active_gate"], int(current["strategy_version"]) + 1,
+                data_date, False,
+            )
+        last_date = current["last_observed_date"]
+        is_new_date = data_date > last_date
+        if is_new_date:
+            current["forward_signal_days"] += 1
+            current["last_observed_date"] = data_date
 
     candidate = _approved_candidate(optimization_report)
     differs = candidate is not None and candidate != current["active_gate"]
     mature = current["forward_signal_days"] >= current["minimum_forward_signal_days"]
     if differs:
         pending = current.get("pending_candidate")
-        if not isinstance(pending, dict) or pending.get("gate") != candidate:
+        if (not isinstance(pending, dict) or pending.get("gate") != candidate
+                or pending.get("campaign_id") != campaign_id):
             pending = {
                 "gate": candidate,
+                "campaign_id": campaign_id,
                 "proposed_on": data_date,
                 "last_observed_date": data_date,
                 "forward_signal_days": 0,
+                "forward_signal_dates": [],
                 "minimum_forward_signal_days": current["minimum_forward_signal_days"],
                 "auto_promotion_allowed": False,
                 "requires_outcome_validation": True,
@@ -136,6 +142,9 @@ def build_registry_update(existing: dict | None, optimization_report: dict,
         elif is_new_date and data_date > pending.get("last_observed_date", ""):
             pending["forward_signal_days"] = int(pending.get("forward_signal_days", 0)) + 1
             pending["last_observed_date"] = data_date
+            dates = pending.get("forward_signal_dates", [])
+            dates = dates if isinstance(dates, list) else []
+            pending["forward_signal_dates"] = sorted(set(dates + [data_date]))
         current["pending_candidate"] = pending
         current["status"] = "pending_candidate"
     elif mature:

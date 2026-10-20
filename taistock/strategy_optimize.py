@@ -121,11 +121,20 @@ def _holdout_checks(candidate_standard: dict, baseline_standard: dict,
                     candidate_stress: dict) -> dict:
     allowed_dd = baseline_standard["max_drawdown"] - 0.02
     standard_pf = candidate_standard["profit_factor"]
+    baseline_pf = baseline_standard["profit_factor"]
     stress_pf = candidate_stress["profit_factor"]
+    pf_above_incumbent = (
+        baseline_pf is not None and (
+            standard_pf is None or standard_pf > baseline_pf
+        )
+    )
     return {
         "standard_minimum_test_trades_30": candidate_standard["trades"] >= MIN_TEST_TRADES,
         "standard_average_return_above_0": candidate_standard["average_return"] > 0,
         "standard_profit_factor_above_1": standard_pf is None or standard_pf > 1.0,
+        "standard_profit_factor_above_incumbent": pf_above_incumbent,
+        "standard_win_rate_above_incumbent": (
+            candidate_standard["win_rate"] > baseline_standard["win_rate"]),
         "standard_max_drawdown_not_worse_than_incumbent_by_more_than_2pp": (
             candidate_standard["max_drawdown"] >= allowed_dd),
         "stress_average_return_above_0": candidate_stress["average_return"] > 0,
@@ -176,7 +185,7 @@ def optimize_strategy(backtest: dict, output_path: Path | None = None,
     applied_mode = "candidate" if upgrade_approved else "incumbent_protective"
     direction_text = "偏空啟用" if applied_gate["short_enabled"] else "偏空停用"
     status = ("保留既有保護性篩選｜沒有符合訓練穩健條件的候選" if no_robust_candidate else
-              (f"已啟用｜偏多分數≥{applied_gate['long_score_min']}、偏空分數≥{applied_gate['short_score_min']}、"
+              (f"候選通過歷史成本檢查｜待前瞻與人工審核｜偏多分數≥{applied_gate['long_score_min']}、偏空分數≥{applied_gate['short_score_min']}、"
                f"{direction_text}、量增≥{applied_gate['volume_growth_min']}%｜成本後驗證通過" if upgrade_approved
                else "保留既有保護性篩選｜成本後升級未通過"))
     report = {
