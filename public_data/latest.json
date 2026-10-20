@@ -16599,7 +16599,7 @@
       "long": true,
       "short": true
     },
-    "updated_at": "2026-10-20T17:20:22+08:00"
+    "updated_at": "2026-10-20T17:52:41+08:00"
   },
   "errors": [],
   "history_skipped": [
@@ -16613,7 +16613,7 @@
   "sources": [
     "官方逐日批次資料"
   ],
-  "updated_at": "2026-10-20T17:50:18+08:00",
+  "updated_at": "2026-10-20T17:52:42+08:00",
   "broker_risk_research": {
     "version": "broker-risk-v1",
     "score_effect": "none",
