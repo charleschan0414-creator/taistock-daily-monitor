@@ -8,13 +8,13 @@
     "selection_objective": "standard net average return, then cumulative return, PF, drawdown, trades"
   },
   "train_dates": {
-    "from": "2026-05-25",
-    "to": "2026-09-01",
+    "from": "2026-05-26",
+    "to": "2026-09-02",
     "days": 70
   },
   "holdout_dates": {
-    "from": "2026-09-02",
-    "to": "2026-10-16",
+    "from": "2026-09-03",
+    "to": "2026-10-19",
     "days": 30
   },
   "costs": {
@@ -116,15 +116,6 @@
         "required_profitable_windows": 2,
         "windows": [
           {
-            "from": "2026-09-14",
-            "to": "2026-10-14",
-            "days": 20,
-            "trades": 0,
-            "profit_factor": null,
-            "data_sufficient": false,
-            "profit_factor_above_1": false
-          },
-          {
             "from": "2026-09-15",
             "to": "2026-10-15",
             "days": 20,
@@ -136,6 +127,15 @@
           {
             "from": "2026-09-16",
             "to": "2026-10-16",
+            "days": 20,
+            "trades": 0,
+            "profit_factor": null,
+            "data_sufficient": false,
+            "profit_factor_above_1": false
+          },
+          {
+            "from": "2026-09-17",
+            "to": "2026-10-19",
             "days": 20,
             "trades": 0,
             "profit_factor": null,
@@ -206,15 +206,6 @@
         "required_profitable_windows": 2,
         "windows": [
           {
-            "from": "2026-09-14",
-            "to": "2026-10-14",
-            "days": 20,
-            "trades": 2,
-            "profit_factor": 0.2762054476081903,
-            "data_sufficient": true,
-            "profit_factor_above_1": false
-          },
-          {
             "from": "2026-09-15",
             "to": "2026-10-15",
             "days": 20,
@@ -226,6 +217,15 @@
           {
             "from": "2026-09-16",
             "to": "2026-10-16",
+            "days": 20,
+            "trades": 2,
+            "profit_factor": 0.2762054476081903,
+            "data_sufficient": true,
+            "profit_factor_above_1": false
+          },
+          {
+            "from": "2026-09-17",
+            "to": "2026-10-19",
             "days": 20,
             "trades": 2,
             "profit_factor": 0.2762054476081903,
@@ -256,5 +256,5 @@
     ],
     "notice": "日 OHLC 只能保守模擬次一交易日當沖，不能重建盤中先後；不跨日持有，也不保證勝率或獲利。"
   },
-  "updated_at": "2026-10-19T23:59:43+00:00"
+  "updated_at": "2026-10-20T17:20:21+08:00"
 }
