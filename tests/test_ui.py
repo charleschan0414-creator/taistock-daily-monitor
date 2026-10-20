@@ -4,7 +4,8 @@ from unittest.mock import Mock, patch
 from taistock.ui import (format_backtest_summary, display_quote_values, visible_signal_rows,
                          format_global_market, BackgroundRefreshGate, dashboard_structure,
                          signal_row_tags, global_market_layers, strategy_card_label,
-                         technical_research_text, format_health_report, Dashboard)
+                         technical_research_text, broker_risk_text, format_health_report,
+                         run_desktop_update, Dashboard)
 
 
 class BacktestUiTests(unittest.TestCase):
@@ -102,6 +103,25 @@ class BacktestUiTests(unittest.TestCase):
             "close_vs_prior5_high_pct": 1.2, "close_vs_prior5_low_pct": 9.8}}}
         self.assertEqual(technical_research_text(row, "long"),
                          "研究不計分｜RSI5 68.4｜ATR5 4.3%｜距前5日高 +1.2%")
+    def test_broker_risk_warning_is_explicitly_non_scoring_and_not_official(self):
+        row = {"broker_risk_research": {"status": "available", "warning": True,
+                "risk_level": "high", "watched_buyers": [{"branch": "國泰-敦南", "net_lots": 1005}],
+                "watched_sellers": []}}
+        text = broker_risk_text(row)
+        self.assertIn("高度注意", text)
+        self.assertIn("國泰-敦南", text)
+        self.assertIn("買超", text)
+        self.assertIn("不計分", text)
+        self.assertIn("非官方認定", text)
+
+    def test_desktop_full_update_delegates_to_the_validated_cli_pipeline(self):
+        completed = Mock(returncode=0, stdout="ok", stderr="")
+        with patch("taistock.ui.subprocess.run", return_value=completed) as runner, \
+             patch("taistock.ui.load_result", return_value={"data_date": "2026-10-20"}):
+            result = run_desktop_update(Path("C:/app/data"))
+        self.assertEqual(result["data_date"], "2026-10-20")
+        self.assertEqual(runner.call_args.args[0][-1], "--update")
+        self.assertEqual(runner.call_args.kwargs["cwd"], Path("C:/app"))
     def test_signal_rows_get_direction_change_and_zebra_tags(self):
         self.assertEqual(signal_row_tags("long", "+1.25%", 0), ("even", "long", "gain"))
         self.assertEqual(signal_row_tags("short", "-0.80%", 1), ("odd", "short", "loss"))

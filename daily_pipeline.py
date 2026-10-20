@@ -8,7 +8,7 @@ import sys
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
-from app import run_backtest, run_strategy_optimization, update
+from app import run_backtest, run_strategy_optimization, update, validate_daily_scan
 from taistock.global_market import GlobalMarketClient
 from taistock.health import build_health_report
 from taistock.market_history import capture_market_history
@@ -111,26 +111,7 @@ def write_status_with_health(status):
 def validate_outputs(backtest, latest, expected_data_date):
     if backtest.get("metrics", {}).get("signal_days") != 100:
         raise ValueError("backtest must contain exactly 100 signal days")
-    if latest.get("data_date") != expected_data_date:
-        raise ValueError("latest data_date is not the newest complete official trading day")
-    if latest.get("top100_count") != 100:
-        raise ValueError("top100_count must be 100")
-    if latest.get("history_success_count") != 100:
-        raise ValueError("history_success_count must be 100")
-    if latest.get("errors"):
-        raise ValueError("latest contains collection errors")
-    for direction in ("long", "short"):
-        rows = latest.get(f"{direction}_top10", [])
-        if len(rows) > 10:
-            raise ValueError(f"{direction}_top10 exceeds 10 rows")
-        for row in rows:
-            risk = row.get("risk_pct")
-            if not isinstance(risk, (int, float)) or not 1.5 <= risk <= 5:
-                raise ValueError("risk_pct must be between 1.5 and 5")
-            entry, stop, target = row.get("entry_trigger"), row.get("stop_loss"), row.get("target1")
-            valid = stop < entry < target if direction == "long" else target < entry < stop
-            if not valid:
-                raise ValueError(f"invalid {direction} price direction")
+    validate_daily_scan(latest, expected_data_date)
 
 
 def build_today_result(backtest, active_gate):

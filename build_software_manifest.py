@@ -27,6 +27,7 @@ RELEASE_FILES = (
     "taistock/__init__.py",
     "taistock/backup.py",
     "taistock/backtest.py",
+    "taistock/broker_risk.py",
     "taistock/core.py",
     "taistock/data.py",
     "taistock/global_market.py",

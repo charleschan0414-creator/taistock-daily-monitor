@@ -17,6 +17,16 @@ class NotifyTests(unittest.TestCase):
         self.assertIn("學習中 8/30", text)
         self.assertIn("非投資建議", text)
 
+    def test_summary_surfaces_broker_risk_warning(self):
+        result = {"data_date": "2026-10-19", "optimization": {"status": "研究中"},
+                  "long_top10": [{"code": "6269", "name": "台郡", "broker_risk_research": {
+                      "warning": True, "risk_level": "high", "watched_buyers": [{"branch": "國泰-敦南"}],
+                      "watched_sellers": []}}], "short_top10": []}
+        text = build_summary(result)
+        self.assertIn("分點風險：6269台郡", text)
+        self.assertIn("國泰-敦南", text)
+        self.assertIn("買超", text)
+
     @patch("taistock.notify.subprocess.run", side_effect=OSError("no powershell"))
     def test_writes_fallback_notification_when_toast_fails(self, _run):
         with tempfile.TemporaryDirectory() as directory:

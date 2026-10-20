@@ -12,6 +12,34 @@ from tests.test_strategy_optimize import fixture_backtest
 
 
 class AppCliTests(unittest.TestCase):
+    def test_daily_scan_rejects_partial_top100_before_persistence(self):
+        complete = {"data_date": "2026-10-20", "top100_count": 100,
+                    "history_success_count": 100, "errors": [],
+                    "long_top10": [{"entry_trigger": 101, "stop_loss": 98,
+                                    "target1": 105, "risk_pct": 3}], "short_top10": []}
+        app.validate_daily_scan(complete, "2026-10-20")
+        with self.assertRaisesRegex(ValueError, "100檔歷史資料完整"):
+            app.validate_daily_scan({"top100_count": 100, "history_success_count": 99,
+                                     "data_date": "2026-10-20", "errors": ["6173 歷史不足"],
+                                     "long_top10": [], "short_top10": []}, "2026-10-20")
+
+    def test_daily_scan_rejects_wrong_date_and_invalid_directional_prices(self):
+        base = {"data_date": "2026-10-19", "top100_count": 100,
+                "history_success_count": 100, "errors": [], "long_top10": [], "short_top10": []}
+        with self.assertRaisesRegex(ValueError, "最新完整官方交易日"):
+            app.validate_daily_scan(base, "2026-10-20")
+        base["data_date"] = "2026-10-20"
+        base["long_top10"] = [{"entry_trigger": 101, "stop_loss": 105,
+                               "target1": 98, "risk_pct": 3}]
+        with self.assertRaisesRegex(ValueError, "價格方向"):
+            app.validate_daily_scan(base, "2026-10-20")
+
+    def test_daily_scan_rejects_missing_required_schema_lists(self):
+        malformed = {"data_date": "2026-10-20", "top100_count": 100,
+                     "history_success_count": 100}
+        with self.assertRaisesRegex(ValueError, "必要欄位"):
+            app.validate_daily_scan(malformed, "2026-10-20")
+
     def test_data_end_date_uses_taipei_close_boundary(self):
         before = datetime(2026, 10, 16, 7, 59, tzinfo=timezone.utc)
         after = datetime(2026, 10, 16, 8, 0, tzinfo=timezone.utc)

@@ -80,6 +80,29 @@ class ScannerTests(unittest.TestCase):
         self.assertEqual(research["score_effect"], "none")
         self.assertIn("rsi_5", research["indicators"])
 
+    def test_bulk_scan_backfills_new_listing_without_six_sessions(self):
+        dates = ("2026-10-08", "2026-10-09", "2026-10-12", "2026-10-13", "2026-10-14", "2026-10-15")
+        days = []
+        for index, date_text in enumerate(dates):
+            quotes = {
+                "1111": {"code": "1111", "name": "甲", "market": "上市", "close": 10 + index,
+                         "volume": 9000, "open": 10, "high": 16, "low": 9},
+                "2222": {"code": "2222", "name": "乙", "market": "上市", "close": 20 + index,
+                         "volume": 8000, "open": 20, "high": 26, "low": 19},
+                "3333": {"code": "3333", "name": "丙", "market": "上市", "close": 30 + index,
+                         "volume": 7000, "open": 30, "high": 36, "low": 29},
+            }
+            if index < 5:
+                quotes.pop("1111")
+            days.append({"date": date_text, "quotes": quotes,
+                         "institutions": {"1111": 1000, "2222": 1000, "3333": 1000}})
+        result = Scanner(FakeClient(), workers=1).run_from_days(days, limit=2)
+        self.assertEqual(result["top100_count"], 2)
+        self.assertEqual(result["history_success_count"], 2)
+        self.assertEqual([row["code"] for row in result["history_skipped"]], ["1111"])
+        self.assertNotIn("1111", [row["code"] for row in result["signals"]])
+        self.assertEqual(result["errors"], [])
+
     def test_strategy_gate_runs_after_scoring_and_filters_daily_lists(self):
         days = []
         for index, date_text in enumerate(("2026-10-08", "2026-10-09", "2026-10-12",

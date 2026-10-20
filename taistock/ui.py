@@ -5,17 +5,13 @@ import sys
 import threading
 import tkinter as tk
 import socket
-from datetime import date, datetime, timedelta, timezone
+from datetime import datetime, timezone
 from pathlib import Path
 from tkinter import ttk, messagebox, filedialog
 from .backup import create_backup, restore_backup
 from .health import DAILY_UPDATE_TIME, build_health_report, export_diagnostics
-from .backtest import OfficialHistoryFetcher
 from .global_market import GlobalMarketClient
-from .net import HttpClient
-from .scanner import Scanner
-from .storage import load_optimizer_state, load_result, save_result
-from .strategy_optimize import load_strategy_gate
+from .storage import load_result
 from .realtime import RealtimeQuoteClient
 from .mobile import lan_ipv4
 
@@ -56,6 +52,31 @@ def technical_research_text(row, direction):
     rsi = "—" if values.get("rsi_5") is None else f"{float(values['rsi_5']):g}"
     atr = "—" if values.get("atr_5_pct") is None else f"{float(values['atr_5_pct']):g}%"
     return f"研究不計分｜RSI5 {rsi}｜ATR5 {atr}｜{distance_label} {distance_text}"
+
+
+def broker_risk_text(row):
+    research = row.get("broker_risk_research") or {}
+    if research.get("status") != "available":
+        return "分點資料不足｜不計分"
+    if not research.get("warning"):
+        return "未達警示門檻｜不計分"
+    branches = ([f"買超 {item.get('branch', '')}" for item in research.get("watched_buyers", [])] +
+                [f"賣超 {item.get('branch', '')}" for item in research.get("watched_sellers", [])])
+    level = "高度注意" if research.get("risk_level") == "high" else "注意"
+    return f"{level}｜{','.join(filter(None, branches))}｜非官方認定｜不計分"
+
+
+def run_desktop_update(data_dir):
+    """Use the same validated Taipei-boundary pipeline as the scheduled CLI update."""
+    root = Path(data_dir).parent
+    completed = subprocess.run([sys.executable, str(root / "app.py"), "--update"],
+                               cwd=root, text=True, capture_output=True)
+    if completed.returncode != 0:
+        raise RuntimeError((completed.stderr or completed.stdout or "更新失敗").strip())
+    result = load_result(Path(data_dir))
+    if not result:
+        raise RuntimeError("更新完成但找不到有效結果")
+    return result
 
 
 def _desktop_version(root):
@@ -268,10 +289,10 @@ class Dashboard(tk.Tk):
         self.trees = []
         for label in layout["tabs"][:3]:
             frame = tk.Frame(self.tabs, bg=PANEL); self.tabs.add(frame, text=label)
-            columns = ("rank", "direction", "code", "name", "price", "change", "quote", "entry", "stop", "target1", "target2", "risk", "score", "technical", "reason")
+            columns = ("rank", "direction", "code", "name", "price", "change", "quote", "entry", "stop", "target1", "target2", "risk", "score", "technical", "broker", "reason")
             tree = ttk.Treeview(frame, columns=columns, show="headings")
-            heads = ("#", "方向", "代號", "名稱", "現價", "漲跌%", "報價時間/狀態", "觸發價（待驗證）", "停損/回補", "目標1", "目標2", "風險%", "研究排序", "技術研究（不計分）", "原因")
-            widths = (35, 55, 60, 80, 70, 70, 145, 115, 80, 75, 75, 60, 80, 300, 390)
+            heads = ("#", "方向", "代號", "名稱", "現價", "漲跌%", "報價時間/狀態", "觸發價（待驗證）", "停損/回補", "目標1", "目標2", "風險%", "研究排序", "技術研究（不計分）", "分點風險（不計分）", "原因")
+            widths = (35, 55, 60, 80, 70, 70, 145, 115, 80, 75, 75, 60, 80, 300, 300, 390)
             for c, h, w in zip(columns, heads, widths):
                 tree.heading(c, text=h); tree.column(c, width=w, minwidth=w, stretch=False,
                                                      anchor="w" if c == "reason" else "center")
@@ -371,20 +392,7 @@ class Dashboard(tk.Tk):
         self.button.configure(state="disabled"); self.status.set("更新中…")
         def worker():
             try:
-                state = load_optimizer_state(self.data_dir)
-                strategy_gate = load_strategy_gate(self.data_dir)
-                fetcher = OfficialHistoryFetcher(
-                    HttpClient(timeout=35, retries=6), self.data_dir / "backtest_cache", throttle=0.35,
-                    progress=lambda text, ratio: self.events.put(("progress", text, int(ratio * 75))))
-                histories = fetcher.collect((date.today() - timedelta(days=1)).isoformat(), 6)
-                scanner = Scanner(HttpClient(), progress=lambda text, pct: self.events.put(("progress", text, pct)),
-                                  weights=state["weights"], optimization=state, strategy_gate=strategy_gate)
-                result = scanner.run_from_days(histories)
-                result["data_collection"] = {"complete_trading_days": len(histories),
-                                             "network_requests": fetcher.requests,
-                                             "cache_hits": fetcher.cache_hits}
-                result = save_result(result, self.data_dir)
-                self.events.put(("done", result))
+                self.events.put(("done", run_desktop_update(self.data_dir)))
             except Exception as exc:
                 self.events.put(("error", str(exc)))
         threading.Thread(target=worker, daemon=True).start()
@@ -518,7 +526,7 @@ class Dashboard(tk.Tk):
                 tree.insert("", "end", values=(i, direction, x.get("code"), x.get("name"), price, change, quote, x.get("entry_trigger", "—"),
                             x.get("stop_loss", "—"), x.get("target1", "—"), x.get("target2", "—"),
                             x.get("risk_pct", "—"), x.get("score", "—"),
-                            technical_research_text(x, direction_key), x.get("reason", "")),
+                            technical_research_text(x, direction_key), broker_risk_text(x), x.get("reason", "")),
                             tags=signal_row_tags(direction_key, change, i - 1))
         gate_status = strategy_gate.get("status", "未啟用｜保留基準訊號")
         learning_status = optimization.get("status", "尚無學習狀態")

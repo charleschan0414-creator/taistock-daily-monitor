@@ -3,11 +3,64 @@ import sqlite3
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
+import os
+import taistock.storage as storage
 from taistock.storage import save_result, load_result, load_optimizer_state, seed_backtest_history
 from taistock.core import BASELINE_WEIGHTS
 
 
 class StorageTests(unittest.TestCase):
+    def test_output_replace_failure_rolls_back_database_and_both_latest_files(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            save_result({"data_date": "2026-10-19", "signals": [], "universe": []}, path)
+            before_json = (path / "latest.json").read_bytes()
+            before_csv = (path / "latest.csv").read_bytes()
+            db = sqlite3.connect(path / "scanner.db")
+            before_runs = db.execute("SELECT COUNT(*) FROM runs").fetchone()[0]
+            db.close()
+            real_replace = os.replace
+            calls = 0
+
+            def fail_second_replace(source, destination):
+                nonlocal calls
+                calls += 1
+                if calls == 2:
+                    raise OSError("injected replace failure")
+                return real_replace(source, destination)
+
+            with patch.object(storage.os, "replace", side_effect=fail_second_replace):
+                with self.assertRaisesRegex(OSError, "injected replace failure"):
+                    save_result({"data_date": "2026-10-20", "signals": [], "universe": []}, path)
+            self.assertEqual((path / "latest.json").read_bytes(), before_json)
+            self.assertEqual((path / "latest.csv").read_bytes(), before_csv)
+            db = sqlite3.connect(path / "scanner.db")
+            self.assertEqual(db.execute("SELECT COUNT(*) FROM runs").fetchone()[0], before_runs)
+            db.close()
+
+    def test_persistent_csv_replace_failure_restores_json_and_database(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            save_result({"data_date": "2026-10-19", "signals": [], "universe": []}, path)
+            before_json = (path / "latest.json").read_bytes()
+            before_csv = (path / "latest.csv").read_bytes()
+            real_replace = os.replace
+
+            def fail_csv_destination(source, destination):
+                if Path(destination).name == "latest.csv":
+                    raise OSError("persistent csv failure")
+                return real_replace(source, destination)
+
+            with patch.object(storage.os, "replace", side_effect=fail_csv_destination):
+                with self.assertRaisesRegex(OSError, "persistent csv failure"):
+                    save_result({"data_date": "2026-10-20", "signals": [], "universe": []}, path)
+            self.assertEqual((path / "latest.json").read_bytes(), before_json)
+            self.assertEqual((path / "latest.csv").read_bytes(), before_csv)
+            db = sqlite3.connect(path / "scanner.db")
+            self.assertEqual(db.execute("SELECT COUNT(*) FROM runs").fetchone()[0], 1)
+            db.close()
+
     def test_successful_result_is_available_as_json_csv_and_sqlite(self):
         payload = {"data_date":"2026-10-15","top100_count":100,"qualified":[{"code":"2330","name":"台積電","score":88.5}]}
         with tempfile.TemporaryDirectory() as directory:

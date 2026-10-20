@@ -153,7 +153,23 @@ function card(row, direction) {
     ? `RSI5 ${fmt(indicators.rsi_5)}｜ATR5 ${fmt(indicators.atr_5_pct)}%｜距前5日高 ${fmt(indicators.close_vs_prior5_high_pct)}%｜距前5日低 ${fmt(indicators.close_vs_prior5_low_pct)}%`
     : '資料不足；不以日K假裝盤中確認。';
   research.append(researchTitle, researchText);
-  node.append(head, price, directionLabel, status, levels, reason, research); return node;
+  const broker = row.broker_risk_research;
+  const brokerResearch = document.createElement('details');
+  brokerResearch.className = `broker-risk-research ${broker?.warning ? 'broker-risk-warning' : ''}`;
+  brokerResearch.open = broker?.warning === true;
+  const brokerTitle = document.createElement('summary');
+  brokerTitle.textContent = broker?.warning
+    ? `⚠ 分點短線風險研究｜${broker.risk_level === 'high' ? '高度注意' : '注意'}｜不計分`
+    : '分點短線風險研究｜無有效警示／資料不足｜不計分';
+  const brokerText = document.createElement('p');
+  const branchText = [...(broker?.watched_buyers ?? []), ...(broker?.watched_sellers ?? [])]
+    .map(item => `${item.branch} ${item.side === 'buy' ? '買超' : '賣超'}${fmt(Math.abs(item.net_lots))}張／週轉占比${fmt(item.turnover_share_pct)}%`)
+    .join('；');
+  brokerText.textContent = broker?.status === 'available'
+    ? `${branchText || '未發現達警示門檻的重點觀察分點'}。分點為多人彙總，短線型標籤非官方認定；只能提示風險，不能保證避免倒貨。`
+    : '分點資料不可用或日期不一致；不據此調整排序或名單。';
+  brokerResearch.append(brokerTitle, brokerText);
+  node.append(head, price, directionLabel, status, levels, reason, research, brokerResearch); return node;
 }
 function renderList(id, rows, direction) {
   const box = $(id); box.replaceChildren();

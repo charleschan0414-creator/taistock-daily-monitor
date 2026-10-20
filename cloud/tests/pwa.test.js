@@ -125,7 +125,7 @@ test('PWA顯示核心100日成本後三情境且保留研究限制', async () =>
   assert.match(app, /renderBacktestPerformance\(data\)/);
   assert.doesNotMatch(app, /\.innerHTML\s*=/);
   assert.match(styles, /\.backtest-performance/);
-  assert.match(sw, /taistock-monitor-v9/);
+  assert.match(sw, /taistock-monitor-v10/);
 });
 
 test('PWA顯示V2成本後績效檢驗、方法限制與新版快取', async () => {
@@ -146,5 +146,13 @@ test('PWA顯示V2成本後績效檢驗、方法限制與新版快取', async () 
   assert.match(app, /v2-quality/);
   assert.doesNotMatch(app, /\.innerHTML\s*=/);
   assert.match(styles, /\.v2-analysis/);
-  assert.match(sw, /taistock-monitor-v9/);
+  assert.match(sw, /taistock-monitor-v10/);
+});
+
+test('個股卡顯示券商短沖倒貨風險且明列不計分', async () => {
+  const app = await read('app.js');
+  assert.match(app, /broker_risk_research/);
+  assert.match(app, /分點短線風險研究/);
+  assert.match(app, /不計分/);
+  assert.match(app, /非官方認定/);
 });

@@ -1,5 +1,7 @@
 import csv
+import io
 import json
+import os
 import sqlite3
 from datetime import datetime
 from pathlib import Path
@@ -139,7 +141,7 @@ def _metric(rows, weights):
     return sum(daily) / len(daily) if daily else 0.0
 
 
-def _optimize(db, directory, old_weights, source="live_update"):
+def _optimize(db, directory, old_weights, source="live_update", audit_sink=None):
     settled_count = db.execute("SELECT COUNT(*) FROM signals WHERE directional_return IS NOT NULL").fetchone()[0]
     if settled_count < MIN_SAMPLES:
         state = load_optimizer_state(directory)
@@ -176,7 +178,10 @@ def _optimize(db, directory, old_weights, source="live_update"):
              "performance": {"old_daily_top3_mean_directional_return": round(current_metric, 8),
                              "new_daily_top3_mean_directional_return": round(selected_metric, 8)},
              "updated_at": datetime.now().astimezone().isoformat(timespec="seconds")}
-    (directory / "optimizer.json").write_text(json.dumps(audit, ensure_ascii=False, indent=2), encoding="utf-8")
+    if audit_sink is None:
+        (directory / "optimizer.json").write_text(json.dumps(audit, ensure_ascii=False, indent=2), encoding="utf-8")
+    else:
+        audit_sink.append(audit)
     return {"version": version, "status": f"舊權重研究完成（{settled_count} 筆／{len(dates)}日）｜不得啟用",
             "settled_count": settled_count, "minimum_samples": MIN_SAMPLES, "weights": old_weights,
             "evaluation_days": len(dates), "current_metric": round(selected_metric, 8),
@@ -188,26 +193,64 @@ def save_result(payload: dict, directory: Path):
     directory.mkdir(parents=True, exist_ok=True)
     current_state = load_optimizer_state(directory)
     db = _connect(directory)
+    staged = []
+    backups = {}
+    replaced = []
     try:
         _settle_prior_signals(db, payload["data_date"], payload.get("universe", []))
         _insert_current(db, payload)
-        optimization = _optimize(db, directory, current_state["weights"])
+        audits = []
+        optimization = _optimize(db, directory, current_state["weights"], audit_sink=audits)
         payload["optimization"] = optimization
         now = datetime.now().isoformat(timespec="seconds")
         db.execute("INSERT OR REPLACE INTO runs VALUES (?,?,?)",
                    (payload["data_date"], now, json.dumps(payload, ensure_ascii=False)))
-        db.commit()
-    finally:
-        db.close()
 
-    (directory / "latest.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
-    rows = payload.get("signals")
-    if rows is None:
-        rows = payload.get("qualified", [])
-    with (directory / "latest.csv").open("w", newline="", encoding="utf-8-sig") as handle:
-        writer = csv.DictWriter(handle, fieldnames=CSV_FIELDS, extrasaction="ignore")
-        writer.writeheader()
-        writer.writerows(rows)
+        rows = payload.get("signals")
+        if rows is None:
+            rows = payload.get("qualified", [])
+        csv_text = io.StringIO(newline="")
+        writer = csv.DictWriter(csv_text, fieldnames=CSV_FIELDS, extrasaction="ignore", lineterminator="\n")
+        writer.writeheader(); writer.writerows(rows)
+        outputs = [
+            (directory / "latest.json", json.dumps(payload, ensure_ascii=False, indent=2,
+                                                     allow_nan=False).encode("utf-8")),
+            (directory / "latest.csv", b"\xef\xbb\xbf" + csv_text.getvalue().encode("utf-8")),
+        ]
+        if audits:
+            outputs.append((directory / "optimizer.json",
+                            json.dumps(audits[-1], ensure_ascii=False, indent=2,
+                                       allow_nan=False).encode("utf-8")))
+        for target, content in outputs:
+            temporary = target.with_name(target.name + ".tmp")
+            temporary.write_bytes(content)
+            staged.append((temporary, target))
+            backups[target] = target.read_bytes() if target.exists() else None
+        for temporary, target in staged:
+            os.replace(temporary, target)
+            replaced.append(target)
+        db.commit()
+    except Exception as original_error:
+        db.rollback()
+        restoration_errors = []
+        for target in reversed(replaced):
+            try:
+                previous = backups.get(target)
+                if previous is None:
+                    target.unlink(missing_ok=True)
+                else:
+                    rollback = target.with_name(target.name + ".rollback")
+                    rollback.write_bytes(previous)
+                    os.replace(rollback, target)
+            except Exception as restore_error:
+                restoration_errors.append(f"{target.name}: {restore_error}")
+        if restoration_errors:
+            raise RuntimeError("輸出回復失敗：" + "; ".join(restoration_errors)) from original_error
+        raise
+    finally:
+        for temporary, _ in staged:
+            temporary.unlink(missing_ok=True)
+        db.close()
     return payload
 
 

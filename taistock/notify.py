@@ -9,8 +9,17 @@ def build_summary(result: dict) -> str:
     def top(rows):
         return "、".join(str(x.get("code", "")) + str(x.get("name", "")) for x in rows[:3]) or "無"
     status = result.get("optimization", {}).get("status", "學習狀態未知")
+    warnings = []
+    for row in result.get("long_top10", []) + result.get("short_top10", []):
+        research = row.get("broker_risk_research") or {}
+        if not research.get("warning"):
+            continue
+        branches = ([f"買超 {item.get('branch', '')}" for item in research.get("watched_buyers", [])] +
+                    [f"賣超 {item.get('branch', '')}" for item in research.get("watched_sellers", [])])
+        warnings.append(f"{row.get('code', '')}{row.get('name', '')}({','.join(filter(None, branches))})")
+    warning_text = f"｜分點風險：{'、'.join(warnings)}" if warnings else ""
     return (f"{result.get('data_date', '')}｜偏多：{top(result.get('long_top10', []))}｜"
-            f"偏空：{top(result.get('short_top10', []))}｜{status}｜規則式研究觀察，非投資建議")
+            f"偏空：{top(result.get('short_top10', []))}{warning_text}｜{status}｜規則式研究觀察，非投資建議")
 
 
 def notify(message: str, directory: Path):

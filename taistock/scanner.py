@@ -92,14 +92,17 @@ class Scanner:
             raise ValueError("批次日更至少需要 6 個完整交易日")
         current = ordered[-1]
         data_date = current["date"]
-        leaders = sorted(current["quotes"].values(),
-                         key=lambda row: (-row["volume"], row["code"]))[:limit]
-        rows, errors = [], []
-        for rank, quote in enumerate(leaders, 1):
+        ranked = sorted(current["quotes"].values(),
+                        key=lambda row: (-row["volume"], row["code"]))
+        rows, errors, history_skipped = [], [], []
+        for rank, quote in enumerate(ranked, 1):
+            if len(rows) >= limit:
+                break
             history = [day["quotes"].get(quote["code"]) for day in ordered[-6:]]
             previous = ordered[-2]["quotes"].get(quote["code"])
             if any(item is None for item in history) or previous is None:
-                errors.append(f"{quote['code']} 批次歷史不足 6 個交易日")
+                history_skipped.append({"code": quote["code"], "name": quote.get("name", ""),
+                                        "volume_rank": rank, "reason": "批次歷史不足6個交易日"})
                 continue
             rows.append({**quote, "date": data_date, "prev_volume": previous["volume"],
                          "closes": [item["close"] for item in history],
@@ -117,7 +120,7 @@ class Scanner:
         universe = [{"code": q["code"], "name": q["name"], "market": q["market"],
                      "date": data_date, "close": q["close"], "volume": q["volume"]}
                     for q in sorted(current["quotes"].values(), key=lambda row: row["code"])]
-        return {"data_date": data_date, "top100_count": len(leaders),
+        return {"data_date": data_date, "top100_count": len(rows),
                 "history_success_count": len(rows), "qualified_count": len(long_signals),
                 "qualified": long_signals, "top10": long_signals[:10],
                 "long_top10": long_signals[:10], "short_top10": short_signals[:10],
@@ -127,7 +130,8 @@ class Scanner:
                                         "short": pre_gate_counts["short"] - len(short_signals)},
                 "optimization": self.optimization,
                 "strategy_gate": self.strategy_gate,
-                "errors": errors, "sources": ["官方逐日批次資料"],
+                "errors": errors, "history_skipped": history_skipped,
+                "sources": ["官方逐日批次資料"],
                 "updated_at": datetime.now().astimezone().isoformat(timespec="seconds")}
 
     def _history(self, quote, data_date):

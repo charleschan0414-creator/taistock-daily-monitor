@@ -8,6 +8,7 @@ from taistock.backup import create_backup, restore_backup
 from taistock.health import export_diagnostics
 from taistock.backtest import (OfficialHistoryFetcher, build_backtest,
                                required_history_days, write_backtest_outputs)
+from taistock.broker_risk import enrich_broker_risk
 from taistock.net import HttpClient
 from taistock.notify import notify, build_summary
 from taistock.scanner import Scanner
@@ -42,6 +43,33 @@ def latest_complete_date(histories):
     return histories[-1]["date"]
 
 
+def validate_daily_scan(result, expected_data_date):
+    """Reject partial scans before any latest output or learning state is replaced."""
+    required_lists = ("errors", "long_top10", "short_top10")
+    if (not isinstance(result, dict) or not isinstance(result.get("data_date"), str)
+            or any(not isinstance(result.get(key), list) for key in required_lists)):
+        raise ValueError("每日更新缺少必要欄位；保留前次成功結果")
+    if result.get("top100_count") != 100 or result.get("history_success_count") != 100 or result.get("errors"):
+        raise ValueError("每日更新未達100檔歷史資料完整門檻；保留前次成功結果")
+    if result.get("data_date") != expected_data_date:
+        raise ValueError("資料日期不是最新完整官方交易日；保留前次成功結果")
+    for direction in ("long", "short"):
+        rows = result.get(f"{direction}_top10", [])
+        if len(rows) > 10:
+            raise ValueError(f"{direction}觀察名單超過10檔")
+        for row in rows:
+            risk = row.get("risk_pct")
+            if not isinstance(risk, (int, float)) or not 1.5 <= risk <= 5:
+                raise ValueError("單筆風險必須介於1.5%至5%")
+            entry, stop, target = row.get("entry_trigger"), row.get("stop_loss"), row.get("target1")
+            prices = (entry, stop, target)
+            valid = all(isinstance(value, (int, float)) for value in prices)
+            if valid:
+                valid = stop < entry < target if direction == "long" else target < entry < stop
+            if not valid:
+                raise ValueError(f"{direction}進場、停損及目標價格方向無效")
+
+
 def update(send_notification=False):
     def progress(text, pct): print(f"[{pct:3d}%] {text}", flush=True)
     state = load_optimizer_state(DATA)
@@ -53,6 +81,9 @@ def update(send_notification=False):
     histories = fetcher.collect(end_date, 6)
     result = Scanner(HttpClient(), progress=progress, weights=state["weights"], optimization=state,
                      strategy_gate=strategy_gate).run_from_days(histories, limit=100)
+    validate_daily_scan(result, latest_complete_date(histories))
+    progress("檢查觀察名單的分點短線風險（研究顯示、不計分）…", 92)
+    result = enrich_broker_risk(result)
     result["data_collection"] = {"complete_trading_days": len(histories),
                                  "latest_complete_date": latest_complete_date(histories),
                                  "network_requests": fetcher.requests, "cache_hits": fetcher.cache_hits}
