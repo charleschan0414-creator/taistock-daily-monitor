@@ -29,28 +29,15 @@
         <span id="updated-at" class="timestamp">更新 —</span>
       </div>
       <div class="summary-grid" aria-live="polite">
-        <article class="summary-card"><span>資料日</span><strong id="summary-date">—</strong><small id="summary-source">等待資料</small></article>
-        <article class="summary-card summary-long"><span>偏多數</span><strong id="summary-long">—</strong><small id="summary-long-note">通過策略閘門</small></article>
-        <article class="summary-card summary-short"><span>偏空數</span><strong id="summary-short">—</strong><small id="summary-short-note">通過策略閘門</small></article>
-        <article class="summary-card summary-night"><span>夜盤情境</span><strong id="summary-night">—</strong><small>台指期多數方向</small></article>
+        <article class="summary-card summary-long"><span>可執行偏多</span><strong id="summary-long">—</strong><small id="summary-long-note">通過策略閘門與官方資格</small></article>
+        <article class="summary-card summary-short"><span>可執行偏空</span><strong id="summary-short">—</strong><small id="summary-short-note">通過策略閘門與官方資格</small></article>
       </div>
       <p id="execution-eligibility-note" class="execution-eligibility-note">官方當沖資格載入中；非當沖標的不列入可執行觀察。</p>
-    </section>
-
-
-    <section class="market-context" aria-labelledby="market-title">
-      <div class="section-title">
-        <div><p class="eyebrow">NIGHT SESSION</p><h2 id="market-title">夜盤脈動</h2></div>
-        <span id="market-risk" class="status-badge">中性</span>
-      </div>
-      <p id="market-rule" class="section-note">TX／UNF／SXF 多數方向判定</p>
-      <div id="market-list" class="market-grid" aria-live="polite"><p class="empty">載入中</p></div>
-      <p id="market-fetched" class="technical-note">系統抓取：—</p>
-      <p class="technical-note">期交所行情，可能延遲 · 僅為市場脈動，不改變選股分數。</p>
+      <p class="disclaimer-strip">規則式研究觀察 · 非投資建議 · 不保證獲利 · 不會自動下單</p>
     </section>
 
     <section class="signals" aria-labelledby="signals-title">
-      <div class="section-title"><div><p class="eyebrow">NEXT SESSION</p><h2 id="signals-title">下一交易日待驗證觀察</h2></div></div>
+      <div class="section-title"><div><p class="eyebrow">NEXT SESSION</p><h2 id="signals-title">下一交易日推薦摘要</h2></div></div>
       <section class="signal-group long-group" aria-labelledby="long-title">
         <div class="signal-heading"><h3 id="long-title">偏多觀察</h3><span class="direction direction-long">偏多 · 最多 10</span></div>
         <div id="long-list" class="cards"></div>
@@ -61,6 +48,19 @@
       </section>
     </section>
 
+    <details class="advanced-hub">
+      <summary><span><span class="eyebrow">DETAILS</span><strong>進階研究與系統</strong></span><span class="advanced-hint">夜盤、績效、研究進度、下載</span></summary>
+      <div class="advanced-content">
+    <details class="market-context secondary-panel">
+      <summary><span><span class="eyebrow">NIGHT SESSION</span><strong id="market-title">夜盤脈動</strong></span><span id="market-risk" class="status-badge">中性</span></summary>
+      <div class="secondary-content">
+        <p id="market-rule" class="section-note">TX／UNF／SXF 多數方向判定</p>
+        <div id="market-list" class="market-grid" aria-live="polite"><p class="empty">載入中</p></div>
+        <p id="market-fetched" class="technical-note">系統抓取：—</p>
+        <p class="technical-note">期交所行情，可能延遲 · 僅為市場脈動，不改變選股分數。</p>
+      </div>
+    </details>
+
     <details class="settlement-summary">
       <summary><span><span class="eyebrow">SETTLED RESULT</span><strong id="settlement-title">最新完整結算</strong></span><span id="today-result-dates" class="timestamp">—</span></summary>
       <div class="summary-grid" aria-live="polite">
@@ -70,7 +70,7 @@
       </div>
     </details>
 
-    <details class="strategy-campaign" open>
+    <details class="strategy-campaign">
       <summary><span><span class="eyebrow">30-DAY RESEARCH</span><strong>一個月策略研究</strong></span><span id="campaign-status" class="status-badge">等待資料</span></summary>
       <p class="backtest-note">每日自動回測及有限候選研究，以改善 Standard 成本後勝率與 PF 為目標；候選觀察日不是前瞻績效核准，候選不會自動啟用，不保證未來勝率或PF提高。</p>
       <div class="backtest-metrics" aria-live="polite">
@@ -131,6 +131,8 @@
     </details>
 
     <nav class="downloads" aria-label="資料下載"><a href="/download/latest.csv">下載 latest.csv</a><a href="/download/backtest_100d.csv">下載 backtest_100d.csv</a></nav>
+      </div>
+    </details>
   </main>
   <footer>唯讀監看 · 不提供下單 · 規則式研究觀察，非投資建議；不保證提高勝率或獲利。</footer>
   <script type="module" src="/app.js"></script>

@@ -5,7 +5,9 @@ from taistock.ui import (format_backtest_summary, display_quote_values, visible_
                          format_global_market, BackgroundRefreshGate, dashboard_structure,
                          signal_row_tags, global_market_layers, strategy_card_label,
                          technical_research_text, broker_risk_text, format_health_report,
-                         run_desktop_update, Dashboard)
+                         execution_eligibility_text, signal_warning_text,
+                         signal_table_columns, run_desktop_update, Dashboard,
+                         executable_signal_lists, BusyOperationState, data_update_label)
 
 
 class BacktestUiTests(unittest.TestCase):
@@ -62,6 +64,44 @@ class BacktestUiTests(unittest.TestCase):
         self.assertLessEqual(len(rows), 20)
         self.assertEqual(len({x["code"] for x in rows}), 19)
 
+    def test_unverified_cached_rows_are_never_presented_as_executable(self):
+        row = {"code": "3354", "day_trading_eligibility": {"eligible": True,
+               "source_date": "2026-10-21"}}
+        result = {"data_date": "2026-10-21", "long_top10": [row], "short_top10": [],
+                  "execution_eligibility": {"enforced": False, "source_date": "2026-10-21"}}
+        self.assertEqual(executable_signal_lists(result), ([], []))
+
+        result["execution_eligibility"]["enforced"] = True
+        self.assertEqual(executable_signal_lists(result), ([row], []))
+
+        row["day_trading_eligibility"]["source_date"] = "2026-10-20"
+        self.assertEqual(executable_signal_lists(result), ([], []))
+
+    def test_next_session_official_eligibility_is_executable_but_invalid_dates_fail_closed(self):
+        row = {"code": "2492", "day_trading_eligibility": {"eligible": True,
+               "source_date": "2026-10-21"}}
+        result = {"data_date": "2026-10-20", "long_top10": [], "short_top10": [row],
+                  "execution_eligibility": {"enforced": True, "source_date": "2026-10-21"}}
+        self.assertEqual(executable_signal_lists(result), ([], [row]))
+
+        for invalid_source_date in ("2026-02-30", "2026-10-19", "20261021"):
+            result["execution_eligibility"]["source_date"] = invalid_source_date
+            row["day_trading_eligibility"]["source_date"] = invalid_source_date
+            self.assertEqual(executable_signal_lists(result), ([], []))
+
+    def test_shared_secondary_menu_stays_busy_until_all_operations_finish(self):
+        state = BusyOperationState()
+        state.set_busy("backtest", True); state.set_busy("quote", True)
+        state.set_busy("quote", False)
+        self.assertTrue(state.is_busy)
+        state.set_busy("backtest", False)
+        self.assertFalse(state.is_busy)
+
+    def test_quote_refresh_does_not_claim_full_data_update(self):
+        self.assertEqual(data_update_label("更新成功"), "成功")
+        self.assertEqual(data_update_label("現價更新成功"), "資料未變")
+        self.assertEqual(data_update_label("離線顯示上次成功結果"), "上次結果")
+
     def test_quote_display_includes_price_change_and_status(self):
         values = display_quote_values({"price": 101.5, "change_pct": 1.25,
                                        "quote_time": "2026-10-16T10:00:00+08:00", "status": "即時"})
@@ -90,8 +130,39 @@ class BacktestUiTests(unittest.TestCase):
         self.assertEqual(structure["primary_action"], "更新全部資料")
         self.assertEqual(structure["tool_actions"], ("更新現價", "更新夜盤", "執行回測", "開啟手機版",
                                                      "匯出診斷", "建立備份", "還原備份"))
-        self.assertEqual(structure["cards"], ("資料日", "待驗證偏多", "待驗證偏空", "即時報價", "策略驗證"))
-        self.assertEqual(structure["tabs"], ("待驗證偏多", "待驗證偏空", "所有觀察", "回測摘要", "夜盤脈動", "系統健康"))
+        self.assertEqual(structure["cards"], ("資料日／更新", "可執行偏多", "可執行偏空"))
+        self.assertEqual(structure["tabs"], ("偏多推薦", "偏空推薦", "研究與系統"))
+        self.assertEqual(structure["detail_sections"], ("回測", "夜盤", "系統與備份"))
+        self.assertEqual(structure["secondary_menu"], "更多功能")
+
+    def test_primary_signal_table_is_compact_and_keeps_risk_warning(self):
+        columns, headings, widths = signal_table_columns()
+        self.assertLessEqual(len(columns), 10)
+        self.assertEqual(len(columns), len(headings))
+        self.assertEqual(len(columns), len(widths))
+        self.assertIn("warning", columns)
+        self.assertIn("重要警示", headings)
+
+    def test_official_eligibility_summary_keeps_exclusion_reasons_visible(self):
+        text = execution_eligibility_text({
+            "enforced": True, "source_date": "2026-10-21", "filtered_count": 2,
+            "filtered_out": [
+                {"code": "3354", "name": "律勝", "reason": "not_day_trade_eligible"},
+                {"code": "9999", "name": "測試", "reason": "sell_first_suspended"},
+            ],
+        })
+        self.assertIn("官方資格已驗證", text)
+        self.assertIn("3354律勝：非當沖標的", text)
+        self.assertIn("9999測試：暫停先賣後買", text)
+
+    def test_compact_warning_keeps_candle_and_broker_risks_visible(self):
+        row = {
+            "candlestick_research": {"status": "direction_conflict"},
+            "broker_risk_research": {"status": "available", "warning": True, "risk_level": "high"},
+        }
+        text = signal_warning_text(row)
+        self.assertIn("K線方向衝突", text)
+        self.assertIn("分點高度注意", text)
     def test_strategy_card_distinguishes_protective_incumbent_from_cost_validated_candidate(self):
         self.assertEqual(strategy_card_label({"applied_mode": "incumbent_protective",
                                               "enabled": False}), "未通過成本驗證")

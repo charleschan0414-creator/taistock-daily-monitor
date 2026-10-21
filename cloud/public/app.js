@@ -124,6 +124,18 @@ export function resolveDataHealth(data, now = new Date()) {
   return { state: 'success', label: '資料成功' };
 }
 
+export function friendlyLoadError() {
+  return '資料暫時無法載入，請稍後重新整理。';
+}
+
+export function resolveLoadFailure() {
+  return {
+    count: '—',
+    note: '資料載入失敗｜不可執行',
+    eligibility: '官方當沖資格無法驗證；目前清單不可執行。',
+  };
+}
+
 function card(row, direction) {
   const node = document.createElement('article'); node.className = 'card';
   const head = document.createElement('div'); head.className = 'card-head';
@@ -131,26 +143,42 @@ function card(row, direction) {
   const code = document.createElement('span'); code.className = 'symbol'; code.textContent = row.code;
   const name = document.createElement('span'); name.className = 'name'; name.textContent = `${row.name ?? ''} · ${row.market ?? ''}`;
   title.append(code, name);
-  const score = document.createElement('span'); score.className = 'score'; score.textContent = `研究排序 ${fmt(row.score)}`;
-  head.append(title, score);
-  const price = document.createElement('div'); price.className = 'price'; price.textContent = fmt(row.current_price ?? row.close);
   const directionLabel = document.createElement('span');
   directionLabel.className = `card-direction ${direction === '偏多' ? 'card-direction-long' : 'card-direction-short'}`;
   directionLabel.textContent = direction;
+  head.append(title, directionLabel);
+  const eligibility = document.createElement('div');
+  const eligible = row.day_trading_eligibility?.eligible === true;
+  eligibility.className = `eligibility-status ${eligible ? 'eligibility-ok' : 'eligibility-error'}`;
+  eligibility.textContent = eligible ? '✓ 官方當沖資格已通過' : '⚠ 官方當沖資格資料異常';
+  const priceLabel = document.createElement('span'); priceLabel.className = 'card-primary-label'; priceLabel.textContent = '觸發價（未觸發不交易）';
+  const price = document.createElement('div'); price.className = 'price card-primary-price'; price.textContent = fmt(row.entry_trigger);
   const status = document.createElement('div'); status.className = 'status';
-  status.textContent = `${row.price_status ?? ''}現價${row.current_price == null ? '（顯示盤後收盤）' : ''}`;
+  status.textContent = `現價 ${fmt(row.current_price ?? row.close)}${row.current_price == null ? '（盤後收盤）' : ''}｜${row.price_status ?? '待更新'}`;
   const levels = document.createElement('div'); levels.className = 'levels';
-  for (const [label, key] of [['觸發價（尚未觸發）', 'entry_trigger'], ['停損', 'stop_loss'], ['目標1', 'target1']]) {
+  for (const [label, key] of [['停損／回補', 'stop_loss'], ['目標1', 'target1']]) {
     const box = document.createElement('div'); const small = document.createElement('span'); small.textContent = label;
     const strong = document.createElement('strong'); strong.textContent = fmt(row[key]); box.append(small, strong); levels.append(box);
   }
-  const reason = document.createElement('p'); reason.className = 'reason'; reason.textContent = row.reason ?? '';
-  const research = document.createElement('details'); research.className = 'technical-research';
   const candle = row.candlestick_research;
   const candleConflict = candle?.status === 'direction_conflict';
-  research.open = candleConflict;
-  const researchTitle = document.createElement('summary');
-  researchTitle.textContent = candleConflict ? '⚠ 技術研究｜K線方向衝突｜不計分' : '技術研究｜不計分｜未啟用';
+  const broker = row.broker_risk_research;
+  const warnings = document.createElement('div'); warnings.className = 'signal-warnings';
+  if (candleConflict) {
+    const warning = document.createElement('p'); warning.className = 'signal-warning';
+    warning.textContent = `⚠ K線方向衝突｜${candle?.message ?? '研究警示，不直接改分或排除'}`; warnings.append(warning);
+  }
+  if (broker?.warning) {
+    const warning = document.createElement('p'); warning.className = 'signal-warning';
+    warning.textContent = `⚠ 分點短線風險｜${broker.risk_level === 'high' ? '高度注意' : '注意'}｜研究不計分`; warnings.append(warning);
+  }
+  const details = document.createElement('details'); details.className = 'card-details';
+  const detailsTitle = document.createElement('summary'); detailsTitle.textContent = '查看原因與研究細節';
+  const reason = document.createElement('p'); reason.className = 'reason'; reason.textContent = `入選原因｜${row.reason ?? '—'}`;
+  const score = document.createElement('p'); score.className = 'score-detail'; score.textContent = `研究排序｜${fmt(row.score)}`;
+  const research = document.createElement('div'); research.className = 'technical-research';
+  const researchTitle = document.createElement('strong');
+  researchTitle.textContent = candleConflict ? 'K線與技術研究｜方向衝突｜不計分' : 'K線與技術研究｜不計分｜未啟用';
   const indicators = row.technical_research?.indicators;
   const researchText = document.createElement('p');
   researchText.textContent = indicators
@@ -159,11 +187,9 @@ function card(row, direction) {
   const candleText = document.createElement('p');
   candleText.textContent = candle?.message ?? 'K線衝突資料尚未完成；研究欄位不直接改分或排除。';
   research.append(researchTitle, researchText, candleText);
-  const broker = row.broker_risk_research;
-  const brokerResearch = document.createElement('details');
+  const brokerResearch = document.createElement('div');
   brokerResearch.className = `broker-risk-research ${broker?.warning ? 'broker-risk-warning' : ''}`;
-  brokerResearch.open = broker?.warning === true;
-  const brokerTitle = document.createElement('summary');
+  const brokerTitle = document.createElement('strong');
   brokerTitle.textContent = broker?.warning
     ? `⚠ 分點短線風險研究｜${broker.risk_level === 'high' ? '高度注意' : '注意'}｜不計分`
     : '分點短線風險研究｜無有效警示／資料不足｜不計分';
@@ -175,12 +201,18 @@ function card(row, direction) {
     ? `${branchText || '未發現達警示門檻的重點觀察分點'}。分點為多人彙總，短線型標籤非官方認定；只能提示風險，不能保證避免倒貨。`
     : '分點資料不可用或日期不一致；不據此調整排序或名單。';
   brokerResearch.append(brokerTitle, brokerText);
-  node.append(head, price, directionLabel, status, levels, reason, research, brokerResearch); return node;
+  details.append(detailsTitle, reason, score, research, brokerResearch);
+  node.append(head, eligibility, priceLabel, price, status, levels, warnings, details); return node;
 }
 function renderList(id, rows, direction) {
   const box = $(id); box.replaceChildren();
   if (!rows.length) { const empty = document.createElement('p'); empty.className = 'empty'; empty.textContent = '目前沒有符合規則的觀察標的。'; box.append(empty); return; }
   box.append(...rows.map(row => card(row, direction)));
+}
+function renderListError(id) {
+  const box = $(id); box.replaceChildren();
+  const empty = document.createElement('p'); empty.className = 'empty';
+  empty.textContent = '資料載入失敗，暫無可執行名單。'; box.append(empty);
 }
 function renderMarket(market) {
   $('market-risk').textContent = market?.risk?.status ?? '中性';
@@ -237,7 +269,6 @@ async function load() {
     if (!response.ok) throw new Error(data.error ?? `HTTP ${response.status}`);
     const health = resolveDataHealth(data);
     $('data-date').textContent = data.data_date ?? '—';
-    $('summary-date').textContent = data.data_date ?? '—';
     $('summary-long').textContent = String(data.long?.length ?? 0);
     $('summary-short').textContent = String(data.short?.length ?? 0);
     const execution = data.execution_eligibility;
@@ -246,13 +277,13 @@ async function load() {
     $('execution-eligibility-note').textContent = execution?.enforced
       ? `官方當沖資格 ${execution.source_date}｜已排除 ${execution.filtered_count ?? excluded.length} 檔${excludedText ? `：${excludedText}` : ''}。${execution.execution_for_signal_date === 'next_session_verified' ? '已核對次一交易日資格。' : '目前為訊號日資格，次一交易日開盤前仍會重新核對。'}`
       : '官方當沖資格尚未驗證；不可把清單視為可執行當沖建議。';
+    $('execution-eligibility-note').className = `execution-eligibility-note${execution?.enforced ? '' : ' status-error'}`;
     const preGate = data.pre_gate_counts ?? {};
     $('summary-long-note').textContent = Number.isFinite(preGate.long)
       ? `通過策略閘門｜基礎候選 ${preGate.long}` : '通過策略閘門';
     $('summary-short-note').textContent = Number.isFinite(preGate.short)
       ? `通過策略閘門｜基礎候選 ${preGate.short}` : '通過策略閘門';
-    $('summary-night').textContent = data.global_market?.risk?.status ?? '中性';
-    $('summary-source').textContent = data.data_source === 'github' ? 'GitHub 公開成果' : 'Cloudflare KV 備援';
+
     $('data-health').textContent = health.label;
     $('data-health').className = `status-badge status-${health.state}`;
     $('updated-at').textContent = data.updated_at ? `更新 ${new Date(data.updated_at).toLocaleString('zh-TW')}` : '更新 —';
@@ -287,9 +318,17 @@ async function load() {
     renderMarket(data.global_market);
     renderList('long-list', data.long ?? [], '偏多'); renderList('short-list', data.short ?? [], '偏空');
   } catch (error) {
+    const failure = resolveLoadFailure();
     $('data-health').textContent = '載入失敗';
     $('data-health').className = 'status-badge status-error';
-    $('message').textContent = `資料載入失敗：${error.message}`;
+    $('message').textContent = friendlyLoadError(error);
+    $('updated-at').textContent = '尚未更新';
+    $('summary-long').textContent = failure.count; $('summary-short').textContent = failure.count;
+    $('summary-long-note').textContent = failure.note;
+    $('summary-short-note').textContent = failure.note;
+    $('execution-eligibility-note').textContent = failure.eligibility;
+    $('execution-eligibility-note').className = 'execution-eligibility-note status-error';
+    renderListError('long-list'); renderListError('short-list');
   }
   finally { $('refresh').disabled = false; }
 }

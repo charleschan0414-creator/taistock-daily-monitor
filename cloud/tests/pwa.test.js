@@ -14,12 +14,18 @@ test('資料健康狀態以明確文字區分成功與過期', async () => {
   assert.deepEqual(failed, { state: 'error', label: '更新失敗' });
 });
 
-test('API載入失敗時頂部狀態不會停在載入中', async () => {
+test('API載入失敗時頂部與推薦區都改為不可執行狀態', async () => {
   const app = await read('app.js');
   const catchBlock = app.match(/catch \(error\) \{[\s\S]*?\}\s*finally/)?.[0] ?? '';
   assert.match(catchBlock, /data-health/);
   assert.match(catchBlock, /載入失敗/);
   assert.match(catchBlock, /status-error/);
+  assert.match(catchBlock, /summary-long-note/);
+  assert.match(catchBlock, /summary-short-note/);
+  assert.match(catchBlock, /execution-eligibility-note/);
+  assert.match(catchBlock, /resolveLoadFailure/);
+  assert.match(catchBlock, /renderListError\('long-list'/);
+  assert.match(catchBlock, /renderListError\('short-list'/);
 });
 
 test('PWA提供五項TAIFEX市場情境卡與非選股分數聲明', async () => {
@@ -35,7 +41,7 @@ test('PWA提供五項TAIFEX市場情境卡與非選股分數聲明', async () =>
   assert.match(sw, /\/refresh\.js/);
 });
 
-test('手機首屏依序顯示精簡狀態列與四張今日重點卡', async () => {
+test('手機首屏只顯示資料狀態與兩張方向摘要卡', async () => {
   const html = await read('index.html');
   const header = html.match(/<header[\s\S]*?<\/header>/)?.[0] ?? '';
   assert.match(header, /id="data-date"/);
@@ -43,11 +49,27 @@ test('手機首屏依序顯示精簡狀態列與四張今日重點卡', async ()
   assert.match(header, /id="refresh"/);
   assert.doesNotMatch(header, /更新時間|資料來源|策略閘門/);
   assert.match(html, /<section[^>]*class="today-summary"/);
-  assert.match(html, /id="summary-date"/);
   assert.match(html, /id="summary-long"/);
   assert.match(html, /id="summary-short"/);
-  assert.match(html, /id="summary-night"/);
-  assert.ok(html.indexOf('today-summary') < html.indexOf('market-context'));
+  assert.doesNotMatch(html, /id="summary-date"/);
+  assert.match(html, /研究觀察[^<]*非投資建議[^<]*不會自動下單/);
+  assert.doesNotMatch(html, /id="summary-night"/);
+  assert.ok(html.indexOf('today-summary') < html.indexOf('signals'));
+  assert.ok(html.indexOf('signals') < html.indexOf('market-context'));
+});
+
+test('夜盤、結算、策略研究與系統資訊集中在單一進階區', async () => {
+  const html = await read('index.html');
+  const advancedStart = html.indexOf('<details class="advanced-hub"');
+  const advancedEnd = html.lastIndexOf('</details>');
+  const advanced = advancedStart >= 0 ? html.slice(advancedStart, advancedEnd + 10) : '';
+  assert.match(advanced, /進階研究與系統/);
+  for (const section of ['market-context', 'settlement-summary', 'strategy-campaign',
+    'v2-analysis', 'backtest-performance', 'system-details']) {
+    assert.match(advanced, new RegExp(`class="${section}`));
+  }
+  assert.match(advanced, /下載 latest\.csv/);
+  assert.doesNotMatch(html, /<details class="advanced-hub" open/);
 });
 
 test('研究與技術資訊預設收合且手機操作符合無障礙需求', async () => {
@@ -60,6 +82,17 @@ test('研究與技術資訊預設收合且手機操作符合無障礙需求', as
   assert.match(styles, /:focus-visible/);
   assert.match(styles, /min-height:\s*44px/);
   assert.match(styles, /@media\s*\(max-width:\s*420px\)/);
+  assert.match(styles, /@media\s*\(max-width:\s*560px\)[\s\S]*?\.summary-grid\s*\{\s*grid-template-columns:\s*1fr/);
+  assert.match(styles, /overflow-wrap:\s*anywhere/);
+});
+
+test('載入失敗顯示一般使用者可理解的訊息而非原始解析錯誤', async () => {
+  const { friendlyLoadError, resolveLoadFailure } = await import('../public/app.js');
+  assert.equal(friendlyLoadError(new SyntaxError("Unexpected token '<'")), '資料暫時無法載入，請稍後重新整理。');
+  assert.deepEqual(resolveLoadFailure(), {
+    count: '—', note: '資料載入失敗｜不可執行',
+    eligibility: '官方當沖資格無法驗證；目前清單不可執行。',
+  });
 });
 
 test('首屏說明通過閘門數與基礎候選數不同', async () => {
@@ -125,7 +158,7 @@ test('PWA顯示核心100日成本後三情境且保留研究限制', async () =>
   assert.match(app, /renderBacktestPerformance\(data\)/);
   assert.doesNotMatch(app, /\.innerHTML\s*=/);
   assert.match(styles, /\.backtest-performance/);
-  assert.match(sw, /taistock-monitor-v11/);
+  assert.match(sw, /taistock-monitor-v13/);
 });
 
 test('PWA顯示V2成本後績效檢驗、方法限制與新版快取', async () => {
@@ -146,7 +179,7 @@ test('PWA顯示V2成本後績效檢驗、方法限制與新版快取', async () 
   assert.match(app, /v2-quality/);
   assert.doesNotMatch(app, /\.innerHTML\s*=/);
   assert.match(styles, /\.v2-analysis/);
-  assert.match(sw, /taistock-monitor-v11/);
+  assert.match(sw, /taistock-monitor-v13/);
 });
 
 test('個股卡顯示券商短沖倒貨風險且明列不計分', async () => {
@@ -166,4 +199,15 @@ test('PWA顯示官方當沖資格排除與K線方向衝突警示', async () => {
   assert.match(app, /candlestick_research/);
   assert.match(app, /紅K/);
   assert.match(app, /不直接改分或排除/);
+});
+
+test('個股卡以觸發價與風險警示為主，研究細節預設收合', async () => {
+  const [html, app, styles] = await Promise.all([read('index.html'), read('app.js'), read('styles.css')]);
+  assert.match(app, /card-primary-price/);
+  assert.match(app, /官方當沖資格已通過/);
+  assert.match(app, /signal-warning/);
+  assert.match(app, /查看原因與研究細節/);
+  assert.match(styles, /\.signal-warning/);
+  assert.match(styles, /\.card-details/);
+  assert.doesNotMatch(html, /<details class="strategy-campaign" open>/);
 });
