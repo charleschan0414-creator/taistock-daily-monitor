@@ -1298,6 +1298,43 @@
           "close_location_pct": 100.0,
           "upper_shadow_pct_of_range": 0.0
         },
+        "recent_candles": [
+          {
+            "date": "2026-10-15",
+            "open": 25.4,
+            "high": 27.0,
+            "low": 25.0,
+            "close": 25.5
+          },
+          {
+            "date": "2026-10-16",
+            "open": 26.0,
+            "high": 26.4,
+            "low": 24.75,
+            "close": 25.25
+          },
+          {
+            "date": "2026-10-19",
+            "open": 24.5,
+            "high": 24.5,
+            "low": 23.85,
+            "close": 24.2
+          },
+          {
+            "date": "2026-10-20",
+            "open": 23.9,
+            "high": 26.6,
+            "low": 23.9,
+            "close": 26.6
+          },
+          {
+            "date": "2026-10-21",
+            "open": 28.65,
+            "high": 29.25,
+            "low": 27.85,
+            "close": 29.25
+          }
+        ],
         "missing_reason": null
       },
       "ma5": 26.16,
@@ -1343,6 +1380,18 @@
         "filter_effect": "none",
         "source": "MoneyDJ公開彙整頁（原始資訊來自市場買賣日報表）",
         "notice": "分點為多人彙總，短線型標籤是觀察名單、非官方認定；只能提示可能賣壓，不能保證避免倒貨。"
+      },
+      "candlestick_window": {
+        "version": "candle-window-v1",
+        "chart_sessions": 5,
+        "pattern_sessions": 3,
+        "score_effect": "none",
+        "filter_effect": "none",
+        "status": "pattern_found",
+        "pattern_name": "外側三日上升",
+        "bias": "bullish",
+        "direction_relation": "aligned",
+        "explanation": "第二日紅K吞噬首日黑K，第三日續漲確認，屬偏多型態；仍須配合位置、量價與隔日資格，不直接改分或排除。"
       }
     },
     {
@@ -1383,6 +1432,43 @@
           "close_location_pct": 23.076923,
           "upper_shadow_pct_of_range": 46.153846
         },
+        "recent_candles": [
+          {
+            "date": "2026-10-15",
+            "open": 87.5,
+            "high": 98.0,
+            "low": 86.4,
+            "close": 93.0
+          },
+          {
+            "date": "2026-10-16",
+            "open": 94.0,
+            "high": 102.0,
+            "low": 92.0,
+            "close": 100.5
+          },
+          {
+            "date": "2026-10-19",
+            "open": 99.0,
+            "high": 104.5,
+            "low": 95.8,
+            "close": 102.0
+          },
+          {
+            "date": "2026-10-20",
+            "open": 101.0,
+            "high": 112.0,
+            "low": 100.5,
+            "close": 112.0
+          },
+          {
+            "date": "2026-10-21",
+            "open": 114.0,
+            "high": 120.0,
+            "low": 107.0,
+            "close": 110.0
+          }
+        ],
         "missing_reason": null
       },
       "ma5": 103.5,
@@ -1457,6 +1543,18 @@
         "filter_effect": "none",
         "source": "MoneyDJ公開彙整頁（原始資訊來自市場買賣日報表）",
         "notice": "分點為多人彙總，短線型標籤是觀察名單、非官方認定；只能提示可能賣壓，不能保證避免倒貨。"
+      },
+      "candlestick_window": {
+        "version": "candle-window-v1",
+        "chart_sessions": 5,
+        "pattern_sessions": 3,
+        "score_effect": "none",
+        "filter_effect": "none",
+        "status": "no_clear_pattern",
+        "pattern_name": "未見明確3日型態",
+        "bias": "neutral",
+        "direction_relation": "neutral",
+        "explanation": "最近3日未形成保守定義的型態；5日收盤走高 +18.28%。只供研究，不計分。"
       }
     },
     {
@@ -1497,6 +1595,43 @@
           "close_location_pct": 100.0,
           "upper_shadow_pct_of_range": 0.0
         },
+        "recent_candles": [
+          {
+            "date": "2026-10-15",
+            "open": 240.0,
+            "high": 240.0,
+            "low": 238.0,
+            "close": 239.5
+          },
+          {
+            "date": "2026-10-16",
+            "open": 241.5,
+            "high": 247.0,
+            "low": 240.5,
+            "close": 244.0
+          },
+          {
+            "date": "2026-10-19",
+            "open": 242.0,
+            "high": 242.5,
+            "low": 238.5,
+            "close": 239.5
+          },
+          {
+            "date": "2026-10-20",
+            "open": 238.0,
+            "high": 244.5,
+            "low": 237.0,
+            "close": 241.5
+          },
+          {
+            "date": "2026-10-21",
+            "open": 244.5,
+            "high": 250.0,
+            "low": 244.5,
+            "close": 250.0
+          }
+        ],
         "missing_reason": null
       },
       "ma5": 242.9,
@@ -1562,6 +1697,18 @@
         "filter_effect": "none",
         "source": "MoneyDJ公開彙整頁（原始資訊來自市場買賣日報表）",
         "notice": "分點為多人彙總，短線型標籤是觀察名單、非官方認定；只能提示可能賣壓，不能保證避免倒貨。"
+      },
+      "candlestick_window": {
+        "version": "candle-window-v1",
+        "chart_sessions": 5,
+        "pattern_sessions": 3,
+        "score_effect": "none",
+        "filter_effect": "none",
+        "status": "no_clear_pattern",
+        "pattern_name": "未見明確3日型態",
+        "bias": "neutral",
+        "direction_relation": "neutral",
+        "explanation": "最近3日未形成保守定義的型態；5日收盤走高 +4.38%。只供研究，不計分。"
       }
     },
     {
@@ -1602,6 +1749,43 @@
           "close_location_pct": 17.948718,
           "upper_shadow_pct_of_range": 35.897436
         },
+        "recent_candles": [
+          {
+            "date": "2026-10-15",
+            "open": 74.6,
+            "high": 74.6,
+            "low": 73.6,
+            "close": 74.6
+          },
+          {
+            "date": "2026-10-16",
+            "open": 75.1,
+            "high": 82.0,
+            "low": 74.3,
+            "close": 82.0
+          },
+          {
+            "date": "2026-10-19",
+            "open": 83.0,
+            "high": 90.0,
+            "low": 79.3,
+            "close": 80.3
+          },
+          {
+            "date": "2026-10-20",
+            "open": 82.1,
+            "high": 88.3,
+            "low": 81.7,
+            "close": 88.3
+          },
+          {
+            "date": "2026-10-21",
+            "open": 90.2,
+            "high": 93.0,
+            "low": 85.2,
+            "close": 86.6
+          }
+        ],
         "missing_reason": null
       },
       "ma5": 82.36,
@@ -1676,6 +1860,18 @@
         "filter_effect": "none",
         "source": "MoneyDJ公開彙整頁（原始資訊來自市場買賣日報表）",
         "notice": "分點為多人彙總，短線型標籤是觀察名單、非官方認定；只能提示可能賣壓，不能保證避免倒貨。"
+      },
+      "candlestick_window": {
+        "version": "candle-window-v1",
+        "chart_sessions": 5,
+        "pattern_sessions": 3,
+        "score_effect": "none",
+        "filter_effect": "none",
+        "status": "no_clear_pattern",
+        "pattern_name": "未見明確3日型態",
+        "bias": "neutral",
+        "direction_relation": "neutral",
+        "explanation": "最近3日未形成保守定義的型態；5日收盤走高 +16.09%。只供研究，不計分。"
       }
     },
     {
@@ -1716,6 +1912,43 @@
           "close_location_pct": 47.5,
           "upper_shadow_pct_of_range": 52.5
         },
+        "recent_candles": [
+          {
+            "date": "2026-10-15",
+            "open": 36.3,
+            "high": 36.5,
+            "low": 35.8,
+            "close": 36.0
+          },
+          {
+            "date": "2026-10-16",
+            "open": 36.3,
+            "high": 37.05,
+            "low": 36.3,
+            "close": 36.7
+          },
+          {
+            "date": "2026-10-19",
+            "open": 36.2,
+            "high": 36.3,
+            "low": 35.75,
+            "close": 36.25
+          },
+          {
+            "date": "2026-10-20",
+            "open": 36.0,
+            "high": 37.1,
+            "low": 36.0,
+            "close": 36.9
+          },
+          {
+            "date": "2026-10-21",
+            "open": 37.1,
+            "high": 38.75,
+            "low": 36.75,
+            "close": 37.7
+          }
+        ],
         "missing_reason": null
       },
       "ma5": 36.71,
@@ -1780,6 +2013,18 @@
         "filter_effect": "none",
         "source": "MoneyDJ公開彙整頁（原始資訊來自市場買賣日報表）",
         "notice": "分點為多人彙總，短線型標籤是觀察名單、非官方認定；只能提示可能賣壓，不能保證避免倒貨。"
+      },
+      "candlestick_window": {
+        "version": "candle-window-v1",
+        "chart_sessions": 5,
+        "pattern_sessions": 3,
+        "score_effect": "none",
+        "filter_effect": "none",
+        "status": "no_clear_pattern",
+        "pattern_name": "未見明確3日型態",
+        "bias": "neutral",
+        "direction_relation": "neutral",
+        "explanation": "最近3日未形成保守定義的型態；5日收盤走高 +4.72%。只供研究，不計分。"
       }
     },
     {
@@ -1820,6 +2065,43 @@
           "close_location_pct": 73.333333,
           "upper_shadow_pct_of_range": 26.666667
         },
+        "recent_candles": [
+          {
+            "date": "2026-10-15",
+            "open": 49.05,
+            "high": 49.2,
+            "low": 47.7,
+            "close": 47.85
+          },
+          {
+            "date": "2026-10-16",
+            "open": 48.4,
+            "high": 49.7,
+            "low": 48.35,
+            "close": 48.55
+          },
+          {
+            "date": "2026-10-19",
+            "open": 47.2,
+            "high": 49.4,
+            "low": 47.2,
+            "close": 49.0
+          },
+          {
+            "date": "2026-10-20",
+            "open": 48.5,
+            "high": 53.9,
+            "low": 48.5,
+            "close": 50.9
+          },
+          {
+            "date": "2026-10-21",
+            "open": 51.0,
+            "high": 55.5,
+            "low": 51.0,
+            "close": 54.3
+          }
+        ],
         "missing_reason": null
       },
       "ma5": 50.12,
@@ -1884,6 +2166,18 @@
         "filter_effect": "none",
         "source": "MoneyDJ公開彙整頁（原始資訊來自市場買賣日報表）",
         "notice": "分點為多人彙總，短線型標籤是觀察名單、非官方認定；只能提示可能賣壓，不能保證避免倒貨。"
+      },
+      "candlestick_window": {
+        "version": "candle-window-v1",
+        "chart_sessions": 5,
+        "pattern_sessions": 3,
+        "score_effect": "none",
+        "filter_effect": "none",
+        "status": "no_clear_pattern",
+        "pattern_name": "未見明確3日型態",
+        "bias": "neutral",
+        "direction_relation": "neutral",
+        "explanation": "最近3日未形成保守定義的型態；5日收盤走高 +13.48%。只供研究，不計分。"
       }
     }
   ],
@@ -1926,6 +2220,43 @@
           "close_location_pct": 15.625,
           "upper_shadow_pct_of_range": 15.625
         },
+        "recent_candles": [
+          {
+            "date": "2026-10-15",
+            "open": 1620.0,
+            "high": 1730.0,
+            "low": 1605.0,
+            "close": 1625.0
+          },
+          {
+            "date": "2026-10-16",
+            "open": 1660.0,
+            "high": 1665.0,
+            "low": 1570.0,
+            "close": 1615.0
+          },
+          {
+            "date": "2026-10-19",
+            "open": 1525.0,
+            "high": 1640.0,
+            "low": 1500.0,
+            "close": 1630.0
+          },
+          {
+            "date": "2026-10-20",
+            "open": 1625.0,
+            "high": 1650.0,
+            "low": 1535.0,
+            "close": 1550.0
+          },
+          {
+            "date": "2026-10-21",
+            "open": 1610.0,
+            "high": 1635.0,
+            "low": 1475.0,
+            "close": 1500.0
+          }
+        ],
         "missing_reason": null
       },
       "ma5": 1584.0,
@@ -1991,6 +2322,18 @@
         "filter_effect": "none",
         "source": "MoneyDJ公開彙整頁（原始資訊來自市場買賣日報表）",
         "notice": "分點為多人彙總，短線型標籤是觀察名單、非官方認定；只能提示可能賣壓，不能保證避免倒貨。"
+      },
+      "candlestick_window": {
+        "version": "candle-window-v1",
+        "chart_sessions": 5,
+        "pattern_sessions": 3,
+        "score_effect": "none",
+        "filter_effect": "none",
+        "status": "pattern_found",
+        "pattern_name": "內困三日翻黑",
+        "bias": "bearish",
+        "direction_relation": "aligned",
+        "explanation": "第二日實體位於首日紅K內，第三日黑K向下突破，屬偏空確認觀察；仍須配合位置、量價與隔日資格，不直接改分或排除。"
       }
     },
     {
@@ -2031,6 +2374,43 @@
           "close_location_pct": 0.0,
           "upper_shadow_pct_of_range": 51.06383
         },
+        "recent_candles": [
+          {
+            "date": "2026-10-15",
+            "open": 9.05,
+            "high": 9.24,
+            "low": 8.97,
+            "close": 9.24
+          },
+          {
+            "date": "2026-10-16",
+            "open": 9.47,
+            "high": 9.56,
+            "low": 9.06,
+            "close": 9.06
+          },
+          {
+            "date": "2026-10-19",
+            "open": 9.1,
+            "high": 9.3,
+            "low": 8.98,
+            "close": 9.13
+          },
+          {
+            "date": "2026-10-20",
+            "open": 9.14,
+            "high": 9.16,
+            "low": 8.9,
+            "close": 8.99
+          },
+          {
+            "date": "2026-10-21",
+            "open": 9.08,
+            "high": 9.32,
+            "low": 8.85,
+            "close": 8.85
+          }
+        ],
         "missing_reason": null
       },
       "ma5": 9.05,
@@ -2104,6 +2484,18 @@
         "filter_effect": "none",
         "source": "MoneyDJ公開彙整頁（原始資訊來自市場買賣日報表）",
         "notice": "分點為多人彙總，短線型標籤是觀察名單、非官方認定；只能提示可能賣壓，不能保證避免倒貨。"
+      },
+      "candlestick_window": {
+        "version": "candle-window-v1",
+        "chart_sessions": 5,
+        "pattern_sessions": 3,
+        "score_effect": "none",
+        "filter_effect": "none",
+        "status": "pattern_found",
+        "pattern_name": "外側三日下跌",
+        "bias": "bearish",
+        "direction_relation": "aligned",
+        "explanation": "第二日黑K吞噬首日紅K，第三日續跌確認，屬偏空型態；仍須配合位置、量價與隔日資格，不直接改分或排除。"
       }
     },
     {
@@ -2144,6 +2536,43 @@
           "close_location_pct": 7.272727,
           "upper_shadow_pct_of_range": 3.636364
         },
+        "recent_candles": [
+          {
+            "date": "2026-10-15",
+            "open": 240.0,
+            "high": 240.5,
+            "low": 228.0,
+            "close": 228.0
+          },
+          {
+            "date": "2026-10-16",
+            "open": 234.0,
+            "high": 250.5,
+            "low": 233.0,
+            "close": 248.0
+          },
+          {
+            "date": "2026-10-19",
+            "open": 239.0,
+            "high": 252.0,
+            "low": 237.0,
+            "close": 248.0
+          },
+          {
+            "date": "2026-10-20",
+            "open": 248.0,
+            "high": 255.0,
+            "low": 243.0,
+            "close": 243.5
+          },
+          {
+            "date": "2026-10-21",
+            "open": 265.0,
+            "high": 266.0,
+            "low": 238.5,
+            "close": 240.5
+          }
+        ],
         "missing_reason": null
       },
       "ma5": 241.6,
@@ -2218,6 +2647,18 @@
         "filter_effect": "none",
         "source": "MoneyDJ公開彙整頁（原始資訊來自市場買賣日報表）",
         "notice": "分點為多人彙總，短線型標籤是觀察名單、非官方認定；只能提示可能賣壓，不能保證避免倒貨。"
+      },
+      "candlestick_window": {
+        "version": "candle-window-v1",
+        "chart_sessions": 5,
+        "pattern_sessions": 3,
+        "score_effect": "none",
+        "filter_effect": "none",
+        "status": "no_clear_pattern",
+        "pattern_name": "未見明確3日型態",
+        "bias": "neutral",
+        "direction_relation": "neutral",
+        "explanation": "最近3日未形成保守定義的型態；5日收盤走高 +5.48%。只供研究，不計分。"
       }
     }
   ],
