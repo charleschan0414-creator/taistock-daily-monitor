@@ -158,7 +158,7 @@ test('PWA顯示核心100日成本後三情境且保留研究限制', async () =>
   assert.match(app, /renderBacktestPerformance\(data\)/);
   assert.doesNotMatch(app, /\.innerHTML\s*=/);
   assert.match(styles, /\.backtest-performance/);
-  assert.match(sw, /taistock-monitor-v13/);
+  assert.match(sw, /taistock-monitor-v14/);
 });
 
 test('PWA顯示V2成本後績效檢驗、方法限制與新版快取', async () => {
@@ -179,7 +179,7 @@ test('PWA顯示V2成本後績效檢驗、方法限制與新版快取', async () 
   assert.match(app, /v2-quality/);
   assert.doesNotMatch(app, /\.innerHTML\s*=/);
   assert.match(styles, /\.v2-analysis/);
-  assert.match(sw, /taistock-monitor-v13/);
+  assert.match(sw, /taistock-monitor-v14/);
 });
 
 test('個股卡顯示券商短沖倒貨風險且明列不計分', async () => {
@@ -210,4 +210,29 @@ test('個股卡以觸發價與風險警示為主，研究細節預設收合', as
   assert.match(styles, /\.signal-warning/);
   assert.match(styles, /\.card-details/);
   assert.doesNotMatch(html, /<details class="strategy-campaign" open>/);
+});
+
+test('推薦股票下方顯示最近5日K線圖與最後3日型態解釋', async () => {
+  const { normalizeCandleGeometry } = await import('../public/app.js');
+  const candles = [
+    { date: '2026-10-09', open: 10, high: 11, low: 9, close: 10.8 },
+    { date: '2026-10-10', open: 11, high: 12, low: 10, close: 11.8 },
+    { date: '2026-10-13', open: 12, high: 13, low: 11, close: 12.8 },
+    { date: '2026-10-14', open: 13, high: 14, low: 12, close: 13.8 },
+    { date: '2026-10-15', open: 14, high: 15, low: 13, close: 14.8 },
+  ];
+  const points = normalizeCandleGeometry(candles, 300, 140);
+  assert.equal(points.length, 5);
+  assert.ok(points.every(point => point.x >= 0 && point.x <= 300));
+  assert.ok(points.every(point => ['highY', 'lowY', 'openY', 'closeY']
+    .every(key => point[key] >= 0 && point[key] <= 140)));
+  const [app, styles, html] = await Promise.all([read('app.js'), read('styles.css'), read('index.html')]);
+  assert.match(app, /createElementNS/);
+  assert.match(app, /最近5日K線/);
+  assert.match(app, /最後3日/);
+  assert.match(app, /不計分/);
+  assert.match(styles, /\.candle-study/);
+  assert.match(html, /48種K棒型態戰法/);
+  assert.match(html, /PLlAWMYbuVkC-sX0QxC_FgepGeL-k-YY1L/);
+  assert.deepEqual(normalizeCandleGeometry(candles.slice(0, 4), 300, 140), []);
 });

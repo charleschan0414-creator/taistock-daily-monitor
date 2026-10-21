@@ -136,6 +136,62 @@ export function resolveLoadFailure() {
   };
 }
 
+export function normalizeCandleGeometry(candles, width = 300, height = 140) {
+  const rows = Array.isArray(candles) ? candles : [];
+  if (rows.length !== 5) return [];
+  const values = rows.map(row => ({ ...row, open: Number(row.open), high: Number(row.high), low: Number(row.low), close: Number(row.close) }));
+  if (values.some(row => ![row.open, row.high, row.low, row.close].every(value => Number.isFinite(value) && value > 0)
+    || row.high < Math.max(row.open, row.close) || row.low > Math.min(row.open, row.close))) return [];
+  const high = Math.max(...values.map(row => row.high));
+  const low = Math.min(...values.map(row => row.low));
+  const span = high - low || 1;
+  const top = 8; const bottom = height - 22;
+  const y = value => top + ((high - value) / span) * (bottom - top);
+  const spacing = (width - 32) / values.length;
+  return values.map((row, index) => ({
+    x: 16 + spacing * (index + 0.5),
+    highY: y(row.high), lowY: y(row.low), openY: y(row.open), closeY: y(row.close),
+    bullish: row.close >= row.open, date: String(row.date ?? ''),
+  }));
+}
+
+function candleStudy(row) {
+  const study = document.createElement('section'); study.className = 'candle-study';
+  const title = document.createElement('strong'); title.textContent = '最近5日K線｜最後3日型態';
+  const windowStudy = row.candlestick_window;
+  const explanation = document.createElement('p');
+  explanation.textContent = windowStudy
+    ? `${windowStudy.pattern_name ?? '未見明確型態'}｜${windowStudy.explanation ?? '只供研究。'}｜不計分、不篩除`
+    : '尚無5日K線資料；下次資料更新後補上。研究不計分、不篩除。';
+  const points = normalizeCandleGeometry(row.technical_research?.recent_candles, 300, 140);
+  if (points.length) {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 300 140'); svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-label', `${row.code ?? ''}最近5日K線圖`);
+    for (const point of points) {
+      const color = point.bullish ? '#fb7185' : '#34d399';
+      const wick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      wick.setAttribute('x1', point.x); wick.setAttribute('x2', point.x);
+      wick.setAttribute('y1', point.highY); wick.setAttribute('y2', point.lowY);
+      wick.setAttribute('stroke', color); wick.setAttribute('stroke-width', '2');
+      const body = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      const upper = Math.min(point.openY, point.closeY); const bodyHeight = Math.max(2, Math.abs(point.closeY - point.openY));
+      body.setAttribute('x', point.x - 10); body.setAttribute('y', upper);
+      body.setAttribute('width', 20); body.setAttribute('height', bodyHeight);
+      body.setAttribute('stroke', color); body.setAttribute('stroke-width', '2');
+      body.setAttribute('fill', point.bullish ? color : 'transparent');
+      const date = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      date.setAttribute('x', point.x); date.setAttribute('y', 136); date.setAttribute('text-anchor', 'middle');
+      date.textContent = point.date.slice(-5);
+      svg.append(wick, body, date);
+    }
+    study.append(title, svg, explanation);
+  } else {
+    study.append(title, explanation);
+  }
+  return study;
+}
+
 function card(row, direction) {
   const node = document.createElement('article'); node.className = 'card';
   const head = document.createElement('div'); head.className = 'card-head';
@@ -202,7 +258,7 @@ function card(row, direction) {
     : '分點資料不可用或日期不一致；不據此調整排序或名單。';
   brokerResearch.append(brokerTitle, brokerText);
   details.append(detailsTitle, reason, score, research, brokerResearch);
-  node.append(head, eligibility, priceLabel, price, status, levels, warnings, details); return node;
+  node.append(head, eligibility, priceLabel, price, status, levels, warnings, candleStudy(row), details); return node;
 }
 function renderList(id, rows, direction) {
   const box = $(id); box.replaceChildren();

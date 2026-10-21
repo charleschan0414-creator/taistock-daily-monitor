@@ -1,4 +1,5 @@
 import json
+import math
 import queue
 import subprocess
 import sys
@@ -63,6 +64,46 @@ def technical_research_text(row, direction):
     if conflict.get("status") == "direction_conflict":
         text += f"｜⚠ {conflict.get('message', 'K線方向衝突；不直接改分或排除')}"
     return text
+
+
+def candlestick_window_text(row):
+    window = row.get("candlestick_window") or {}
+    if window.get("status") == "insufficient_history" or not window:
+        return "5日K線資料不足｜不計分"
+    return (f"近3日型態｜{window.get('pattern_name', '未辨識')}｜"
+            f"{window.get('explanation', '只供研究。')}｜不計分、不篩除")
+
+
+def candle_chart_geometry(candles, width, height):
+    """將正好5根OHLC轉成畫布座標，供桌面K線圖使用。"""
+    rows = list(candles or [])
+    if len(rows) != 5:
+        return []
+    try:
+        lows = [float(row["low"]) for row in rows]
+        highs = [float(row["high"]) for row in rows]
+        opens = [float(row["open"]) for row in rows]
+        closes = [float(row["close"]) for row in rows]
+    except (KeyError, TypeError, ValueError):
+        return []
+    if not all(math.isfinite(value) and value > 0
+               for values in zip(opens, highs, lows, closes) for value in values):
+        return []
+    if any(high < max(open_price, close) or low > min(open_price, close)
+           for open_price, high, low, close in zip(opens, highs, lows, closes)):
+        return []
+    low, high = min(lows), max(highs)
+    top, bottom = 10.0, max(11.0, float(height) - 24.0)
+    span = high - low or 1.0
+    y = lambda value: top + (high - value) / span * (bottom - top)
+    spacing = max(1.0, (float(width) - 40.0) / len(rows))
+    return [{
+        "x": 20.0 + spacing * (index + 0.5),
+        "high_y": y(highs[index]), "low_y": y(lows[index]),
+        "open_y": y(opens[index]), "close_y": y(closes[index]),
+        "bullish": closes[index] >= opens[index],
+        "date": str(row.get("date", "")),
+    } for index, row in enumerate(rows)]
 
 
 def broker_risk_text(row):
@@ -386,6 +427,7 @@ class Dashboard(tk.Tk):
 
         self.tabs = ttk.Notebook(self); self.tabs.pack(fill="both", expand=True, padx=20, pady=3)
         self.trees, self.tree_rows = [], []
+        self.candle_canvases, self.candle_detail_vars = [], []
         for label in layout["tabs"][:2]:
             frame = tk.Frame(self.tabs, bg=PANEL); self.tabs.add(frame, text=label)
             columns, heads, widths = signal_table_columns()
@@ -400,8 +442,19 @@ class Dashboard(tk.Tk):
             scroll = ttk.Scrollbar(frame, orient="vertical", command=tree.yview); tree.configure(yscrollcommand=scroll.set)
             xscroll = ttk.Scrollbar(frame, orient="horizontal", command=tree.xview); tree.configure(xscrollcommand=xscroll.set)
             scroll.pack(side="right", fill="y"); xscroll.pack(side="bottom", fill="x")
+            tree_index = len(self.trees)
             tree.bind("<Double-1>", lambda _event, current=tree: self._show_signal_details(current))
+            tree.bind("<<TreeviewSelect>>", lambda _event, current=tree: self._render_selected_signal(current))
+            detail = tk.Frame(frame, bg="#0f1929", highlightthickness=1, highlightbackground="#263956")
+            detail.pack(fill="x", side="bottom", padx=8, pady=(4, 7))
+            canvas = tk.Canvas(detail, width=300, height=150, bg="#0f1929", highlightthickness=0)
+            canvas.pack(side="left", padx=(10, 4), pady=7)
+            detail_var = tk.StringVar(value="選取股票後顯示最近5日K線與3日型態說明。")
+            tk.Label(detail, textvariable=detail_var, fg=FG, bg="#0f1929", justify="left",
+                     anchor="nw", wraplength=720, padx=12, pady=12,
+                     font=("Microsoft JhengHei UI", 10)).pack(side="left", fill="both", expand=True)
             tree.pack(fill="both", expand=True); self.trees.append(tree); self.tree_rows.append({})
+            self.candle_canvases.append(canvas); self.candle_detail_vars.append(detail_var)
             tk.Label(frame, text="雙擊任一股票可查看入選原因、K線研究、分點資料與完整價位。",
                      fg=MUTED, bg=PANEL, anchor="w", padx=12, pady=7,
                      font=("Microsoft JhengHei UI", 9)).pack(fill="x", side="bottom")
@@ -478,11 +531,42 @@ class Dashboard(tk.Tk):
             f"入選原因｜{row.get('reason', '—')}",
             "",
             f"K線與技術｜{technical_research_text(row, direction)}",
+            f"3日／5日K線｜{candlestick_window_text(row)}",
             f"分點風險｜{broker_risk_text(row)}",
             "",
             "規則式研究觀察，非投資建議；不保證獲利，不會自動下單。",
         ]
         messagebox.showinfo(title, "\n".join(details))
+
+    def _render_selected_signal(self, tree):
+        selected = tree.selection()
+        if not selected:
+            return
+        index = self.trees.index(tree)
+        row = self.tree_rows[index].get(selected[0])
+        if not row:
+            return
+        canvas = self.candle_canvases[index]
+        canvas.delete("all")
+        candles = (row.get("technical_research") or {}).get("recent_candles") or []
+        geometry = candle_chart_geometry(candles, 300, 150)
+        if not geometry:
+            canvas.create_text(150, 72, text="5日K線資料不足", fill=MUTED,
+                               font=("Microsoft JhengHei UI", 11))
+        for item in geometry:
+            color = "#fb7185" if item["bullish"] else "#34d399"
+            x = item["x"]
+            canvas.create_line(x, item["high_y"], x, item["low_y"], fill=color, width=2)
+            upper, lower = sorted((item["open_y"], item["close_y"]))
+            if lower - upper < 2:
+                lower = upper + 2
+            canvas.create_rectangle(x - 10, upper, x + 10, lower, outline=color,
+                                    fill=color if item["bullish"] else "#0f1929", width=2)
+            canvas.create_text(x, 139, text=item["date"][-5:], fill=MUTED,
+                               font=("Microsoft JhengHei UI", 7))
+        self.candle_detail_vars[index].set(
+            f"{row.get('code', '')} {row.get('name', '')}\n{candlestick_window_text(row)}\n"
+            "圖為最近5個完整交易日；型態以最後3日優先。參考播放清單48種K棒架構，僅供研究。")
 
     def export_diagnostics_action(self):
         root = self.data_dir.parent
@@ -668,6 +752,12 @@ class Dashboard(tk.Tk):
                                     x.get("target1", "—"), signal_warning_text(x)),
                             tags=signal_row_tags(direction_key, change, i - 1))
                 self.tree_rows[tree_index][iid] = x
+            children = tree.get_children()
+            if children:
+                tree.selection_set(children[0]); tree.focus(children[0]); self._render_selected_signal(tree)
+            else:
+                self.candle_canvases[tree_index].delete("all")
+                self.candle_detail_vars[tree_index].set("目前沒有通過官方資格的可執行推薦。")
         gate_status = strategy_gate.get("status", "未啟用｜保留基準訊號")
         learning_status = optimization.get("status", "尚無學習狀態")
         self.status.set(f"{prefix}｜資料 {result.get('data_date')}｜策略：{gate_status}｜學習：{learning_status}｜非投資建議｜不會自動下單")

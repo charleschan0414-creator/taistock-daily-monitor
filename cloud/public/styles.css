@@ -184,6 +184,15 @@ h3 { margin-bottom: 0; font-size: 16px; }
 .reason { margin: 12px 0 0; color: var(--muted); font-size: 12px; }
 .signal-warnings:empty { display: none; }
 .signal-warning { margin: 9px 0 0; padding: 8px 10px; border: 1px solid rgba(244,198,106,.28); border-radius: 8px; background: var(--amber-bg); color: #ffe2a8; font-size: 12px; }
+.candle-study { margin-top: 12px; padding: 11px; border: 1px solid var(--line); border-radius: 10px; background: rgba(15,25,41,.62); }
+.candle-study strong { display: block; font-size: 12px; }
+.candle-study svg { display: block; width: 100%; height: 140px; margin-top: 7px; overflow: visible; }
+.candle-study svg text { fill: var(--muted); font-size: 9px; }
+.candle-study p { margin: 8px 0 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+.pattern-guide { padding: 18px; }
+.pattern-guide h2 { margin: 5px 0 8px; font-size: 18px; }
+.pattern-guide p { margin: 6px 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+.pattern-guide a { display: inline-block; margin-top: 7px; color: var(--accent); font-size: 12px; }
 .card-details { margin-top: 11px; border-top: 1px solid var(--line); color: var(--muted); }
 .card-details > summary { padding-top: 10px; cursor: pointer; font-size: 12px; font-weight: 700; }
 .score-detail { margin: 8px 0 0; color: var(--muted); font-size: 12px; }

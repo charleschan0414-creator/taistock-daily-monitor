@@ -4,7 +4,8 @@ from urllib.parse import urlencode
 from .core import BASELINE_WEIGHTS, evaluate_candidates, is_common_stock
 from .data import parse_twse_quotes, parse_tpex_quotes, ensure_same_date, _date, _number
 from .strategy_optimize import apply_strategy_gate
-from .technical import assess_candlestick_conflict, calculate_technical_research
+from .technical import (analyze_candlestick_window, assess_candlestick_conflict,
+                        calculate_technical_research)
 
 TWSE_QUOTES = "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL"
 TWSE_INST = "https://www.twse.com.tw/rwd/zh/fund/T86?response=json&selectType=ALLBUT0999"
@@ -67,6 +68,8 @@ class Scanner:
         for row in evaluated:
             row["candlestick_research"] = assess_candlestick_conflict(
                 row.get("technical_research", {}), row.get("signal_direction"))
+            row["candlestick_window"] = analyze_candlestick_window(
+                row.get("technical_research", {}), row.get("signal_direction"))
         pre_gate_counts = {
             "long": sum(x["signal_direction"] == "long" for x in evaluated),
             "short": sum(x["signal_direction"] == "short" for x in evaluated),
@@ -101,7 +104,9 @@ class Scanner:
         for rank, quote in enumerate(ranked, 1):
             if len(rows) >= limit:
                 break
-            history = [day["quotes"].get(quote["code"]) for day in ordered[-6:]]
+            history = [({**item, "date": day["date"]} if item is not None else None)
+                       for day in ordered[-6:]
+                       for item in [day["quotes"].get(quote["code"])]]
             previous = ordered[-2]["quotes"].get(quote["code"])
             if any(item is None for item in history) or previous is None:
                 history_skipped.append({"code": quote["code"], "name": quote.get("name", ""),
@@ -115,6 +120,8 @@ class Scanner:
         evaluated = evaluate_candidates(rows, self.weights)
         for row in evaluated:
             row["candlestick_research"] = assess_candlestick_conflict(
+                row.get("technical_research", {}), row.get("signal_direction"))
+            row["candlestick_window"] = analyze_candlestick_window(
                 row.get("technical_research", {}), row.get("signal_direction"))
         pre_gate_counts = {
             "long": sum(row["signal_direction"] == "long" for row in evaluated),

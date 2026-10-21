@@ -82,6 +82,10 @@ class ScannerTests(unittest.TestCase):
         self.assertEqual(result["short_top10"][0]["candlestick_research"]["status"],
                          "aligned_or_neutral")
         self.assertEqual(result["short_top10"][0]["candlestick_research"]["filter_effect"], "none")
+        window = result["long_top10"][0]["candlestick_window"]
+        self.assertEqual(window["chart_sessions"], 5)
+        self.assertEqual(window["pattern_sessions"], 3)
+        self.assertEqual(window["score_effect"], "none")
 
     def test_bulk_scan_backfills_new_listing_without_six_sessions(self):
         dates = ("2026-10-08", "2026-10-09", "2026-10-12", "2026-10-13", "2026-10-14", "2026-10-15")

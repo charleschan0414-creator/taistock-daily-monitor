@@ -7,7 +7,8 @@ from taistock.ui import (format_backtest_summary, display_quote_values, visible_
                          technical_research_text, broker_risk_text, format_health_report,
                          execution_eligibility_text, signal_warning_text,
                          signal_table_columns, run_desktop_update, Dashboard,
-                         executable_signal_lists, BusyOperationState, data_update_label)
+                         executable_signal_lists, BusyOperationState, data_update_label,
+                         candlestick_window_text, candle_chart_geometry)
 
 
 class BacktestUiTests(unittest.TestCase):
@@ -163,6 +164,27 @@ class BacktestUiTests(unittest.TestCase):
         text = signal_warning_text(row)
         self.assertIn("K線方向衝突", text)
         self.assertIn("分點高度注意", text)
+
+    def test_selected_stock_detail_formats_five_day_chart_and_three_day_explanation(self):
+        candles = [
+            {"date": f"2026-10-{day}", "open": 10 + index, "high": 11 + index,
+             "low": 9 + index, "close": 10.8 + index}
+            for index, day in enumerate((9, 10, 13, 14, 15))
+        ]
+        row = {"technical_research": {"recent_candles": candles},
+               "candlestick_window": {"pattern_name": "三白兵", "pattern_sessions": 3,
+                    "explanation": "最近3日連續墊高", "score_effect": "none"}}
+        text = candlestick_window_text(row)
+        self.assertIn("三白兵", text)
+        self.assertIn("最近3日", text)
+        self.assertIn("不計分", text)
+        geometry = candle_chart_geometry(candles, 300, 150)
+        self.assertEqual(len(geometry), 5)
+        self.assertTrue(all(0 <= item["x"] <= 300 for item in geometry))
+        self.assertTrue(all(0 <= item[key] <= 150 for item in geometry
+                            for key in ("high_y", "low_y", "open_y", "close_y")))
+        self.assertEqual(candle_chart_geometry(candles[:4], 300, 150), [])
+
     def test_strategy_card_distinguishes_protective_incumbent_from_cost_validated_candidate(self):
         self.assertEqual(strategy_card_label({"applied_mode": "incumbent_protective",
                                               "enabled": False}), "未通過成本驗證")
