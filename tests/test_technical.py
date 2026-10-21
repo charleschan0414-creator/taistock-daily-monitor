@@ -1,7 +1,7 @@
 import math
 import unittest
 
-from taistock.technical import calculate_technical_research
+from taistock.technical import assess_candlestick_conflict, calculate_technical_research
 
 
 class TechnicalResearchTests(unittest.TestCase):
@@ -17,7 +17,20 @@ class TechnicalResearchTests(unittest.TestCase):
         self.assertAlmostEqual(result["indicators"]["rsi_5"], 83.333333, places=5)
         self.assertAlmostEqual(result["indicators"]["atr_5_pct"], 21.428571, places=5)
         self.assertAlmostEqual(result["indicators"]["close_vs_prior5_high_pct"], 0.0)
+        self.assertAlmostEqual(result["indicators"]["candle_body_pct"], 100 / 13, places=5)
+        self.assertAlmostEqual(result["indicators"]["close_change_pct"], 100 / 13, places=5)
         self.assertTrue(all(math.isfinite(value) for value in result["indicators"].values()))
+
+    def test_flags_bullish_daily_candle_against_short_without_filtering(self):
+        research = {"status": "available", "indicators": {
+            "candle_body_pct": 0.82, "close_change_pct": 1.37,
+            "gap_pct": 0.55, "close_location_pct": 20.97,
+        }}
+        conflict = assess_candlestick_conflict(research, "short")
+        self.assertEqual(conflict["status"], "direction_conflict")
+        self.assertEqual(conflict["score_effect"], "none")
+        self.assertEqual(conflict["filter_effect"], "none")
+        self.assertIn("紅K", conflict["message"])
 
     def test_requires_six_complete_sessions_and_never_imputes(self):
         result = calculate_technical_research([], "2026-10-15")

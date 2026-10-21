@@ -6,6 +6,11 @@ INDICATOR_KEYS = (
     "atr_5_pct",
     "close_vs_prior5_high_pct",
     "close_vs_prior5_low_pct",
+    "candle_body_pct",
+    "close_change_pct",
+    "gap_pct",
+    "close_location_pct",
+    "upper_shadow_pct_of_range",
 )
 
 
@@ -29,12 +34,13 @@ def calculate_technical_research(bars, as_of_date):
         return _missing(as_of_date)
     bars6 = eligible[-6:]
     try:
+        opens = [float(row["open"]) for row in bars6]
         closes = [float(row["close"]) for row in bars6]
         highs = [float(row["high"]) for row in bars6]
         lows = [float(row["low"]) for row in bars6]
     except (KeyError, TypeError, ValueError):
         return _missing(as_of_date, "invalid_ohlc")
-    if closes[-1] <= 0 or any(high < low for high, low in zip(highs, lows)):
+    if opens[-1] <= 0 or closes[-1] <= 0 or closes[-2] <= 0 or any(high < low for high, low in zip(highs, lows)):
         return _missing(as_of_date, "invalid_ohlc")
 
     changes = [closes[index] - closes[index - 1] for index in range(1, 6)]
@@ -63,6 +69,14 @@ def calculate_technical_research(bars, as_of_date):
         "atr_5_pct": sum(true_ranges) / 5 / closes[-1] * 100,
         "close_vs_prior5_high_pct": (closes[-1] / prior_high - 1) * 100,
         "close_vs_prior5_low_pct": (closes[-1] / prior_low - 1) * 100,
+        "candle_body_pct": (closes[-1] / opens[-1] - 1) * 100,
+        "close_change_pct": (closes[-1] / closes[-2] - 1) * 100,
+        "gap_pct": (opens[-1] / closes[-2] - 1) * 100,
+        "close_location_pct": ((closes[-1] - lows[-1]) / (highs[-1] - lows[-1]) * 100
+                               if highs[-1] > lows[-1] else 50.0),
+        "upper_shadow_pct_of_range": ((highs[-1] - max(opens[-1], closes[-1])) /
+                                      (highs[-1] - lows[-1]) * 100
+                                      if highs[-1] > lows[-1] else 0.0),
     }
     return {
         "version": "ta-v1",
@@ -73,3 +87,23 @@ def calculate_technical_research(bars, as_of_date):
         "indicators": {key: round(value, 6) for key, value in values.items()},
         "missing_reason": None,
     }
+
+
+def assess_candlestick_conflict(technical_research, direction):
+    """標示日K與方向的衝突；只供研究顯示，不改分或排除。"""
+    base = {"version": "candle-v1", "score_effect": "none", "filter_effect": "none"}
+    if technical_research.get("status") != "available":
+        return {**base, "status": "unknown", "message": "K線資料不足，無法判定方向衝突"}
+    indicators = technical_research.get("indicators", {})
+    body = indicators.get("candle_body_pct")
+    change = indicators.get("close_change_pct")
+    if not isinstance(body, (int, float)) or not isinstance(change, (int, float)):
+        return {**base, "status": "unknown", "message": "K線欄位不完整，無法判定方向衝突"}
+    conflict = ((direction == "short" and body > 0 and change > 0) or
+                (direction == "long" and body < 0 and change < 0))
+    if conflict:
+        label = "紅K且收漲" if direction == "short" else "黑K且收跌"
+        side = "空方" if direction == "short" else "多方"
+        return {**base, "status": "direction_conflict",
+                "message": f"{side}訊號與{label}方向衝突；研究警示，不直接改分或排除"}
+    return {**base, "status": "aligned_or_neutral", "message": "日K未出現預先定義的方向衝突"}

@@ -9,6 +9,7 @@ from taistock.health import export_diagnostics
 from taistock.backtest import (OfficialHistoryFetcher, build_backtest,
                                required_history_days, write_backtest_outputs)
 from taistock.broker_risk import enrich_broker_risk
+from taistock.day_trading import fetch_and_apply_execution_eligibility
 from taistock.net import HttpClient
 from taistock.notify import notify, build_summary
 from taistock.scanner import Scanner
@@ -81,6 +82,10 @@ def update(send_notification=False):
     histories = fetcher.collect(end_date, 6)
     result = Scanner(HttpClient(), progress=progress, weights=state["weights"], optimization=state,
                      strategy_gate=strategy_gate).run_from_days(histories, limit=100)
+    validate_daily_scan(result, latest_complete_date(histories))
+    execution_date = datetime.now(TAIPEI).date().isoformat()
+    progress(f"核對 {execution_date} 官方當沖資格…", 90)
+    result = fetch_and_apply_execution_eligibility(HttpClient(), result, execution_date)
     validate_daily_scan(result, latest_complete_date(histories))
     progress("檢查觀察名單的分點短線風險（研究顯示、不計分）…", 92)
     result = enrich_broker_risk(result)

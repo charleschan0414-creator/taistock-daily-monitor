@@ -37,6 +37,44 @@ async function latestData(env, fetcher) {
   }
 }
 
+function executableLists(latest) {
+  const eligibility = latest?.execution_eligibility;
+  const long = latest?.long_top10 ?? latest?.top10;
+  const short = latest?.short_top10;
+  const sourceDate = eligibility?.source_date;
+  const parsedDate = typeof sourceDate === 'string' ? new Date(`${sourceDate}T00:00:00Z`) : null;
+  const validDate = typeof sourceDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(sourceDate)
+    && !Number.isNaN(parsedDate?.getTime()) && parsedDate.toISOString().slice(0, 10) === sourceDate
+    && sourceDate >= latest.data_date;
+  const rows = Array.isArray(long) && Array.isArray(short) ? [...long, ...short] : [];
+  const verified = eligibility?.enforced === true && validDate
+    && Array.isArray(eligibility.filtered_out)
+    && rows.every(row => row?.day_trading_eligibility?.eligible === true
+      && row.day_trading_eligibility.source_date === sourceDate);
+  if (verified) return { long: long.slice(0, 10), short: short.slice(0, 10), eligibility };
+  return { long: [], short: [], eligibility: {
+    version: 'official-day-trade-v1', enforced: false, source_date: sourceDate ?? null,
+    filtered_count: null, filtered_out: [],
+    notice: '官方當沖資格未驗證，不顯示可執行名單。',
+  } };
+}
+
+function csvCell(value) {
+  const text = String(value ?? '');
+  return /[",\n]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
+}
+
+function executableCsv(latest) {
+  const executable = executableLists(latest);
+  if (executable.eligibility.enforced !== true) return null;
+  const fields = ['date','code','name','market','signal_direction','close','ma5','entry_trigger','stop_loss','target1','target2','risk_pct','score','reason'];
+  const lines = [fields.join(',')];
+  for (const row of [...executable.long, ...executable.short]) {
+    lines.push(fields.map(key => csvCell(key === 'date' ? row.date ?? latest.data_date : row[key])).join(','));
+  }
+  return `${lines.join('\n')}\n`;
+}
+
 export async function dashboard(env, fetcher = fetch) {
   const loaded = await latestData(env, fetcher);
   const latest = loaded.value;
@@ -44,8 +82,9 @@ export async function dashboard(env, fetcher = fetch) {
   let dailyStatus;
   try { dailyStatus = await githubJson('daily_status.json', fetcher); }
   catch { dailyStatus = await env.DATA.get('cron:last', 'json'); }
-  const long = (latest.long_top10 ?? latest.top10 ?? []).slice(0, 10);
-  const short = (latest.short_top10 ?? []).slice(0, 10); const rows = [...long, ...short];
+  const executable = executableLists(latest);
+  const long = executable.long;
+  const short = executable.short; const rows = [...long, ...short];
   const prices = new Map(); let status = 'unavailable';
   if (rows.length) {
     try {
@@ -70,6 +109,7 @@ export async function dashboard(env, fetcher = fetch) {
     strategy_gate: latest.strategy_gate ?? { enabled: false, status: '未提供策略閘門' },
     pre_gate_counts: latest.pre_gate_counts ?? null,
     filtered_out_counts: latest.filtered_out_counts ?? null,
+    execution_eligibility: executable.eligibility,
     long: long.map(merge), short: short.map(merge), disclaimer: '規則式研究觀察，非投資建議、獲利保證或下單服務。' });
 }
 
@@ -87,11 +127,20 @@ export function createWorker(defaultFetcher = fetch) {
         catch { dailyStatus = await env.DATA.get('cron:last', 'json'); }
         return json({ ok: Boolean(loaded.value), data_source: loaded.source,
           data_date: loaded.value?.data_date ?? null, updated_at: loaded.value?.updated_at ?? null,
+          execution_eligibility: loaded.value ? executableLists(loaded.value).eligibility : null,
           daily_status: dailyStatus ?? null }, loaded.value ? 200 : 503);
       }
       if (url.pathname.startsWith('/download/')) {
         let name; try { name = decodeURIComponent(url.pathname.slice('/download/'.length)); } catch { return json({ error: 'Not Found' }, 404); }
         if (!DOWNLOADS.has(name)) return json({ error: 'Not Found' }, 404);
+        if (name === 'latest.csv') {
+          const loaded = await latestData(env, env.fetcher ?? defaultFetcher);
+          const value = loaded.value ? executableCsv(loaded.value) : null;
+          if (value == null) return json({ error: '官方當沖資格未驗證，拒絕提供可執行名單。' }, 503);
+          return new Response(request.method === 'HEAD' ? null : value, { headers: { ...securityHeaders,
+            'content-type': 'text/csv; charset=utf-8', 'content-disposition': 'attachment; filename="latest.csv"',
+            'cache-control': 'no-store' } });
+        }
         let value = null;
         try {
           const remote = await (env.fetcher ?? defaultFetcher)(rawUrl(name), { headers: { accept: 'text/csv' }, cf: { cacheTtl: 300, cacheEverything: true } });

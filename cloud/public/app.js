@@ -146,13 +146,19 @@ function card(row, direction) {
   }
   const reason = document.createElement('p'); reason.className = 'reason'; reason.textContent = row.reason ?? '';
   const research = document.createElement('details'); research.className = 'technical-research';
-  const researchTitle = document.createElement('summary'); researchTitle.textContent = '技術研究｜不計分｜未啟用';
+  const candle = row.candlestick_research;
+  const candleConflict = candle?.status === 'direction_conflict';
+  research.open = candleConflict;
+  const researchTitle = document.createElement('summary');
+  researchTitle.textContent = candleConflict ? '⚠ 技術研究｜K線方向衝突｜不計分' : '技術研究｜不計分｜未啟用';
   const indicators = row.technical_research?.indicators;
   const researchText = document.createElement('p');
   researchText.textContent = indicators
-    ? `RSI5 ${fmt(indicators.rsi_5)}｜ATR5 ${fmt(indicators.atr_5_pct)}%｜距前5日高 ${fmt(indicators.close_vs_prior5_high_pct)}%｜距前5日低 ${fmt(indicators.close_vs_prior5_low_pct)}%`
+    ? `RSI5 ${fmt(indicators.rsi_5)}｜ATR5 ${fmt(indicators.atr_5_pct)}%｜${indicators.candle_body_pct > 0 ? '紅K' : indicators.candle_body_pct < 0 ? '黑K' : '十字K'} ${fmt(indicators.candle_body_pct)}%｜較前收 ${fmt(indicators.close_change_pct)}%｜收盤位置 ${fmt(indicators.close_location_pct)}%｜距前5日高 ${fmt(indicators.close_vs_prior5_high_pct)}%｜距前5日低 ${fmt(indicators.close_vs_prior5_low_pct)}%`
     : '資料不足；不以日K假裝盤中確認。';
-  research.append(researchTitle, researchText);
+  const candleText = document.createElement('p');
+  candleText.textContent = candle?.message ?? 'K線衝突資料尚未完成；研究欄位不直接改分或排除。';
+  research.append(researchTitle, researchText, candleText);
   const broker = row.broker_risk_research;
   const brokerResearch = document.createElement('details');
   brokerResearch.className = `broker-risk-research ${broker?.warning ? 'broker-risk-warning' : ''}`;
@@ -234,6 +240,12 @@ async function load() {
     $('summary-date').textContent = data.data_date ?? '—';
     $('summary-long').textContent = String(data.long?.length ?? 0);
     $('summary-short').textContent = String(data.short?.length ?? 0);
+    const execution = data.execution_eligibility;
+    const excluded = execution?.filtered_out ?? [];
+    const excludedText = excluded.map(row => `${row.code}${row.name ?? ''}（${row.reason === 'sell_first_suspended' ? '暫停先賣後買' : '非當沖標的'}）`).join('、');
+    $('execution-eligibility-note').textContent = execution?.enforced
+      ? `官方當沖資格 ${execution.source_date}｜已排除 ${execution.filtered_count ?? excluded.length} 檔${excludedText ? `：${excludedText}` : ''}。${execution.execution_for_signal_date === 'next_session_verified' ? '已核對次一交易日資格。' : '目前為訊號日資格，次一交易日開盤前仍會重新核對。'}`
+      : '官方當沖資格尚未驗證；不可把清單視為可執行當沖建議。';
     const preGate = data.pre_gate_counts ?? {};
     $('summary-long-note').textContent = Number.isFinite(preGate.long)
       ? `通過策略閘門｜基礎候選 ${preGate.long}` : '通過策略閘門';

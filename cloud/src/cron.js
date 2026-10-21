@@ -57,6 +57,8 @@ export function buildLatest(days, rawGate = null, updatedAt = new Date().toISOSt
     top10: long.slice(0, 10), long_top10: long.slice(0, 10), short_top10: short.slice(0, 10),
     signals: [...long.slice(0, 10), ...short.slice(0, 10)], long_count: long.length, short_count: short.length,
     strategy_gate: gate, scoring_weights: weights,
+    execution_eligibility: { version: 'official-day-trade-v1', enforced: false, source_date: null,
+      filtered_count: null, filtered_out: [], notice: 'Cloudflare備援未驗證官方當沖資格，不提供可執行名單。' },
     sources: ['TWSE MI_INDEX', 'TWSE T86', 'TPEx dailyQuotes', 'TPEx dailyTrade'] };
 }
 
@@ -66,7 +68,10 @@ function csvCell(value) {
 export function latestCsv(latest) {
   const fields = ['date','code','name','market','signal_direction','close','ma5','entry_trigger','stop_loss','target1','target2','risk_pct','score','reason'];
   const lines = [fields.join(',')];
-  for (const row of latest.signals ?? []) lines.push(fields.map(k => csvCell(k === 'date' ? row.date ?? latest.data_date : row[k])).join(','));
+  const signals = latest.execution_eligibility?.enforced === true
+    && (latest.signals ?? []).every(row => row?.day_trading_eligibility?.eligible === true)
+    ? latest.signals ?? [] : [];
+  for (const row of signals) lines.push(fields.map(k => csvCell(k === 'date' ? row.date ?? latest.data_date : row[k])).join(','));
   return `${lines.join('\n')}\n`;
 }
 

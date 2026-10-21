@@ -27,6 +27,16 @@ class NotifyTests(unittest.TestCase):
         self.assertIn("國泰-敦南", text)
         self.assertIn("買超", text)
 
+    def test_summary_lists_official_day_trade_exclusions(self):
+        result = {"data_date": "2026-10-20", "long_top10": [], "short_top10": [],
+                  "optimization": {"status": "研究"},
+                  "execution_eligibility": {"source_date": "2026-10-21", "filtered_out": [
+                      {"code": "3354", "name": "律勝", "reason": "not_day_trade_eligible"},
+                  ]}}
+        text = build_summary(result)
+        self.assertIn("官方當沖資格排除", text)
+        self.assertIn("3354律勝", text)
+
     @patch("taistock.notify.subprocess.run", side_effect=OSError("no powershell"))
     def test_writes_fallback_notification_when_toast_fails(self, _run):
         with tempfile.TemporaryDirectory() as directory:

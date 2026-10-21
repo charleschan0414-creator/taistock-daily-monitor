@@ -13,7 +13,7 @@ from pathlib import Path
 from urllib.parse import urlencode
 
 from .core import BASELINE_WEIGHTS, audit_candidates, evaluate_candidates, is_common_stock
-from .technical import calculate_technical_research
+from .technical import assess_candlestick_conflict, calculate_technical_research
 from .data import _number
 from .portfolio import simulate_portfolio
 from .storage import CANDIDATE_WEIGHTS, MIN_SAMPLES
@@ -335,6 +335,9 @@ def build_backtest(days: list[dict], signal_days: int = 100, weights: dict | Non
                               zip(range(i - 5, i + 1), history) if item is not None],
                              current["date"])})
         evaluated = evaluate_candidates(rows, current_weights)
+        for row in evaluated:
+            row["candlestick_research"] = assess_candlestick_conflict(
+                row.get("technical_research", {}), row.get("signal_direction"))
         signals = ([row for row in evaluated if row["signal_direction"] == "long"][:10] +
                    [row for row in evaluated if row["signal_direction"] == "short"][:10])
         selected_ranks = {
@@ -344,7 +347,10 @@ def build_backtest(days: list[dict], signal_days: int = 100, weights: dict | Non
                 [row for row in signals if row["signal_direction"] == direction], 1
             )
         }
-        for audited in audit_candidates(rows, current_weights):
+        audited_rows = audit_candidates(rows, current_weights)
+        for audited in audited_rows:
+            audited["candlestick_research"] = assess_candlestick_conflict(
+                audited.get("technical_research", {}), audited.get("signal_direction"))
             direction = audited.get("signal_direction")
             selected_rank = selected_ranks.get((audited["code"], direction))
             candidate_universe.append({
@@ -367,6 +373,11 @@ def build_backtest(days: list[dict], signal_days: int = 100, weights: dict | Non
                     "technical_atr_5_pct": (audited.get("technical_research", {}).get("indicators", {}).get("atr_5_pct")),
                     "technical_close_vs_prior5_high_pct": (audited.get("technical_research", {}).get("indicators", {}).get("close_vs_prior5_high_pct")),
                     "technical_close_vs_prior5_low_pct": (audited.get("technical_research", {}).get("indicators", {}).get("close_vs_prior5_low_pct")),
+                    "technical_candle_body_pct": (audited.get("technical_research", {}).get("indicators", {}).get("candle_body_pct")),
+                    "technical_close_change_pct": (audited.get("technical_research", {}).get("indicators", {}).get("close_change_pct")),
+                    "technical_gap_pct": (audited.get("technical_research", {}).get("indicators", {}).get("gap_pct")),
+                    "technical_close_location_pct": (audited.get("technical_research", {}).get("indicators", {}).get("close_location_pct")),
+                    "candlestick_status": audited.get("candlestick_research", {}).get("status"),
                     "eligible": audited.get("eligible"), "signal_direction": direction,
                     "rejection_reasons": audited.get("rejection_reasons", []),
                     "score": audited.get("score"), "reason": audited.get("reason"),
@@ -430,6 +441,8 @@ CANDIDATE_AUDIT_FIELDS = [
     "ma5_distance_pct", "institutional_lots", "institutional_abs_lots", "volatility_proxy_pct",
     "technical_rsi_5", "technical_atr_5_pct", "technical_close_vs_prior5_high_pct",
     "technical_close_vs_prior5_low_pct",
+    "technical_candle_body_pct", "technical_close_change_pct", "technical_gap_pct",
+    "technical_close_location_pct", "candlestick_status",
     "eligible", "signal_direction", "rejection_reasons", "score", "reason", "action_text",
     "entry_trigger", "stop_loss", "target1", "target2", "risk_pct", "entry_offset_pct",
     "selected_signal", "selected_rank",

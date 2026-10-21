@@ -51,7 +51,16 @@ def technical_research_text(row, direction):
     distance_text = "—" if distance is None else f"{float(distance):+g}%"
     rsi = "—" if values.get("rsi_5") is None else f"{float(values['rsi_5']):g}"
     atr = "—" if values.get("atr_5_pct") is None else f"{float(values['atr_5_pct']):g}%"
-    return f"研究不計分｜RSI5 {rsi}｜ATR5 {atr}｜{distance_label} {distance_text}"
+    text = f"研究不計分｜RSI5 {rsi}｜ATR5 {atr}｜{distance_label} {distance_text}"
+    body = values.get("candle_body_pct")
+    change = values.get("close_change_pct")
+    if isinstance(body, (int, float)) and isinstance(change, (int, float)):
+        candle = "紅K" if body > 0 else "黑K" if body < 0 else "十字K"
+        text += f"｜{candle} {float(body):+g}%｜較前收 {float(change):+g}%"
+    conflict = row.get("candlestick_research") or {}
+    if conflict.get("status") == "direction_conflict":
+        text += f"｜⚠ {conflict.get('message', 'K線方向衝突；不直接改分或排除')}"
+    return text
 
 
 def broker_risk_text(row):

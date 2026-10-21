@@ -109,8 +109,9 @@ class WindowsInstallerTests(unittest.TestCase):
         self.assertIn("install.bat", RELEASE_FILES)
         self.assertIn("uninstall.bat", RELEASE_FILES)
         self.assertIn("taistock/broker_risk.py", RELEASE_FILES)
+        self.assertIn("taistock/day_trading.py", RELEASE_FILES)
         manifest = json.loads((ROOT / "software_manifest.json").read_text(encoding="utf-8"))
-        self.assertEqual(len(RELEASE_FILES), 43)
+        self.assertEqual(len(RELEASE_FILES), 44)
         self.assertEqual(len(manifest["files"]), len(RELEASE_FILES))
         for name in ("install.bat", "uninstall.bat", "install_daily_task.bat"):
             self.assertIn(name, manifest["files"])

@@ -18,8 +18,10 @@ def build_summary(result: dict) -> str:
                     [f"賣超 {item.get('branch', '')}" for item in research.get("watched_sellers", [])])
         warnings.append(f"{row.get('code', '')}{row.get('name', '')}({','.join(filter(None, branches))})")
     warning_text = f"｜分點風險：{'、'.join(warnings)}" if warnings else ""
+    excluded = result.get("execution_eligibility", {}).get("filtered_out", [])
+    exclusion_text = (f"｜官方當沖資格排除：{top(excluded)}" if excluded else "")
     return (f"{result.get('data_date', '')}｜偏多：{top(result.get('long_top10', []))}｜"
-            f"偏空：{top(result.get('short_top10', []))}{warning_text}｜{status}｜規則式研究觀察，非投資建議")
+            f"偏空：{top(result.get('short_top10', []))}{exclusion_text}{warning_text}｜{status}｜規則式研究觀察，非投資建議")
 
 
 def notify(message: str, directory: Path):

@@ -4,7 +4,7 @@ from urllib.parse import urlencode
 from .core import BASELINE_WEIGHTS, evaluate_candidates, is_common_stock
 from .data import parse_twse_quotes, parse_tpex_quotes, ensure_same_date, _date, _number
 from .strategy_optimize import apply_strategy_gate
-from .technical import calculate_technical_research
+from .technical import assess_candlestick_conflict, calculate_technical_research
 
 TWSE_QUOTES = "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL"
 TWSE_INST = "https://www.twse.com.tw/rwd/zh/fund/T86?response=json&selectType=ALLBUT0999"
@@ -64,6 +64,9 @@ class Scanner:
                     errors.append(f"{quote.code} 歷史資料失敗：{exc}")
                 self.progress(f"個股歷史 {done}/{len(leaders)}（失敗 {len(errors)}）", 15 + int(75 * done / max(1, len(leaders))))
         evaluated = evaluate_candidates(rows, self.weights)
+        for row in evaluated:
+            row["candlestick_research"] = assess_candlestick_conflict(
+                row.get("technical_research", {}), row.get("signal_direction"))
         pre_gate_counts = {
             "long": sum(x["signal_direction"] == "long" for x in evaluated),
             "short": sum(x["signal_direction"] == "short" for x in evaluated),
@@ -110,6 +113,9 @@ class Scanner:
                          "volume_rank": rank,
                          "technical_research": calculate_technical_research(history, data_date)})
         evaluated = evaluate_candidates(rows, self.weights)
+        for row in evaluated:
+            row["candlestick_research"] = assess_candlestick_conflict(
+                row.get("technical_research", {}), row.get("signal_direction"))
         pre_gate_counts = {
             "long": sum(row["signal_direction"] == "long" for row in evaluated),
             "short": sum(row["signal_direction"] == "short" for row in evaluated),

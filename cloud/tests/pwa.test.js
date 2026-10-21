@@ -125,7 +125,7 @@ test('PWA顯示核心100日成本後三情境且保留研究限制', async () =>
   assert.match(app, /renderBacktestPerformance\(data\)/);
   assert.doesNotMatch(app, /\.innerHTML\s*=/);
   assert.match(styles, /\.backtest-performance/);
-  assert.match(sw, /taistock-monitor-v10/);
+  assert.match(sw, /taistock-monitor-v11/);
 });
 
 test('PWA顯示V2成本後績效檢驗、方法限制與新版快取', async () => {
@@ -146,7 +146,7 @@ test('PWA顯示V2成本後績效檢驗、方法限制與新版快取', async () 
   assert.match(app, /v2-quality/);
   assert.doesNotMatch(app, /\.innerHTML\s*=/);
   assert.match(styles, /\.v2-analysis/);
-  assert.match(sw, /taistock-monitor-v10/);
+  assert.match(sw, /taistock-monitor-v11/);
 });
 
 test('個股卡顯示券商短沖倒貨風險且明列不計分', async () => {
@@ -155,4 +155,15 @@ test('個股卡顯示券商短沖倒貨風險且明列不計分', async () => {
   assert.match(app, /分點短線風險研究/);
   assert.match(app, /不計分/);
   assert.match(app, /非官方認定/);
+});
+
+test('PWA顯示官方當沖資格排除與K線方向衝突警示', async () => {
+  const html = await read('index.html');
+  const app = await read('app.js');
+  assert.match(html, /execution-eligibility-note/);
+  assert.match(app, /execution_eligibility/);
+  assert.match(app, /官方當沖資格/);
+  assert.match(app, /candlestick_research/);
+  assert.match(app, /紅K/);
+  assert.match(app, /不直接改分或排除/);
 });

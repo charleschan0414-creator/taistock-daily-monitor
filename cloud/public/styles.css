@@ -107,6 +107,7 @@ h3 { margin-bottom: 0; font-size: 16px; }
 .alert { margin: 0 0 18px; padding: 12px 14px; border: 1px solid rgba(244, 198, 106, .25); border-radius: 10px; background: var(--amber-bg); color: #ffe2a8; font-size: 13px; }
 
 .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 16px; }
+.execution-eligibility-note { margin: 10px 0 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; color: var(--muted); line-height: 1.55; }
 .summary-card {
   min-width: 0;
   padding: 15px;

@@ -79,6 +79,9 @@ class ScannerTests(unittest.TestCase):
         self.assertEqual(research["status"], "available")
         self.assertEqual(research["score_effect"], "none")
         self.assertIn("rsi_5", research["indicators"])
+        self.assertEqual(result["short_top10"][0]["candlestick_research"]["status"],
+                         "aligned_or_neutral")
+        self.assertEqual(result["short_top10"][0]["candlestick_research"]["filter_effect"], "none")
 
     def test_bulk_scan_backfills_new_listing_without_six_sessions(self):
         dates = ("2026-10-08", "2026-10-09", "2026-10-12", "2026-10-13", "2026-10-14", "2026-10-15")

@@ -1,7 +1,7 @@
 {
   "snapshot_count": 6,
   "first": "2026-10-17T23:32:49+00:00",
-  "last": "2026-10-20T23:56:55+00:00",
+  "last": "2026-10-21T19:53:54+08:00",
   "first_snapshot": {
     "snapshot_id": "2026-10-18:morning_backup",
     "fetched_at": "2026-10-17T23:32:49+00:00",
@@ -9,10 +9,10 @@
     "phase": "morning_backup"
   },
   "last_snapshot": {
-    "snapshot_id": "2026-10-21:morning_backup",
-    "fetched_at": "2026-10-20T23:56:55+00:00",
+    "snapshot_id": "2026-10-21:post_close",
+    "fetched_at": "2026-10-21T19:53:54+08:00",
     "market_date": "2026-10-21",
-    "phase": "morning_backup"
+    "phase": "post_close"
   },
   "bias_counts": {
     "偏多": 1,
@@ -20,46 +20,46 @@
     "偏空": 5
   },
   "latest": {
-    "snapshot_id": "2026-10-21:morning_backup",
-    "fetched_at": "2026-10-20T23:56:55+00:00",
+    "snapshot_id": "2026-10-21:post_close",
+    "fetched_at": "2026-10-21T19:53:54+08:00",
     "market_date": "2026-10-21",
-    "phase": "morning_backup",
+    "phase": "post_close",
     "scenario": {
       "bias": "偏多",
-      "positive": 3,
-      "negative": 0,
-      "basis": "TX / UNF / SXF 上漲 3、下跌 0；僅供情境參考，不加入策略分數"
+      "positive": 2,
+      "negative": 1,
+      "basis": "TX / UNF / SXF 上漲 2、下跌 1；僅供情境參考，不加入策略分數"
     },
     "products": {
       "TX": {
-        "price": 46975.0,
-        "updown": 634.0,
-        "change_pct": 1.3681189443473383,
-        "volume": 30319
+        "price": 47289.0,
+        "updown": 276.0,
+        "change_pct": 0.5870716610299279,
+        "volume": 13199
       },
       "ZEF": {
-        "price": 2931.3,
-        "updown": 40.7,
-        "change_pct": 1.4080121774026153,
-        "volume": 268
+        "price": 2962.0,
+        "updown": 16.45,
+        "change_pct": 0.5584695557705691,
+        "volume": 119
       },
       "CDF": {
-        "price": 2425.0,
-        "updown": 17.0,
-        "change_pct": 0.7059800664451827,
-        "volume": 2235
+        "price": 2443.0,
+        "updown": 12.0,
+        "change_pct": 0.49362402303578773,
+        "volume": 181
       },
       "UNF": {
-        "price": 29672.0,
-        "updown": 28.0,
-        "change_pct": 0.09445418971798678,
-        "volume": 250
+        "price": 29870.0,
+        "updown": 6.0,
+        "change_pct": 0.02009107956067506,
+        "volume": 63
       },
       "SXF": {
-        "price": 11387.0,
-        "updown": 137.0,
-        "change_pct": 1.2177777777777776,
-        "volume": 94
+        "price": 11568.0,
+        "updown": -22.0,
+        "change_pct": -0.1898188093183779,
+        "volume": 95
       }
     }
   },

@@ -103,6 +103,18 @@ class BacktestUiTests(unittest.TestCase):
             "close_vs_prior5_high_pct": 1.2, "close_vs_prior5_low_pct": 9.8}}}
         self.assertEqual(technical_research_text(row, "long"),
                          "研究不計分｜RSI5 68.4｜ATR5 4.3%｜距前5日高 +1.2%")
+
+    def test_technical_research_displays_candle_direction_conflict(self):
+        row = {"technical_research": {"status": "available", "indicators": {
+                   "rsi_5": 38.6, "atr_5_pct": 8.75,
+                   "close_vs_prior5_low_pct": 3.8,
+                   "candle_body_pct": 0.82, "close_change_pct": 1.37}},
+               "candlestick_research": {"status": "direction_conflict",
+                   "message": "空方訊號與紅K且收漲方向衝突；研究警示，不直接改分或排除"}}
+        text = technical_research_text(row, "short")
+        self.assertIn("紅K", text)
+        self.assertIn("空方訊號", text)
+        self.assertIn("不直接改分或排除", text)
     def test_broker_risk_warning_is_explicitly_non_scoring_and_not_official(self):
         row = {"broker_risk_research": {"status": "available", "warning": True,
                 "risk_level": "high", "watched_buyers": [{"branch": "國泰-敦南", "net_lots": 1005}],

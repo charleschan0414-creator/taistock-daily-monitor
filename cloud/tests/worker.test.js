@@ -10,8 +10,9 @@ class KV {
 }
 const latest = {
   data_date: '2026-10-15', updated_at: '2026-10-15T09:00:00Z',
-  long_top10: [{ code: '2330', market: '上市', close: 100 }],
-  short_top10: [{ code: '6488', market: '上櫃', close: 200 }],
+  long_top10: [{ code: '2330', market: '上市', close: 100, day_trading_eligibility: { eligible: true, source_date: '2026-10-15' } }],
+  short_top10: [{ code: '6488', market: '上櫃', close: 200, day_trading_eligibility: { eligible: true, source_date: '2026-10-15' } }],
+  execution_eligibility: { enforced: true, source_date: '2026-10-15', filtered_count: 0, filtered_out: [] },
   pre_gate_counts: { long: 10, short: 8 },
   filtered_out_counts: { long: 9, short: 7 },
 };
@@ -42,11 +43,13 @@ test('dashboard加入TAIFEX全球市場情境與系統抓取時間', async () =>
   assert.equal(body.global_market.notice, '期交所行情，可能延遲');
   assert.deepEqual(body.pre_gate_counts, { long: 10, short: 8 });
   assert.deepEqual(body.filtered_out_counts, { long: 9, short: 7 });
+  assert.equal(body.execution_eligibility.enforced, true);
 });
 
 test('dashboard優先讀固定GitHub Raw latest且不接受請求URL覆寫', async () => {
   const calls = [];
-  const githubLatest = { ...latest, data_date: '2026-10-16', long_top10: [{ code: '9999', market: '上市', close: 50 }] };
+  const githubLatest = { ...latest, data_date: '2026-10-16', execution_eligibility: { ...latest.execution_eligibility, source_date: '2026-10-16' },
+    long_top10: [{ code: '9999', market: '上市', close: 50, day_trading_eligibility: { eligible: true, source_date: '2026-10-16' } }], short_top10: [] };
   const githubStatus = { status: 'success', completed_at: '2026-10-16T16:20:00+08:00', strategy: { candidate: { test: { win_rate: .42, profit_factor: 1.2 } } } };
   const fetcher = async url => {
     calls.push(String(url));
@@ -77,6 +80,34 @@ test('dashboard在MIS失敗時仍回KV清單並標示非即時', async () => {
   assert.equal(body.global_market.status, 'unavailable');
   assert.equal(body.global_market.fetched_at, null);
   assert.equal(res.headers.get('access-control-allow-origin'), null);
+});
+
+test('dashboard對未經官方當沖資格驗證的KV資料隱藏可執行清單', async () => {
+  const unverified = { ...latest };
+  delete unverified.execution_eligibility;
+  const fetcher = async () => { throw new Error('GitHub down'); };
+  const e = env(fetcher);
+  e.DATA = new KV({ latest: JSON.stringify(unverified) });
+  const res = await createWorker(fetcher).fetch(new Request('https://example.com/api/dashboard'), e);
+  const body = await res.json();
+  assert.equal(res.status, 200);
+  assert.deepEqual(body.long, []);
+  assert.deepEqual(body.short, []);
+  assert.equal(body.execution_eligibility.enforced, false);
+  assert.match(body.execution_eligibility.notice, /不顯示可執行名單/);
+});
+
+test('dashboard拒絕不可能的官方資格日期', async () => {
+  const invalid = { ...latest, data_date: '2026-02-28', short_top10: [],
+    execution_eligibility: { ...latest.execution_eligibility, source_date: '2026-02-30' },
+    long_top10: [{ ...latest.long_top10[0], day_trading_eligibility: { eligible: true, source_date: '2026-02-30' } }],
+  };
+  const fetcher = async () => { throw new Error('GitHub down'); };
+  const e = env(fetcher);
+  e.DATA = new KV({ latest: JSON.stringify(invalid) });
+  const body = await (await createWorker(fetcher).fetch(new Request('https://example.com/api/dashboard'), e)).json();
+  assert.deepEqual(body.long, []);
+  assert.equal(body.execution_eligibility.enforced, false);
 });
 
 test('dashboard產生上市與上櫃MIS channel並合併現價', async () => {
@@ -110,13 +141,31 @@ test('health優先回報GitHub資料來源與每日流水線狀態', async () =>
   assert.deepEqual(body.daily_status, status);
 });
 
-test('下載固定白名單優先GitHub且失敗才回KV', async () => {
-  const github = async url => new Response(String(url).includes('/latest.csv') ? 'github,csv\n' : '', { status: 200 });
-  const fromGithub = await createWorker(github).fetch(new Request('https://x/download/latest.csv'), env(github));
-  assert.equal(await fromGithub.text(), 'github,csv\n');
+test('latest CSV只由已驗證JSON產生且不接受未驗證KV備援', async () => {
+  const github = async url => {
+    if (String(url).includes('/latest.json')) return new Response(JSON.stringify(latest));
+    throw new Error('other source unavailable');
+  };
+  const verified = await createWorker(github).fetch(new Request('https://x/download/latest.csv'), env(github));
+  const csv = await verified.text();
+  assert.equal(verified.status, 200);
+  assert.match(csv, /2330/);
+  assert.match(csv, /6488/);
+
   const failed = async () => { throw new Error('GitHub down'); };
-  const fromKv = await createWorker(failed).fetch(new Request('https://x/download/latest.csv'), env(failed));
-  assert.equal(await fromKv.text(), 'a,b\n1,2');
+  const unverified = { ...latest };
+  delete unverified.execution_eligibility;
+  const e = env(failed);
+  e.DATA = new KV({ latest: JSON.stringify(unverified), 'download:latest.csv': 'legacy,unsafe\n' });
+  const blocked = await createWorker(failed).fetch(new Request('https://x/download/latest.csv'), e);
+  assert.equal(blocked.status, 503);
+  assert.match((await blocked.json()).error, /當沖資格未驗證/);
+});
+
+test('其他下載檔優先GitHub且失敗才回KV', async () => {
+  const github = async () => new Response('github,csv\n', { status: 200 });
+  const fromGithub = await createWorker(github).fetch(new Request('https://x/download/backtest_100d.csv'), env(github));
+  assert.equal(await fromGithub.text(), 'github,csv\n');
 });
 
 test('只允許GET與固定下載白名單且拒絕路徑穿越', async () => {

@@ -276,6 +276,8 @@ class BacktestAggregationTests(unittest.TestCase):
         self.assertTrue(candidate["eligible"])
         self.assertTrue(candidate["selected_signal"])
         self.assertEqual(candidate["selected_rank"], 1)
+        self.assertIn("technical_candle_body_pct", candidate)
+        self.assertEqual(candidate["candlestick_status"], "aligned_or_neutral")
         self.assertNotIn("return", candidate)
         self.assertNotIn("high", candidate)
         trade = result["trades"][0]
