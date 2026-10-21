@@ -36,6 +36,13 @@ class DayTradingEligibilityTests(unittest.TestCase):
         }]}
         self.assertEqual(parse_twse_eligibility(payload), ("2026-10-21", {"1111": True}))
 
+    def test_twse_parser_accepts_official_line_break_in_field_label(self):
+        payload = {"stat": "OK", "date": "20261022", "tables": [{
+            "fields": ["證券代號", "證券名稱", "暫停現股賣出後\n現款買進當沖註記"],
+            "data": [["1111", "測試", "Y"]],
+        }]}
+        self.assertEqual(parse_twse_eligibility(payload), ("2026-10-22", {"1111": True}))
+
     def test_filters_noneligible_and_sell_first_suspended_from_executable_signals(self):
         result = {
             "data_date": "2026-10-20",

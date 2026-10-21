@@ -38,13 +38,14 @@ def parse_twse_eligibility(payload):
         if not isinstance(table, dict) or not isinstance(table.get("fields"), list):
             continue
         fields = table["fields"]
-        if code_field not in fields:
+        normalized_fields = ["".join(str(field).split()) for field in fields]
+        if normalized_fields.count(code_field) == 0:
             continue
-        if suspension_field not in fields:
-            raise ValueError("TWSE當沖標的缺少暫停先賣後買欄位")
+        if normalized_fields.count(code_field) != 1 or normalized_fields.count(suspension_field) != 1:
+            raise ValueError("TWSE當沖標的必要欄位重複或缺漏")
         matched = True
-        code_index = fields.index(code_field)
-        suspension_index = fields.index(suspension_field)
+        code_index = normalized_fields.index(code_field)
+        suspension_index = normalized_fields.index(suspension_field)
         if not isinstance(table.get("data"), list):
             raise ValueError("TWSE當沖標的資料列格式異常")
         for row in table["data"]:
