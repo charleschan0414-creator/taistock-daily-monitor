@@ -14,6 +14,20 @@ test('資料健康狀態以明確文字區分成功與過期', async () => {
   assert.deepEqual(failed, { state: 'error', label: '更新失敗' });
 });
 
+test('資料過期或流水線失敗時清空可執行名單與數量', async () => {
+  const { executableListsForHealth } = await import('../public/app.js');
+  const data = { long: [{ code: '1111' }], short: [{ code: '2222' }] };
+  assert.deepEqual(executableListsForHealth(data, { state: 'stale' }),
+    { long: [], short: [], longCount: 0, shortCount: 0 });
+  assert.deepEqual(executableListsForHealth(data, { state: 'error' }),
+    { long: [], short: [], longCount: 0, shortCount: 0 });
+  assert.deepEqual(executableListsForHealth(data, { state: 'success' }),
+    { long: data.long, short: data.short, longCount: 1, shortCount: 1 });
+  const app = await read('app.js');
+  assert.match(app, /const executable = executableListsForHealth\(data, health\)/);
+  assert.match(app, /renderList\('long-list', executable\.long/);
+});
+
 test('API載入失敗時頂部與推薦區都改為不可執行狀態', async () => {
   const app = await read('app.js');
   const catchBlock = app.match(/catch \(error\) \{[\s\S]*?\}\s*finally/)?.[0] ?? '';
@@ -158,7 +172,7 @@ test('PWA顯示核心100日成本後三情境且保留研究限制', async () =>
   assert.match(app, /renderBacktestPerformance\(data\)/);
   assert.doesNotMatch(app, /\.innerHTML\s*=/);
   assert.match(styles, /\.backtest-performance/);
-  assert.match(sw, /taistock-monitor-v14/);
+  assert.match(sw, /taistock-monitor-v15/);
 });
 
 test('PWA顯示V2成本後績效檢驗、方法限制與新版快取', async () => {
@@ -179,7 +193,7 @@ test('PWA顯示V2成本後績效檢驗、方法限制與新版快取', async () 
   assert.match(app, /v2-quality/);
   assert.doesNotMatch(app, /\.innerHTML\s*=/);
   assert.match(styles, /\.v2-analysis/);
-  assert.match(sw, /taistock-monitor-v14/);
+  assert.match(sw, /taistock-monitor-v15/);
 });
 
 test('個股卡顯示券商短沖倒貨風險且明列不計分', async () => {

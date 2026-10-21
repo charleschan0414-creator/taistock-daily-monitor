@@ -48,7 +48,7 @@ def calculate_technical_research(bars, as_of_date):
         closes = [float(row["close"]) for row in bars6]
         highs = [float(row["high"]) for row in bars6]
         lows = [float(row["low"]) for row in bars6]
-    except (KeyError, TypeError, ValueError):
+    except (KeyError, TypeError, ValueError, OverflowError):
         return _missing(as_of_date, "invalid_ohlc")
     if not all(_valid_ohlc(open_price, high, low, close)
                for open_price, high, low, close in zip(opens, highs, lows, closes)):
@@ -89,6 +89,19 @@ def calculate_technical_research(bars, as_of_date):
                                       (highs[-1] - lows[-1]) * 100
                                       if highs[-1] > lows[-1] else 0.0),
     }
+    if not all(math.isfinite(value) for value in values.values()):
+        return _missing(as_of_date, "invalid_ohlc")
+    recent_candles = [
+        {"date": str(bars6[index]["date"]),
+         "open": round(opens[index], 6),
+         "high": round(highs[index], 6),
+         "low": round(lows[index], 6),
+         "close": round(closes[index], 6)}
+        for index in range(1, 6)
+    ]
+    if not all(_valid_ohlc(row["open"], row["high"], row["low"], row["close"])
+               for row in recent_candles):
+        return _missing(as_of_date, "invalid_ohlc")
     return {
         "version": "ta-v1",
         "as_of_date": as_of_date,
@@ -96,14 +109,7 @@ def calculate_technical_research(bars, as_of_date):
         "status": "available",
         "score_effect": "none",
         "indicators": {key: round(value, 6) for key, value in values.items()},
-        "recent_candles": [
-            {"date": str(row["date"]),
-             "open": round(float(row["open"]), 6),
-             "high": round(float(row["high"]), 6),
-             "low": round(float(row["low"]), 6),
-             "close": round(float(row["close"]), 6)}
-            for row in bars6[-5:]
-        ],
+        "recent_candles": recent_candles,
         "missing_reason": None,
     }
 
@@ -126,7 +132,7 @@ def analyze_candlestick_window(technical_research, direction):
         valid = all(_valid_ohlc(float(row["open"]), float(row["high"]),
                                 float(row["low"]), float(row["close"]))
                     for row in candles)
-    except (KeyError, TypeError, ValueError):
+    except (KeyError, TypeError, ValueError, OverflowError):
         valid = False
     if not valid:
         return {**base, "status": "invalid_ohlc", "pattern_name": "K線資料無效",

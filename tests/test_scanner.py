@@ -1,5 +1,6 @@
+import copy
 import unittest
-from taistock.scanner import Scanner
+from taistock.scanner import Scanner, attach_candlestick_research
 from taistock.models import Quote
 
 
@@ -21,6 +22,26 @@ class FakeClient:
 
 
 class ScannerTests(unittest.TestCase):
+    def test_candlestick_enrichment_cannot_change_execution_fields(self):
+        candles = [{"date": str(i), "open": 10, "high": 11, "low": 9, "close": 10.5}
+                   for i in range(5)]
+        rows = [{
+            "code": "1111", "score": 77.5, "signal_direction": "long",
+            "volume_rank": 3, "entry_trigger": 10.6, "stop_loss": 10.0,
+            "target1": 11.2, "eligible": True, "eligibility_source_date": "2026-10-21",
+            "technical_research": {"status": "available", "recent_candles": candles,
+                                     "indicators": {"candle_body_pct": 5.0,
+                                                    "close_change_pct": 2.0}},
+        }]
+        before = copy.deepcopy(rows)
+        result = attach_candlestick_research(rows)
+        protected = ("code", "score", "signal_direction", "volume_rank", "entry_trigger",
+                     "stop_loss", "target1", "eligible", "eligibility_source_date")
+        self.assertEqual([{key: row.get(key) for key in protected} for row in result],
+                         [{key: row.get(key) for key in protected} for row in before])
+        self.assertEqual(result[0]["candlestick_window"]["score_effect"], "none")
+        self.assertEqual(result[0]["candlestick_window"]["filter_effect"], "none")
+
     def test_scans_combined_volume_leaders_and_returns_only_eligible(self):
         result = Scanner(FakeClient(), workers=1).run(limit=100)
         self.assertEqual(result["data_date"], "2026-10-15")

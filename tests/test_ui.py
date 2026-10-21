@@ -8,7 +8,8 @@ from taistock.ui import (format_backtest_summary, display_quote_values, visible_
                          execution_eligibility_text, signal_warning_text,
                          signal_table_columns, run_desktop_update, Dashboard,
                          executable_signal_lists, BusyOperationState, data_update_label,
-                         candlestick_window_text, candle_chart_geometry)
+                         candlestick_window_text, candle_chart_geometry,
+                         desktop_execution_health)
 
 
 class BacktestUiTests(unittest.TestCase):
@@ -77,6 +78,31 @@ class BacktestUiTests(unittest.TestCase):
 
         row["day_trading_eligibility"]["source_date"] = "2026-10-20"
         self.assertEqual(executable_signal_lists(result), ([], []))
+
+    def test_stale_or_failed_pipeline_rows_are_never_executable(self):
+        row = {"code": "1111", "day_trading_eligibility": {"eligible": True,
+               "source_date": "2026-10-22"}}
+        result = {"data_date": "2026-10-21", "long_top10": [row], "short_top10": [],
+                  "execution_eligibility": {"enforced": True, "source_date": "2026-10-22"}}
+        self.assertEqual(executable_signal_lists(result, health_state="stale"), ([], []))
+        self.assertEqual(executable_signal_lists(result, health_state="error"), ([], []))
+        self.assertEqual(executable_signal_lists(result, health_state="success"), ([row], []))
+
+    def test_desktop_uses_canonical_freshness_and_clears_rows_after_update_error(self):
+        result = {"data_date": "2026-10-21"}
+        stale_report = {"pipeline": {"status": "success", "freshness": "stale",
+                                      "data_date": "2026-10-21"}}
+        fresh_report = {"pipeline": {"status": "success", "freshness": "fresh",
+                                      "data_date": "2026-10-21"}}
+        self.assertEqual(desktop_execution_health(stale_report, result), "stale")
+        self.assertEqual(desktop_execution_health(fresh_report, result), "success")
+
+        dashboard = Mock()
+        dashboard.current_result = result
+        with patch("taistock.ui.messagebox.showerror"):
+            Dashboard._handle_data_update_error(dashboard, "network failed")
+        dashboard._render.assert_called_once_with(result, "更新失敗", health_state_override="error")
+        dashboard.status.set.assert_called_with("更新失敗｜network failed")
 
     def test_next_session_official_eligibility_is_executable_but_invalid_dates_fail_closed(self):
         row = {"code": "2492", "day_trading_eligibility": {"eligible": True,

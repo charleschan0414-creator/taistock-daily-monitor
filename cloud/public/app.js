@@ -124,6 +124,13 @@ export function resolveDataHealth(data, now = new Date()) {
   return { state: 'success', label: '資料成功' };
 }
 
+export function executableListsForHealth(data, health) {
+  const executable = health?.state === 'success';
+  const long = executable && Array.isArray(data?.long) ? data.long : [];
+  const short = executable && Array.isArray(data?.short) ? data.short : [];
+  return { long, short, longCount: long.length, shortCount: short.length };
+}
+
 export function friendlyLoadError() {
   return '資料暫時無法載入，請稍後重新整理。';
 }
@@ -324,16 +331,19 @@ async function load() {
     const response = await fetch('/api/dashboard', { cache: 'no-store' }); const data = await response.json();
     if (!response.ok) throw new Error(data.error ?? `HTTP ${response.status}`);
     const health = resolveDataHealth(data);
+    const executable = executableListsForHealth(data, health);
     $('data-date').textContent = data.data_date ?? '—';
-    $('summary-long').textContent = String(data.long?.length ?? 0);
-    $('summary-short').textContent = String(data.short?.length ?? 0);
+    $('summary-long').textContent = String(executable.longCount);
+    $('summary-short').textContent = String(executable.shortCount);
     const execution = data.execution_eligibility;
     const excluded = execution?.filtered_out ?? [];
     const excludedText = excluded.map(row => `${row.code}${row.name ?? ''}（${row.reason === 'sell_first_suspended' ? '暫停先賣後買' : '非當沖標的'}）`).join('、');
-    $('execution-eligibility-note').textContent = execution?.enforced
-      ? `官方當沖資格 ${execution.source_date}｜已排除 ${execution.filtered_count ?? excluded.length} 檔${excludedText ? `：${excludedText}` : ''}。${execution.execution_for_signal_date === 'next_session_verified' ? '已核對次一交易日資格。' : '目前為訊號日資格，次一交易日開盤前仍會重新核對。'}`
-      : '官方當沖資格尚未驗證；不可把清單視為可執行當沖建議。';
-    $('execution-eligibility-note').className = `execution-eligibility-note${execution?.enforced ? '' : ' status-error'}`;
+    $('execution-eligibility-note').textContent = health.state !== 'success'
+      ? `${health.label}；可執行名單已清空，請等待成功更新。`
+      : execution?.enforced
+        ? `官方當沖資格 ${execution.source_date}｜已排除 ${execution.filtered_count ?? excluded.length} 檔${excludedText ? `：${excludedText}` : ''}。${execution.execution_for_signal_date === 'next_session_verified' ? '已核對次一交易日資格。' : '目前為訊號日資格，次一交易日開盤前仍會重新核對。'}`
+        : '官方當沖資格尚未驗證；不可把清單視為可執行當沖建議。';
+    $('execution-eligibility-note').className = `execution-eligibility-note${health.state === 'success' && execution?.enforced ? '' : ' status-error'}`;
     const preGate = data.pre_gate_counts ?? {};
     $('summary-long-note').textContent = Number.isFinite(preGate.long)
       ? `通過策略閘門｜基礎候選 ${preGate.long}` : '通過策略閘門';
@@ -372,7 +382,7 @@ async function load() {
     if (health.state === 'stale') warnings.push('盤後資料已過期，07:40 備援可能尚未完成');
     $('message').textContent = warnings.length ? `注意：${warnings.join('；')}。` : '';
     renderMarket(data.global_market);
-    renderList('long-list', data.long ?? [], '偏多'); renderList('short-list', data.short ?? [], '偏空');
+    renderList('long-list', executable.long, '偏多'); renderList('short-list', executable.short, '偏空');
   } catch (error) {
     const failure = resolveLoadFailure();
     $('data-health').textContent = '載入失敗';

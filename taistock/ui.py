@@ -236,7 +236,21 @@ def visible_signal_rows(result):
     return rows
 
 
-def executable_signal_lists(result):
+def desktop_execution_health(report, result):
+    """Only canonical fresh, successful data may remain executable."""
+    pipeline = (report or {}).get("pipeline") or {}
+    if pipeline.get("status") != "success":
+        return "error"
+    if pipeline.get("freshness") != "fresh":
+        return "stale"
+    if pipeline.get("data_date") != result.get("data_date"):
+        return "stale"
+    return "success"
+
+
+def executable_signal_lists(result, health_state="success"):
+    if health_state != "success":
+        return [], []
     execution = result.get("execution_eligibility") or {}
     data_date = result.get("data_date")
     source_date = execution.get("source_date")
@@ -717,14 +731,28 @@ class Dashboard(tk.Tk):
                     self.status.set("現價更新失敗，保留最後報價｜" + event[1]); self._set_tool_busy("quote", False)
                 elif event[0] == "global_market_done":
                     self._render_global_market(event[1]); self.global_market_gate.finish(); self._set_tool_busy("market", False)
-                else: self.status.set("更新失敗｜" + event[1]); self.button.configure(state="normal"); messagebox.showerror("資料更新失敗", event[1])
+                else: self._handle_data_update_error(event[1])
         except queue.Empty:
             pass
         self.after(120, self._poll)
 
-    def _render(self, result, prefix):
+    def _handle_data_update_error(self, message):
+        if self.current_result:
+            self._render(self.current_result, "更新失敗", health_state_override="error")
+        self.status.set("更新失敗｜" + message)
+        self.button.configure(state="normal")
+        messagebox.showerror("資料更新失敗", message)
+
+    def _render(self, result, prefix, health_state_override=None):
         self.current_result = result
-        longs, shorts = executable_signal_lists(result)
+        if health_state_override is not None:
+            health_state = health_state_override
+        else:
+            try:
+                health_state = desktop_execution_health(self._load_health(), result)
+            except (OSError, ValueError, TypeError):
+                health_state = "error"
+        longs, shorts = executable_signal_lists(result, health_state=health_state)
         signals = result.get("signals", result.get("qualified", []))
         optimization = result.get("optimization", {})
         strategy_gate = result.get("strategy_gate", {})

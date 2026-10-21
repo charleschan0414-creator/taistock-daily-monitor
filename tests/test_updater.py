@@ -408,7 +408,7 @@ class UpdaterTests(unittest.TestCase):
 
         root = Path(__file__).resolve().parents[1]
         manifest = json.loads((root / "software_manifest.json").read_text(encoding="utf-8"))
-        self.assertEqual(manifest["version"], "2026.10.22.1")
+        self.assertEqual(manifest["version"], "2026.10.22.2")
         self.assertIn("updater.py", manifest["files"])
         self.assertIn("taistock/strategy_freeze.py", manifest["files"])
         self.assertIn("taistock/market_history.py", manifest["files"])

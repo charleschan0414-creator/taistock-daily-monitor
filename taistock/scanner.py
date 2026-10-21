@@ -13,6 +13,16 @@ TPEX_QUOTES = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quo
 TPEX_INST = "https://www.tpex.org.tw/openapi/v1/tpex_3insti_daily_trading"
 
 
+def attach_candlestick_research(rows):
+    """附加只供顯示的K線研究欄位，不改動任何執行欄位。"""
+    for row in rows:
+        row["candlestick_research"] = assess_candlestick_conflict(
+            row.get("technical_research", {}), row.get("signal_direction"))
+        row["candlestick_window"] = analyze_candlestick_window(
+            row.get("technical_research", {}), row.get("signal_direction"))
+    return rows
+
+
 class Scanner:
     def __init__(self, client, workers=6, progress=None, weights=None, optimization=None, strategy_gate=None):
         self.client, self.workers = client, workers
@@ -65,11 +75,7 @@ class Scanner:
                     errors.append(f"{quote.code} 歷史資料失敗：{exc}")
                 self.progress(f"個股歷史 {done}/{len(leaders)}（失敗 {len(errors)}）", 15 + int(75 * done / max(1, len(leaders))))
         evaluated = evaluate_candidates(rows, self.weights)
-        for row in evaluated:
-            row["candlestick_research"] = assess_candlestick_conflict(
-                row.get("technical_research", {}), row.get("signal_direction"))
-            row["candlestick_window"] = analyze_candlestick_window(
-                row.get("technical_research", {}), row.get("signal_direction"))
+        attach_candlestick_research(evaluated)
         pre_gate_counts = {
             "long": sum(x["signal_direction"] == "long" for x in evaluated),
             "short": sum(x["signal_direction"] == "short" for x in evaluated),
@@ -118,11 +124,7 @@ class Scanner:
                          "volume_rank": rank,
                          "technical_research": calculate_technical_research(history, data_date)})
         evaluated = evaluate_candidates(rows, self.weights)
-        for row in evaluated:
-            row["candlestick_research"] = assess_candlestick_conflict(
-                row.get("technical_research", {}), row.get("signal_direction"))
-            row["candlestick_window"] = analyze_candlestick_window(
-                row.get("technical_research", {}), row.get("signal_direction"))
+        attach_candlestick_research(evaluated)
         pre_gate_counts = {
             "long": sum(row["signal_direction"] == "long" for row in evaluated),
             "short": sum(row["signal_direction"] == "short" for row in evaluated),

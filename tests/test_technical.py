@@ -113,6 +113,24 @@ class TechnicalResearchTests(unittest.TestCase):
         self.assertEqual(result["score_effect"], "none")
         self.assertEqual(result["filter_effect"], "none")
 
+    def test_overflow_tiny_rounding_and_nonfinite_indicators_fail_closed(self):
+        valid = [{"date": str(i), "open": 10, "high": 11, "low": 9, "close": 10}
+                 for i in range(6)]
+        oversized = [dict(row) for row in valid]
+        oversized[0]["close"] = 10 ** 10000
+        self.assertEqual(calculate_technical_research(oversized, "5")["missing_reason"],
+                         "invalid_ohlc")
+
+        tiny = [{"date": str(i), "open": 1e-7, "high": 2e-7,
+                 "low": 1e-7, "close": 1e-7} for i in range(6)]
+        self.assertEqual(calculate_technical_research(tiny, "5")["missing_reason"],
+                         "invalid_ohlc")
+
+        extreme = [dict(row) for row in valid]
+        extreme[-1].update({"open": 1.0, "high": 1e308, "low": 1.0, "close": 1.0})
+        self.assertEqual(calculate_technical_research(extreme, "5")["missing_reason"],
+                         "invalid_ohlc")
+
     def test_flat_prices_are_finite_and_neutral(self):
         bars = [{"date": str(i), "open": 10, "high": 10, "low": 10, "close": 10} for i in range(6)]
         result = calculate_technical_research(bars, "5")
