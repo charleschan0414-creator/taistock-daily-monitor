@@ -8,8 +8,8 @@
   "cost_validated": false,
   "research_only": true,
   "period": {
-    "from": "2026-05-26",
-    "to": "2026-10-20"
+    "from": "2026-05-27",
+    "to": "2026-10-21"
   },
   "old_weights": {
     "volume_growth_pct": 0.35,
@@ -24,14 +24,14 @@
     "volume_rank": 0.1
   },
   "research_weights": {
-    "volume_growth_pct": 0.25,
-    "ma5_distance_pct": 0.2,
-    "institutional_lots": 0.45,
+    "volume_growth_pct": 0.45,
+    "ma5_distance_pct": 0.25,
+    "institutional_lots": 0.2,
     "volume_rank": 0.1
   },
   "metrics": {
-    "baseline": -0.006692726882746359,
-    "selected": -0.006293441425056844
+    "baseline": -0.006875822987755702,
+    "selected": -0.006200266557191847
   },
-  "updated_at": "2026-10-20T23:56:53+00:00"
+  "updated_at": "2026-10-21T08:47:30+00:00"
 }
