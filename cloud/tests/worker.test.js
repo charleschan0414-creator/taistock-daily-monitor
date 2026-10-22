@@ -126,9 +126,10 @@ test('dashboard產生上市與上櫃MIS channel並合併現價', async () => {
   assert.equal(body.short[0].realtime, false);
 });
 
-test('health優先回報GitHub資料來源與每日流水線狀態', async () => {
-  const status = { status: 'success', data_date: '2026-10-16', completed_at: '2026-10-16T16:20:00+08:00' };
+test('health優先回報GitHub資料來源、發布版本與每日流水線狀態', async () => {
+  const status = { status: 'success', data_date: '2026-10-16', completed_at: '2026-10-16T16:20:00+08:00', health: { desktop_version: '2026.10.21.1' } };
   const fetcher = async url => {
+    if (String(url).includes('/software_manifest.json')) return new Response(JSON.stringify({ version: '2026.10.22.3' }));
     if (String(url).includes('/latest.json')) return new Response(JSON.stringify({ ...latest, data_date: '2026-10-16' }));
     if (String(url).includes('/daily_status.json')) return new Response(JSON.stringify(status));
     throw new Error('unexpected URL');
@@ -138,6 +139,7 @@ test('health優先回報GitHub資料來源與每日流水線狀態', async () =>
   assert.equal(body.ok, true);
   assert.equal(body.data_source, 'github');
   assert.equal(body.data_date, '2026-10-16');
+  assert.equal(body.desktop_version, '2026.10.22.3');
   assert.deepEqual(body.daily_status, status);
 });
 

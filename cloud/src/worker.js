@@ -3,6 +3,7 @@ import { fetchTaifexMarket } from './taifex.js';
 
 const DOWNLOADS = new Set(['latest.csv', 'backtest_100d.csv']);
 const RAW_BASE = 'https://raw.githubusercontent.com/charleschan0414-creator/taistock-daily-monitor/main/public_data/';
+const RELEASE_MANIFEST = 'https://raw.githubusercontent.com/charleschan0414-creator/taistock-daily-monitor/main/software_manifest.json';
 const securityHeaders = {
   'x-content-type-options': 'nosniff',
   'referrer-policy': 'same-origin',
@@ -26,6 +27,22 @@ async function githubJson(name, fetcher) {
   const response = await fetcher(rawUrl(name), { headers: { accept: 'application/json' }, cf: { cacheTtl: 300, cacheEverything: true } });
   if (!response.ok) throw new Error(`GitHub HTTP ${response.status}`);
   return response.json();
+}
+async function desktopReleaseVersion(fetcher, dailyStatus) {
+  try {
+    const bucket = Math.floor(Date.now() / 300000);
+    const response = await fetcher(`${RELEASE_MANIFEST}?v=${bucket}`, {
+      headers: { accept: 'application/json' }, cf: { cacheTtl: 300, cacheEverything: true },
+    });
+    if (!response.ok) throw new Error(`GitHub HTTP ${response.status}`);
+    const manifest = await response.json();
+    if (typeof manifest?.version !== 'string' || !/^\d{4}\.\d{2}\.\d{2}\.\d+$/.test(manifest.version)) {
+      throw new Error('Invalid software manifest version');
+    }
+    return manifest.version;
+  } catch {
+    return dailyStatus?.health?.desktop_version ?? null;
+  }
 }
 async function latestData(env, fetcher) {
   try {
@@ -125,8 +142,10 @@ export function createWorker(defaultFetcher = fetch) {
         let dailyStatus;
         try { dailyStatus = await githubJson('daily_status.json', fetcher); }
         catch { dailyStatus = await env.DATA.get('cron:last', 'json'); }
+        const desktopVersion = await desktopReleaseVersion(fetcher, dailyStatus);
         return json({ ok: Boolean(loaded.value), data_source: loaded.source,
           data_date: loaded.value?.data_date ?? null, updated_at: loaded.value?.updated_at ?? null,
+          desktop_version: desktopVersion,
           execution_eligibility: loaded.value ? executableLists(loaded.value).eligibility : null,
           daily_status: dailyStatus ?? null }, loaded.value ? 200 : 503);
       }

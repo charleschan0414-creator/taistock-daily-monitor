@@ -9,6 +9,16 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class WindowsRunnerTests(unittest.TestCase):
+    def test_all_windows_batch_files_use_crlf_for_cmd_compatibility(self):
+        batch_files = sorted(ROOT.glob("*.bat"))
+        self.assertTrue(batch_files, "No Windows batch files found")
+        for path in batch_files:
+            content = path.read_bytes()
+            with self.subTest(name=path.name):
+                self.assertNotIn(b"\n", content.replace(b"\r\n", b""),
+                                 f"{path.name} contains LF-only line endings")
+                self.assertIn(b"\r\n", content, f"{path.name} contains no CRLF line endings")
+
     @unittest.skipUnless(os.name == "nt", "Windows batch runner only")
     def test_runner_uses_saved_absolute_python_when_path_is_restricted(self):
         saved = ROOT / "python_path.txt"
