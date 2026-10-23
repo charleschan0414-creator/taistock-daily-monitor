@@ -191,6 +191,13 @@ class BacktestUiTests(unittest.TestCase):
         self.assertIn("K線方向衝突", text)
         self.assertIn("分點高度注意", text)
 
+    def test_compact_warning_prioritizes_high_volume_black_long_risk(self):
+        row = {"candlestick_research": {
+            "status": "direction_conflict", "risk_level": "high",
+            "shadow_candidate": "long_black_volume_veto_v1",
+        }}
+        self.assertIn("爆量收黑K高風險", signal_warning_text(row))
+
     def test_selected_stock_detail_formats_five_day_chart_and_three_day_explanation(self):
         candles = [
             {"date": f"2026-10-{day}", "open": 10 + index, "high": 11 + index,

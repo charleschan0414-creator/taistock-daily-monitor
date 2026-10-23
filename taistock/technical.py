@@ -202,9 +202,10 @@ def analyze_candlestick_window(technical_research, direction):
             "explanation": f"最近3日未形成保守定義的型態；5日收盤{trend} {change:+.2f}%。只供研究，不計分。"}
 
 
-def assess_candlestick_conflict(technical_research, direction):
+def assess_candlestick_conflict(technical_research, direction, volume_growth_pct=None):
     """標示日K與方向的衝突；只供研究顯示，不改分或排除。"""
-    base = {"version": "candle-v1", "score_effect": "none", "filter_effect": "none"}
+    base = {"version": "candle-v1", "score_effect": "none", "filter_effect": "none",
+            "risk_level": "normal", "shadow_candidate": None}
     if technical_research.get("status") != "available":
         return {**base, "status": "unknown", "message": "K線資料不足，無法判定方向衝突"}
     indicators = technical_research.get("indicators", {})
@@ -217,6 +218,14 @@ def assess_candlestick_conflict(technical_research, direction):
     if conflict:
         label = "紅K且收漲" if direction == "short" else "黑K且收跌"
         side = "空方" if direction == "short" else "多方"
+        valid_volume = (type(volume_growth_pct) is int or
+                        (type(volume_growth_pct) is float and math.isfinite(volume_growth_pct)))
+        high_volume_long = direction == "long" and valid_volume and volume_growth_pct >= 100
+        if high_volume_long:
+            return {**base, "status": "direction_conflict", "risk_level": "high",
+                    "shadow_candidate": "long_black_volume_veto_v1",
+                    "message": "多方訊號遇爆量收黑K，列為高風險影子候選；正式分數不變，"
+                               "不得追價，僅於突破觸發價後觀察"}
         return {**base, "status": "direction_conflict",
                 "message": f"{side}訊號與{label}方向衝突；研究警示，不直接改分或排除"}
     return {**base, "status": "aligned_or_neutral", "message": "日K未出現預先定義的方向衝突"}

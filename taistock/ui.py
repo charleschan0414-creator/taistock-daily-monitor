@@ -120,8 +120,9 @@ def broker_risk_text(row):
 
 def signal_warning_text(row):
     warnings = []
-    if (row.get("candlestick_research") or {}).get("status") == "direction_conflict":
-        warnings.append("K線方向衝突")
+    candle = row.get("candlestick_research") or {}
+    if candle.get("status") == "direction_conflict":
+        warnings.append("爆量收黑K高風險" if candle.get("risk_level") == "high" else "K線方向衝突")
     broker = row.get("broker_risk_research") or {}
     if broker.get("warning"):
         warnings.append("分點高度注意" if broker.get("risk_level") == "high" else "分點注意")

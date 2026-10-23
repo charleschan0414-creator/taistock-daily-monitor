@@ -91,6 +91,35 @@ class TechnicalResearchTests(unittest.TestCase):
         self.assertEqual(conflict["filter_effect"], "none")
         self.assertIn("紅K", conflict["message"])
 
+    def test_marks_high_volume_black_long_conflict_as_high_risk_without_changing_signal(self):
+        research = {"status": "available", "indicators": {
+            "candle_body_pct": -3.99, "close_change_pct": -1.93,
+            "gap_pct": 2.15, "close_location_pct": 17.95,
+        }}
+        conflict = assess_candlestick_conflict(research, "long", volume_growth_pct=346.81)
+        self.assertEqual(conflict["status"], "direction_conflict")
+        self.assertEqual(conflict["risk_level"], "high")
+        self.assertEqual(conflict["shadow_candidate"], "long_black_volume_veto_v1")
+        self.assertEqual(conflict["score_effect"], "none")
+        self.assertEqual(conflict["filter_effect"], "none")
+        self.assertIn("爆量收黑K", conflict["message"])
+        self.assertIn("突破觸發價", conflict["message"])
+
+    def test_high_volume_conflict_requires_finite_real_threshold_value(self):
+        research = {"status": "available", "indicators": {
+            "candle_body_pct": -3.0, "close_change_pct": -2.0,
+        }}
+        huge = 10 ** 10000
+        cases = (("below", 99.99, "normal"), ("threshold", 100.0, "high"),
+                 ("nan", float("nan"), "normal"), ("positive infinity", float("inf"), "normal"),
+                 ("negative infinity", float("-inf"), "normal"), ("huge integer", huge, "high"),
+                 ("huge negative integer", -huge, "normal"), ("boolean", True, "normal"),
+                 ("string", "346.81", "normal"))
+        for label, value, expected in cases:
+            with self.subTest(case=label):
+                result = assess_candlestick_conflict(research, "long", volume_growth_pct=value)
+                self.assertEqual(result["risk_level"], expected)
+
     def test_requires_six_complete_sessions_and_never_imputes(self):
         result = calculate_technical_research([], "2026-10-15")
         self.assertEqual(result["status"], "insufficient_history")

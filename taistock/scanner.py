@@ -17,7 +17,8 @@ def attach_candlestick_research(rows):
     """附加只供顯示的K線研究欄位，不改動任何執行欄位。"""
     for row in rows:
         row["candlestick_research"] = assess_candlestick_conflict(
-            row.get("technical_research", {}), row.get("signal_direction"))
+            row.get("technical_research", {}), row.get("signal_direction"),
+            row.get("volume_growth_pct"))
         row["candlestick_window"] = analyze_candlestick_window(
             row.get("technical_research", {}), row.get("signal_direction"))
     return rows

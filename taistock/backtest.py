@@ -337,7 +337,8 @@ def build_backtest(days: list[dict], signal_days: int = 100, weights: dict | Non
         evaluated = evaluate_candidates(rows, current_weights)
         for row in evaluated:
             row["candlestick_research"] = assess_candlestick_conflict(
-                row.get("technical_research", {}), row.get("signal_direction"))
+                row.get("technical_research", {}), row.get("signal_direction"),
+                row.get("volume_growth_pct"))
         signals = ([row for row in evaluated if row["signal_direction"] == "long"][:10] +
                    [row for row in evaluated if row["signal_direction"] == "short"][:10])
         selected_ranks = {
@@ -350,7 +351,8 @@ def build_backtest(days: list[dict], signal_days: int = 100, weights: dict | Non
         audited_rows = audit_candidates(rows, current_weights)
         for audited in audited_rows:
             audited["candlestick_research"] = assess_candlestick_conflict(
-                audited.get("technical_research", {}), audited.get("signal_direction"))
+                audited.get("technical_research", {}), audited.get("signal_direction"),
+                audited.get("volume_growth_pct"))
             direction = audited.get("signal_direction")
             selected_rank = selected_ranks.get((audited["code"], direction))
             candidate_universe.append({
