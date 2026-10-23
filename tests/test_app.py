@@ -12,6 +12,79 @@ from tests.test_strategy_optimize import fixture_backtest
 
 
 class AppCliTests(unittest.TestCase):
+    def test_closed_session_carries_latest_data_and_skips_full_market_scan(self):
+        previous = {
+            "data_date": "2026-10-22", "top100_count": 100,
+            "history_success_count": 100, "errors": [],
+            "signals": [{"code": "6269", "score": 88.0}],
+            "long_top10": [], "short_top10": [],
+            "data_collection": {"latest_complete_date": "2026-10-22"},
+        }
+        paused = json.loads(json.dumps(previous))
+        paused["market_session"] = {
+            "status": "paused_no_new_official_session",
+            "requested_date": "2026-10-23",
+            "latest_official_date": "2026-10-22",
+        }
+        paused["execution_eligibility"] = {
+            "enforced": True, "eligible_count": 0,
+            "execution_for_signal_date": "paused_no_new_official_session",
+        }
+        now = datetime(2026, 10, 23, 6, 30, tzinfo=app.TAIPEI)
+        with tempfile.TemporaryDirectory() as directory:
+            data = Path(directory)
+            (data / "latest.json").write_text(json.dumps(previous), encoding="utf-8")
+            with patch("app.market_session_status", return_value={
+                     "status": "closed", "date": "2026-10-23",
+                     "reason": "taipei_disaster_stop_work", "source": "DGPA"}), \
+                 patch("app.latest_official_quote_date", return_value="2026-10-22"), \
+                 patch("app.fetch_and_apply_execution_eligibility") as eligibility_fetch, \
+                 patch("app.OfficialHistoryFetcher") as history_fetcher:
+                result = app.carry_forward_if_market_closed(data, now=now, client=object())
+            saved = json.loads((data / "latest.json").read_text(encoding="utf-8"))
+        self.assertEqual(result["data_date"], "2026-10-22")
+        self.assertEqual(saved["market_session"]["requested_date"], "2026-10-23")
+        self.assertEqual(saved["market_session"]["latest_official_date"], "2026-10-22")
+        self.assertEqual(saved["data_collection"]["latest_official_quote_date"], "2026-10-22")
+        self.assertEqual(saved["market_session"]["closure_reason"], "taipei_disaster_stop_work")
+        self.assertTrue(saved["data_collection"]["carried_forward"])
+        self.assertEqual(saved["signals"][0]["score"], 88.0)
+        self.assertEqual(saved["execution_eligibility"]["eligible_count"], 0)
+        eligibility_fetch.assert_not_called()
+        history_fetcher.assert_not_called()
+
+    def test_closed_session_refuses_to_promote_stale_previous_data(self):
+        previous = {"data_date": "2026-10-21", "signals": [],
+                    "long_top10": [], "short_top10": []}
+        now = datetime(2026, 10, 23, 6, 30, tzinfo=app.TAIPEI)
+        with tempfile.TemporaryDirectory() as directory:
+            data = Path(directory)
+            path = data / "latest.json"
+            path.write_text(json.dumps(previous), encoding="utf-8")
+            with patch("app.market_session_status", return_value={
+                     "status": "closed", "reason": "taipei_disaster_stop_work", "source": "DGPA"}), \
+                 patch("app.latest_official_quote_date", return_value="2026-10-22"), \
+                 patch("app.fetch_and_apply_execution_eligibility") as eligibility_fetch:
+                self.assertIsNone(app.carry_forward_if_market_closed(data, now=now, client=object()))
+            saved = json.loads(path.read_text(encoding="utf-8"))
+        self.assertEqual(saved, previous)
+        eligibility_fetch.assert_not_called()
+
+    def test_session_preflight_does_not_reuse_data_when_official_session_advanced(self):
+        previous = {"data_date": "2026-10-22", "signals": [],
+                    "long_top10": [], "short_top10": []}
+        lagged = {**previous, "market_session": {
+            "status": "paused_no_new_official_session",
+            "requested_date": "2026-10-23", "latest_official_date": "2026-10-22"}}
+        now = datetime(2026, 10, 23, 6, 30, tzinfo=app.TAIPEI)
+        with tempfile.TemporaryDirectory() as directory:
+            data = Path(directory)
+            (data / "latest.json").write_text(json.dumps(previous), encoding="utf-8")
+            with patch("app.market_session_status", return_value={"status": "open"}), \
+                 patch("app.latest_official_quote_date", return_value="2026-10-23"), \
+                 patch("app.fetch_and_apply_execution_eligibility", return_value=lagged):
+                self.assertIsNone(app.carry_forward_if_market_closed(data, now=now, client=object()))
+
     def test_daily_scan_rejects_partial_top100_before_persistence(self):
         complete = {"data_date": "2026-10-20", "top100_count": 100,
                     "history_success_count": 100, "errors": [],

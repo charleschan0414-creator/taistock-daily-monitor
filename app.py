@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import argparse
 import json
+import os
 import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -9,7 +10,9 @@ from taistock.health import export_diagnostics
 from taistock.backtest import (OfficialHistoryFetcher, build_backtest,
                                required_history_days, write_backtest_outputs)
 from taistock.broker_risk import enrich_broker_risk
-from taistock.day_trading import fetch_and_apply_execution_eligibility
+from taistock.day_trading import (fetch_and_apply_execution_eligibility,
+                                  pause_execution_for_closed_market)
+from taistock.market_calendar import latest_official_quote_date, market_session_status
 from taistock.net import HttpClient
 from taistock.notify import notify, build_summary
 from taistock.scanner import Scanner
@@ -71,8 +74,72 @@ def validate_daily_scan(result, expected_data_date):
                 raise ValueError(f"{direction}進場、停損及目標價格方向無效")
 
 
+def carry_forward_if_market_closed(data_dir=DATA, now=None, client=None):
+    """Use the last trading-day observation when both official markets have not advanced.
+
+    Official TWSE/TPEx source dates are the closure evidence.  A mismatched or
+    malformed source still raises and leaves the prior file untouched.
+    """
+    current = now or datetime.now(TAIPEI)
+    if not isinstance(current, datetime) or current.tzinfo is None:
+        raise ValueError("now must be timezone-aware")
+    requested_date = current.astimezone(TAIPEI).date().isoformat()
+    path = Path(data_dir) / "latest.json"
+    try:
+        previous = json.loads(path.read_text(encoding="utf-8"))
+        data_date = datetime.strptime(previous["data_date"], "%Y-%m-%d").date().isoformat()
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return None
+    if requested_date <= data_date:
+        return None
+
+    network = client or HttpClient()
+    calendar = market_session_status(network, requested_date)
+    if latest_official_quote_date(network) != data_date:
+        return None
+    if calendar.get("status") == "closed":
+        checked = pause_execution_for_closed_market(
+            previous, requested_date, calendar.get("reason", "official_market_closed"),
+            calendar.get("source", "official_market_calendar"))
+    else:
+        checked = fetch_and_apply_execution_eligibility(network, previous, requested_date)
+    session = checked.get("market_session") or {}
+    if session.get("status") != "paused_no_new_official_session":
+        return None
+    if session.get("latest_official_date") != data_date:
+        raise ValueError("休市沿用日期與最後完整資料日不一致")
+
+    collection = dict(checked.get("data_collection") or {})
+    collection.update({
+        "latest_complete_date": data_date,
+        "latest_official_quote_date": data_date,
+        "carried_forward": True,
+        "session_checked_at": current.astimezone(TAIPEI).isoformat(timespec="seconds"),
+    })
+    checked["data_collection"] = collection
+    temporary = path.with_name(path.name + ".tmp")
+    try:
+        temporary.write_text(json.dumps(checked, ensure_ascii=False, indent=2,
+                                        allow_nan=False) + "\n",
+                             encoding="utf-8", newline="\n")
+        os.replace(temporary, path)
+    finally:
+        temporary.unlink(missing_ok=True)
+    return checked
+
+
 def update(send_notification=False):
     def progress(text, pct): print(f"[{pct:3d}%] {text}", flush=True)
+    progress("核對官方市場是否產生新交易日…", 2)
+    paused = carry_forward_if_market_closed(DATA)
+    if paused is not None:
+        session = paused["market_session"]
+        print(session["notice"])
+        print("狀態：休市／暫停沿用｜所有可執行訊號已清空")
+        if send_notification:
+            fallback = notify(build_summary(paused), DATA)
+            print("通知：" + (f"Toast 失敗，已寫入 {fallback}" if fallback else "Windows Toast 已送出"))
+        return paused
     state = load_optimizer_state(DATA)
     strategy_gate = load_strategy_gate(DATA)
     end_date = data_end_date()
@@ -85,13 +152,26 @@ def update(send_notification=False):
     validate_daily_scan(result, latest_complete_date(histories))
     execution_date = datetime.now(TAIPEI).date().isoformat()
     progress(f"核對 {execution_date} 官方當沖資格…", 90)
-    result = fetch_and_apply_execution_eligibility(HttpClient(), result, execution_date)
+    calendar = market_session_status(HttpClient(), execution_date)
+    if calendar.get("status") == "closed":
+        if latest_official_quote_date(HttpClient()) != result["data_date"]:
+            raise ValueError("休市日掃描結果不是兩市場最新完整官方行情")
+        result = pause_execution_for_closed_market(
+            result, execution_date, calendar.get("reason", "official_market_closed"),
+            calendar.get("source", "official_market_calendar"))
+    else:
+        result = fetch_and_apply_execution_eligibility(HttpClient(), result, execution_date)
     validate_daily_scan(result, latest_complete_date(histories))
     progress("檢查觀察名單的分點短線風險（研究顯示、不計分）…", 92)
     result = enrich_broker_risk(result)
     result["data_collection"] = {"complete_trading_days": len(histories),
                                  "latest_complete_date": latest_complete_date(histories),
                                  "network_requests": fetcher.requests, "cache_hits": fetcher.cache_hits}
+    if calendar.get("status") == "closed":
+        result["data_collection"].update({
+            "latest_official_quote_date": result["data_date"],
+            "session_checked_at": datetime.now(TAIPEI).isoformat(timespec="seconds"),
+        })
     result = save_result(result, DATA)
     print(f"資料日期: {result['data_date']}\n成交量前100實得: {result['top100_count']}｜偏多: {result['long_count']}｜偏空: {result['short_count']}")
     for label, rows in (("偏多", result["long_top10"]), ("偏空", result["short_top10"])):

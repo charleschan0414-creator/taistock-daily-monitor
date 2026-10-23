@@ -8,6 +8,37 @@ import daily_pipeline
 
 
 class DailyPipelineTests(unittest.TestCase):
+    def test_market_closure_carries_previous_status_without_running_backtest(self):
+        previous = {
+            "status": "success", "completed_at": "2026-10-22T16:47:33+08:00",
+            "data_date": "2026-10-22", "backtest": {"marker": "preserved"},
+            "strategy_campaign": {"unique_signal_dates": ["2026-10-22"]},
+            "health": {"old": True},
+        }
+        paused = {
+            "data_date": "2026-10-22",
+            "market_session": {"status": "paused_no_new_official_session",
+                               "requested_date": "2026-10-23",
+                               "latest_official_date": "2026-10-22"},
+            "execution_eligibility": {"eligible_count": 0,
+                                      "execution_for_signal_date": "paused_no_new_official_session"},
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            data = Path(tmp)
+            (data / "daily_status.json").write_text(json.dumps(previous), encoding="utf-8")
+            with patch.object(daily_pipeline, "DATA", data), \
+                 patch.object(daily_pipeline, "carry_forward_if_market_closed", return_value=paused), \
+                 patch.object(daily_pipeline, "run_backtest") as backtest:
+                self.assertEqual(daily_pipeline.main(), 0)
+            status = json.loads((data / "daily_status.json").read_text(encoding="utf-8"))
+        backtest.assert_not_called()
+        self.assertEqual(status["status"], "success")
+        self.assertEqual(status["data_date"], "2026-10-22")
+        self.assertEqual(status["backtest"], {"marker": "preserved"})
+        self.assertEqual(status["market_session"]["requested_date"], "2026-10-23")
+        self.assertEqual(status["run_mode"], "market_closed_carry_forward")
+        self.assertNotIn("old", status["health"])
+
     def test_campaign_id_is_only_attached_inside_campaign_window(self):
         config = {"id": "campaign-a", "start_date": "2026-10-20", "end_date": "2026-11-20"}
         self.assertIsNone(daily_pipeline.campaign_id_for_date(config, "2026-10-19"))

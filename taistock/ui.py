@@ -132,6 +132,9 @@ def signal_warning_text(row):
 def execution_eligibility_text(execution):
     if not execution or not execution.get("enforced"):
         return "⚠ 官方當沖資格尚未驗證｜清單不可視為可執行"
+    if execution.get("execution_for_signal_date") == "paused_no_new_official_session":
+        return (f"⏸ {execution.get('requested_date', '今日')} 官方尚無新交易日資料｜"
+                f"沿用 {execution.get('source_date', '—')} 觀察資料｜所有訊號暫停執行")
     reasons = {
         "sell_first_suspended": "暫停先賣後買",
         "not_day_trade_eligible": "非當沖標的",
@@ -242,6 +245,9 @@ def desktop_execution_health(report, result):
     pipeline = (report or {}).get("pipeline") or {}
     if pipeline.get("status") != "success":
         return "error"
+    if (pipeline.get("freshness") == "paused" and
+            (result.get("market_session") or {}).get("status") == "paused_no_new_official_session"):
+        return "paused"
     if pipeline.get("freshness") != "fresh":
         return "stale"
     if pipeline.get("data_date") != result.get("data_date"):
@@ -275,7 +281,9 @@ def executable_signal_lists(result, health_state="success"):
     return verified(longs), verified(shorts)
 
 
-def data_update_label(prefix):
+def data_update_label(prefix, market_session=None):
+    if (market_session or {}).get("status") == "paused_no_new_official_session":
+        return "休市／暫停沿用"
     if prefix == "更新成功":
         return "成功"
     if prefix == "現價更新成功":
@@ -759,13 +767,15 @@ class Dashboard(tk.Tk):
         strategy_gate = result.get("strategy_gate", {})
         long_count = result.get("long_count", len([x for x in signals if x.get("signal_direction", "long") == "long"]))
         short_count = result.get("short_count", len([x for x in signals if x.get("signal_direction") == "short"]))
-        update_label = data_update_label(prefix)
+        update_label = data_update_label(prefix, result.get("market_session"))
         self.card_vars[0].set(f"{result.get('data_date', '—')}｜{update_label}")
         self.card_vars[1].set(f"{len(longs)} 檔")
         self.card_vars[2].set(f"{len(shorts)} 檔")
         execution = result.get("execution_eligibility") or {}
         self.eligibility_var.set(execution_eligibility_text(execution))
-        self.eligibility_label.configure(fg="#34d399" if execution.get("enforced") else "#fb7185")
+        paused = execution.get("execution_for_signal_date") == "paused_no_new_official_session"
+        self.eligibility_label.configure(fg="#fbbf24" if paused else
+                                         "#34d399" if execution.get("enforced") else "#fb7185")
         for tree_index, (tree, rows) in enumerate(zip(self.trees, (longs, shorts))):
             tree.delete(*tree.get_children())
             self.tree_rows[tree_index].clear()

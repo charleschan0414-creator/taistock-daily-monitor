@@ -33,6 +33,7 @@ RELEASE_FILES = (
     "taistock/data.py",
     "taistock/global_market.py",
     "taistock/health.py",
+    "taistock/market_calendar.py",
     "taistock/market_history.py",
     "taistock/mobile.py",
     "taistock/models.py",

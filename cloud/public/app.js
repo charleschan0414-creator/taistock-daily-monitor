@@ -118,17 +118,54 @@ function missedTradingDays(dataDate, now = new Date()) {
   return count;
 }
 
+function taipeiDateOfTimestamp(value) {
+  if (typeof value !== 'string'
+      || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/.test(value)) return null;
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return null;
+  const parts = Object.fromEntries(new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Taipei',
+    year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(parsed)
+    .filter(part => part.type !== 'literal').map(part => [part.type, part.value]));
+  return `${parts.year}-${parts.month}-${parts.day}`;
+}
+
 export function resolveDataHealth(data, now = new Date()) {
   if (data?.daily_status?.status !== 'success') return { state: 'error', label: '更新失敗' };
+  const session = data?.market_session;
+  const closure = session?.closure_reason !== undefined || session?.closure_source !== undefined;
+  const verifiedClosure = !closure || (data?.data_collection?.latest_official_quote_date === data?.data_date
+    && taipeiDateOfTimestamp(data?.data_collection?.session_checked_at) === session?.requested_date);
+  if (session?.status === 'paused_no_new_official_session' && closure && !verifiedClosure) {
+    return { state: 'stale', label: '資料過期' };
+  }
+  if (session?.status === 'paused_no_new_official_session'
+      && verifiedClosure && missedTradingDays(session.requested_date, now) === 0) {
+    return { state: 'paused', label: '休市／暫停沿用' };
+  }
   if (missedTradingDays(data?.data_date, now) > 0) return { state: 'stale', label: '資料過期' };
   return { state: 'success', label: '資料成功' };
 }
 
 export function executableListsForHealth(data, health) {
-  const executable = health?.state === 'success';
+  const paused = data?.market_session?.status === 'paused_no_new_official_session';
+  const executable = health?.state === 'success' && !paused;
   const long = executable && Array.isArray(data?.long) ? data.long : [];
   const short = executable && Array.isArray(data?.short) ? data.short : [];
   return { long, short, longCount: long.length, shortCount: short.length };
+}
+
+export function executionEligibilityNote(data, health) {
+  const execution = data?.execution_eligibility;
+  if (execution?.execution_for_signal_date === 'paused_no_new_official_session') {
+    return `${execution.requested_date ?? '今日'} 官方尚無新交易日資料；沿用 ${execution.source_date ?? '—'} 觀察資料，所有訊號暫停執行。`;
+  }
+  if (health?.state !== 'success') {
+    return `${health?.label ?? '資料狀態異常'}；可執行名單已清空，請等待成功更新。`;
+  }
+  if (!execution?.enforced) return '官方當沖資格尚未驗證；不可把清單視為可執行當沖建議。';
+  const excluded = execution.filtered_out ?? [];
+  const excludedText = excluded.map(row => `${row.code}${row.name ?? ''}（${row.reason === 'sell_first_suspended' ? '暫停先賣後買' : '非當沖標的'}）`).join('、');
+  return `官方當沖資格 ${execution.source_date}｜已排除 ${execution.filtered_count ?? excluded.length} 檔${excludedText ? `：${excludedText}` : ''}。${execution.execution_for_signal_date === 'next_session_verified' ? '已核對次一交易日資格。' : '目前為訊號日資格，次一交易日開盤前仍會重新核對。'}`;
 }
 
 export function friendlyLoadError() {
@@ -336,14 +373,9 @@ async function load() {
     $('summary-long').textContent = String(executable.longCount);
     $('summary-short').textContent = String(executable.shortCount);
     const execution = data.execution_eligibility;
-    const excluded = execution?.filtered_out ?? [];
-    const excludedText = excluded.map(row => `${row.code}${row.name ?? ''}（${row.reason === 'sell_first_suspended' ? '暫停先賣後買' : '非當沖標的'}）`).join('、');
-    $('execution-eligibility-note').textContent = health.state !== 'success'
-      ? `${health.label}；可執行名單已清空，請等待成功更新。`
-      : execution?.enforced
-        ? `官方當沖資格 ${execution.source_date}｜已排除 ${execution.filtered_count ?? excluded.length} 檔${excludedText ? `：${excludedText}` : ''}。${execution.execution_for_signal_date === 'next_session_verified' ? '已核對次一交易日資格。' : '目前為訊號日資格，次一交易日開盤前仍會重新核對。'}`
-        : '官方當沖資格尚未驗證；不可把清單視為可執行當沖建議。';
-    $('execution-eligibility-note').className = `execution-eligibility-note${health.state === 'success' && execution?.enforced ? '' : ' status-error'}`;
+    const paused = execution?.execution_for_signal_date === 'paused_no_new_official_session';
+    $('execution-eligibility-note').textContent = executionEligibilityNote(data, health);
+    $('execution-eligibility-note').className = `execution-eligibility-note${health.state === 'success' && execution?.enforced && !paused ? '' : ' status-error'}`;
     const preGate = data.pre_gate_counts ?? {};
     $('summary-long-note').textContent = Number.isFinite(preGate.long)
       ? `通過策略閘門｜基礎候選 ${preGate.long}` : '通過策略閘門';

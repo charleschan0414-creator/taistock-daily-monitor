@@ -88,6 +88,16 @@ class BacktestUiTests(unittest.TestCase):
         self.assertEqual(executable_signal_lists(result, health_state="error"), ([], []))
         self.assertEqual(executable_signal_lists(result, health_state="success"), ([row], []))
 
+    def test_paused_market_session_is_not_stale_but_never_executable(self):
+        row = {"code": "6269", "day_trading_eligibility": {
+            "eligible": False, "source_date": "2026-10-22", "reason": "no_new_official_session"}}
+        result = {"data_date": "2026-10-22", "long_top10": [row], "short_top10": [],
+                  "market_session": {"status": "paused_no_new_official_session"}}
+        report = {"pipeline": {"status": "success", "freshness": "paused",
+                               "data_date": "2026-10-22"}}
+        self.assertEqual(desktop_execution_health(report, result), "paused")
+        self.assertEqual(executable_signal_lists(result, health_state="paused"), ([], []))
+
     def test_desktop_uses_canonical_freshness_and_clears_rows_after_update_error(self):
         result = {"data_date": "2026-10-21"}
         stale_report = {"pipeline": {"status": "success", "freshness": "stale",
@@ -115,6 +125,23 @@ class BacktestUiTests(unittest.TestCase):
             result["execution_eligibility"]["source_date"] = invalid_source_date
             row["day_trading_eligibility"]["source_date"] = invalid_source_date
             self.assertEqual(executable_signal_lists(result), ([], []))
+
+    def test_paused_official_session_is_clearly_labeled_and_never_executable(self):
+        row = {"code": "1001", "day_trading_eligibility": {
+            "eligible": False, "source_date": "2026-10-22", "reason": "no_new_official_session"}}
+        execution = {"enforced": True, "source_date": "2026-10-22",
+                     "requested_date": "2026-10-23", "eligible_count": 0,
+                     "filtered_count": 1, "filtered_out": [],
+                     "execution_for_signal_date": "paused_no_new_official_session"}
+        result = {"data_date": "2026-10-22", "long_top10": [row], "short_top10": [],
+                  "execution_eligibility": execution}
+        self.assertEqual(executable_signal_lists(result), ([], []))
+        text = execution_eligibility_text(execution)
+        self.assertIn("2026-10-23", text)
+        self.assertIn("沿用 2026-10-22", text)
+        self.assertIn("暫停", text)
+        self.assertEqual(data_update_label(
+            "更新成功", {"status": "paused_no_new_official_session"}), "休市／暫停沿用")
 
     def test_shared_secondary_menu_stays_busy_until_all_operations_finish(self):
         state = BusyOperationState()

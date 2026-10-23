@@ -108,6 +108,58 @@ class HealthReportTests(unittest.TestCase):
         self.assertEqual(report["overall"], "warning")
         self.assertEqual(report["pipeline"]["freshness"], "stale")
 
+    def test_official_closed_session_stays_paused_instead_of_becoming_stale(self):
+        self.write_healthy_files()
+        self.write("daily_status.json", {
+            "status": "success", "completed_at": "2026-10-22T16:10:00+08:00",
+            "data_date": "2026-10-22",
+        })
+        self.write("latest.json", {
+            "data_date": "2026-10-22", "top100_count": 100,
+            "long_count": 0, "short_count": 0,
+            "market_session": {
+                "status": "paused_no_new_official_session",
+                "requested_date": "2026-10-23",
+                "latest_official_date": "2026-10-22",
+            },
+        })
+        now = datetime(2026, 10, 25, 8, 0, tzinfo=TAIPEI)
+        report = build_health_report(self.data, "test", now)
+        self.assertEqual(report["overall"], "ok")
+        self.assertEqual(report["pipeline"]["freshness"], "paused")
+        self.assertEqual(report["market_session"]["latest_official_date"], "2026-10-22")
+
+    def test_unverified_calendar_closure_cannot_hide_stale_data(self):
+        self.write_healthy_files()
+        self.write("daily_status.json", {"status": "success",
+            "completed_at": "2026-10-23T06:30:00+08:00", "data_date": "2026-10-21"})
+        self.write("latest.json", {"data_date": "2026-10-21", "top100_count": 100,
+            "long_count": 0, "short_count": 0,
+            "market_session": {"status": "paused_no_new_official_session",
+                "requested_date": "2026-10-23", "latest_official_date": "2026-10-21",
+                "closure_reason": "taipei_disaster_stop_work",
+                "closure_source": "https://www.dgpa.gov.tw/typh/daily/nds.html"}})
+        report = build_health_report(self.data, "test", datetime(2026, 10, 23, 8, 0, tzinfo=TAIPEI))
+        self.assertEqual(report["pipeline"]["freshness"], "stale")
+        self.assertIsNone(report["market_session"])
+
+    def test_calendar_closure_requires_parseable_same_taipei_day_verification_time(self):
+        self.write_healthy_files()
+        base = {"data_date": "2026-10-22", "top100_count": 100,
+            "long_count": 0, "short_count": 0,
+            "market_session": {"status": "paused_no_new_official_session",
+                "requested_date": "2026-10-23", "latest_official_date": "2026-10-22",
+                "closure_reason": "taipei_disaster_stop_work",
+                "closure_source": "https://www.dgpa.gov.tw/typh/daily/nds.html"},
+            "data_collection": {"latest_official_quote_date": "2026-10-22",
+                "session_checked_at": "2026-10-23T06:30:00+08:00"}}
+        self.write("latest.json", base)
+        now = datetime(2026, 10, 23, 8, 0, tzinfo=TAIPEI)
+        self.assertEqual(build_health_report(self.data, "test", now)["pipeline"]["freshness"], "paused")
+        base["data_collection"]["session_checked_at"] = "2026-10-23Tgarbage"
+        self.write("latest.json", base)
+        self.assertEqual(build_health_report(self.data, "test", now)["pipeline"]["freshness"], "stale")
+
     def test_next_schedule_rolls_to_next_day_at_or_after_0630(self):
         self.write_healthy_files()
         now = datetime(2026, 10, 17, 6, 30, tzinfo=TAIPEI)

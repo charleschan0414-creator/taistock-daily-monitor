@@ -54,6 +54,49 @@ async function latestData(env, fetcher) {
   }
 }
 
+function taipeiDateOfTimestamp(value) {
+  if (typeof value !== 'string'
+      || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/.test(value)) return null;
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return null;
+  const parts = Object.fromEntries(new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Taipei',
+    year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(parsed)
+    .filter(part => part.type !== 'literal').map(part => [part.type, part.value]));
+  return `${parts.year}-${parts.month}-${parts.day}`;
+}
+
+function pausedSession(latest) {
+  const session = latest?.market_session;
+  const execution = latest?.execution_eligibility;
+  const iso = value => {
+    if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+    const parsed = new Date(`${value}T00:00:00Z`);
+    return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
+  };
+  if (session?.status !== 'paused_no_new_official_session'
+      || execution?.execution_for_signal_date !== 'paused_no_new_official_session'
+      || execution?.enforced !== true || !iso(latest?.data_date)
+      || !iso(session.requested_date) || session.requested_date <= latest.data_date
+      || session.latest_official_date !== latest.data_date
+      || execution.requested_date !== session.requested_date
+      || execution.source_date !== latest.data_date) return null;
+  const closureSources = {
+    weekend: 'calendar',
+    twse_holiday: 'https://www.twse.com.tw/rwd/zh/holidaySchedule/holidaySchedule',
+    taipei_disaster_stop_work: 'https://www.dgpa.gov.tw/typh/daily/nds.html',
+  };
+  const hasClosure = session.closure_reason !== undefined || session.closure_source !== undefined;
+  if (hasClosure && closureSources[session.closure_reason] !== session.closure_source) return null;
+  const collection = latest?.data_collection;
+  if (hasClosure && (collection?.latest_official_quote_date !== latest.data_date
+      || taipeiDateOfTimestamp(collection?.session_checked_at) !== session.requested_date)) return null;
+  return { status: session.status, requested_date: session.requested_date,
+    latest_official_date: session.latest_official_date,
+    ...(hasClosure ? { closure_reason: session.closure_reason,
+      closure_source: session.closure_source } : {}),
+    notice: typeof session.notice === 'string' ? session.notice : undefined };
+}
+
 function executableLists(latest) {
   const eligibility = latest?.execution_eligibility;
   const long = latest?.long_top10 ?? latest?.top10;
@@ -64,6 +107,12 @@ function executableLists(latest) {
     && !Number.isNaN(parsedDate?.getTime()) && parsedDate.toISOString().slice(0, 10) === sourceDate
     && sourceDate >= latest.data_date;
   const rows = Array.isArray(long) && Array.isArray(short) ? [...long, ...short] : [];
+  const paused = pausedSession(latest);
+  const pausedReason = paused?.closure_reason ? 'market_closed' : 'no_new_official_session';
+  const pausedRows = paused && rows.every(row => row?.day_trading_eligibility?.eligible === false
+    && row.day_trading_eligibility.source_date === latest.data_date
+    && row.day_trading_eligibility.reason === pausedReason);
+  if (pausedRows) return { long: [], short: [], eligibility };
   const verified = eligibility?.enforced === true && validDate
     && Array.isArray(eligibility.filtered_out)
     && rows.every(row => row?.day_trading_eligibility?.eligible === true
@@ -100,6 +149,7 @@ export async function dashboard(env, fetcher = fetch) {
   try { dailyStatus = await githubJson('daily_status.json', fetcher); }
   catch { dailyStatus = await env.DATA.get('cron:last', 'json'); }
   const executable = executableLists(latest);
+  const marketSession = pausedSession(latest);
   const long = executable.long;
   const short = executable.short; const rows = [...long, ...short];
   const prices = new Map(); let status = 'unavailable';
@@ -122,6 +172,11 @@ export async function dashboard(env, fetcher = fetch) {
   catch { globalMarket = { status: 'unavailable', fetched_at: null, notice: '期交所行情，可能延遲', items: [],
     risk: { status: '中性', rule: 'TAIFEX 資料無法取得，維持中性' } }; }
   return json({ data_date: latest.data_date, updated_at: latest.updated_at, data_source: loaded.source,
+    market_session: marketSession,
+    data_collection: marketSession?.closure_reason ? {
+      latest_official_quote_date: latest.data_collection.latest_official_quote_date,
+      session_checked_at: latest.data_collection.session_checked_at,
+    } : null,
     daily_status: dailyStatus ?? null, realtime_status: status, global_market: globalMarket,
     strategy_gate: latest.strategy_gate ?? { enabled: false, status: '未提供策略閘門' },
     pre_gate_counts: latest.pre_gate_counts ?? null,

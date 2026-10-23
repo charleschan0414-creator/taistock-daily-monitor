@@ -4,6 +4,7 @@ This is an execution constraint, not a strategy score. A T+1 intraday
 signal cannot be presented as executable when the official market list
 does not permit the required same-day round trip.
 """
+import copy
 from datetime import datetime
 from urllib.parse import urlencode
 
@@ -164,6 +165,49 @@ def apply_execution_eligibility(result, twse_payload, tpex_payload, expected_sou
     return updated
 
 
+def pause_execution_for_closed_market(result, requested_date, closure_reason=None, closure_source=None,
+                                      eligibility_reason="market_closed"):
+    """Carry observations forward while making every execution path fail closed."""
+    requested_date = _iso_date(requested_date)
+    data_date = _iso_date(result.get("data_date"))
+    if requested_date <= data_date:
+        raise ValueError("休市日期必須晚於最後完整交易日")
+    paused = copy.deepcopy(result)
+    for key in ("signals", "qualified", "top10", "long_top10", "short_top10"):
+        for row in paused.get(key, []):
+            row["day_trading_eligibility"] = {
+                "eligible": False, "source_date": data_date,
+                "reason": eligibility_reason,
+            }
+    rows = paused.get("signals", [])
+    paused["execution_eligibility"] = {
+        "version": "official-day-trade-v1", "source_date": data_date,
+        "requested_date": requested_date,
+        "execution_for_signal_date": "paused_no_new_official_session",
+        "enforced": True, "score_effect": "none", "eligible_count": 0,
+        "filtered_count": len(rows),
+        "filtered_out": [{"code": row.get("code"), "name": row.get("name", ""),
+                          "direction": row.get("signal_direction"),
+                          "reason": eligibility_reason, "source_date": data_date}
+                         for row in rows],
+        "sources": [closure_source] if closure_source else [TWSE_DAY_TRADE, TPEX_DAY_TRADE],
+        "notice": "官方市場休市；沿用最後完整交易日觀察資料，所有可執行訊號暫停。",
+    }
+    paused["market_session"] = {
+        "status": "paused_no_new_official_session",
+        "requested_date": requested_date,
+        "latest_official_date": data_date,
+        "notice": f"{requested_date} 官方市場休市；沿用 {data_date} 觀察資料並暫停執行。",
+    }
+    if closure_reason and closure_source:
+        paused["market_session"].update({
+            "closure_reason": closure_reason, "closure_source": closure_source})
+    paused["sources"] = list(dict.fromkeys(
+        list(result.get("sources", []))
+        + ([closure_source] if closure_source else [TWSE_DAY_TRADE, TPEX_DAY_TRADE])))
+    return paused
+
+
 def fetch_and_apply_execution_eligibility(client, result, source_date):
     compact = source_date.replace("-", "")
     twse_url = TWSE_DAY_TRADE + "?" + urlencode({"date": compact, "response": "json"})
@@ -174,5 +218,21 @@ def fetch_and_apply_execution_eligibility(client, result, source_date):
     if len(twse) < 100 or len(tpex) < 100:
         raise ValueError(f"官方當沖標的數量異常：TWSE {len(twse)}、TPEx {len(tpex)}")
     if twse_date != source_date or tpex_date != source_date:
+        data_date = _iso_date(result.get("data_date"))
+        requested_date = _iso_date(source_date)
+        official_dates = {twse_date, tpex_date}
+        session_not_advanced = (requested_date > data_date and data_date in official_dates
+                                and official_dates <= {data_date, requested_date})
+        if session_not_advanced:
+            paused = pause_execution_for_closed_market(
+                result, requested_date, eligibility_reason="no_new_official_session")
+            paused["execution_eligibility"]["sources"] = [TWSE_DAY_TRADE, TPEX_DAY_TRADE]
+            paused["execution_eligibility"]["notice"] = (
+                "官方兩市場未同時提供新交易日資料；沿用觀察資料並暫停所有可執行訊號。")
+            paused["market_session"]["notice"] = (
+                f"{requested_date} 官方尚無新交易日資料；沿用 {data_date} 觀察資料並暫停執行。")
+            paused["sources"] = list(dict.fromkeys(
+                list(result.get("sources", [])) + [TWSE_DAY_TRADE, TPEX_DAY_TRADE]))
+            return paused
         raise ValueError(f"官方當沖標的尚未更新至 {source_date}")
     return apply_execution_eligibility(result, twse_payload, tpex_payload, source_date)

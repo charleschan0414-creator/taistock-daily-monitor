@@ -30,3 +30,19 @@ class HttpClient:
                             pass
                     time.sleep(delay)
         raise DataSourceError(f"資料來源連線失敗 {url}: {last}") from last
+
+    def text(self, url):
+        last = None
+        for attempt in range(self.retries):
+            try:
+                request = Request(url, headers={
+                    "User-Agent": "Mozilla/5.0", "Accept": "text/html",
+                    "Accept-Encoding": "identity",
+                })
+                with urlopen(request, timeout=self.timeout) as response:
+                    return response.read().decode("utf-8-sig")
+            except Exception as exc:
+                last = exc
+                if attempt + 1 < self.retries:
+                    time.sleep(min(60.0, 1.5 * (2 ** attempt)))
+        raise DataSourceError(f"資料來源連線失敗 {url}: {last}") from last

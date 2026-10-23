@@ -97,6 +97,71 @@ test('dashboard對未經官方當沖資格驗證的KV資料隱藏可執行清單
   assert.match(body.execution_eligibility.notice, /不顯示可執行名單/);
 });
 
+test('dashboard在休市或兩市場未同步時沿用資料但清空可執行名單', async () => {
+  const paused = {
+    ...latest,
+    data_date: '2026-10-22',
+    market_session: { status: 'paused_no_new_official_session', requested_date: '2026-10-23',
+      latest_official_date: '2026-10-22' },
+    execution_eligibility: { enforced: true, source_date: '2026-10-22', requested_date: '2026-10-23',
+      execution_for_signal_date: 'paused_no_new_official_session', filtered_count: 2, filtered_out: [] },
+    long_top10: [{ ...latest.long_top10[0], day_trading_eligibility: {
+      eligible: false, source_date: '2026-10-22', reason: 'no_new_official_session' } }],
+    short_top10: [{ ...latest.short_top10[0], day_trading_eligibility: {
+      eligible: false, source_date: '2026-10-22', reason: 'no_new_official_session' } }],
+  };
+  const fetcher = async () => { throw new Error('GitHub down'); };
+  const e = env(fetcher);
+  e.DATA = new KV({ latest: JSON.stringify(paused) });
+  const body = await (await createWorker(fetcher).fetch(new Request('https://x/api/dashboard'), e)).json();
+  assert.deepEqual(body.long, []);
+  assert.deepEqual(body.short, []);
+  assert.deepEqual(body.market_session, paused.market_session);
+  assert.equal(body.execution_eligibility.enforced, true);
+  assert.equal(body.execution_eligibility.execution_for_signal_date, 'paused_no_new_official_session');
+
+  const disasterClosed = {
+    ...paused,
+    data_collection: { latest_official_quote_date: '2026-10-22',
+      session_checked_at: '2026-10-23T06:30:00+08:00' },
+    market_session: { ...paused.market_session, closure_reason: 'taipei_disaster_stop_work',
+      closure_source: 'https://www.dgpa.gov.tw/typh/daily/nds.html' },
+    execution_eligibility: { ...paused.execution_eligibility, eligible_count: 0 },
+    long_top10: paused.long_top10.map(row => ({ ...row, day_trading_eligibility: {
+      ...row.day_trading_eligibility, reason: 'market_closed' } })),
+    short_top10: paused.short_top10.map(row => ({ ...row, day_trading_eligibility: {
+      ...row.day_trading_eligibility, reason: 'market_closed' } })),
+  };
+  const disasterEnv = env(fetcher);
+  disasterEnv.DATA = new KV({ latest: JSON.stringify(disasterClosed) });
+  const disasterBody = await (await createWorker(fetcher).fetch(
+    new Request('https://x/api/dashboard'), disasterEnv)).json();
+  assert.deepEqual(disasterBody.long, []);
+  assert.deepEqual(disasterBody.short, []);
+  assert.equal(disasterBody.execution_eligibility.enforced, true);
+  assert.equal(disasterBody.execution_eligibility.eligible_count, 0);
+  assert.equal(disasterBody.market_session.closure_reason, 'taipei_disaster_stop_work');
+  assert.deepEqual(disasterBody.data_collection, disasterClosed.data_collection);
+
+  const malformedTime = { ...disasterClosed, data_collection: {
+    ...disasterClosed.data_collection, session_checked_at: '2026-10-23Tgarbage' } };
+  const malformedTimeEnv = env(fetcher);
+  malformedTimeEnv.DATA = new KV({ latest: JSON.stringify(malformedTime) });
+  const malformedTimeBody = await (await createWorker(fetcher).fetch(
+    new Request('https://x/api/dashboard'), malformedTimeEnv)).json();
+  assert.equal(malformedTimeBody.market_session, null);
+  assert.equal(malformedTimeBody.execution_eligibility.enforced, false);
+
+  const malformed = { ...paused, market_session: { ...paused.market_session, requested_date: '2026-99-99' } };
+  const badEnv = env(fetcher);
+  badEnv.DATA = new KV({ latest: JSON.stringify(malformed) });
+  const badResponse = await createWorker(fetcher).fetch(new Request('https://x/api/dashboard'), badEnv);
+  assert.equal(badResponse.status, 200);
+  const badBody = await badResponse.json();
+  assert.equal(badBody.market_session, null);
+  assert.equal(badBody.execution_eligibility.enforced, false);
+});
+
 test('dashboard拒絕不可能的官方資格日期', async () => {
   const invalid = { ...latest, data_date: '2026-02-28', short_top10: [],
     execution_eligibility: { ...latest.execution_eligibility, source_date: '2026-02-30' },

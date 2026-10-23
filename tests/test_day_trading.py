@@ -1,6 +1,8 @@
 import unittest
 
-from taistock.day_trading import apply_execution_eligibility, parse_tpex_eligibility, parse_twse_eligibility
+from taistock.day_trading import (apply_execution_eligibility,
+                                  fetch_and_apply_execution_eligibility,
+                                  parse_tpex_eligibility, parse_twse_eligibility)
 
 
 class DayTradingEligibilityTests(unittest.TestCase):
@@ -94,6 +96,39 @@ class DayTradingEligibilityTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             apply_execution_eligibility({"data_date": "2026-10-20", "signals": []},
                                         twse, tpex, "2026-10-21")
+
+    def test_pauses_without_error_when_official_markets_do_not_both_advance(self):
+        row = {"code": "1001", "name": "測試", "market": "上市",
+               "signal_direction": "long", "score": 88.0}
+        result = {"data_date": "2026-10-22", "signals": [row],
+                  "qualified": [row], "top10": [row], "long_top10": [row],
+                  "short_top10": [], "long_count": 1, "short_count": 0,
+                  "sources": []}
+        twse = {"stat": "OK", "date": "20261023", "tables": [{
+            "fields": ["證券代號", "證券名稱", "暫停現股賣出後現款買進當沖註記"],
+            "data": [[f"{1001 + index}", "測試", ""] for index in range(100)],
+        }]}
+        tpex = [{"資料日期": "1151022", "證券代號": f"{2001 + index}",
+                 "證券名稱": "測試", "暫停現股賣出後現款買進當沖註記": ""}
+                for index in range(100)]
+
+        class Client:
+            def json(self, url):
+                return twse if "TWTB4U" in url else tpex
+
+        paused = fetch_and_apply_execution_eligibility(Client(), result, "2026-10-23")
+
+        self.assertEqual(paused["market_session"]["status"], "paused_no_new_official_session")
+        self.assertEqual(paused["market_session"]["requested_date"], "2026-10-23")
+        self.assertEqual(paused["market_session"]["latest_official_date"], "2026-10-22")
+        self.assertNotIn("closure_reason", paused["market_session"])
+        self.assertNotIn("closure_source", paused["market_session"])
+        self.assertTrue(paused["execution_eligibility"]["enforced"])
+        self.assertEqual(paused["execution_eligibility"]["eligible_count"], 0)
+        self.assertEqual(paused["signals"][0]["score"], 88.0)
+        self.assertFalse(paused["signals"][0]["day_trading_eligibility"]["eligible"])
+        self.assertEqual(paused["signals"][0]["day_trading_eligibility"]["reason"],
+                         "no_new_official_session")
 
 
 if __name__ == "__main__":

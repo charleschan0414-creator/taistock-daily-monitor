@@ -8,7 +8,8 @@ import sys
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
-from app import run_backtest, run_strategy_optimization, update, validate_daily_scan
+from app import (carry_forward_if_market_closed, run_backtest,
+                 run_strategy_optimization, update, validate_daily_scan)
 from taistock.global_market import GlobalMarketClient
 from taistock.health import build_health_report
 from taistock.market_history import capture_market_history
@@ -74,6 +75,14 @@ def previous_campaign_state(path):
         payload = json.loads(path.read_text(encoding="utf-8"))
         campaign = payload.get("strategy_campaign", {})
         return campaign if isinstance(campaign, dict) else {}
+    except (OSError, ValueError, TypeError):
+        return {}
+
+
+def previous_daily_status(path):
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+        return value if isinstance(value, dict) else {}
     except (OSError, ValueError, TypeError):
         return {}
 
@@ -223,7 +232,9 @@ def record_market_history(client=None, clock=None):
 
 def main():
     started = taipei_now()
-    prior_campaign = previous_campaign_state(DATA / "daily_status.json")
+    status_path = DATA / "daily_status.json"
+    prior_status = previous_daily_status(status_path)
+    prior_campaign = previous_campaign_state(status_path)
     status = {"started_at": started, "completed_at": None, "status": "running", "data_date": None}
     if prior_campaign:
         status["strategy_campaign"] = prior_campaign
@@ -232,6 +243,24 @@ def main():
     strategy_report_staged = False
     atomic_json(DATA / "daily_status.json", status)
     try:
+        paused = carry_forward_if_market_closed(DATA)
+        if paused is not None:
+            preserved = {key: value for key, value in prior_status.items()
+                         if key not in {"health", "error", "started_at", "completed_at", "status"}}
+            status = {
+                **preserved,
+                "started_at": started,
+                "completed_at": taipei_now(),
+                "status": "success",
+                "data_date": paused["data_date"],
+                "run_mode": "market_closed_carry_forward",
+                "market_session": paused["market_session"],
+                "execution_eligibility": paused.get("execution_eligibility"),
+            }
+            write_status_with_health(status)
+            print(paused["market_session"].get(
+                "notice", "官方市場未產生新交易日；沿用最後完整交易日資料並暫停執行。"))
+            return 0
         backtest = run_backtest(100)
         v2_report = optimize_v2(backtest, DATA / "v2_optimization.json")
         registry_path = DATA / "strategy_registry.json"

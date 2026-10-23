@@ -70,6 +70,38 @@ def _integer(value, default=0):
     return value if isinstance(value, int) and not isinstance(value, bool) and value >= 0 else default
 
 
+def _current_official_pause(latest, now):
+    session = latest.get("market_session") if isinstance(latest, dict) else None
+    if not isinstance(session, dict) or session.get("status") != "paused_no_new_official_session":
+        return None
+    try:
+        requested = datetime.strptime(session["requested_date"], "%Y-%m-%d").date()
+        official = datetime.strptime(session["latest_official_date"], "%Y-%m-%d").date()
+        data_date = datetime.strptime(latest["data_date"], "%Y-%m-%d").date()
+    except (KeyError, TypeError, ValueError):
+        return None
+    today = now.astimezone(TAIPEI).date()
+    if official != data_date or requested <= official or requested > today:
+        return None
+    if session.get("closure_reason") or session.get("closure_source"):
+        collection = latest.get("data_collection") or {}
+        checked_at = collection.get("session_checked_at")
+        try:
+            checked_moment = datetime.fromisoformat(checked_at.replace("Z", "+00:00"))
+            checked_date = checked_moment.astimezone(TAIPEI).date() if checked_moment.tzinfo else None
+        except (AttributeError, TypeError, ValueError):
+            checked_date = None
+        if (collection.get("latest_official_quote_date") != latest.get("data_date")
+                or checked_date != requested):
+            return None
+    cursor = requested + timedelta(days=1)
+    while cursor < today:
+        if cursor.weekday() < 5:
+            return None
+        cursor += timedelta(days=1)
+    return copy.deepcopy(session)
+
+
 def build_health_report(data_dir, app_version, now):
     """Read local JSON state without raising for absent or malformed inputs."""
     if not isinstance(now, datetime) or now.tzinfo is None:
@@ -87,8 +119,15 @@ def build_health_report(data_dir, app_version, now):
     pipeline_status = daily.get("status") or "unknown"
     completed_at = daily.get("completed_at")
     freshness = "unknown"
+    market_session = _current_official_pause(latest, now)
+    claimed_pause = ((latest.get("market_session") or {}).get("status")
+                     == "paused_no_new_official_session")
     completed = _parse_moment(completed_at)
-    if pipeline_status == "success" and completed is not None:
+    if pipeline_status == "success" and market_session is not None:
+        freshness = "paused"
+    elif pipeline_status == "success" and claimed_pause:
+        freshness = "stale"
+    elif pipeline_status == "success" and completed is not None:
         freshness = "stale" if now.astimezone(timezone.utc) - completed.astimezone(timezone.utc) > timedelta(hours=48) else "fresh"
 
     if pipeline_status == "error":
@@ -114,6 +153,7 @@ def build_health_report(data_dir, app_version, now):
         "generated_at": now.astimezone(TAIPEI).isoformat(timespec="seconds"),
         "sources": sources,
         "latest_data_date": latest.get("data_date") or daily.get("data_date"),
+        "market_session": market_session,
         "pipeline": {
             "status": pipeline_status,
             "completed_at": completed_at,

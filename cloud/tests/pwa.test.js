@@ -9,13 +9,34 @@ test('資料健康狀態以明確文字區分成功與過期', async () => {
   const fresh = resolveDataHealth({ data_date: '2026-10-16', daily_status: { status: 'success' } }, new Date('2026-10-17T08:00:00+08:00'));
   const stale = resolveDataHealth({ data_date: '2026-10-15', daily_status: { status: 'success' } }, new Date('2026-10-19T08:00:00+08:00'));
   const failed = resolveDataHealth({ data_date: '2026-10-16', daily_status: { status: 'failed' } }, new Date('2026-10-17T08:00:00+08:00'));
+  const paused = resolveDataHealth({ data_date: '2026-10-22', daily_status: { status: 'success' },
+    market_session: { status: 'paused_no_new_official_session', requested_date: '2026-10-23' } },
+  new Date('2026-10-24T08:00:00+08:00'));
   assert.deepEqual(fresh, { state: 'success', label: '資料成功' });
   assert.deepEqual(stale, { state: 'stale', label: '資料過期' });
   assert.deepEqual(failed, { state: 'error', label: '更新失敗' });
+  assert.deepEqual(paused, { state: 'paused', label: '休市／暫停沿用' });
+  const unverifiedClosure = resolveDataHealth({ data_date: '2026-10-21', daily_status: { status: 'success' },
+    market_session: { status: 'paused_no_new_official_session', requested_date: '2026-10-23',
+      closure_reason: 'taipei_disaster_stop_work',
+      closure_source: 'https://www.dgpa.gov.tw/typh/daily/nds.html' } },
+  new Date('2026-10-23T08:00:00+08:00'));
+  assert.deepEqual(unverifiedClosure, { state: 'stale', label: '資料過期' });
+  const verifiedClosureData = { data_date: '2026-10-22', daily_status: { status: 'success' },
+    data_collection: { latest_official_quote_date: '2026-10-22',
+      session_checked_at: '2026-10-23T06:30:00+08:00' },
+    market_session: { status: 'paused_no_new_official_session', requested_date: '2026-10-23',
+      closure_reason: 'taipei_disaster_stop_work',
+      closure_source: 'https://www.dgpa.gov.tw/typh/daily/nds.html' } };
+  assert.deepEqual(resolveDataHealth(verifiedClosureData, new Date('2026-10-23T08:00:00+08:00')),
+    { state: 'paused', label: '休市／暫停沿用' });
+  verifiedClosureData.data_collection.session_checked_at = '2026-10-23Tgarbage';
+  assert.deepEqual(resolveDataHealth(verifiedClosureData, new Date('2026-10-23T08:00:00+08:00')),
+    { state: 'stale', label: '資料過期' });
 });
 
 test('資料過期或流水線失敗時清空可執行名單與數量', async () => {
-  const { executableListsForHealth } = await import('../public/app.js');
+  const { executableListsForHealth, executionEligibilityNote } = await import('../public/app.js');
   const data = { long: [{ code: '1111' }], short: [{ code: '2222' }] };
   assert.deepEqual(executableListsForHealth(data, { state: 'stale' }),
     { long: [], short: [], longCount: 0, shortCount: 0 });
@@ -23,6 +44,13 @@ test('資料過期或流水線失敗時清空可執行名單與數量', async ()
     { long: [], short: [], longCount: 0, shortCount: 0 });
   assert.deepEqual(executableListsForHealth(data, { state: 'success' }),
     { long: data.long, short: data.short, longCount: 1, shortCount: 1 });
+  const paused = { ...data, market_session: { status: 'paused_no_new_official_session' } };
+  assert.deepEqual(executableListsForHealth(paused, { state: 'success' }),
+    { long: [], short: [], longCount: 0, shortCount: 0 });
+  paused.execution_eligibility = { enforced: true, requested_date: '2026-10-23',
+    source_date: '2026-10-22', execution_for_signal_date: 'paused_no_new_official_session' };
+  assert.match(executionEligibilityNote(paused, { state: 'paused', label: '休市／暫停沿用' }),
+    /2026-10-23.*沿用 2026-10-22.*暫停/);
   const app = await read('app.js');
   assert.match(app, /const executable = executableListsForHealth\(data, health\)/);
   assert.match(app, /renderList\('long-list', executable\.long/);
