@@ -281,6 +281,21 @@ def executable_signal_lists(result, health_state="success"):
     return verified(longs), verified(shorts)
 
 
+def display_signal_lists(result, health_state="success"):
+    """Show safe prior-session observations during closure without making them executable."""
+    if health_state == "success":
+        return executable_signal_lists(result, health_state)
+    execution = result.get("execution_eligibility") or {}
+    session = result.get("market_session") or {}
+    if (health_state == "paused" and execution.get("enforced") is True
+            and execution.get("execution_for_signal_date") == "paused_no_new_official_session"
+            and session.get("status") == "paused_no_new_official_session"
+            and execution.get("source_date") == result.get("data_date")):
+        return (list(result.get("long_top10", result.get("top10", [])))[:10],
+                list(result.get("short_top10", []))[:10])
+    return [], []
+
+
 def data_update_label(prefix, market_session=None):
     if (market_session or {}).get("status") == "paused_no_new_official_session":
         return "休市／暫停沿用"
@@ -762,6 +777,7 @@ class Dashboard(tk.Tk):
             except (OSError, ValueError, TypeError):
                 health_state = "error"
         longs, shorts = executable_signal_lists(result, health_state=health_state)
+        display_longs, display_shorts = display_signal_lists(result, health_state=health_state)
         signals = result.get("signals", result.get("qualified", []))
         optimization = result.get("optimization", {})
         strategy_gate = result.get("strategy_gate", {})
@@ -776,7 +792,7 @@ class Dashboard(tk.Tk):
         paused = execution.get("execution_for_signal_date") == "paused_no_new_official_session"
         self.eligibility_label.configure(fg="#fbbf24" if paused else
                                          "#34d399" if execution.get("enforced") else "#fb7185")
-        for tree_index, (tree, rows) in enumerate(zip(self.trees, (longs, shorts))):
+        for tree_index, (tree, rows) in enumerate(zip(self.trees, (display_longs, display_shorts))):
             tree.delete(*tree.get_children())
             self.tree_rows[tree_index].clear()
             for i, x in enumerate(rows, 1):
@@ -785,10 +801,13 @@ class Dashboard(tk.Tk):
                 price, change, quote = display_quote_values(self.quotes.get(str(x.get("code"))))
                 quote_text = f"{price} {change}｜{quote}" if price != "—" else quote
                 iid = str(i - 1)
+                warning = signal_warning_text(x)
+                if health_state == "paused":
+                    warning = "休市沿用｜不可執行｜" + warning
                 tree.insert("", "end", iid=iid,
                             values=(i, direction, x.get("code"), x.get("name"), quote_text,
                                     x.get("entry_trigger", "—"), x.get("stop_loss", "—"),
-                                    x.get("target1", "—"), signal_warning_text(x)),
+                                    x.get("target1", "—"), warning),
                             tags=signal_row_tags(direction_key, change, i - 1))
                 self.tree_rows[tree_index][iid] = x
             children = tree.get_children()
@@ -796,7 +815,9 @@ class Dashboard(tk.Tk):
                 tree.selection_set(children[0]); tree.focus(children[0]); self._render_selected_signal(tree)
             else:
                 self.candle_canvases[tree_index].delete("all")
-                self.candle_detail_vars[tree_index].set("目前沒有通過官方資格的可執行推薦。")
+                self.candle_detail_vars[tree_index].set(
+                    "休市期間沒有可執行訊號。" if health_state == "paused"
+                    else "目前沒有通過官方資格的可執行推薦。")
         gate_status = strategy_gate.get("status", "未啟用｜保留基準訊號")
         learning_status = optimization.get("status", "尚無學習狀態")
         self.status.set(f"{prefix}｜資料 {result.get('data_date')}｜策略：{gate_status}｜學習：{learning_status}｜非投資建議｜不會自動下單")

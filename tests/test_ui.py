@@ -8,6 +8,7 @@ from taistock.ui import (format_backtest_summary, display_quote_values, visible_
                          execution_eligibility_text, signal_warning_text,
                          signal_table_columns, run_desktop_update, Dashboard,
                          executable_signal_lists, BusyOperationState, data_update_label,
+                         display_signal_lists,
                          candlestick_window_text, candle_chart_geometry,
                          desktop_execution_health)
 
@@ -92,11 +93,16 @@ class BacktestUiTests(unittest.TestCase):
         row = {"code": "6269", "day_trading_eligibility": {
             "eligible": False, "source_date": "2026-10-22", "reason": "no_new_official_session"}}
         result = {"data_date": "2026-10-22", "long_top10": [row], "short_top10": [],
-                  "market_session": {"status": "paused_no_new_official_session"}}
+                  "market_session": {"status": "paused_no_new_official_session"},
+                  "execution_eligibility": {"enforced": True, "source_date": "2026-10-22",
+                      "execution_for_signal_date": "paused_no_new_official_session"}}
         report = {"pipeline": {"status": "success", "freshness": "paused",
                                "data_date": "2026-10-22"}}
         self.assertEqual(desktop_execution_health(report, result), "paused")
         self.assertEqual(executable_signal_lists(result, health_state="paused"), ([], []))
+        self.assertEqual(display_signal_lists(result, health_state="paused"), ([row], []))
+        self.assertEqual(display_signal_lists(result, health_state="stale"), ([], []))
+        self.assertEqual(display_signal_lists(result, health_state="error"), ([], []))
 
     def test_desktop_uses_canonical_freshness_and_clears_rows_after_update_error(self):
         result = {"data_date": "2026-10-21"}
