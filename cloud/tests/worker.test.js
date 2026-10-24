@@ -116,6 +116,9 @@ test('dashboard在休市或兩市場未同步時沿用資料但清空可執行�
   const body = await (await createWorker(fetcher).fetch(new Request('https://x/api/dashboard'), e)).json();
   assert.deepEqual(body.long, []);
   assert.deepEqual(body.short, []);
+  assert.equal(body.observation_long.length, 1);
+  assert.equal(body.observation_short.length, 1);
+  assert.equal(body.observation_long[0].display_status, '休市沿用｜不可執行');
   assert.deepEqual(body.market_session, paused.market_session);
   assert.equal(body.execution_eligibility.enforced, true);
   assert.equal(body.execution_eligibility.execution_for_signal_date, 'paused_no_new_official_session');
@@ -138,10 +141,29 @@ test('dashboard在休市或兩市場未同步時沿用資料但清空可執行�
     new Request('https://x/api/dashboard'), disasterEnv)).json();
   assert.deepEqual(disasterBody.long, []);
   assert.deepEqual(disasterBody.short, []);
+  assert.equal(disasterBody.observation_long.length, 1);
+  assert.equal(disasterBody.observation_short.length, 1);
   assert.equal(disasterBody.execution_eligibility.enforced, true);
   assert.equal(disasterBody.execution_eligibility.eligible_count, 0);
   assert.equal(disasterBody.market_session.closure_reason, 'taipei_disaster_stop_work');
   assert.deepEqual(disasterBody.data_collection, disasterClosed.data_collection);
+
+  const mixedRows = { ...disasterClosed,
+    long_top10: [...disasterClosed.long_top10, {
+      ...disasterClosed.long_top10[0], code: '9998', day_trading_eligibility: {
+        eligible: false, source_date: '2026-10-21', reason: 'market_closed' } }],
+    short_top10: [...disasterClosed.short_top10, {
+      ...disasterClosed.short_top10[0], code: '9999', day_trading_eligibility: {
+        eligible: false, source_date: '2026-10-22', reason: 'unknown' } }],
+  };
+  const mixedEnv = env(fetcher);
+  mixedEnv.DATA = new KV({ latest: JSON.stringify(mixedRows) });
+  const mixedBody = await (await createWorker(fetcher).fetch(
+    new Request('https://x/api/dashboard'), mixedEnv)).json();
+  assert.deepEqual(mixedBody.observation_long.map(row => row.code),
+    [disasterClosed.long_top10[0].code]);
+  assert.deepEqual(mixedBody.observation_short.map(row => row.code),
+    [disasterClosed.short_top10[0].code]);
 
   const malformedTime = { ...disasterClosed, data_collection: {
     ...disasterClosed.data_collection, session_checked_at: '2026-10-23Tgarbage' } };

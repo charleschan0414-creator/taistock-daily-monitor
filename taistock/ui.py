@@ -281,8 +281,21 @@ def executable_signal_lists(result, health_state="success"):
     return verified(longs), verified(shorts)
 
 
+def _is_verified_carried_row(row, result):
+    eligibility = row.get("day_trading_eligibility") or {}
+    data_date = result.get("data_date")
+    try:
+        data_day = date.fromisoformat(data_date)
+    except (TypeError, ValueError):
+        return False
+    return (data_date == data_day.isoformat()
+            and eligibility.get("eligible") is False
+            and eligibility.get("source_date") == data_date
+            and eligibility.get("reason") in {"market_closed", "no_new_official_session"})
+
+
 def display_signal_lists(result, health_state="success"):
-    """Show safe prior-session observations during closure without making them executable."""
+    """Show only verified prior-session targets during closure, never executable rows."""
     if health_state == "success":
         return executable_signal_lists(result, health_state)
     execution = result.get("execution_eligibility") or {}
@@ -291,9 +304,35 @@ def display_signal_lists(result, health_state="success"):
             and execution.get("execution_for_signal_date") == "paused_no_new_official_session"
             and session.get("status") == "paused_no_new_official_session"
             and execution.get("source_date") == result.get("data_date")):
-        return (list(result.get("long_top10", result.get("top10", [])))[:10],
-                list(result.get("short_top10", []))[:10])
+        longs = result.get("long_top10", result.get("top10", []))
+        shorts = result.get("short_top10", [])
+        return ([row for row in longs if _is_verified_carried_row(row, result)][:10],
+                [row for row in shorts if _is_verified_carried_row(row, result)][:10])
     return [], []
+
+
+def signal_count_presentation(health_state, executable_long, executable_short,
+                              display_long, display_short):
+    if health_state == "paused":
+        return (("當沖偏多標的（沿用）", f"{display_long} 檔｜休市不可執行"),
+                ("當沖偏空標的（沿用）", f"{display_short} 檔｜休市不可執行"))
+    return (("可執行偏多", f"{executable_long} 檔"),
+            ("可執行偏空", f"{executable_short} 檔"))
+
+
+def row_eligibility_text(row, result):
+    eligibility = row.get("day_trading_eligibility") or {}
+    session = result.get("market_session") or {}
+    execution = result.get("execution_eligibility") or {}
+    data_date = result.get("data_date")
+    if (session.get("status") == "paused_no_new_official_session"
+            and execution.get("enforced") is True
+            and execution.get("execution_for_signal_date") == "paused_no_new_official_session"
+            and execution.get("source_date") == data_date
+            and _is_verified_carried_row(row, result)):
+        return f"{data_date} 當沖資格已通過並沿用｜今日休市不可執行"
+    status = "已通過" if eligibility.get("eligible") else "未通過／不明"
+    return f"{status}｜來源日 {eligibility.get('source_date', '—')}"
 
 
 def data_update_label(prefix, market_session=None):
@@ -445,13 +484,14 @@ class Dashboard(tk.Tk):
         tk.Label(overview, text="今日總覽", fg=FG, bg=BG,
                  font=("Microsoft JhengHei UI", 13, "bold")).pack(anchor="w", pady=(0, 5))
         cards = tk.Frame(overview, bg=BG); cards.pack(fill="x")
-        self.card_vars, self.card_value_labels = [], []
+        self.card_vars, self.card_title_vars, self.card_value_labels = [], [], []
         card_colors = (FG, "#fb7185", "#34d399")
         for title, color in zip(layout["cards"], card_colors):
             box = tk.Frame(cards, bg=PANEL, padx=15, pady=11, highlightthickness=1,
                            highlightbackground="#20324d")
             box.pack(side="left", fill="x", expand=True, padx=(0, 8))
-            tk.Label(box, text=title, fg=MUTED, bg=PANEL,
+            title_var = tk.StringVar(value=title); self.card_title_vars.append(title_var)
+            tk.Label(box, textvariable=title_var, fg=MUTED, bg=PANEL,
                      font=("Microsoft JhengHei UI", 9, "bold")).pack(anchor="w")
             var = tk.StringVar(value="—"); self.card_vars.append(var)
             value_label = tk.Label(box, textvariable=var, fg=color, bg=PANEL, anchor="w",
@@ -560,10 +600,8 @@ class Dashboard(tk.Tk):
             return
         direction = row.get("signal_direction", "long")
         title = f"{row.get('code', '')} {row.get('name', '')}｜{'偏多' if direction == 'long' else '偏空'}"
-        eligibility = row.get("day_trading_eligibility") or {}
-        eligible = "已通過" if eligibility.get("eligible") else "未通過／不明"
         details = [
-            f"官方當沖資格｜{eligible}｜來源日 {eligibility.get('source_date', '—')}",
+            f"官方當沖資格｜{row_eligibility_text(row, self.current_result or {})}",
             f"觸發價 {row.get('entry_trigger', '—')}｜停損／回補 {row.get('stop_loss', '—')}｜目標1 {row.get('target1', '—')}｜目標2 {row.get('target2', '—')}",
             f"研究排序｜{row.get('score', '—')}",
             f"入選原因｜{row.get('reason', '—')}",
@@ -785,8 +823,11 @@ class Dashboard(tk.Tk):
         short_count = result.get("short_count", len([x for x in signals if x.get("signal_direction") == "short"]))
         update_label = data_update_label(prefix, result.get("market_session"))
         self.card_vars[0].set(f"{result.get('data_date', '—')}｜{update_label}")
-        self.card_vars[1].set(f"{len(longs)} 檔")
-        self.card_vars[2].set(f"{len(shorts)} 檔")
+        count_cards = signal_count_presentation(
+            health_state, len(longs), len(shorts), len(display_longs), len(display_shorts))
+        for index, (title, value) in enumerate(count_cards, 1):
+            self.card_title_vars[index].set(title)
+            self.card_vars[index].set(value)
         execution = result.get("execution_eligibility") or {}
         self.eligibility_var.set(execution_eligibility_text(execution))
         paused = execution.get("execution_for_signal_date") == "paused_no_new_official_session"

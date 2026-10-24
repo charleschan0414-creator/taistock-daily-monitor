@@ -36,7 +36,7 @@ test('資料健康狀態以明確文字區分成功與過期', async () => {
 });
 
 test('資料過期或流水線失敗時清空可執行名單與數量', async () => {
-  const { executableListsForHealth, executionEligibilityNote } = await import('../public/app.js');
+  const { executableListsForHealth, displayListsForHealth, executionEligibilityNote } = await import('../public/app.js');
   const data = { long: [{ code: '1111' }], short: [{ code: '2222' }] };
   assert.deepEqual(executableListsForHealth(data, { state: 'stale' }),
     { long: [], short: [], longCount: 0, shortCount: 0 });
@@ -51,9 +51,19 @@ test('資料過期或流水線失敗時清空可執行名單與數量', async ()
     source_date: '2026-10-22', execution_for_signal_date: 'paused_no_new_official_session' };
   assert.match(executionEligibilityNote(paused, { state: 'paused', label: '休市／暫停沿用' }),
     /2026-10-23.*沿用 2026-10-22.*暫停/);
+  paused.observation_long = [{ code: '1111', display_status: '休市沿用｜不可執行' }];
+  paused.observation_short = [{ code: '2222', display_status: '休市沿用｜不可執行' }];
+  assert.deepEqual(displayListsForHealth(paused, { state: 'paused' }), {
+    long: paused.observation_long, short: paused.observation_short,
+    longCount: 1, shortCount: 1, carried: true,
+  });
+  assert.deepEqual(displayListsForHealth(paused, { state: 'stale' }), {
+    long: [], short: [], longCount: 0, shortCount: 0, carried: false,
+  });
   const app = await read('app.js');
   assert.match(app, /const executable = executableListsForHealth\(data, health\)/);
-  assert.match(app, /renderList\('long-list', executable\.long/);
+  assert.match(app, /const display = displayListsForHealth\(data, health\)/);
+  assert.match(app, /renderList\('long-list', display\.long/);
 });
 
 test('API載入失敗時頂部與推薦區都改為不可執行狀態', async () => {

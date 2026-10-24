@@ -9,6 +9,7 @@ from taistock.ui import (format_backtest_summary, display_quote_values, visible_
                          signal_table_columns, run_desktop_update, Dashboard,
                          executable_signal_lists, BusyOperationState, data_update_label,
                          display_signal_lists,
+                         signal_count_presentation, row_eligibility_text,
                          candlestick_window_text, candle_chart_geometry,
                          desktop_execution_health)
 
@@ -103,6 +104,22 @@ class BacktestUiTests(unittest.TestCase):
         self.assertEqual(display_signal_lists(result, health_state="paused"), ([row], []))
         self.assertEqual(display_signal_lists(result, health_state="stale"), ([], []))
         self.assertEqual(display_signal_lists(result, health_state="error"), ([], []))
+        self.assertEqual(signal_count_presentation("paused", 0, 0, 1, 0),
+                         (("當沖偏多標的（沿用）", "1 檔｜休市不可執行"),
+                          ("當沖偏空標的（沿用）", "0 檔｜休市不可執行")))
+        self.assertEqual(row_eligibility_text(row, result),
+                         "2026-10-22 當沖資格已通過並沿用｜今日休市不可執行")
+
+        mismatched_date = {"code": "2001", "day_trading_eligibility": {
+            "eligible": False, "source_date": "2026-10-21", "reason": "market_closed"}}
+        unknown_reason = {"code": "2002", "day_trading_eligibility": {
+            "eligible": False, "source_date": "2026-10-22", "reason": "unknown"}}
+        incorrectly_executable = {"code": "2003", "day_trading_eligibility": {
+            "eligible": True, "source_date": "2026-10-22", "reason": "market_closed"}}
+        missing_eligibility = {"code": "2004"}
+        result["long_top10"] = [row, mismatched_date, unknown_reason]
+        result["short_top10"] = [incorrectly_executable, missing_eligibility]
+        self.assertEqual(display_signal_lists(result, health_state="paused"), ([row], []))
 
     def test_desktop_uses_canonical_freshness_and_clears_rows_after_update_error(self):
         result = {"data_date": "2026-10-21"}

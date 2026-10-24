@@ -125,6 +125,22 @@ function executableLists(latest) {
   } };
 }
 
+function carriedObservationLists(latest) {
+  const paused = pausedSession(latest);
+  if (!paused) return { long: [], short: [] };
+  const expectedReason = paused.closure_reason ? 'market_closed' : 'no_new_official_session';
+  const verified = rows => (Array.isArray(rows) ? rows : [])
+    .filter(row => row?.day_trading_eligibility?.eligible === false
+      && row.day_trading_eligibility.source_date === latest.data_date
+      && row.day_trading_eligibility.reason === expectedReason)
+    .slice(0, 10)
+    .map(row => ({ ...row, display_status: '休市沿用｜不可執行' }));
+  return {
+    long: verified(latest?.long_top10 ?? latest?.top10),
+    short: verified(latest?.short_top10),
+  };
+}
+
 function csvCell(value) {
   const text = String(value ?? '');
   return /[",\n]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
@@ -149,6 +165,7 @@ export async function dashboard(env, fetcher = fetch) {
   try { dailyStatus = await githubJson('daily_status.json', fetcher); }
   catch { dailyStatus = await env.DATA.get('cron:last', 'json'); }
   const executable = executableLists(latest);
+  const observations = carriedObservationLists(latest);
   const marketSession = pausedSession(latest);
   const long = executable.long;
   const short = executable.short; const rows = [...long, ...short];
@@ -182,7 +199,9 @@ export async function dashboard(env, fetcher = fetch) {
     pre_gate_counts: latest.pre_gate_counts ?? null,
     filtered_out_counts: latest.filtered_out_counts ?? null,
     execution_eligibility: executable.eligibility,
-    long: long.map(merge), short: short.map(merge), disclaimer: '規則式研究觀察，非投資建議、獲利保證或下單服務。' });
+    long: long.map(merge), short: short.map(merge),
+    observation_long: observations.long.map(merge), observation_short: observations.short.map(merge),
+    disclaimer: '規則式研究觀察，非投資建議、獲利保證或下單服務。' });
 }
 
 export function createWorker(defaultFetcher = fetch) {

@@ -154,6 +154,18 @@ export function executableListsForHealth(data, health) {
   return { long, short, longCount: long.length, shortCount: short.length };
 }
 
+export function displayListsForHealth(data, health) {
+  if (health?.state === 'paused') {
+    const valid = rows => (Array.isArray(rows) ? rows : [])
+      .filter(row => row?.display_status === '休市沿用｜不可執行');
+    const long = valid(data?.observation_long);
+    const short = valid(data?.observation_short);
+    return { long, short, longCount: long.length, shortCount: short.length, carried: true };
+  }
+  const executable = executableListsForHealth(data, health);
+  return { ...executable, carried: false };
+}
+
 export function executionEligibilityNote(data, health) {
   const execution = data?.execution_eligibility;
   if (execution?.execution_for_signal_date === 'paused_no_new_official_session') {
@@ -248,9 +260,11 @@ function card(row, direction) {
   directionLabel.textContent = direction;
   head.append(title, directionLabel);
   const eligibility = document.createElement('div');
+  const carried = row.display_status === '休市沿用｜不可執行';
   const eligible = row.day_trading_eligibility?.eligible === true;
   eligibility.className = `eligibility-status ${eligible ? 'eligibility-ok' : 'eligibility-error'}`;
-  eligibility.textContent = eligible ? '✓ 官方當沖資格已通過' : '⚠ 官方當沖資格資料異常';
+  eligibility.textContent = carried ? `⚠ ${row.display_status}`
+    : eligible ? '✓ 官方當沖資格已通過' : '⚠ 官方當沖資格資料異常';
   const priceLabel = document.createElement('span'); priceLabel.className = 'card-primary-label'; priceLabel.textContent = '觸發價（未觸發不交易）';
   const price = document.createElement('div'); price.className = 'price card-primary-price'; price.textContent = fmt(row.entry_trigger);
   const status = document.createElement('div'); status.className = 'status';
@@ -369,18 +383,21 @@ async function load() {
     if (!response.ok) throw new Error(data.error ?? `HTTP ${response.status}`);
     const health = resolveDataHealth(data);
     const executable = executableListsForHealth(data, health);
+    const display = displayListsForHealth(data, health);
     $('data-date').textContent = data.data_date ?? '—';
-    $('summary-long').textContent = String(executable.longCount);
-    $('summary-short').textContent = String(executable.shortCount);
+    $('summary-long').textContent = String(display.longCount);
+    $('summary-short').textContent = String(display.shortCount);
+    $('summary-long-label').textContent = display.carried ? '當沖偏多標的（沿用）' : '可執行偏多';
+    $('summary-short-label').textContent = display.carried ? '當沖偏空標的（沿用）' : '可執行偏空';
     const execution = data.execution_eligibility;
     const paused = execution?.execution_for_signal_date === 'paused_no_new_official_session';
     $('execution-eligibility-note').textContent = executionEligibilityNote(data, health);
     $('execution-eligibility-note').className = `execution-eligibility-note${health.state === 'success' && execution?.enforced && !paused ? '' : ' status-error'}`;
     const preGate = data.pre_gate_counts ?? {};
-    $('summary-long-note').textContent = Number.isFinite(preGate.long)
-      ? `通過策略閘門｜基礎候選 ${preGate.long}` : '通過策略閘門';
-    $('summary-short-note').textContent = Number.isFinite(preGate.short)
-      ? `通過策略閘門｜基礎候選 ${preGate.short}` : '通過策略閘門';
+    $('summary-long-note').textContent = display.carried ? '上一完整交易日｜今日休市不可執行'
+      : Number.isFinite(preGate.long) ? `通過策略閘門｜基礎候選 ${preGate.long}` : '通過策略閘門';
+    $('summary-short-note').textContent = display.carried ? '上一完整交易日｜今日休市不可執行'
+      : Number.isFinite(preGate.short) ? `通過策略閘門｜基礎候選 ${preGate.short}` : '通過策略閘門';
 
     $('data-health').textContent = health.label;
     $('data-health').className = `status-badge status-${health.state}`;
@@ -414,7 +431,7 @@ async function load() {
     if (health.state === 'stale') warnings.push('盤後資料已過期，07:40 備援可能尚未完成');
     $('message').textContent = warnings.length ? `注意：${warnings.join('；')}。` : '';
     renderMarket(data.global_market);
-    renderList('long-list', executable.long, '偏多'); renderList('short-list', executable.short, '偏空');
+    renderList('long-list', display.long, '偏多'); renderList('short-list', display.short, '偏空');
   } catch (error) {
     const failure = resolveLoadFailure();
     $('data-health').textContent = '載入失敗';
