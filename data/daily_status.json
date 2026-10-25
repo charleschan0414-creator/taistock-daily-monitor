@@ -709,16 +709,16 @@
   "run_mode": "market_closed_carry_forward",
   "market_session": {
     "status": "paused_no_new_official_session",
-    "requested_date": "2026-10-23",
+    "requested_date": "2026-10-26",
     "latest_official_date": "2026-10-22",
-    "notice": "2026-10-23 官方市場休市；沿用 2026-10-22 觀察資料並暫停執行。",
-    "closure_reason": "taipei_disaster_stop_work",
-    "closure_source": "https://www.dgpa.gov.tw/typh/daily/nds.html"
+    "notice": "2026-10-26 官方市場休市；沿用 2026-10-22 觀察資料並暫停執行。",
+    "closure_reason": "twse_holiday",
+    "closure_source": "https://www.twse.com.tw/rwd/zh/holidaySchedule/holidaySchedule"
   },
   "execution_eligibility": {
     "version": "official-day-trade-v1",
     "source_date": "2026-10-22",
-    "requested_date": "2026-10-23",
+    "requested_date": "2026-10-26",
     "execution_for_signal_date": "paused_no_new_official_session",
     "enforced": true,
     "score_effect": "none",
@@ -755,16 +755,16 @@
       }
     ],
     "sources": [
-      "https://www.dgpa.gov.tw/typh/daily/nds.html"
+      "https://www.twse.com.tw/rwd/zh/holidaySchedule/holidaySchedule"
     ],
     "notice": "官方市場休市；沿用最後完整交易日觀察資料，所有可執行訊號暫停。"
   },
-  "started_at": "2026-10-23T16:43:21+08:00",
-  "completed_at": "2026-10-23T16:43:34+08:00",
+  "started_at": "2026-10-26T07:54:26+08:00",
+  "completed_at": "2026-10-26T07:54:37+08:00",
   "status": "success",
   "health": {
     "overall": "ok",
-    "generated_at": "2026-10-23T16:43:34+08:00",
+    "generated_at": "2026-10-26T07:54:37+08:00",
     "sources": {
       "daily_status": {
         "status": "ok",
@@ -795,15 +795,15 @@
     "latest_data_date": "2026-10-22",
     "market_session": {
       "status": "paused_no_new_official_session",
-      "requested_date": "2026-10-23",
+      "requested_date": "2026-10-26",
       "latest_official_date": "2026-10-22",
-      "notice": "2026-10-23 官方市場休市；沿用 2026-10-22 觀察資料並暫停執行。",
-      "closure_reason": "taipei_disaster_stop_work",
-      "closure_source": "https://www.dgpa.gov.tw/typh/daily/nds.html"
+      "notice": "2026-10-26 官方市場休市；沿用 2026-10-22 觀察資料並暫停執行。",
+      "closure_reason": "twse_holiday",
+      "closure_source": "https://www.twse.com.tw/rwd/zh/holidaySchedule/holidaySchedule"
     },
     "pipeline": {
       "status": "success",
-      "completed_at": "2026-10-23T16:43:34+08:00",
+      "completed_at": "2026-10-26T07:54:37+08:00",
       "data_date": "2026-10-22",
       "freshness": "paused"
     },
@@ -824,8 +824,8 @@
       "threshold": 60,
       "remaining": 54
     },
-    "desktop_version": "2026.10.23.1",
-    "next_update": "2026-10-24T06:30:00+08:00",
+    "desktop_version": "2026.10.23.3",
+    "next_update": "2026-10-27T06:30:00+08:00",
     "recent_error": null
   }
 }
