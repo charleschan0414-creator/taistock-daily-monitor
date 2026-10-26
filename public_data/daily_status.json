@@ -759,12 +759,12 @@
     ],
     "notice": "官方市場休市；沿用最後完整交易日觀察資料，所有可執行訊號暫停。"
   },
-  "started_at": "2026-10-26T07:54:26+08:00",
-  "completed_at": "2026-10-26T07:54:37+08:00",
+  "started_at": "2026-10-26T16:51:51+08:00",
+  "completed_at": "2026-10-26T16:52:04+08:00",
   "status": "success",
   "health": {
     "overall": "ok",
-    "generated_at": "2026-10-26T07:54:37+08:00",
+    "generated_at": "2026-10-26T16:52:04+08:00",
     "sources": {
       "daily_status": {
         "status": "ok",
@@ -803,7 +803,7 @@
     },
     "pipeline": {
       "status": "success",
-      "completed_at": "2026-10-26T07:54:37+08:00",
+      "completed_at": "2026-10-26T16:52:04+08:00",
       "data_date": "2026-10-22",
       "freshness": "paused"
     },
