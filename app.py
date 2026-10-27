@@ -95,7 +95,13 @@ def carry_forward_if_market_closed(data_dir=DATA, now=None, client=None):
 
     network = client or HttpClient()
     calendar = market_session_status(network, requested_date)
-    if latest_official_quote_date(network) != data_date:
+    try:
+        official_quote_date = latest_official_quote_date(network)
+    except ValueError:
+        if calendar.get("status") == "closed":
+            raise
+        return None
+    if official_quote_date != data_date:
         return None
     if calendar.get("status") == "closed":
         checked = pause_execution_for_closed_market(

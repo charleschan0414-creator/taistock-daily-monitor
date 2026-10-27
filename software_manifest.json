@@ -1,8 +1,8 @@
 {
-  "version": "2026.10.23.3",
+  "version": "2026.10.23.4",
   "files": {
     "README.md": "b1b9cbce24c32a1c8167effd8a8bb915887fd6df4d1dd362981639c612d53d46",
-    "app.py": "17cbb9a21b7c1e2c2e9c174d7d8dc60728c454bffe479bbbdcd046f90d3ca3a0",
+    "app.py": "db49e22bc373eab1da5c59e43dd76344df6ec690cdcaf3182c182f4ed0821fe1",
     "build_software_manifest.py": "9d63fa5c98729ea011746e0856ec42e819ad1e3f4e0ddf883aa9a3e801f9dfa5",
     "daily_pipeline.py": "c210abebdb607e895ec32ba3e5876291ee76b0651cdd0359b6f47dc6f3f38b0b",
     "install.bat": "75a92f0baf46ec57f96697cf3eb0d831f4be10f4b03337fc76168f8a4bc95ebb",
@@ -26,7 +26,7 @@
     "taistock/data.py": "080129c5b5ac024f5d5b6889a16be23336006e0bc1b11094d9ce1386d7a3d618",
     "taistock/global_market.py": "8f3a64ce007a0b51637016d4bd81e311e6973541a3bcdabaaab9f02265efd23a",
     "taistock/health.py": "0cd30aa0741bbfa4b744b7839d0e07cb9292e81a5c0fe5be0824c3c100eac4e6",
-    "taistock/market_calendar.py": "5df01be4dc1949dd81cd4cb03b8c2446782e49ed39cb0fd4361dc9fd3729a623",
+    "taistock/market_calendar.py": "f37ffc712a0dbe89123ac9ded367dfcd366b7a29ed255f9592819d7d99330754",
     "taistock/market_history.py": "d5aacc221cd0fd9755c06b8820ed396ec65d0c6f3a2bb0ef3654067973a13189",
     "taistock/mobile.py": "62bc9f6e4536700ec08b0c4f150deac28fd64faf7b8d608b4638cecdf88f528a",
     "taistock/models.py": "6b0011b8aac66e3eaac33b30bb3b716bd745e84a5e1e116c36872168eb559a63",

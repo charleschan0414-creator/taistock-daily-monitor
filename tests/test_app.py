@@ -85,6 +85,22 @@ class AppCliTests(unittest.TestCase):
                  patch("app.fetch_and_apply_execution_eligibility", return_value=lagged):
                 self.assertIsNone(app.carry_forward_if_market_closed(data, now=now, client=object()))
 
+    def test_open_session_preflight_continues_full_refresh_when_quote_feeds_disagree(self):
+        previous = {"data_date": "2026-10-22", "signals": [],
+                    "long_top10": [], "short_top10": []}
+        now = datetime(2026, 10, 27, 20, 0, tzinfo=app.TAIPEI)
+        with tempfile.TemporaryDirectory() as directory:
+            data = Path(directory)
+            path = data / "latest.json"
+            path.write_text(json.dumps(previous), encoding="utf-8")
+            with patch("app.market_session_status", return_value={"status": "open"}), \
+                 patch("app.latest_official_quote_date", side_effect=ValueError(
+                     "上市與上櫃最新官方行情日期不一致")), \
+                 patch("app.fetch_and_apply_execution_eligibility") as eligibility_fetch:
+                self.assertIsNone(app.carry_forward_if_market_closed(data, now=now, client=object()))
+            self.assertEqual(json.loads(path.read_text(encoding="utf-8")), previous)
+        eligibility_fetch.assert_not_called()
+
     def test_daily_scan_rejects_partial_top100_before_persistence(self):
         complete = {"data_date": "2026-10-20", "top100_count": 100,
                     "history_success_count": 100, "errors": [],

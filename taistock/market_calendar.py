@@ -77,16 +77,23 @@ def parse_dgpa_taipei_closure(page, target_date):
     if f"{roc}年{target.month}月{target.day}日天然災害停止上班及上課情形" not in plain:
         raise ValueError("DGPA天然災害來源日期不一致")
     rows = re.findall(r"<tr\b[^>]*>[\s\S]*?</tr>", page, flags=re.IGNORECASE)
-    taipei = [_plain_text(row) for row in rows if "臺北市" in _plain_text(row)]
+    row_texts = [_plain_text(row) for row in rows]
+    taipei = [text for text in row_texts if "臺北市" in text]
+    no_closure = [text for text in row_texts if text == "無停班停課訊息。"]
+    if len(no_closure) == 1 and not taipei:
+        return False
     if len(taipei) != 1:
         raise ValueError("DGPA天然災害來源缺少唯一臺北市資料")
     text = taipei[0]
+    closes_full_day = "今天停止上班" in text or "上午停止上班" in text
+    signals_open = any(marker in text for marker in ("照常上班", "尚未宣布", "未達停止上班"))
+    if closes_full_day and signals_open:
+        raise ValueError("DGPA臺北市停止上班狀態無法判定")
     if "下午停止上班" in text and "上午停止上班" not in text:
         return False
-    if (("今天停止上班" in text or "上午停止上班" in text)
-            and "照常上班" not in text):
+    if closes_full_day:
         return True
-    if "照常上班" in text or "尚未宣布" in text or "未達停止上班" in text:
+    if signals_open:
         return False
     raise ValueError("DGPA臺北市停止上班狀態無法判定")
 
