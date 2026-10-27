@@ -4,9 +4,9 @@ import threading
 import unittest
 from pathlib import Path
 from urllib.error import HTTPError
-from urllib.request import urlopen
+from urllib.request import Request, urlopen
 
-from taistock.mobile import build_dashboard, create_server
+from taistock.mobile import build_dashboard, create_server, csv_download_allowed
 
 
 class StubQuotes:
@@ -22,22 +22,32 @@ class StubGlobalMarket:
                 "scenario": {"bias": "偏多", "basis": "TX / UNF / SXF 上漲 2、下跌 1"}}
 
 
+def verified_latest(longs=None, shorts=None, data_date="2026-10-15"):
+    def verified(row):
+        return {**row, "day_trading_eligibility": {"eligible": True, "source_date": data_date}}
+    return {"data_date": data_date, "updated_at": f"{data_date}T09:00:00+08:00",
+            "long_top10": [verified(row) for row in (longs or [])],
+            "short_top10": [verified(row) for row in (shorts or [])],
+            "execution_eligibility": {"enforced": True, "source_date": data_date}}
+
+
 class MobileTests(unittest.TestCase):
     def test_dashboard_limits_sides_and_adds_quotes(self):
-        payload = {"data_date":"2026-10-15", "long_top10":[{"code":str(i), "market":"上市"} for i in range(12)],
-                   "short_top10":[{"code":str(i + 20), "market":"上櫃"} for i in range(12)],
-                   "optimization":{"status":"學習中"},
-                   "strategy_gate":{"enabled":True,"status":"已啟用｜偏空停用",
-                                    "directions":{"long":True,"short":False}}}
+        payload = verified_latest([{"code":str(i), "market":"上市"} for i in range(12)],
+                                  [{"code":str(i + 20), "market":"上櫃"} for i in range(12)])
+        payload.update({"optimization":{"status":"學習中"},
+                        "strategy_gate":{"enabled":True,"status":"已啟用｜偏空停用",
+                                         "directions":{"long":True,"short":False}}})
         dashboard = build_dashboard(payload, {}, StubQuotes(), StubGlobalMarket())
         self.assertEqual(len(dashboard["long_top10"]), 10)
         self.assertEqual(len(dashboard["short_top10"]), 10)
         self.assertEqual(dashboard["long_top10"][0]["realtime"]["price"], 123.0)
         self.assertFalse(dashboard["strategy_gate"]["directions"]["short"])
         self.assertIn("generated_at", dashboard)
+        self.assertEqual(dashboard["source_updated_at"], "2026-10-15T09:00:00+08:00")
 
     def test_dashboard_includes_global_market_without_affecting_stock_rows(self):
-        latest = {"long_top10": [{"code": "2330"}], "short_top10": []}
+        latest = verified_latest([{"code": "2330"}])
         dashboard = build_dashboard(latest, {}, StubQuotes(), StubGlobalMarket())
         self.assertEqual(dashboard["global_market"]["items"][0]["symbol"], "TX")
         self.assertEqual(dashboard["global_market"]["scenario"]["bias"], "偏多")
@@ -46,9 +56,38 @@ class MobileTests(unittest.TestCase):
     def test_quote_failure_keeps_rows_and_reports_error(self):
         class Failed:
             def fetch(self, rows): raise RuntimeError("offline")
-        dashboard = build_dashboard({"long_top10":[{"code":"2330"}]}, {}, Failed(), StubGlobalMarket())
+        dashboard = build_dashboard(verified_latest([{"code":"2330"}]), {}, Failed(), StubGlobalMarket())
         self.assertEqual(dashboard["long_top10"][0]["code"], "2330")
         self.assertIn("offline", dashboard["quote_error"])
+
+    def test_unverified_or_malformed_eligibility_hides_rows_and_blocks_csv(self):
+        malformed_row = verified_latest([{"code": "2330"}])
+        malformed_row["long_top10"][0]["day_trading_eligibility"] = "invalid"
+        mixed_rows = verified_latest([{"code": "2330"}, {"code": "2317"}])
+        mixed_rows["long_top10"][1]["day_trading_eligibility"] = "invalid"
+        malformed_direction = verified_latest([], [{"code": "2308"}])
+        malformed_direction["long_top10"] = "invalid"
+        for payload in (
+            [],
+            "invalid",
+            {"data_date": "2026-10-15", "long_top10": [{"code": "2330"}]},
+            {**verified_latest([{"code": "2330"}]), "data_date": "2026-10-15garbage"},
+            {**verified_latest(), "long_top10": None, "short_top10": None},
+            {**verified_latest(), "execution_eligibility": []},
+            malformed_row,
+            mixed_rows,
+            malformed_direction,
+        ):
+            dashboard = build_dashboard(payload, {}, StubQuotes(), StubGlobalMarket())
+            self.assertEqual(dashboard["long_top10"], [])
+            self.assertEqual(dashboard["short_top10"], [])
+            self.assertFalse(csv_download_allowed(payload))
+
+    def test_malformed_backtest_container_is_ignored(self):
+        latest = verified_latest([{"code": "2330"}])
+        for malformed in (["invalid"], "invalid"):
+            dashboard = build_dashboard(latest, malformed, StubQuotes(), StubGlobalMarket())
+            self.assertIsNone(dashboard["backtest"])
 
     def test_mobile_page_renders_global_market_with_required_disclaimer(self):
         html = (Path(__file__).resolve().parent.parent / "mobile" / "index.html").read_text(encoding="utf-8")
@@ -69,6 +108,7 @@ class MobileTests(unittest.TestCase):
         self.assertIn("夜盤脈動", html)
         self.assertIn('aria-pressed="true"', html)
         self.assertIn("el('details')", html)
+        self.assertIn("data?.source_updated_at", html)
 
     def test_mobile_page_renders_compatible_100_day_cost_performance(self):
         html = (Path(__file__).resolve().parent.parent / "mobile" / "index.html").read_text(encoding="utf-8")
@@ -99,12 +139,27 @@ class MobileTests(unittest.TestCase):
         self.assertIn("同一 Wi‑Fi", html)
         self.assertIn("目前離線", html)
 
+    def test_mobile_page_clears_cached_executable_rows_after_refresh_failure(self):
+        html = (Path(__file__).resolve().parent.parent / "mobile" / "index.html").read_text(encoding="utf-8")
+        catch_block = html.split("}catch(error){", 1)[1].split("}finally{", 1)[0]
+        self.assertIn("data=failClosedRows(data);render();", catch_block)
+        self.assertLess(catch_block.index("data=failClosedRows(data);render();"), catch_block.index("localStorage"))
+        self.assertIn("try{saved=localStorage.getItem('dashboard')}catch(storageError){}", catch_block)
+        self.assertIn("data=failClosedRows(cached);render()", catch_block)
+        self.assertNotIn("data=JSON.parse(saved);render()", html)
+
+    def test_mobile_service_worker_only_caches_shell_and_never_downloads(self):
+        script = (Path(__file__).resolve().parent.parent / "mobile" / "service-worker.js").read_text(encoding="utf-8")
+        self.assertIn("taistock-shell-v2", script)
+        self.assertIn("startsWith('/download/')", script)
+        self.assertIn("SHELL.includes(path)", script)
+
     def test_http_static_api_download_whitelist_and_traversal(self):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td); data = root / "data"; mobile = root / "mobile"
             data.mkdir(); mobile.mkdir()
-            (data / "latest.json").write_text(json.dumps({"long_top10":[{"code":"2330","market":"上市"}], "short_top10":[]}), encoding="utf-8")
-            (data / "latest.csv").write_text("code\n2330\n", encoding="utf-8")
+            (data / "latest.json").write_text(json.dumps(verified_latest([{"code":"2330","market":"上市"}])), encoding="utf-8")
+            (data / "latest.csv").write_text("UNRELATED-STALE", encoding="utf-8")
             (data / "backtest_100d.csv").write_text("code\n", encoding="utf-8")
             (mobile / "index.html").write_text("<h1>Monitor</h1>", encoding="utf-8")
             (mobile / "manifest.json").write_text("{}", encoding="utf-8")
@@ -112,12 +167,41 @@ class MobileTests(unittest.TestCase):
             thread = threading.Thread(target=server.serve_forever, daemon=True); thread.start()
             base = f"http://127.0.0.1:{server.server_port}"
             try:
-                self.assertIn(b"Monitor", urlopen(base + "/").read())
+                home = urlopen(base + "/")
+                self.assertIn(b"Monitor", home.read())
+                self.assertEqual(home.headers["X-Frame-Options"], "DENY")
+                self.assertIn("frame-ancestors 'none'", home.headers["Content-Security-Policy"])
+                self.assertEqual(home.headers["Referrer-Policy"], "no-referrer")
+                self.assertIn("geolocation=()", home.headers["Permissions-Policy"])
+                head = urlopen(Request(base + "/", method="HEAD"))
+                self.assertEqual(head.status, 200)
+                self.assertEqual(head.read(), b"")
+                self.assertIn("frame-ancestors 'none'", head.headers["Content-Security-Policy"])
+                self.assertEqual(head.headers["X-Content-Type-Options"], "nosniff")
+                with self.assertRaises(HTTPError) as unsupported:
+                    urlopen(Request(base + "/", data=b"", method="POST"))
+                self.assertEqual(unsupported.exception.code, 405)
+                self.assertIn("frame-ancestors 'none'", unsupported.exception.headers["Content-Security-Policy"])
                 self.assertEqual(urlopen(base + "/manifest.json").status, 200)
                 api = json.load(urlopen(base + "/api/dashboard"))
                 self.assertIn("realtime", api["long_top10"][0])
                 self.assertEqual(api["global_market"]["status"], "ok")
-                self.assertEqual(urlopen(base + "/download/latest.csv").status, 200)
+                response = urlopen(base + "/download/latest.csv")
+                latest_csv = response.read().decode("utf-8-sig")
+                self.assertEqual(response.status, 200)
+                self.assertEqual(response.headers["Cache-Control"], "no-store")
+                self.assertIn("date,code,name,market", latest_csv)
+                self.assertIn("2026-10-15,2330", latest_csv)
+                self.assertNotIn("UNRELATED-STALE", latest_csv)
+                (data / "latest.csv").unlink()
+                regenerated = urlopen(base + "/download/latest.csv")
+                self.assertEqual(regenerated.status, 200)
+                self.assertIn("2026-10-15,2330", regenerated.read().decode("utf-8-sig"))
+                (data / "latest.json").write_text("[]", encoding="utf-8")
+                with self.assertRaises(HTTPError) as rejected:
+                    urlopen(base + "/download/latest.csv")
+                self.assertEqual(rejected.exception.code, 503)
+                self.assertEqual(rejected.exception.headers["Cache-Control"], "no-store")
                 self.assertEqual(urlopen(base + "/download/backtest_100d.csv").status, 200)
                 for path in ("/download/scanner.db", "/../app.py", "/mobile/../app.py"):
                     with self.assertRaises(HTTPError) as caught:

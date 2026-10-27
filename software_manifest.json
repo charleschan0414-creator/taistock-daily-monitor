@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.23.4",
+  "version": "2026.10.27.1",
   "files": {
     "README.md": "b1b9cbce24c32a1c8167effd8a8bb915887fd6df4d1dd362981639c612d53d46",
     "app.py": "db49e22bc373eab1da5c59e43dd76344df6ec690cdcaf3182c182f4ed0821fe1",
@@ -28,7 +28,7 @@
     "taistock/health.py": "0cd30aa0741bbfa4b744b7839d0e07cb9292e81a5c0fe5be0824c3c100eac4e6",
     "taistock/market_calendar.py": "f37ffc712a0dbe89123ac9ded367dfcd366b7a29ed255f9592819d7d99330754",
     "taistock/market_history.py": "d5aacc221cd0fd9755c06b8820ed396ec65d0c6f3a2bb0ef3654067973a13189",
-    "taistock/mobile.py": "62bc9f6e4536700ec08b0c4f150deac28fd64faf7b8d608b4638cecdf88f528a",
+    "taistock/mobile.py": "37c56bbe76bfb97c571f26740cec8bbd921f1e0f798ba14d69a4d78365396002",
     "taistock/models.py": "6b0011b8aac66e3eaac33b30bb3b716bd745e84a5e1e116c36872168eb559a63",
     "taistock/net.py": "26462391b85edaa758b12ea88814a9e566f10e2f34bb9796e167f93bf69bbf24",
     "taistock/notify.py": "ea63f22b7a8b4c76e559bc8676b34bd82a1261eeb446aad2fbe07a4244e8c2ce",
@@ -43,8 +43,8 @@
     "taistock/v2_optimize.py": "ddec2553531f9c20c2ce68b96006b954c6c2d319c50ff36515eae2e531762b19",
     "taistock/ui.py": "5ffffce1ed6c3142e3fe0f382d25064b80a69bfdfff7dd7f7342eeecc74bff12",
     "mobile/icon.svg": "e353005663862afae7d651ea24718b49274c5aa7cb775ae723636c1c76d54c27",
-    "mobile/index.html": "2371939a73a1cc9f7a9de8fa310e76e77e5ed16f4479cd4744c84d758abc2a92",
+    "mobile/index.html": "b5c329cfdf058d5a56aba3e17804f5af18a34d832e470aee2ef28550e7d1198b",
     "mobile/manifest.json": "16dcaafec98aea81b5efac4f9d41440fdbfa830deb714b1c205ba40155beba77",
-    "mobile/service-worker.js": "eb9c96955bb0de72ae0cf31b8897b5e5c1de6379603276c585492be61e5683c9"
+    "mobile/service-worker.js": "adbba7b507bbfdc1967c275aefb12e9835d154b11a073e46649741050c566dfe"
   }
 }

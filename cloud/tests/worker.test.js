@@ -22,6 +22,17 @@ function env(fetcher) {
     ASSETS: { fetch: async () => new Response('asset') }, fetcher };
 }
 
+test('所有回應加入防嵌入與HTTPS安全標頭', async () => {
+  const worker = createWorker(async () => new Response('{}'));
+  for (const url of ['https://x/api/health', 'https://x/']) {
+    const response = await worker.fetch(new Request(url), env());
+    assert.match(response.headers.get('content-security-policy') ?? '', /frame-ancestors 'none'/);
+    assert.match(response.headers.get('content-security-policy') ?? '', /base-uri 'none'/);
+    assert.equal(response.headers.get('strict-transport-security'), 'max-age=31536000; includeSubDomains');
+    assert.equal(response.headers.get('permissions-policy'), 'camera=(), microphone=(), geolocation=()');
+  }
+});
+
 test('dashboard加入TAIFEX全球市場情境與系統抓取時間', async () => {
   const taifex = [
     { contract: 'TX106', price: '100', ttlvol: '1,000', contractName: '臺股期貨', updown: '1' },

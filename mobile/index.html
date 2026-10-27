@@ -106,12 +106,16 @@ function render(){
   const rows=data?.[side+'_top10']||[];
   list.replaceChildren(...(rows.length?rows.map(stockCard):[el('div','empty','本方向目前沒有訊號')]));
 }
+function failClosedRows(value){
+  const base=value&&typeof value==='object'&&!Array.isArray(value)?value:{};
+  return {...base,long_top10:[],short_top10:[]};
+}
 function updateFreshness(){
-  const stamp=data?.generated_at;
-  if(!stamp){freshness.textContent='更新時間未知';return}
+  const stamp=data?.source_updated_at;
+  if(!stamp){freshness.textContent='資料更新時間未知';return}
   const age=Math.max(0,Math.floor((Date.now()-new Date(stamp).getTime())/60000));
-  freshness.textContent=(Number.isFinite(age)?(age<1?'剛剛更新':age+' 分鐘前更新'):'已更新');
-  meta.textContent='資料 '+(data?.data_date||'—')+' · '+stamp+' · 每 60 秒更新';
+  freshness.textContent=(Number.isFinite(age)?(age<1?'資料剛更新':age+' 分鐘前的資料'):'資料已載入');
+  meta.textContent='資料日 '+(data?.data_date||'—')+' · 來源更新 '+stamp+' · 本次查詢 '+(data?.generated_at||'—');
 }
 async function load(){
   if(loading)return;loading=true;freshness.textContent='更新中…';
@@ -120,8 +124,9 @@ async function load(){
     if(!response.ok)throw Error((await response.json()).error||response.status);
     data=await response.json();localStorage.setItem('dashboard',JSON.stringify(data));offline.style.display='none';updateFreshness();render();
   }catch(error){
-    const saved=localStorage.getItem('dashboard');
-    if(saved){try{data=JSON.parse(saved);render()}catch(parseError){localStorage.removeItem('dashboard')}}
+    data=failClosedRows(data);render();
+    let saved=null;try{saved=localStorage.getItem('dashboard')}catch(storageError){}
+    if(saved){try{const cached=JSON.parse(saved);data=failClosedRows(cached);render()}catch(parseError){try{localStorage.removeItem('dashboard')}catch(storageError){}}}
     offline.style.display='block';freshness.textContent='更新失敗';meta.textContent='更新失敗：'+error.message;
   }finally{loading=false}
 }

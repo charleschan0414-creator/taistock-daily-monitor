@@ -7,7 +7,9 @@ const RELEASE_MANIFEST = 'https://raw.githubusercontent.com/charleschan0414-crea
 const securityHeaders = {
   'x-content-type-options': 'nosniff',
   'referrer-policy': 'same-origin',
-  'content-security-policy': "default-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; manifest-src 'self'",
+  'content-security-policy': "default-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; manifest-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'",
+  'strict-transport-security': 'max-age=31536000; includeSubDomains',
+  'permissions-policy': 'camera=(), microphone=(), geolocation=()',
 };
 const json = (body, status = 200) => new Response(JSON.stringify(body), {
   status, headers: { ...securityHeaders, 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },

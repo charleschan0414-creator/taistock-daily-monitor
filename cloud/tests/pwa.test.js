@@ -4,6 +4,12 @@ import { readFile } from 'node:fs/promises';
 
 const read = name => readFile(new URL(`../public/${name}`, import.meta.url), 'utf8');
 
+test('service worker只快取應用程式外殼且不快取下載資料', async () => {
+  const sw = await read('sw.js');
+  assert.match(sw, /startsWith\('\/download\/'\)/);
+  assert.match(sw, /SHELL\.includes\(path\)/);
+});
+
 test('資料健康狀態以明確文字區分成功與過期', async () => {
   const { resolveDataHealth } = await import('../public/app.js');
   const fresh = resolveDataHealth({ data_date: '2026-10-16', daily_status: { status: 'success' } }, new Date('2026-10-17T08:00:00+08:00'));
@@ -210,7 +216,7 @@ test('PWA顯示核心100日成本後三情境且保留研究限制', async () =>
   assert.match(app, /renderBacktestPerformance\(data\)/);
   assert.doesNotMatch(app, /\.innerHTML\s*=/);
   assert.match(styles, /\.backtest-performance/);
-  assert.match(sw, /taistock-monitor-v15/);
+  assert.match(sw, /taistock-monitor-v16/);
 });
 
 test('PWA顯示V2成本後績效檢驗、方法限制與新版快取', async () => {
@@ -231,7 +237,7 @@ test('PWA顯示V2成本後績效檢驗、方法限制與新版快取', async () 
   assert.match(app, /v2-quality/);
   assert.doesNotMatch(app, /\.innerHTML\s*=/);
   assert.match(styles, /\.v2-analysis/);
-  assert.match(sw, /taistock-monitor-v15/);
+  assert.match(sw, /taistock-monitor-v16/);
 });
 
 test('個股卡顯示券商短沖倒貨風險且明列不計分', async () => {
