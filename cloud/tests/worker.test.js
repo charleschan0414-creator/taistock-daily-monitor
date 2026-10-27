@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import { createWorker } from '../src/worker.js';
 
 class KV {
@@ -21,6 +22,11 @@ function env(fetcher) {
   return { DATA: new KV({ latest: JSON.stringify(latest), 'download:latest.csv': 'a,b\n1,2' }),
     ASSETS: { fetch: async () => new Response('asset') }, fetcher };
 }
+
+test('所有靜態資產都先經Worker套用安全標頭', async () => {
+  const config = JSON.parse(await readFile(new URL('../wrangler.jsonc', import.meta.url), 'utf8'));
+  assert.equal(config.assets.run_worker_first, true);
+});
 
 test('所有回應加入防嵌入與HTTPS安全標頭', async () => {
   const worker = createWorker(async () => new Response('{}'));
