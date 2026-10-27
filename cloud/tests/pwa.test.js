@@ -140,8 +140,18 @@ test('研究與技術資訊預設收合且手機操作符合無障礙需求', as
   assert.match(styles, /:focus-visible/);
   assert.match(styles, /min-height:\s*44px/);
   assert.match(styles, /@media\s*\(max-width:\s*420px\)/);
-  assert.match(styles, /@media\s*\(max-width:\s*560px\)[\s\S]*?\.summary-grid\s*\{\s*grid-template-columns:\s*1fr/);
+  assert.match(styles, /@media\s*\(max-width:\s*560px\)[\s\S]*?\.summary-grid\s*\{\s*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/);
+  assert.match(styles, /@media\s*\(max-width:\s*560px\)[\s\S]*?\.topbar-status\s*\{[^}]*min-width:\s*0/);
+  assert.match(styles, /body\s*\{[^}]*overflow-x:\s*hidden/);
   assert.match(styles, /overflow-wrap:\s*anywhere/);
+});
+
+test('推薦區載入時有明確佔位且手機摘要維持可比較的雙欄', async () => {
+  const html = await read('index.html');
+  assert.match(html, /id="long-list"[^>]*>[\s\S]*?正在載入偏多觀察/);
+  assert.match(html, /id="short-list"[^>]*>[\s\S]*?正在載入偏空觀察/);
+  assert.match(html, /class="refresh-label"/);
+  assert.match(html, /class="refresh-icon"/);
 });
 
 test('載入失敗顯示一般使用者可理解的訊息而非原始解析錯誤', async () => {

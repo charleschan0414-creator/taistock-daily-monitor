@@ -31,6 +31,26 @@ def dashboard_structure():
     }
 
 
+def desktop_visual_spec():
+    """Centralize desktop density choices so they remain testable."""
+    return {
+        "table_row_height": 31,
+        "stretch_column": "warning",
+        "horizontal_scrollbar": False,
+        "primary_button_width": 18,
+    }
+
+
+def signal_empty_state(direction, health_state):
+    label = "偏多" if direction == "long" else "偏空"
+    other = "偏空" if direction == "long" else "偏多"
+    if health_state == "paused":
+        return f"今日休市，沒有可執行的{label}訊號。\n可查看沿用觀察標的；今日不可執行。"
+    if health_state in ("stale", "error"):
+        return f"{label}清單目前不可執行。\n請先更新資料，確認官方資格與資料狀態。"
+    return f"目前沒有符合官方資格的{label}推薦。\n可更新資料或查看{other}推薦。"
+
+
 def signal_row_tags(direction, change, index):
     zebra = "even" if index % 2 == 0 else "odd"
     movement = "gain" if str(change).startswith("+") else "loss" if str(change).startswith("-") else "flat"
@@ -151,7 +171,7 @@ def execution_eligibility_text(execution):
 def signal_table_columns():
     columns = ("rank", "direction", "code", "name", "quote", "entry", "stop", "target", "warning")
     headings = ("#", "方向", "代號", "名稱", "現價／狀態", "觸發價", "停損／回補", "目標1", "重要警示")
-    widths = (38, 62, 66, 100, 155, 90, 90, 90, 220)
+    widths = (36, 58, 62, 94, 145, 84, 84, 84, 200)
     return columns, headings, widths
 
 
@@ -438,10 +458,19 @@ class Dashboard(tk.Tk):
         self.global_market_gate = BackgroundRefreshGate()
         self.tool_busy = BusyOperationState()
         self.title("TaiStock Monitor｜台股多空規則式觀察"); self.geometry("1180x780"); self.minsize(960, 640); self.configure(bg=BG)
+        visual = desktop_visual_spec()
         style = ttk.Style(self); style.theme_use("clam")
-        style.configure("Treeview", background=PANEL, fieldbackground=PANEL, foreground=FG, rowheight=27, borderwidth=0)
+        style.configure("Treeview", background=PANEL, fieldbackground=PANEL, foreground=FG,
+                        rowheight=visual["table_row_height"], borderwidth=0,
+                        font=("Microsoft JhengHei UI", 10))
         style.configure("Treeview.Heading", background="#19283f", foreground=FG, font=("Microsoft JhengHei UI", 10, "bold"))
         style.map("Treeview", background=[("selected", "#234a72")])
+        style.configure("TNotebook", background=BG, borderwidth=0)
+        style.configure("TNotebook.Tab", background="#16243a", foreground=MUTED,
+                        padding=(16, 9), font=("Microsoft JhengHei UI", 10, "bold"))
+        style.map("TNotebook.Tab", background=[("selected", PANEL)], foreground=[("selected", FG)])
+        style.configure("Vertical.TScrollbar", background="#263b59", troughcolor="#0f1929",
+                        bordercolor="#0f1929", arrowcolor=MUTED)
         self._build(); self._load_health(); self.after(120, self._poll)
         cached = load_result(data_dir)
         if cached:
@@ -452,6 +481,7 @@ class Dashboard(tk.Tk):
 
     def _build(self):
         layout = dashboard_structure()
+        visual = desktop_visual_spec()
         header = tk.Frame(self, bg=BG); header.pack(fill="x", padx=20, pady=(16, 8))
         brand = tk.Frame(header, bg=BG); brand.pack(fill="x")
         title_box = tk.Frame(brand, bg=BG); title_box.pack(side="left", fill="x", expand=True)
@@ -461,7 +491,8 @@ class Dashboard(tk.Tk):
                  font=("Microsoft JhengHei UI", 9)).pack(anchor="w")
         self.button = tk.Button(brand, text=layout["primary_action"], command=self.update_data,
                                 bg=ACCENT, activebackground="#78b9ff", fg="#06121f", relief="flat",
-                                padx=24, pady=11, font=("Microsoft JhengHei UI", 12, "bold"))
+                                width=visual["primary_button_width"], padx=10, pady=8,
+                                font=("Microsoft JhengHei UI", 11, "bold"))
         self.button.pack(side="right")
         tools = tk.Frame(header, bg=BG); tools.pack(fill="x", pady=(9, 0))
         tool_style = {"bg": "#19283f", "activebackground": "#263b59", "fg": FG, "relief": "flat",
@@ -506,20 +537,21 @@ class Dashboard(tk.Tk):
         self.tabs = ttk.Notebook(self); self.tabs.pack(fill="both", expand=True, padx=20, pady=3)
         self.trees, self.tree_rows = [], []
         self.candle_canvases, self.candle_detail_vars = [], []
-        for label in layout["tabs"][:2]:
+        self.signal_detail_frames, self.signal_empty_labels = [], []
+        for direction_key, label in zip(("long", "short"), layout["tabs"][:2]):
             frame = tk.Frame(self.tabs, bg=PANEL); self.tabs.add(frame, text=label)
             columns, heads, widths = signal_table_columns()
             tree = ttk.Treeview(frame, columns=columns, show="headings")
             for c, h, w in zip(columns, heads, widths):
-                tree.heading(c, text=h); tree.column(c, width=w, minwidth=w, stretch=False,
+                tree.heading(c, text=h); tree.column(c, width=w, minwidth=w,
+                                                     stretch=c == visual["stretch_column"],
                                                      anchor="w" if c in ("quote", "warning") else "center")
             tree.tag_configure("even", background=PANEL); tree.tag_configure("odd", background="#16243a")
             tree.tag_configure("long", foreground="#fb7185"); tree.tag_configure("short", foreground="#34d399")
             tree.tag_configure("gain", foreground="#fb7185"); tree.tag_configure("loss", foreground="#34d399")
             tree.tag_configure("flat", foreground=FG)
             scroll = ttk.Scrollbar(frame, orient="vertical", command=tree.yview); tree.configure(yscrollcommand=scroll.set)
-            xscroll = ttk.Scrollbar(frame, orient="horizontal", command=tree.xview); tree.configure(xscrollcommand=xscroll.set)
-            scroll.pack(side="right", fill="y"); xscroll.pack(side="bottom", fill="x")
+            scroll.pack(side="right", fill="y")
             tree_index = len(self.trees)
             tree.bind("<Double-1>", lambda _event, current=tree: self._show_signal_details(current))
             tree.bind("<<TreeviewSelect>>", lambda _event, current=tree: self._render_selected_signal(current))
@@ -531,8 +563,13 @@ class Dashboard(tk.Tk):
             tk.Label(detail, textvariable=detail_var, fg=FG, bg="#0f1929", justify="left",
                      anchor="nw", wraplength=720, padx=12, pady=12,
                      font=("Microsoft JhengHei UI", 10)).pack(side="left", fill="both", expand=True)
-            tree.pack(fill="both", expand=True); self.trees.append(tree); self.tree_rows.append({})
+            tree.pack(fill="both", expand=True)
+            empty_label = tk.Label(frame, text=signal_empty_state(direction_key, "success"),
+                                   fg=FG, bg=PANEL, justify="center",
+                                   font=("Microsoft JhengHei UI", 12, "bold"))
+            self.trees.append(tree); self.tree_rows.append({})
             self.candle_canvases.append(canvas); self.candle_detail_vars.append(detail_var)
+            self.signal_detail_frames.append(detail); self.signal_empty_labels.append(empty_label)
             tk.Label(frame, text="雙擊任一股票可查看入選原因、K線研究、分點資料與完整價位。",
                      fg=MUTED, bg=PANEL, anchor="w", padx=12, pady=7,
                      font=("Microsoft JhengHei UI", 9)).pack(fill="x", side="bottom")
@@ -853,12 +890,18 @@ class Dashboard(tk.Tk):
                 self.tree_rows[tree_index][iid] = x
             children = tree.get_children()
             if children:
+                self.signal_empty_labels[tree_index].place_forget()
+                if not self.signal_detail_frames[tree_index].winfo_manager():
+                    self.signal_detail_frames[tree_index].pack(fill="x", side="bottom", padx=8, pady=(4, 7))
                 tree.selection_set(children[0]); tree.focus(children[0]); self._render_selected_signal(tree)
             else:
+                self.signal_detail_frames[tree_index].pack_forget()
+                direction_key = "long" if tree_index == 0 else "short"
+                empty_text = signal_empty_state(direction_key, health_state)
+                self.signal_empty_labels[tree_index].configure(text=empty_text)
+                self.signal_empty_labels[tree_index].place(relx=.5, rely=.48, anchor="center")
                 self.candle_canvases[tree_index].delete("all")
-                self.candle_detail_vars[tree_index].set(
-                    "休市期間沒有可執行訊號。" if health_state == "paused"
-                    else "目前沒有通過官方資格的可執行推薦。")
+                self.candle_detail_vars[tree_index].set(empty_text)
         gate_status = strategy_gate.get("status", "未啟用｜保留基準訊號")
         learning_status = optimization.get("status", "尚無學習狀態")
         self.status.set(f"{prefix}｜資料 {result.get('data_date')}｜策略：{gate_status}｜學習：{learning_status}｜非投資建議｜不會自動下單")

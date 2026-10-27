@@ -11,7 +11,8 @@ from taistock.ui import (format_backtest_summary, display_quote_values, visible_
                          display_signal_lists,
                          signal_count_presentation, row_eligibility_text,
                          candlestick_window_text, candle_chart_geometry,
-                         desktop_execution_health)
+                         desktop_execution_health, desktop_visual_spec,
+                         signal_empty_state)
 
 
 class BacktestUiTests(unittest.TestCase):
@@ -219,6 +220,20 @@ class BacktestUiTests(unittest.TestCase):
         self.assertEqual(len(columns), len(widths))
         self.assertIn("warning", columns)
         self.assertIn("重要警示", headings)
+
+    def test_desktop_visual_spec_prioritizes_readability_without_horizontal_scroll(self):
+        spec = desktop_visual_spec()
+        self.assertGreaterEqual(spec["table_row_height"], 30)
+        self.assertEqual(spec["stretch_column"], "warning")
+        self.assertFalse(spec["horizontal_scrollbar"])
+        self.assertLessEqual(spec["primary_button_width"], 18)
+        self.assertLessEqual(sum(signal_table_columns()[2]), 880)
+
+    def test_empty_signal_state_is_direction_specific_and_actionable(self):
+        self.assertEqual(signal_empty_state("long", "success"),
+                         "目前沒有符合官方資格的偏多推薦。\n可更新資料或查看偏空推薦。")
+        self.assertEqual(signal_empty_state("short", "paused"),
+                         "今日休市，沒有可執行的偏空訊號。\n可查看沿用觀察標的；今日不可執行。")
 
     def test_official_eligibility_summary_keeps_exclusion_reasons_visible(self):
         text = execution_eligibility_text({

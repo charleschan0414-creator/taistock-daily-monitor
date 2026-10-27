@@ -106,6 +106,18 @@ class MobileTests(unittest.TestCase):
             self.assertIn(marker, html)
         self.assertIn("今日重點", html)
         self.assertIn("夜盤脈動", html)
+
+    def test_mobile_primary_stock_list_precedes_collapsed_research_details(self):
+        html = (Path(__file__).resolve().parent.parent / "mobile" / "index.html").read_text(encoding="utf-8")
+        self.assertLess(html.index('id="stock-heading"'), html.index('id="night-pulse"'))
+        self.assertIn('<details id="advanced-hub"', html)
+        self.assertIn("進階研究與系統", html)
+        self.assertIn('<span>可執行偏多</span>', html)
+        self.assertIn('<span>可執行偏空</span>', html)
+        self.assertRegex(html, r'id="list"[^>]*>[\s\S]*?正在載入個股觀察')
+        self.assertIn("freshness.classList.add('failed')", html)
+        self.assertIn("資料暫時無法載入，請稍後再試。", html)
+        self.assertNotIn("meta.textContent='更新失敗：'+error.message", html)
         self.assertIn('aria-pressed="true"', html)
         self.assertIn("el('details')", html)
         self.assertIn("data?.source_updated_at", html)

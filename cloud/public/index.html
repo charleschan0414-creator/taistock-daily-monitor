@@ -16,7 +16,7 @@
     <div class="topbar-status" aria-live="polite">
       <span class="topbar-date"><span class="sr-only">資料日期：</span><strong id="data-date">—</strong></span>
       <span id="data-health" class="status-badge status-loading">載入中</span>
-      <button id="refresh" type="button">重新整理</button>
+      <button id="refresh" type="button" aria-label="重新整理資料"><span class="refresh-icon" aria-hidden="true">↻</span><span class="refresh-label">重新整理</span></button>
     </div>
   </header>
 
@@ -40,11 +40,11 @@
       <div class="section-title"><div><p class="eyebrow">NEXT SESSION</p><h2 id="signals-title">下一交易日推薦摘要</h2></div></div>
       <section class="signal-group long-group" aria-labelledby="long-title">
         <div class="signal-heading"><h3 id="long-title">偏多觀察</h3><span class="direction direction-long">偏多 · 最多 10</span></div>
-        <div id="long-list" class="cards"></div>
+        <div id="long-list" class="cards"><p class="empty loading-placeholder">正在載入偏多觀察…</p></div>
       </section>
       <section class="signal-group short-group" aria-labelledby="short-title">
         <div class="signal-heading"><h3 id="short-title">偏空觀察</h3><span class="direction direction-short">偏空 · 最多 10</span></div>
-        <div id="short-list" class="cards"></div>
+        <div id="short-list" class="cards"><p class="empty loading-placeholder">正在載入偏空觀察…</p></div>
       </section>
     </section>
 

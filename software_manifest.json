@@ -1,5 +1,5 @@
 {
-  "version": "2026.10.27.1",
+  "version": "2026.10.28.1",
   "files": {
     "README.md": "b1b9cbce24c32a1c8167effd8a8bb915887fd6df4d1dd362981639c612d53d46",
     "app.py": "db49e22bc373eab1da5c59e43dd76344df6ec690cdcaf3182c182f4ed0821fe1",
@@ -41,9 +41,9 @@
     "taistock/strategy_freeze.py": "c4dfb126df7f44a00fefc7e3576747fab8bc6c8d3ed2efc8799625c861f60041",
     "taistock/strategy_optimize.py": "e2f86424c76afa6136e3fef80bd45d16415f84b3011a6d3b7529da1e9d3ecb91",
     "taistock/v2_optimize.py": "ddec2553531f9c20c2ce68b96006b954c6c2d319c50ff36515eae2e531762b19",
-    "taistock/ui.py": "5ffffce1ed6c3142e3fe0f382d25064b80a69bfdfff7dd7f7342eeecc74bff12",
+    "taistock/ui.py": "322a2638c9792eb280071ad0aa17b2592290b0eb1aaace969c96426b153af90b",
     "mobile/icon.svg": "e353005663862afae7d651ea24718b49274c5aa7cb775ae723636c1c76d54c27",
-    "mobile/index.html": "b5c329cfdf058d5a56aba3e17804f5af18a34d832e470aee2ef28550e7d1198b",
+    "mobile/index.html": "b262ca7f1df5c446e62ef8e1fdb0a4dee028979a741c4f3a2da4b7ffb5634007",
     "mobile/manifest.json": "16dcaafec98aea81b5efac4f9d41440fdbfa830deb714b1c205ba40155beba77",
     "mobile/service-worker.js": "adbba7b507bbfdc1967c275aefb12e9835d154b11a073e46649741050c566dfe"
   }
