@@ -1,7 +1,4 @@
 {
-  "started_at": "2026-10-27T20:27:50+08:00",
-  "completed_at": "2026-10-27T20:28:58+08:00",
-  "status": "success",
   "data_date": "2026-10-27",
   "strategy_campaign": {
     "id": "one_month_winrate_pf_20261020",
@@ -678,9 +675,92 @@
       "snapshot_id": "2026-10-27:post_close"
     }
   },
+  "started_at": "2026-10-28T08:02:00+08:00",
+  "completed_at": "2026-10-28T08:02:44+08:00",
+  "status": "success",
+  "run_mode": "market_closed_carry_forward",
+  "market_session": {
+    "status": "paused_no_new_official_session",
+    "requested_date": "2026-10-28",
+    "latest_official_date": "2026-10-27",
+    "notice": "2026-10-28 官方尚無新交易日資料；沿用 2026-10-27 觀察資料並暫停執行。"
+  },
+  "execution_eligibility": {
+    "version": "official-day-trade-v1",
+    "source_date": "2026-10-27",
+    "requested_date": "2026-10-28",
+    "execution_for_signal_date": "paused_no_new_official_session",
+    "enforced": true,
+    "score_effect": "none",
+    "eligible_count": 0,
+    "filtered_count": 8,
+    "filtered_out": [
+      {
+        "code": "2356",
+        "name": "英業達",
+        "direction": "long",
+        "reason": "no_new_official_session",
+        "source_date": "2026-10-27"
+      },
+      {
+        "code": "2353",
+        "name": "宏碁",
+        "direction": "long",
+        "reason": "no_new_official_session",
+        "source_date": "2026-10-27"
+      },
+      {
+        "code": "5880",
+        "name": "合庫金",
+        "direction": "long",
+        "reason": "no_new_official_session",
+        "source_date": "2026-10-27"
+      },
+      {
+        "code": "2344",
+        "name": "華邦電",
+        "direction": "long",
+        "reason": "no_new_official_session",
+        "source_date": "2026-10-27"
+      },
+      {
+        "code": "2504",
+        "name": "國產",
+        "direction": "long",
+        "reason": "no_new_official_session",
+        "source_date": "2026-10-27"
+      },
+      {
+        "code": "6770",
+        "name": "力積電",
+        "direction": "long",
+        "reason": "no_new_official_session",
+        "source_date": "2026-10-27"
+      },
+      {
+        "code": "2308",
+        "name": "台達電",
+        "direction": "short",
+        "reason": "no_new_official_session",
+        "source_date": "2026-10-27"
+      },
+      {
+        "code": "2454",
+        "name": "聯發科",
+        "direction": "short",
+        "reason": "no_new_official_session",
+        "source_date": "2026-10-27"
+      }
+    ],
+    "sources": [
+      "https://www.twse.com.tw/rwd/zh/dayTrading/TWTB4U",
+      "https://www.tpex.org.tw/openapi/v1/tpex_securities"
+    ],
+    "notice": "官方兩市場未同時提供新交易日資料；沿用觀察資料並暫停所有可執行訊號。"
+  },
   "health": {
     "overall": "ok",
-    "generated_at": "2026-10-27T20:28:58+08:00",
+    "generated_at": "2026-10-28T08:02:44+08:00",
     "sources": {
       "daily_status": {
         "status": "ok",
@@ -709,12 +789,17 @@
       }
     },
     "latest_data_date": "2026-10-27",
-    "market_session": null,
+    "market_session": {
+      "status": "paused_no_new_official_session",
+      "requested_date": "2026-10-28",
+      "latest_official_date": "2026-10-27",
+      "notice": "2026-10-28 官方尚無新交易日資料；沿用 2026-10-27 觀察資料並暫停執行。"
+    },
     "pipeline": {
       "status": "success",
-      "completed_at": "2026-10-27T20:28:58+08:00",
+      "completed_at": "2026-10-28T08:02:44+08:00",
       "data_date": "2026-10-27",
-      "freshness": "fresh"
+      "freshness": "paused"
     },
     "strategy": {
       "version": 2,
@@ -733,8 +818,8 @@
       "threshold": 60,
       "remaining": 53
     },
-    "desktop_version": "2026.10.23.4",
-    "next_update": "2026-10-28T06:30:00+08:00",
+    "desktop_version": "2026.10.28.1",
+    "next_update": "2026-10-29T06:30:00+08:00",
     "recent_error": null
   }
 }
