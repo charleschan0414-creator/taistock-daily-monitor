@@ -1,7 +1,4 @@
 {
-  "started_at": "2026-10-28T16:56:31+08:00",
-  "completed_at": "2026-10-28T16:58:08+08:00",
-  "status": "success",
   "data_date": "2026-10-28",
   "strategy_campaign": {
     "id": "one_month_winrate_pf_20261020",
@@ -711,9 +708,57 @@
       "error": "TAIFEX 行情更新失敗：官方回傳缺少契約：CDF"
     }
   },
+  "started_at": "2026-10-29T08:06:09+08:00",
+  "completed_at": "2026-10-29T08:06:53+08:00",
+  "status": "success",
+  "run_mode": "market_closed_carry_forward",
+  "market_session": {
+    "status": "paused_no_new_official_session",
+    "requested_date": "2026-10-29",
+    "latest_official_date": "2026-10-28",
+    "notice": "2026-10-29 官方尚無新交易日資料；沿用 2026-10-28 觀察資料並暫停執行。"
+  },
+  "execution_eligibility": {
+    "version": "official-day-trade-v1",
+    "source_date": "2026-10-28",
+    "requested_date": "2026-10-29",
+    "execution_for_signal_date": "paused_no_new_official_session",
+    "enforced": true,
+    "score_effect": "none",
+    "eligible_count": 0,
+    "filtered_count": 3,
+    "filtered_out": [
+      {
+        "code": "3260",
+        "name": "威剛",
+        "direction": "long",
+        "reason": "no_new_official_session",
+        "source_date": "2026-10-28"
+      },
+      {
+        "code": "6147",
+        "name": "頎邦",
+        "direction": "long",
+        "reason": "no_new_official_session",
+        "source_date": "2026-10-28"
+      },
+      {
+        "code": "3264",
+        "name": "欣銓",
+        "direction": "short",
+        "reason": "no_new_official_session",
+        "source_date": "2026-10-28"
+      }
+    ],
+    "sources": [
+      "https://www.twse.com.tw/rwd/zh/dayTrading/TWTB4U",
+      "https://www.tpex.org.tw/openapi/v1/tpex_securities"
+    ],
+    "notice": "官方兩市場未同時提供新交易日資料；沿用觀察資料並暫停所有可執行訊號。"
+  },
   "health": {
     "overall": "ok",
-    "generated_at": "2026-10-28T16:58:08+08:00",
+    "generated_at": "2026-10-29T08:06:53+08:00",
     "sources": {
       "daily_status": {
         "status": "ok",
@@ -742,12 +787,17 @@
       }
     },
     "latest_data_date": "2026-10-28",
-    "market_session": null,
+    "market_session": {
+      "status": "paused_no_new_official_session",
+      "requested_date": "2026-10-29",
+      "latest_official_date": "2026-10-28",
+      "notice": "2026-10-29 官方尚無新交易日資料；沿用 2026-10-28 觀察資料並暫停執行。"
+    },
     "pipeline": {
       "status": "success",
-      "completed_at": "2026-10-28T16:58:08+08:00",
+      "completed_at": "2026-10-29T08:06:53+08:00",
       "data_date": "2026-10-28",
-      "freshness": "fresh"
+      "freshness": "paused"
     },
     "strategy": {
       "version": 2,
@@ -767,7 +817,7 @@
       "remaining": 53
     },
     "desktop_version": "2026.10.28.1",
-    "next_update": "2026-10-29T06:30:00+08:00",
+    "next_update": "2026-10-30T06:30:00+08:00",
     "recent_error": null
   }
 }
