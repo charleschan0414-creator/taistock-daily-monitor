@@ -81,9 +81,26 @@ def csv_download_allowed(latest):
                for row in rows)
 
 
-def verified_latest_csv(latest):
+def _daily_status_verified(latest, daily_status):
+    if not isinstance(latest, dict) or not isinstance(daily_status, dict):
+        return False
+    data_date = latest.get("data_date")
+    status_date = daily_status.get("data_date")
+    try:
+        latest_day = date.fromisoformat(data_date)
+        daily_day = date.fromisoformat(status_date)
+    except (TypeError, ValueError):
+        return False
+    return (daily_status.get("status") == "success"
+            and daily_status.get("errors") == []
+            and latest_day.isoformat() == data_date
+            and daily_day.isoformat() == status_date
+            and status_date == data_date)
+
+
+def verified_latest_csv(latest, daily_status):
     """Build the download from the same verified JSON used by the dashboard."""
-    if not csv_download_allowed(latest):
+    if not _daily_status_verified(latest, daily_status) or not csv_download_allowed(latest):
         return None
     longs, shorts = _executable_lists(latest)
     output = io.StringIO(newline="")
@@ -94,10 +111,15 @@ def verified_latest_csv(latest):
     return b"\xef\xbb\xbf" + output.getvalue().encode("utf-8")
 
 
-def build_dashboard(latest, backtest, quote_client=None, global_client=None):
+def build_dashboard(latest, backtest, quote_client=None, global_client=None, daily_status=None):
     latest = latest if isinstance(latest, dict) else {}
     backtest = backtest if isinstance(backtest, dict) else {}
-    longs, shorts = _executable_lists(latest)
+    health_ok = _daily_status_verified(latest, daily_status)
+    eligibility_ok = csv_download_allowed(latest)
+    session = latest.get("market_session") if isinstance(latest.get("market_session"), dict) else {}
+    paused = health_ok and session.get("status") == "paused_no_new_official_session"
+    execution_ready = health_ok and eligibility_ok and not paused
+    longs, shorts = _executable_lists(latest) if execution_ready else ([], [])
     rows = longs + shorts
     quote_error = None
     try:
@@ -124,6 +146,12 @@ def build_dashboard(latest, backtest, quote_client=None, global_client=None):
         "strategy_gate": latest.get("strategy_gate", {"enabled": False, "status": "未啟用｜保留基準訊號",
                                                         "directions": {"long": True, "short": True}}),
         "execution_eligibility": latest.get("execution_eligibility", {}),
+        "execution_status": {
+            "ready": execution_ready,
+            "state": "paused" if paused else "ready" if execution_ready else "blocked",
+            "health_verified": health_ok,
+            "eligibility_verified": eligibility_ok,
+        },
         "quote_error": quote_error,
         "global_market": global_market,
         "disclaimer": "僅供研究、非投資建議",
@@ -166,14 +194,17 @@ def _handler(root, quote_client, global_client):
                 latest = load_json(data / "latest.json", {})
                 if not latest:
                     return self._json_error(503, "尚無 latest.json 資料")
-                result = build_dashboard(latest, load_json(data / "backtest_100d.json", {}), quote_client, global_client)
+                result = build_dashboard(latest, load_json(data / "backtest_100d.json", {}),
+                                         quote_client, global_client,
+                                         load_json(data / "daily_status.json", {}))
                 return self._send(200, json.dumps(result, ensure_ascii=False).encode(), "application/json; charset=utf-8")
             if raw_path.startswith("/download/"):
                 name = raw_path[len("/download/"):]
                 if name not in DOWNLOADS:
                     return self._json_error(404, "not found")
                 if name == "latest.csv":
-                    body = verified_latest_csv(load_json(data / "latest.json", {}))
+                    body = verified_latest_csv(load_json(data / "latest.json", {}),
+                                               load_json(data / "daily_status.json", {}))
                     if body is None:
                         return self._json_error(503, "當日官方可當沖資格尚未驗證")
                 else:

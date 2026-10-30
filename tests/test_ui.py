@@ -12,7 +12,7 @@ from taistock.ui import (format_backtest_summary, display_quote_values, visible_
                          signal_count_presentation, row_eligibility_text,
                          candlestick_window_text, candle_chart_geometry,
                          desktop_execution_health, desktop_visual_spec,
-                         signal_empty_state)
+                         signal_empty_state, preflight_status)
 
 
 class BacktestUiTests(unittest.TestCase):
@@ -319,12 +319,36 @@ class BacktestUiTests(unittest.TestCase):
 
     def test_desktop_full_update_delegates_to_the_validated_cli_pipeline(self):
         completed = Mock(returncode=0, stdout="ok", stderr="")
+        progress = []
         with patch("taistock.ui.subprocess.run", return_value=completed) as runner, \
              patch("taistock.ui.load_result", return_value={"data_date": "2026-10-20"}):
-            result = run_desktop_update(Path("C:/app/data"))
+            result = run_desktop_update(Path("C:/app/data"), lambda label, value: progress.append((label, value)))
         self.assertEqual(result["data_date"], "2026-10-20")
         self.assertEqual(runner.call_args.args[0][-1], "--update")
         self.assertEqual(runner.call_args.kwargs["cwd"], Path("C:/app"))
+        self.assertEqual(progress, [
+            ("步驟 1/4｜準備更新", 10),
+            ("步驟 2/4｜下載並驗證官方資料與當沖資格", 35),
+            ("步驟 3/4｜載入並檢查篩選結果", 80),
+            ("步驟 4/4｜更新完成", 100),
+        ])
+
+    def test_preflight_status_clearly_separates_executable_paused_and_error_states(self):
+        result = {"data_date": "2026-10-27", "execution_eligibility": {"enforced": True,
+                  "source_date": "2026-10-28"}}
+        self.assertEqual(preflight_status(result, "success", 6, 2),
+                         ("ready", "今日可執行", "資料日 2026-10-27｜偏多 6｜偏空 2｜官方資格 2026-10-28 已驗證"))
+        result["data_date"] = "2026-10-27garbage"
+        self.assertEqual(preflight_status(result, "success", 0, 0)[0:2],
+                         ("blocked", "官方資格未完成｜不可執行"))
+        result["data_date"] = "2026-10-27"
+        result["long_top10"] = [{"code": "2330"}]
+        result["short_top10"] = []
+        self.assertEqual(preflight_status(result, "success", 0, 0)[0:2],
+                         ("blocked", "官方資格未完成｜不可執行"))
+        self.assertEqual(preflight_status(result, "paused", 0, 0)[0:2], ("paused", "休市觀察｜不可執行"))
+        self.assertEqual(preflight_status(result, "stale", 0, 0)[0:2], ("blocked", "資料過期｜不可執行"))
+        self.assertEqual(preflight_status(result, "error", 0, 0)[0:2], ("blocked", "更新失敗｜不可執行"))
     def test_signal_rows_get_direction_change_and_zebra_tags(self):
         self.assertEqual(signal_row_tags("long", "+1.25%", 0), ("even", "long", "gain"))
         self.assertEqual(signal_row_tags("short", "-0.80%", 1), ("odd", "short", "loss"))

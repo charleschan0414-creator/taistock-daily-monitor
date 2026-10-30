@@ -129,8 +129,21 @@ function taipeiDateOfTimestamp(value) {
   return `${parts.year}-${parts.month}-${parts.day}`;
 }
 
+function isStrictIsoDate(value) {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const parsed = new Date(`${value}T00:00:00Z`);
+  return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
+}
+
 export function resolveDataHealth(data, now = new Date()) {
-  if (data?.daily_status?.status !== 'success') return { state: 'error', label: '更新失敗' };
+  const errors = data?.daily_status?.errors;
+  if (data?.daily_status?.status !== 'success'
+      || !Array.isArray(errors) || errors.length > 0
+      || !isStrictIsoDate(data?.data_date)
+      || !isStrictIsoDate(data?.daily_status?.data_date)
+      || data.daily_status.data_date !== data.data_date) {
+    return { state: 'error', label: '更新失敗' };
+  }
   const session = data?.market_session;
   const closure = session?.closure_reason !== undefined || session?.closure_source !== undefined;
   const verifiedClosure = !closure || (data?.data_collection?.latest_official_quote_date === data?.data_date
@@ -152,6 +165,31 @@ export function executableListsForHealth(data, health) {
   const long = executable && Array.isArray(data?.long) ? data.long : [];
   const short = executable && Array.isArray(data?.short) ? data.short : [];
   return { long, short, longCount: long.length, shortCount: short.length };
+}
+
+export function preflightStatus(data, health, executable) {
+  const dataDate = data?.data_date ?? '—';
+  const execution = data?.execution_eligibility;
+  if (health?.state === 'paused') return {
+    state: 'paused', title: '休市觀察｜不可執行',
+    detail: `沿用資料日 ${dataDate}｜正式執行清單為空`,
+  };
+  if (health?.state === 'stale') return {
+    state: 'blocked', title: '資料過期｜不可執行',
+    detail: `目前資料日 ${dataDate}｜請等待成功更新`,
+  };
+  if (health?.state !== 'success') return {
+    state: 'blocked', title: '更新失敗｜不可執行',
+    detail: '可執行清單已清空｜請稍後重新整理',
+  };
+  if (!execution?.enforced) return {
+    state: 'blocked', title: '官方資格未完成｜不可執行',
+    detail: `資料日 ${dataDate}｜等待TWSE／TPEx官方資格核對`,
+  };
+  return {
+    state: 'ready', title: '今日可執行',
+    detail: `資料日 ${dataDate}｜偏多 ${executable?.longCount ?? 0}｜偏空 ${executable?.shortCount ?? 0}｜官方資格 ${execution.source_date ?? '—'} 已驗證`,
+  };
 }
 
 export function displayListsForHealth(data, health) {
@@ -378,12 +416,19 @@ function renderV2Analysis(data) {
 
 async function load() {
   $('refresh').disabled = true; $('message').textContent = '';
+  $('preflight-center').className = 'preflight-center status-loading';
+  $('preflight-title').textContent = '更新中';
+  $('preflight-detail').textContent = '正在取得最新資料並核對官方當沖資格…';
   try {
     const response = await fetch('/api/dashboard', { cache: 'no-store' }); const data = await response.json();
     if (!response.ok) throw new Error(data.error ?? `HTTP ${response.status}`);
     const health = resolveDataHealth(data);
     const executable = executableListsForHealth(data, health);
     const display = displayListsForHealth(data, health);
+    const preflight = preflightStatus(data, health, executable);
+    $('preflight-center').className = `preflight-center preflight-${preflight.state}`;
+    $('preflight-title').textContent = preflight.title;
+    $('preflight-detail').textContent = preflight.detail;
     $('data-date').textContent = data.data_date ?? '—';
     $('summary-long').textContent = String(display.longCount);
     $('summary-short').textContent = String(display.shortCount);
@@ -434,6 +479,9 @@ async function load() {
     renderList('long-list', display.long, '偏多'); renderList('short-list', display.short, '偏空');
   } catch (error) {
     const failure = resolveLoadFailure();
+    $('preflight-center').className = 'preflight-center preflight-blocked';
+    $('preflight-title').textContent = '載入失敗｜不可執行';
+    $('preflight-detail').textContent = '可執行清單已清空｜請稍後重新整理';
     $('data-health').textContent = '載入失敗';
     $('data-health').className = 'status-badge status-error';
     $('message').textContent = friendlyLoadError(error);

@@ -38,7 +38,8 @@ class MobileTests(unittest.TestCase):
         payload.update({"optimization":{"status":"學習中"},
                         "strategy_gate":{"enabled":True,"status":"已啟用｜偏空停用",
                                          "directions":{"long":True,"short":False}}})
-        dashboard = build_dashboard(payload, {}, StubQuotes(), StubGlobalMarket())
+        dashboard = build_dashboard(payload, {}, StubQuotes(), StubGlobalMarket(),
+                                    {"status": "success", "errors": [], "data_date": payload["data_date"]})
         self.assertEqual(len(dashboard["long_top10"]), 10)
         self.assertEqual(len(dashboard["short_top10"]), 10)
         self.assertEqual(dashboard["long_top10"][0]["realtime"]["price"], 123.0)
@@ -48,7 +49,8 @@ class MobileTests(unittest.TestCase):
 
     def test_dashboard_includes_global_market_without_affecting_stock_rows(self):
         latest = verified_latest([{"code": "2330"}])
-        dashboard = build_dashboard(latest, {}, StubQuotes(), StubGlobalMarket())
+        dashboard = build_dashboard(latest, {}, StubQuotes(), StubGlobalMarket(),
+                                    {"status": "success", "errors": [], "data_date": latest["data_date"]})
         self.assertEqual(dashboard["global_market"]["items"][0]["symbol"], "TX")
         self.assertEqual(dashboard["global_market"]["scenario"]["bias"], "偏多")
         self.assertEqual(dashboard["long_top10"][0]["code"], "2330")
@@ -56,7 +58,9 @@ class MobileTests(unittest.TestCase):
     def test_quote_failure_keeps_rows_and_reports_error(self):
         class Failed:
             def fetch(self, rows): raise RuntimeError("offline")
-        dashboard = build_dashboard(verified_latest([{"code":"2330"}]), {}, Failed(), StubGlobalMarket())
+        latest = verified_latest([{"code":"2330"}])
+        dashboard = build_dashboard(latest, {}, Failed(), StubGlobalMarket(),
+                                    {"status": "success", "errors": [], "data_date": latest["data_date"]})
         self.assertEqual(dashboard["long_top10"][0]["code"], "2330")
         self.assertIn("offline", dashboard["quote_error"])
 
@@ -82,6 +86,36 @@ class MobileTests(unittest.TestCase):
             self.assertEqual(dashboard["long_top10"], [])
             self.assertEqual(dashboard["short_top10"], [])
             self.assertFalse(csv_download_allowed(payload))
+
+    def test_local_dashboard_ready_requires_canonical_health_and_eligibility(self):
+        latest = verified_latest([{"code": "2330"}])
+        healthy = {"status": "success", "errors": [], "data_date": latest["data_date"]}
+        dashboard = build_dashboard(latest, {}, StubQuotes(), StubGlobalMarket(), healthy)
+        self.assertTrue(dashboard["execution_status"]["ready"])
+        self.assertEqual(len(dashboard["long_top10"]), 1)
+
+        missing = build_dashboard(latest, {}, StubQuotes(), StubGlobalMarket())
+        self.assertFalse(missing["execution_status"]["ready"])
+        self.assertEqual(missing["long_top10"], [])
+
+        failed = build_dashboard(latest, {}, StubQuotes(), StubGlobalMarket(),
+                                 {"status": "success", "errors": ["source failed"],
+                                  "data_date": latest["data_date"]})
+        self.assertFalse(failed["execution_status"]["ready"])
+        self.assertEqual(failed["long_top10"], [])
+
+        malformed = verified_latest([{"code": "2330"}])
+        malformed["long_top10"][0]["day_trading_eligibility"] = "invalid"
+        rejected = build_dashboard(malformed, {}, StubQuotes(), StubGlobalMarket(), healthy)
+        self.assertFalse(rejected["execution_status"]["ready"])
+        self.assertEqual(rejected["long_top10"], [])
+
+        paused_latest = verified_latest([])
+        paused_latest["market_session"] = {"status": "paused_no_new_official_session"}
+        paused_failed = build_dashboard(paused_latest, {}, StubQuotes(), StubGlobalMarket(), {
+            "status": "failed", "errors": ["boom"], "data_date": paused_latest["data_date"],
+        })
+        self.assertEqual(paused_failed["execution_status"]["state"], "blocked")
 
     def test_malformed_backtest_container_is_ignored(self):
         latest = verified_latest([{"code": "2330"}])
@@ -121,6 +155,17 @@ class MobileTests(unittest.TestCase):
         self.assertIn('aria-pressed="true"', html)
         self.assertIn("el('details')", html)
         self.assertIn("data?.source_updated_at", html)
+
+    def test_local_mobile_has_fail_closed_preflight_status_center(self):
+        html = (Path(__file__).resolve().parent.parent / "mobile" / "index.html").read_text(encoding="utf-8")
+        self.assertRegex(html, r'id="preflight-center"[\s\S]*?id="preflight-title"[\s\S]*?id="preflight-detail"')
+        self.assertIn("function preflightStatus()", html)
+        self.assertIn("官方資格或資料健康未完成｜不可執行", html)
+        self.assertIn("休市觀察｜不可執行", html)
+        self.assertIn("更新失敗｜不可執行", html)
+        self.assertIn("preflightTitle.textContent='更新中'", html)
+        self.assertIn("data?.execution_status?.ready===true", html)
+        self.assertIn("execution_status:{ready:false,state:'blocked'", html)
 
     def test_mobile_page_renders_compatible_100_day_cost_performance(self):
         html = (Path(__file__).resolve().parent.parent / "mobile" / "index.html").read_text(encoding="utf-8")
@@ -171,6 +216,9 @@ class MobileTests(unittest.TestCase):
             root = Path(td); data = root / "data"; mobile = root / "mobile"
             data.mkdir(); mobile.mkdir()
             (data / "latest.json").write_text(json.dumps(verified_latest([{"code":"2330","market":"上市"}])), encoding="utf-8")
+            (data / "daily_status.json").write_text(json.dumps({
+                "status": "success", "errors": [], "data_date": "2026-10-15",
+            }), encoding="utf-8")
             (data / "latest.csv").write_text("UNRELATED-STALE", encoding="utf-8")
             (data / "backtest_100d.csv").write_text("code\n", encoding="utf-8")
             (mobile / "index.html").write_text("<h1>Monitor</h1>", encoding="utf-8")
@@ -209,6 +257,12 @@ class MobileTests(unittest.TestCase):
                 regenerated = urlopen(base + "/download/latest.csv")
                 self.assertEqual(regenerated.status, 200)
                 self.assertIn("2026-10-15,2330", regenerated.read().decode("utf-8-sig"))
+                (data / "daily_status.json").write_text(json.dumps({
+                    "status": "failed", "errors": ["boom"], "data_date": "2026-10-15",
+                }), encoding="utf-8")
+                with self.assertRaises(HTTPError) as unhealthy_csv:
+                    urlopen(base + "/download/latest.csv")
+                self.assertEqual(unhealthy_csv.exception.code, 503)
                 (data / "latest.json").write_text("[]", encoding="utf-8")
                 with self.assertRaises(HTTPError) as rejected:
                     urlopen(base + "/download/latest.csv")

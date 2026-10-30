@@ -134,6 +134,7 @@ class DailyPipelineTests(unittest.TestCase):
             order.append(("update", notify))
             effective = json.loads((Path(tmp) / "strategy_optimization.json").read_text(encoding="utf-8"))
             effective_gates.append(effective["decision"]["applied_gate"])
+            (Path(tmp) / "latest.json").write_text(json.dumps(latest), encoding="utf-8")
             return latest
         with tempfile.TemporaryDirectory() as tmp, \
              patch.object(daily_pipeline, "DATA", Path(tmp)), \

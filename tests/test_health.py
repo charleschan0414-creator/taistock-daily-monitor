@@ -26,7 +26,7 @@ class HealthReportTests(unittest.TestCase):
     def write_healthy_files(self):
         self.write("daily_status.json", {
             "status": "success", "completed_at": "2026-10-16T16:10:00+08:00",
-            "data_date": "2026-10-16",
+            "data_date": "2026-10-16", "errors": [],
         })
         self.write("latest.json", {
             "data_date": "2026-10-16", "top100_count": 100,
@@ -98,12 +98,26 @@ class HealthReportTests(unittest.TestCase):
         self.assertEqual(report["pipeline"]["status"], "error")
         self.assertEqual(report["recent_error"], "RuntimeError: offline")
 
+    def test_success_requires_empty_errors_and_matching_latest_date(self):
+        self.write_healthy_files()
+        for daily in (
+            {"status": "success", "data_date": "2026-10-16"},
+            {"status": "success", "errors": ["boom"], "data_date": "2026-10-16"},
+            {"status": "success", "errors": [], "data_date": "2026-10-15"},
+        ):
+            self.write("daily_status.json", daily)
+            report = build_health_report(self.data, "test", self.now)
+            self.assertEqual(report["pipeline"]["status"], "error")
+            self.assertEqual(report["overall"], "error")
+
     def test_success_older_than_48_hours_warns(self):
         self.write_healthy_files()
         self.write("daily_status.json", {
             "status": "success", "completed_at": "2026-10-15T07:44:59+08:00",
-            "data_date": "2026-10-14",
+            "data_date": "2026-10-14", "errors": [],
         })
+        self.write("latest.json", {"data_date": "2026-10-14", "top100_count": 100,
+            "long_count": 4, "short_count": 3, "signals": [], "universe": []})
         report = build_health_report(self.data, "test", self.now)
         self.assertEqual(report["overall"], "warning")
         self.assertEqual(report["pipeline"]["freshness"], "stale")
@@ -112,7 +126,7 @@ class HealthReportTests(unittest.TestCase):
         self.write_healthy_files()
         self.write("daily_status.json", {
             "status": "success", "completed_at": "2026-10-22T16:10:00+08:00",
-            "data_date": "2026-10-22",
+            "data_date": "2026-10-22", "errors": [],
         })
         self.write("latest.json", {
             "data_date": "2026-10-22", "top100_count": 100,
@@ -132,7 +146,7 @@ class HealthReportTests(unittest.TestCase):
     def test_unverified_calendar_closure_cannot_hide_stale_data(self):
         self.write_healthy_files()
         self.write("daily_status.json", {"status": "success",
-            "completed_at": "2026-10-23T06:30:00+08:00", "data_date": "2026-10-21"})
+            "completed_at": "2026-10-23T06:30:00+08:00", "data_date": "2026-10-21", "errors": []})
         self.write("latest.json", {"data_date": "2026-10-21", "top100_count": 100,
             "long_count": 0, "short_count": 0,
             "market_session": {"status": "paused_no_new_official_session",
@@ -145,6 +159,8 @@ class HealthReportTests(unittest.TestCase):
 
     def test_calendar_closure_requires_parseable_same_taipei_day_verification_time(self):
         self.write_healthy_files()
+        self.write("daily_status.json", {"status": "success", "errors": [],
+            "completed_at": "2026-10-23T06:30:00+08:00", "data_date": "2026-10-22"})
         base = {"data_date": "2026-10-22", "top100_count": 100,
             "long_count": 0, "short_count": 0,
             "market_session": {"status": "paused_no_new_official_session",

@@ -12,23 +12,39 @@ test('service worker只快取應用程式外殼且不快取下載資料', async 
 
 test('資料健康狀態以明確文字區分成功與過期', async () => {
   const { resolveDataHealth } = await import('../public/app.js');
-  const fresh = resolveDataHealth({ data_date: '2026-10-16', daily_status: { status: 'success' } }, new Date('2026-10-17T08:00:00+08:00'));
-  const stale = resolveDataHealth({ data_date: '2026-10-15', daily_status: { status: 'success' } }, new Date('2026-10-19T08:00:00+08:00'));
+  const fresh = resolveDataHealth({ data_date: '2026-10-16', daily_status: { status: 'success', errors: [], data_date: '2026-10-16' } }, new Date('2026-10-17T08:00:00+08:00'));
+  const stale = resolveDataHealth({ data_date: '2026-10-15', daily_status: { status: 'success', errors: [], data_date: '2026-10-15' } }, new Date('2026-10-19T08:00:00+08:00'));
   const failed = resolveDataHealth({ data_date: '2026-10-16', daily_status: { status: 'failed' } }, new Date('2026-10-17T08:00:00+08:00'));
-  const paused = resolveDataHealth({ data_date: '2026-10-22', daily_status: { status: 'success' },
+  const paused = resolveDataHealth({ data_date: '2026-10-22', daily_status: { status: 'success', errors: [], data_date: '2026-10-22' },
     market_session: { status: 'paused_no_new_official_session', requested_date: '2026-10-23' } },
   new Date('2026-10-24T08:00:00+08:00'));
   assert.deepEqual(fresh, { state: 'success', label: '資料成功' });
   assert.deepEqual(stale, { state: 'stale', label: '資料過期' });
   assert.deepEqual(failed, { state: 'error', label: '更新失敗' });
+  const contradictory = resolveDataHealth({ data_date: '2026-10-16',
+    daily_status: { status: 'success', errors: ['official source failed'] } },
+  new Date('2026-10-17T08:00:00+08:00'));
+  assert.deepEqual(contradictory, { state: 'error', label: '更新失敗' });
+  const malformedErrors = resolveDataHealth({ data_date: '2026-10-16',
+    daily_status: { status: 'success', errors: 'official source failed' } },
+  new Date('2026-10-17T08:00:00+08:00'));
+  assert.deepEqual(malformedErrors, { state: 'error', label: '更新失敗' });
+  const missingErrors = resolveDataHealth({ data_date: '2026-10-16',
+    daily_status: { status: 'success', data_date: '2026-10-16' } },
+  new Date('2026-10-17T08:00:00+08:00'));
+  assert.deepEqual(missingErrors, { state: 'error', label: '更新失敗' });
+  const mismatchedDate = resolveDataHealth({ data_date: '2026-10-16',
+    daily_status: { status: 'success', errors: [], data_date: '2026-10-15' } },
+  new Date('2026-10-17T08:00:00+08:00'));
+  assert.deepEqual(mismatchedDate, { state: 'error', label: '更新失敗' });
   assert.deepEqual(paused, { state: 'paused', label: '休市／暫停沿用' });
-  const unverifiedClosure = resolveDataHealth({ data_date: '2026-10-21', daily_status: { status: 'success' },
+  const unverifiedClosure = resolveDataHealth({ data_date: '2026-10-21', daily_status: { status: 'success', errors: [], data_date: '2026-10-21' },
     market_session: { status: 'paused_no_new_official_session', requested_date: '2026-10-23',
       closure_reason: 'taipei_disaster_stop_work',
       closure_source: 'https://www.dgpa.gov.tw/typh/daily/nds.html' } },
   new Date('2026-10-23T08:00:00+08:00'));
   assert.deepEqual(unverifiedClosure, { state: 'stale', label: '資料過期' });
-  const verifiedClosureData = { data_date: '2026-10-22', daily_status: { status: 'success' },
+  const verifiedClosureData = { data_date: '2026-10-22', daily_status: { status: 'success', errors: [], data_date: '2026-10-22' },
     data_collection: { latest_official_quote_date: '2026-10-22',
       session_checked_at: '2026-10-23T06:30:00+08:00' },
     market_session: { status: 'paused_no_new_official_session', requested_date: '2026-10-23',
@@ -39,6 +55,27 @@ test('資料健康狀態以明確文字區分成功與過期', async () => {
   verifiedClosureData.data_collection.session_checked_at = '2026-10-23Tgarbage';
   assert.deepEqual(resolveDataHealth(verifiedClosureData, new Date('2026-10-23T08:00:00+08:00')),
     { state: 'stale', label: '資料過期' });
+});
+
+test('盤前狀態中心清楚區分可執行、休市觀察與封鎖狀態', async () => {
+  const { preflightStatus } = await import('../public/app.js');
+  const data = { data_date: '2026-10-27', execution_eligibility: { enforced: true, source_date: '2026-10-28' } };
+  assert.deepEqual(preflightStatus(data, { state: 'success' }, { longCount: 6, shortCount: 2 }), {
+    state: 'ready', title: '今日可執行',
+    detail: '資料日 2026-10-27｜偏多 6｜偏空 2｜官方資格 2026-10-28 已驗證',
+  });
+  assert.equal(preflightStatus(data, { state: 'paused' }, { longCount: 0, shortCount: 0 }).title,
+    '休市觀察｜不可執行');
+  assert.equal(preflightStatus(data, { state: 'stale' }, { longCount: 0, shortCount: 0 }).title,
+    '資料過期｜不可執行');
+  assert.equal(preflightStatus(data, { state: 'error' }, { longCount: 0, shortCount: 0 }).title,
+    '更新失敗｜不可執行');
+  const html = await read('index.html');
+  const styles = await read('styles.css');
+  const app = await read('app.js');
+  assert.match(html, /id="preflight-center"[\s\S]*id="preflight-title"[\s\S]*id="preflight-detail"/);
+  assert.match(styles, /\.preflight-center/);
+  assert.match(app, /preflightStatus\(data, health, executable\)/);
 });
 
 test('資料過期或流水線失敗時清空可執行名單與數量', async () => {

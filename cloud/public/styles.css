@@ -108,6 +108,26 @@ h3 { margin-bottom: 0; font-size: 16px; }
 .alert { margin: 0 0 18px; padding: 12px 14px; border: 1px solid rgba(244, 198, 106, .25); border-radius: 10px; background: var(--amber-bg); color: #ffe2a8; font-size: 13px; }
 .alert, .execution-eligibility-note, .disclaimer-strip, footer { overflow-wrap: anywhere; }
 
+.preflight-center {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 11px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  background: var(--surface-soft);
+}
+.preflight-center > span { color: var(--muted); font-size: 11px; font-weight: 700; }
+.preflight-center > strong { color: var(--amber); font-size: 15px; }
+.preflight-center > p { min-width: 0; margin: 0; color: var(--text); font-size: 12px; overflow-wrap: anywhere; }
+.preflight-ready { border-color: rgba(85,214,161,.35); background: var(--green-bg); }
+.preflight-ready > strong { color: var(--green); }
+.preflight-paused { border-color: rgba(244,198,106,.35); background: var(--amber-bg); }
+.preflight-blocked { border-color: rgba(255,127,145,.35); background: var(--red-bg); }
+.preflight-blocked > strong { color: var(--red); }
+
 .summary-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 16px; }
 .execution-eligibility-note { margin: 10px 0 0; padding: 10px 12px; border: 1px solid rgba(85,214,161,.25); border-radius: 12px; background: var(--green-bg); color: var(--text); line-height: 1.55; }
 .execution-eligibility-note.status-error { border-color: rgba(255,127,145,.35); background: var(--red-bg); color: var(--red); }
@@ -325,7 +345,9 @@ footer { padding: 20px 0 max(28px, env(safe-area-inset-bottom)); border-top: 1px
 }
 
 @media (max-width: 420px) {
-  .section-heading { align-items: flex-start; }
+  .section-heading, .section-title { align-items: flex-start; }
+  .preflight-center { grid-template-columns: auto 1fr; gap: 5px 10px; }
+  .preflight-center > p { grid-column: 1 / -1; }
   .timestamp { margin-top: 4px; font-size: 10px; }
   .summary-card strong { font-size: 21px; }
   .market-grid { grid-template-columns: 1fr 1fr; }

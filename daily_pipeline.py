@@ -252,6 +252,7 @@ def main():
                 "started_at": started,
                 "completed_at": taipei_now(),
                 "status": "success",
+                "errors": [],
                 "data_date": paused["data_date"],
                 "run_mode": "market_closed_carry_forward",
                 "market_session": paused["market_session"],
@@ -287,7 +288,8 @@ def main():
         market_history = record_market_history()
         write_registry(registry_path, proposed_registry)
         status.update({
-            "completed_at": taipei_now(), "status": "success", "data_date": latest["data_date"],
+            "completed_at": taipei_now(), "status": "success", "errors": [],
+            "data_date": latest["data_date"],
             "backtest": {
                 "period": backtest["period"],
                 "metrics": backtest["metrics"],

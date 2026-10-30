@@ -116,7 +116,25 @@ def build_health_report(data_dir, app_version, now):
     registry = documents["strategy_registry"] or {}
     regime = documents["market_regime"] or {}
 
-    pipeline_status = daily.get("status") or "unknown"
+    raw_pipeline_status = daily.get("status") or "unknown"
+    daily_date = daily.get("data_date")
+    latest_date = latest.get("data_date")
+    try:
+        parsed_daily_date = datetime.strptime(daily_date, "%Y-%m-%d").date()
+        parsed_latest_date = datetime.strptime(latest_date, "%Y-%m-%d").date()
+        dates_match = (parsed_daily_date.isoformat() == daily_date
+                       and parsed_latest_date.isoformat() == latest_date
+                       and daily_date == latest_date)
+    except (TypeError, ValueError):
+        dates_match = False
+    valid_success = (raw_pipeline_status == "success"
+                     and daily.get("errors") == [] and dates_match)
+    if raw_pipeline_status == "success" and not valid_success:
+        pipeline_status = "error"
+    elif raw_pipeline_status in ("error", "failed"):
+        pipeline_status = "error"
+    else:
+        pipeline_status = raw_pipeline_status
     completed_at = daily.get("completed_at")
     freshness = "unknown"
     market_session = _current_official_pause(latest, now)

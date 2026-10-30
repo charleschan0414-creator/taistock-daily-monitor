@@ -9,14 +9,14 @@
 <title>TaiStock Monitor</title>
 <style>
 :root{color-scheme:dark;--bg:#07101d;--panel:#101e31;--panel2:#142640;--muted:#9eb0ca;--line:#29405f;--blue:#65b2ff;--green:#45e3a4;--red:#ff7785;--amber:#ffd978}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f2f6fc;font:15px/1.5 system-ui,-apple-system,"Noto Sans TC",sans-serif}.wrap{max-width:760px;margin:auto;padding:18px 14px 80px}header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}h1{font-size:24px;line-height:1.2;margin:4px 0 8px}h2{font-size:19px;margin:24px 0 10px}.eyebrow{color:var(--blue);font-size:11px;font-weight:800;letter-spacing:.16em}.freshness{display:flex;align-items:center;gap:7px;color:#dbe9fc;font-weight:700}.freshness::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px #45e3a422}.meta,.small,.status{color:var(--muted);font-size:12px}button,.download{min-height:44px;border:0;border-radius:11px;background:#0b5cff;color:#fff;padding:11px 14px;font:inherit;font-weight:800;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}button:focus-visible,.download:focus-visible,summary:focus-visible{outline:3px solid var(--amber);outline-offset:3px}.summary{background:linear-gradient(145deg,#132a49,#0f1d30);border:1px solid #355982;border-radius:18px;padding:16px;margin:16px 0}.summary h2{margin:0 0 12px}.summary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.summary-item{background:#091729;border:1px solid var(--line);border-radius:12px;padding:11px}.summary-item span{display:block;color:var(--muted);font-size:12px}.summary-item b{display:block;font-size:17px;margin-top:2px;overflow-wrap:anywhere}.notice{border:1px solid #725a1e;background:#28200d;color:var(--amber);padding:10px 12px;border-radius:11px;margin:14px 0;font-size:13px}.tabs{display:flex;background:#0d192a;border:1px solid var(--line);border-radius:14px;padding:4px;margin:10px 0 14px;gap:4px}.tabs button{flex:1;background:transparent;color:var(--muted)}.tabs button.active{background:#245386;color:#fff}.stock,.market{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:15px;margin:10px 0}.stock{border-left:4px solid var(--blue)}.stock.short{border-left-color:var(--green)}.top,.market-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.identity{min-width:0}.name{font-weight:900;font-size:19px;line-height:1.25}.code{color:var(--muted);font-size:12px}.direction{display:inline-block;margin-top:7px;border-radius:999px;padding:3px 8px;background:#17385d;color:#a9d5ff;font-size:12px;font-weight:800}.short .direction{background:#123c30;color:#80ecc1}.quote{text-align:right;flex:0 0 auto}.price{font-size:26px;line-height:1.1;font-weight:900}.change{font-size:15px;font-weight:800;margin-top:3px}.up{color:var(--red)}.down{color:var(--green)}details{margin-top:13px;border-top:1px solid var(--line);padding-top:10px}summary{min-height:44px;display:flex;align-items:center;color:#cfe0f7;font-weight:700;cursor:pointer}.levels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:3px 0 5px}.levels div{min-width:0}.levels b{display:block;margin-top:3px;overflow-wrap:anywhere}.status{margin-top:9px}.market-row{padding:11px 0;border-bottom:1px solid var(--line);align-items:center}.market-row:last-of-type{border:0}.scenario{font-size:18px;font-weight:900;margin-bottom:3px}.performance{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:0 15px 15px}.performance>summary{justify-content:space-between;font-size:17px}.performance>p{margin:0 0 12px}.performance-block{padding:12px;border:1px solid var(--line);border-radius:12px;background:#091729}.performance-metrics{margin-top:7px;color:#dbe9fc;font-size:12px;line-height:1.75;white-space:pre-line}.performance details{margin-top:9px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.offline{position:sticky;top:0;z-index:5;text-align:center;background:#9a3412;padding:9px;display:none}.empty{text-align:center;color:var(--muted);padding:34px 12px}footer{margin-top:22px;color:var(--muted);font-size:12px;line-height:1.7}@media(max-width:360px){.wrap{padding:14px 10px 64px}header{align-items:stretch}h1{font-size:21px}#refresh{padding:9px 10px}.summary{padding:12px}.summary-grid{gap:7px}.summary-item{padding:9px}.stock,.market{padding:12px}.name{font-size:17px}.price{font-size:23px}.levels{grid-template-columns:1fr}.tabs button{padding-inline:7px}}
-.freshness.failed{color:var(--red)}.freshness.failed::before{background:var(--red);box-shadow:0 0 0 3px #ff778522}.advanced-hub{margin-top:26px;padding-top:0;border:1px solid var(--line);border-radius:16px;background:#0d192a}.advanced-hub>summary{min-height:58px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;cursor:pointer;list-style:none}.advanced-hub>summary::-webkit-details-marker{display:none}.advanced-hub>summary:after{content:"＋";color:var(--muted);font-size:20px}.advanced-hub[open]>summary:after{content:"−"}.advanced-hub>summary>span:first-child{min-width:0;flex:1}.advanced-hub>summary b{display:block;font-size:16px}.advanced-content{padding:0 12px 14px}.advanced-content h2{margin-top:16px}.advanced-content .actions{margin-bottom:0}
+.freshness.failed{color:var(--red)}.freshness.failed::before{background:var(--red);box-shadow:0 0 0 3px #ff778522}.preflight-center{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;margin-bottom:12px;padding:10px 11px;border:1px solid var(--line);border-radius:12px;background:#091729}.preflight-center>span{color:var(--muted);font-size:11px;font-weight:800}.preflight-center>b{font-size:15px}.preflight-center>small{grid-column:1/-1;color:#dbe9fc;overflow-wrap:anywhere}.preflight-center.ready{border-color:#45e3a455}.preflight-center.ready>b{color:var(--green)}.preflight-center.paused{border-color:#ffd97866}.preflight-center.paused>b{color:var(--amber)}.preflight-center.blocked{border-color:#ff778566}.preflight-center.blocked>b{color:var(--red)}.advanced-hub{margin-top:26px;padding-top:0;border:1px solid var(--line);border-radius:16px;background:#0d192a}.advanced-hub>summary{min-height:58px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;cursor:pointer;list-style:none}.advanced-hub>summary::-webkit-details-marker{display:none}.advanced-hub>summary:after{content:"＋";color:var(--muted);font-size:20px}.advanced-hub[open]>summary:after{content:"−"}.advanced-hub>summary>span:first-child{min-width:0;flex:1}.advanced-hub>summary b{display:block;font-size:16px}.advanced-content{padding:0 12px 14px}.advanced-content h2{margin-top:16px}.advanced-content .actions{margin-bottom:0}
 </style>
 </head>
 <body>
 <div id="offline" class="offline" role="status">目前離線：顯示本機上次資料，並非即時報價</div>
 <main class="wrap">
 <header><div><div class="eyebrow">TAISTOCK / MOBILE MONITOR</div><h1>台股多空觀察</h1><div id="freshness" class="freshness" aria-live="polite">資料讀取中…</div><div id="meta" class="meta">每 60 秒自動更新</div></div><button id="refresh" type="button">立即更新</button></header>
-<section id="today-summary" class="summary" aria-labelledby="summary-heading"><h2 id="summary-heading">今日重點</h2><div class="summary-grid"><div class="summary-item"><span>資料日</span><b id="summary-date">—</b></div><div class="summary-item"><span>可執行偏多</span><b id="summary-long">—</b></div><div class="summary-item"><span>可執行偏空</span><b id="summary-short">—</b></div><div class="summary-item"><span>夜盤情境</span><b id="summary-night">讀取中</b></div></div><div id="gate" class="status">策略閘門讀取中…</div></section>
+<section id="today-summary" class="summary" aria-labelledby="summary-heading"><h2 id="summary-heading">今日重點</h2><div id="preflight-center" class="preflight-center" aria-live="polite"><span>盤前狀態</span><b id="preflight-title">檢查中</b><small id="preflight-detail">正在讀取資料日期與官方當沖資格…</small></div><div class="summary-grid"><div class="summary-item"><span>資料日</span><b id="summary-date">—</b></div><div class="summary-item"><span>可執行偏多</span><b id="summary-long">—</b></div><div class="summary-item"><span>可執行偏空</span><b id="summary-short">—</b></div><div class="summary-item"><span>夜盤情境</span><b id="summary-night">讀取中</b></div></div><div id="gate" class="status">策略閘門讀取中…</div></section>
 <div class="notice">僅供研究、非投資建議。報價狀態為「非即時」時，不可視為目前成交價。</div>
 <h2 id="stock-heading">個股觀察</h2>
 <nav class="tabs" aria-label="多空方向"><button data-side="long" class="active" type="button" aria-pressed="true">偏多前 10</button><button data-side="short" type="button" aria-pressed="false">偏空前 10</button></nav>
@@ -42,13 +42,20 @@
 <script>
 let data=null,side='long',loading=false;
 const $=selector=>document.querySelector(selector);
-const list=$('#list'),meta=$('#meta'),gate=$('#gate'),offline=$('#offline'),globalMarket=$('#global-market'),freshness=$('#freshness');
+const list=$('#list'),meta=$('#meta'),gate=$('#gate'),offline=$('#offline'),globalMarket=$('#global-market'),freshness=$('#freshness'),preflightCenter=$('#preflight-center'),preflightTitle=$('#preflight-title'),preflightDetail=$('#preflight-detail');
 const fmt=value=>value==null?'—':Number(value).toLocaleString('zh-TW',{maximumFractionDigits:2});
 const pctText=value=>value==null?'—':(value>0?'+':'')+fmt(value)+'%';
 function el(tag,className,text){const node=document.createElement(tag);if(className)node.className=className;if(text!==undefined)node.textContent=String(text);return node}
 function trendClass(value){return value>0?'up':value<0?'down':''}
+function preflightStatus(){
+  const execution=data?.execution_eligibility||{},status=data?.execution_status||{},longs=data?.long_top10||[],shorts=data?.short_top10||[],date=data?.data_date||'—';
+  if(status.state==='paused')return ['paused','休市觀察｜不可執行','沿用資料日 '+date+'｜正式執行清單為空'];
+  if(data?.execution_status?.ready===true)return ['ready','今日可執行','資料日 '+date+'｜偏多 '+longs.length+'｜偏空 '+shorts.length+'｜官方資格 '+(execution.source_date||'—')+' 已驗證'];
+  return ['blocked','官方資格或資料健康未完成｜不可執行','可執行清單已清空｜請等待成功更新'];
+}
 function renderSummary(){
   const longs=data?.long_top10||[],shorts=data?.short_top10||[],scenario=data?.global_market?.scenario||{};
+  const preflight=preflightStatus();preflightCenter.className='preflight-center '+preflight[0];preflightTitle.textContent=preflight[1];preflightDetail.textContent=preflight[2];
   $('#summary-date').textContent=data?.data_date||'—';
   $('#summary-long').textContent=longs.length+' 檔訊號';
   $('#summary-short').textContent=shorts.length+' 檔訊號';
@@ -114,7 +121,7 @@ function render(){
 }
 function failClosedRows(value){
   const base=value&&typeof value==='object'&&!Array.isArray(value)?value:{};
-  return {...base,long_top10:[],short_top10:[]};
+  return {...base,long_top10:[],short_top10:[],execution_status:{ready:false,state:'blocked',health_verified:false,eligibility_verified:false}};
 }
 function updateFreshness(){
   freshness.classList.remove('failed');
@@ -125,7 +132,7 @@ function updateFreshness(){
   meta.textContent='資料日 '+(data?.data_date||'—')+' · 來源更新 '+stamp+' · 本次查詢 '+(data?.generated_at||'—');
 }
 async function load(){
-  if(loading)return;loading=true;freshness.classList.remove('failed');freshness.textContent='更新中…';
+  if(loading)return;loading=true;freshness.classList.remove('failed');freshness.textContent='更新中…';preflightCenter.className='preflight-center';preflightTitle.textContent='更新中';preflightDetail.textContent='正在取得最新資料並核對官方當沖資格…';
   try{
     const response=await fetch('/api/dashboard',{cache:'no-store'});
     if(!response.ok)throw Error((await response.json()).error||response.status);
@@ -134,7 +141,7 @@ async function load(){
     data=failClosedRows(data);render();
     let saved=null;try{saved=localStorage.getItem('dashboard')}catch(storageError){}
     if(saved){try{const cached=JSON.parse(saved);data=failClosedRows(cached);render()}catch(parseError){try{localStorage.removeItem('dashboard')}catch(storageError){}}}
-    offline.style.display='block';freshness.classList.add('failed');freshness.textContent='更新失敗';meta.textContent='資料暫時無法載入，請稍後再試。';
+    offline.style.display='block';freshness.classList.add('failed');freshness.textContent='更新失敗';meta.textContent='資料暫時無法載入，請稍後再試。';preflightCenter.className='preflight-center blocked';preflightTitle.textContent='更新失敗｜不可執行';preflightDetail.textContent='可執行清單已清空｜請稍後重新整理';
   }finally{loading=false}
 }
 document.querySelectorAll('[data-side]').forEach(button=>button.onclick=()=>{side=button.dataset.side;document.querySelectorAll('[data-side]').forEach(item=>{const active=item===button;item.classList.toggle('active',active);item.setAttribute('aria-pressed',String(active))});render()});

@@ -175,16 +175,44 @@ def signal_table_columns():
     return columns, headings, widths
 
 
-def run_desktop_update(data_dir):
+def preflight_status(result, health_state, long_count=0, short_count=0):
+    """Return a fail-closed, glanceable status for the next session."""
+    result = result if isinstance(result, dict) else {}
+    execution = result.get("execution_eligibility")
+    execution = execution if isinstance(execution, dict) else {}
+    data_date = result.get("data_date") or "—"
+    source_date = execution.get("source_date") or "—"
+    if health_state == "paused":
+        return ("paused", "休市觀察｜不可執行",
+                f"沿用資料日 {data_date}｜正式執行清單為空")
+    if health_state == "stale":
+        return ("blocked", "資料過期｜不可執行",
+                f"目前資料日 {data_date}｜請先完成成功更新")
+    if health_state != "success":
+        return ("blocked", "更新失敗｜不可執行",
+                "可執行清單已清空｜請查看下方更新進度或錯誤訊息")
+    if not execution_payload_verified(result, health_state):
+        return ("blocked", "官方資格未完成｜不可執行",
+                f"資料日 {data_date}｜等待TWSE／TPEx官方資格核對")
+    return ("ready", "今日可執行",
+            f"資料日 {data_date}｜偏多 {long_count}｜偏空 {short_count}｜官方資格 {source_date} 已驗證")
+
+
+def run_desktop_update(data_dir, progress_callback=None):
     """Use the same validated Taipei-boundary pipeline as the scheduled CLI update."""
+    notify = progress_callback or (lambda _label, _value: None)
     root = Path(data_dir).parent
+    notify("步驟 1/4｜準備更新", 10)
+    notify("步驟 2/4｜下載並驗證官方資料與當沖資格", 35)
     completed = subprocess.run([sys.executable, str(root / "app.py"), "--update"],
                                cwd=root, text=True, capture_output=True)
     if completed.returncode != 0:
         raise RuntimeError((completed.stderr or completed.stdout or "更新失敗").strip())
+    notify("步驟 3/4｜載入並檢查篩選結果", 80)
     result = load_result(Path(data_dir))
     if not result:
         raise RuntimeError("更新完成但找不到有效結果")
+    notify("步驟 4/4｜更新完成", 100)
     return result
 
 
@@ -275,21 +303,37 @@ def desktop_execution_health(report, result):
     return "success"
 
 
-def executable_signal_lists(result, health_state="success"):
-    if health_state != "success":
-        return [], []
-    execution = result.get("execution_eligibility") or {}
+def execution_payload_verified(result, health_state="success"):
+    if health_state != "success" or not isinstance(result, dict):
+        return False
+    execution = result.get("execution_eligibility")
+    if not isinstance(execution, dict) or execution.get("enforced") is not True:
+        return False
     data_date = result.get("data_date")
     source_date = execution.get("source_date")
-    if not execution.get("enforced"):
-        return [], []
     try:
         source_day = date.fromisoformat(source_date)
         signal_day = date.fromisoformat(data_date)
     except (TypeError, ValueError):
-        return [], []
+        return False
     if source_date != source_day.isoformat() or data_date != signal_day.isoformat() or source_day < signal_day:
+        return False
+    longs = result.get("long_top10", result.get("top10", []))
+    shorts = result.get("short_top10", [])
+    if not isinstance(longs, list) or not isinstance(shorts, list):
+        return False
+    return all(isinstance(row, dict)
+               and isinstance(row.get("day_trading_eligibility"), dict)
+               and row["day_trading_eligibility"].get("eligible") is True
+               and row["day_trading_eligibility"].get("source_date") == source_date
+               for row in longs + shorts)
+
+
+def executable_signal_lists(result, health_state="success"):
+    if not execution_payload_verified(result, health_state):
         return [], []
+    execution = result.get("execution_eligibility") or {}
+    source_date = execution.get("source_date")
 
     def verified(rows):
         return [row for row in rows if
@@ -514,6 +558,18 @@ class Dashboard(tk.Tk):
         overview = tk.Frame(self, bg=BG); overview.pack(fill="x", padx=20, pady=(2, 9))
         tk.Label(overview, text="今日總覽", fg=FG, bg=BG,
                  font=("Microsoft JhengHei UI", 13, "bold")).pack(anchor="w", pady=(0, 5))
+        preflight = tk.Frame(overview, bg="#10233a", padx=14, pady=9,
+                             highlightthickness=1, highlightbackground="#294465")
+        preflight.pack(fill="x", pady=(0, 7))
+        tk.Label(preflight, text="盤前狀態", fg=MUTED, bg="#10233a",
+                 font=("Microsoft JhengHei UI", 9, "bold")).pack(side="left")
+        self.preflight_title_var = tk.StringVar(value="檢查中")
+        self.preflight_title_label = tk.Label(preflight, textvariable=self.preflight_title_var,
+                 fg="#fbbf24", bg="#10233a", font=("Microsoft JhengHei UI", 12, "bold"))
+        self.preflight_title_label.pack(side="left", padx=(14, 18))
+        self.preflight_detail_var = tk.StringVar(value="正在讀取資料日期與官方當沖資格…")
+        tk.Label(preflight, textvariable=self.preflight_detail_var, fg=FG, bg="#10233a",
+                 anchor="w", font=("Microsoft JhengHei UI", 9)).pack(side="left", fill="x", expand=True)
         cards = tk.Frame(overview, bg=BG); cards.pack(fill="x")
         self.card_vars, self.card_title_vars, self.card_value_labels = [], [], []
         card_colors = (FG, "#fb7185", "#34d399")
@@ -718,9 +774,14 @@ class Dashboard(tk.Tk):
 
     def update_data(self):
         self.button.configure(state="disabled"); self.status.set("更新中…")
+        self.progress["value"] = 0
+        self.preflight_title_var.set("更新中")
+        self.preflight_title_label.configure(fg=ACCENT)
+        self.preflight_detail_var.set("步驟 1/4｜準備更新")
         def worker():
             try:
-                self.events.put(("done", run_desktop_update(self.data_dir)))
+                callback = lambda label, value: self.events.put(("progress", label, value))
+                self.events.put(("done", run_desktop_update(self.data_dir, callback)))
             except Exception as exc:
                 self.events.put(("error", str(exc)))
         threading.Thread(target=worker, daemon=True).start()
@@ -818,7 +879,10 @@ class Dashboard(tk.Tk):
         try:
             while True:
                 event = self.events.get_nowait()
-                if event[0] == "progress": self.status.set(event[1]); self.progress["value"] = event[2]
+                if event[0] == "progress":
+                    self.status.set(event[1]); self.progress["value"] = event[2]
+                    self.preflight_title_var.set("更新中")
+                    self.preflight_detail_var.set(event[1])
                 elif event[0] == "done": self._render(event[1], "更新成功"); self._load_health(); self.progress["value"] = 100; self.button.configure(state="normal")
                 elif event[0] == "backtest_done":
                     self._load_backtest(); self._set_tool_busy("backtest", False); self.status.set("100日回測完成")
@@ -838,6 +902,11 @@ class Dashboard(tk.Tk):
     def _handle_data_update_error(self, message):
         if self.current_result:
             self._render(self.current_result, "更新失敗", health_state_override="error")
+        else:
+            self.preflight_title_var.set("更新失敗｜不可執行")
+            self.preflight_title_label.configure(fg="#fb7185")
+            self.preflight_detail_var.set("可執行清單已清空｜請查看錯誤訊息後重新更新")
+        self.progress.configure(value=0)
         self.status.set("更新失敗｜" + message)
         self.button.configure(state="normal")
         messagebox.showerror("資料更新失敗", message)
@@ -853,6 +922,12 @@ class Dashboard(tk.Tk):
                 health_state = "error"
         longs, shorts = executable_signal_lists(result, health_state=health_state)
         display_longs, display_shorts = display_signal_lists(result, health_state=health_state)
+        preflight_key, preflight_title, preflight_detail = preflight_status(
+            result, health_state, len(longs), len(shorts))
+        self.preflight_title_var.set(preflight_title)
+        self.preflight_detail_var.set(preflight_detail)
+        self.preflight_title_label.configure(fg={"ready": "#34d399", "paused": "#fbbf24"}.get(
+            preflight_key, "#fb7185"))
         signals = result.get("signals", result.get("qualified", []))
         optimization = result.get("optimization", {})
         strategy_gate = result.get("strategy_gate", {})
