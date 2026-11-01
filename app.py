@@ -10,9 +10,11 @@ from taistock.health import export_diagnostics
 from taistock.backtest import (OfficialHistoryFetcher, build_backtest,
                                required_history_days, write_backtest_outputs)
 from taistock.broker_risk import enrich_broker_risk
-from taistock.day_trading import (fetch_and_apply_execution_eligibility,
+from taistock.day_trading import (TPEX_DAY_TRADE, TWSE_DAY_TRADE,
+                                  fetch_and_apply_execution_eligibility,
                                   pause_execution_for_closed_market)
-from taistock.market_calendar import latest_official_quote_date, market_session_status
+from taistock.market_calendar import (DGPA_CLOSURE, TWSE_HOLIDAY,
+                                      latest_official_quote_date, market_session_status)
 from taistock.net import HttpClient
 from taistock.notify import notify, build_summary
 from taistock.scanner import Scanner
@@ -22,6 +24,120 @@ from taistock.strategy_optimize import load_strategy_gate, optimize_strategy
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / "data"
 TAIPEI = timezone(timedelta(hours=8))
+
+
+def _strict_iso_date(value, label):
+    if not isinstance(value, str):
+        raise ValueError(f"{label}不是有效日期")
+    try:
+        parsed = datetime.strptime(value, "%Y-%m-%d").date()
+    except ValueError as exc:
+        raise ValueError(f"{label}不是有效日期") from exc
+    if parsed.isoformat() != value:
+        raise ValueError(f"{label}不是有效日期")
+    return parsed
+
+
+def _validate_standalone_update_result(result):
+    if (not isinstance(result, dict) or result.get("errors") != []
+            or not isinstance(result.get("long_top10"), list)
+            or not isinstance(result.get("short_top10"), list)):
+        raise ValueError("更新結果不符合成功格式")
+    data_date = _strict_iso_date(result.get("data_date"), "資料日期")
+    session = result.get("market_session")
+    if session is None:
+        return False
+    if (not isinstance(session, dict)
+            or session.get("status") != "paused_no_new_official_session"):
+        raise ValueError("市場沿用狀態格式無效")
+    requested = _strict_iso_date(session.get("requested_date"), "要求日期")
+    official = _strict_iso_date(session.get("latest_official_date"), "官方資料日期")
+    eligibility = result.get("execution_eligibility")
+    if (official != data_date or requested <= official
+            or not isinstance(eligibility, dict)
+            or eligibility.get("enforced") is not True
+            or type(eligibility.get("eligible_count")) is not int
+            or eligibility.get("eligible_count") != 0
+            or eligibility.get("source_date") != result["data_date"]
+            or eligibility.get("requested_date") != session["requested_date"]
+            or eligibility.get("execution_for_signal_date") != "paused_no_new_official_session"):
+        raise ValueError("市場沿用狀態未通過完整官方證明")
+    collection = result.get("data_collection")
+    checked_at = collection.get("session_checked_at") if isinstance(collection, dict) else None
+    try:
+        checked_moment = datetime.fromisoformat(checked_at.replace("Z", "+00:00"))
+    except (AttributeError, TypeError, ValueError) as exc:
+        raise ValueError("市場沿用缺少有效驗證時間") from exc
+    if (checked_moment.tzinfo is None
+            or checked_moment.astimezone(TAIPEI).date() != requested
+            or collection.get("latest_complete_date") != result["data_date"]
+            or collection.get("latest_official_quote_date") != result["data_date"]
+            or collection.get("carried_forward") is not True):
+        raise ValueError("市場沿用缺少即時官方行情證明")
+    closure_reason = session.get("closure_reason")
+    closure_source = session.get("closure_source")
+    if (closure_reason is None) != (closure_source is None):
+        raise ValueError("市場沿用休市證明不完整")
+    if closure_reason is None:
+        if eligibility.get("sources") != [TWSE_DAY_TRADE, TPEX_DAY_TRADE]:
+            raise ValueError("市場沿用缺少官方資格來源證明")
+        allowed_row_reason = "no_new_official_session"
+    else:
+        recognized_closure = (
+            (closure_reason == "weekend" and closure_source == "calendar" and requested.weekday() >= 5)
+            or (closure_reason == "twse_holiday" and closure_source == TWSE_HOLIDAY)
+            or (closure_reason == "taipei_disaster_stop_work" and closure_source == DGPA_CLOSURE)
+        )
+        if not recognized_closure or eligibility.get("sources") != [closure_source]:
+            raise ValueError("市場沿用休市證明來源無效")
+        allowed_row_reason = "market_closed"
+    for key in ("signals", "qualified", "top10", "long_top10", "short_top10"):
+        rows = result.get(key, [])
+        if not isinstance(rows, list):
+            raise ValueError("沿用觀察清單格式無效")
+        for row in rows:
+            row_eligibility = row.get("day_trading_eligibility") if isinstance(row, dict) else None
+            if (not isinstance(row_eligibility, dict)
+                    or row_eligibility.get("eligible") is not False
+                    or row_eligibility.get("source_date") != result["data_date"]
+                    or row_eligibility.get("reason") != allowed_row_reason):
+                raise ValueError("沿用觀察列未明確標記為不可執行")
+    return True
+
+
+def _write_standalone_update_status(data_dir, *, started_at, result=None, error=None):
+    """Atomically publish the canonical health status for every CLI refresh."""
+    completed_at = datetime.now(TAIPEI)
+    if error is None:
+        carried = _validate_standalone_update_result(result)
+        session = result.get("market_session")
+        payload = {
+            "status": "success",
+            "errors": [],
+            "data_date": result["data_date"],
+            "run_mode": "previous_close_carry_forward" if carried else "full_refresh",
+            "started_at": started_at.isoformat(timespec="seconds"),
+            "completed_at": completed_at.isoformat(timespec="seconds"),
+        }
+        if carried:
+            payload["market_session"] = session
+    else:
+        payload = {
+            "status": "error",
+            "errors": ["standalone_update_failed"],
+            "run_mode": "standalone_update",
+            "started_at": started_at.isoformat(timespec="seconds"),
+            "completed_at": completed_at.isoformat(timespec="seconds"),
+        }
+    data_dir.mkdir(parents=True, exist_ok=True)
+    path = data_dir / "daily_status.json"
+    temporary = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+    try:
+        temporary.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+                             encoding="utf-8", newline="\n")
+        os.replace(temporary, path)
+    finally:
+        temporary.unlink(missing_ok=True)
 
 
 def app_version():
@@ -176,6 +292,7 @@ def update(send_notification=False):
     if calendar.get("status") == "closed":
         result["data_collection"].update({
             "latest_official_quote_date": result["data_date"],
+            "carried_forward": True,
             "session_checked_at": datetime.now(TAIPEI).isoformat(timespec="seconds"),
         })
     result = save_result(result, DATA)
@@ -312,9 +429,21 @@ def main(argv=None):
             print(f"策略優化失敗：{exc}", file=sys.stderr); return 1
         return 0
     if args.update:
-        try: update(args.notify)
+        started_at = datetime.now(TAIPEI)
+        try:
+            result = update(args.notify)
+            _validate_standalone_update_result(result)
         except Exception as exc:
+            try:
+                _write_standalone_update_status(DATA, started_at=started_at, error=exc)
+            except Exception as status_exc:
+                print(f"健康狀態寫入失敗：{status_exc}", file=sys.stderr)
             print(f"更新失敗：{exc}", file=sys.stderr); return 1
+        try:
+            _write_standalone_update_status(DATA, started_at=started_at, result=result)
+        except Exception as status_exc:
+            print(f"健康狀態寫入失敗：{status_exc}", file=sys.stderr)
+            return 1
         return 0
     from taistock.ui import Dashboard
     Dashboard(DATA).mainloop(); return 0

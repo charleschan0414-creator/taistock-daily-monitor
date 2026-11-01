@@ -1,8 +1,8 @@
 {
-  "version": "2026.10.30.1",
+  "version": "2026.11.01.1",
   "files": {
     "README.md": "b1b9cbce24c32a1c8167effd8a8bb915887fd6df4d1dd362981639c612d53d46",
-    "app.py": "db49e22bc373eab1da5c59e43dd76344df6ec690cdcaf3182c182f4ed0821fe1",
+    "app.py": "20f0bbbb50f6d07aee652e1ef7f87c3cd3acf3ee9d8acadf6ffa8d1d309a27c5",
     "build_software_manifest.py": "9d63fa5c98729ea011746e0856ec42e819ad1e3f4e0ddf883aa9a3e801f9dfa5",
     "daily_pipeline.py": "a97f2333f489b4ebdc0acd189eb21b64b44e07e5397968d66f85b5b43c7042b5",
     "install.bat": "75a92f0baf46ec57f96697cf3eb0d831f4be10f4b03337fc76168f8a4bc95ebb",

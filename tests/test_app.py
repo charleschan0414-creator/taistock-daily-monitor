@@ -5,13 +5,247 @@ from contextlib import redirect_stdout
 from datetime import datetime, timezone
 from io import StringIO
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import app
 from tests.test_strategy_optimize import fixture_backtest
 
 
 class AppCliTests(unittest.TestCase):
+    def test_monday_update_persists_friday_close_as_canonical_paused_status(self):
+        paused = {
+            "data_date": "2026-10-30",
+            "errors": [], "long_top10": [], "short_top10": [],
+            "market_session": {
+                "status": "paused_no_new_official_session",
+                "requested_date": "2026-11-02",
+                "latest_official_date": "2026-10-30",
+                "notice": "星期一盤前沿用星期五收盤資料並暫停執行。",
+            },
+            "execution_eligibility": {
+                "enforced": True,
+                "source_date": "2026-10-30",
+                "requested_date": "2026-11-02",
+                "execution_for_signal_date": "paused_no_new_official_session",
+                "eligible_count": 0,
+                "sources": [app.TWSE_DAY_TRADE, app.TPEX_DAY_TRADE],
+            },
+            "data_collection": {
+                "latest_complete_date": "2026-10-30",
+                "latest_official_quote_date": "2026-10-30",
+                "carried_forward": True,
+                "session_checked_at": "2026-11-02T06:30:00+08:00",
+            },
+        }
+        with tempfile.TemporaryDirectory() as directory, \
+             patch.object(app, "DATA", Path(directory)), \
+             patch.object(app, "update", return_value=paused):
+            self.assertEqual(app.main(["--update"]), 0)
+            status = json.loads((Path(directory) / "daily_status.json").read_text(encoding="utf-8"))
+        self.assertEqual(status["status"], "success")
+        self.assertEqual(status["errors"], [])
+        self.assertEqual(status["data_date"], "2026-10-30")
+        self.assertEqual(status["market_session"]["requested_date"], "2026-11-02")
+        self.assertEqual(status["run_mode"], "previous_close_carry_forward")
+
+    def test_standalone_update_rejects_invalid_success_date(self):
+        malformed = {"data_date": "not-a-date", "errors": [],
+                     "long_top10": [], "short_top10": []}
+        with tempfile.TemporaryDirectory() as directory, \
+             patch.object(app, "DATA", Path(directory)), \
+             patch.object(app, "update", return_value=malformed):
+            self.assertEqual(app.main(["--update"]), 1)
+            status = json.loads((Path(directory) / "daily_status.json").read_text(encoding="utf-8"))
+        self.assertEqual(status["status"], "error")
+        self.assertNotIn("not-a-date", json.dumps(status))
+
+    def test_standalone_update_rejects_unverified_carry_forward(self):
+        malformed = {
+            "data_date": "2026-10-30", "errors": [],
+            "long_top10": [], "short_top10": [],
+            "market_session": {
+                "status": "paused_no_new_official_session",
+                "requested_date": "2026-11-02",
+                "latest_official_date": "2026-10-29",
+            },
+            "execution_eligibility": {"enforced": True, "eligible_count": 0},
+        }
+        with tempfile.TemporaryDirectory() as directory, \
+             patch.object(app, "DATA", Path(directory)), \
+             patch.object(app, "update", return_value=malformed):
+            self.assertEqual(app.main(["--update"]), 1)
+            status = json.loads((Path(directory) / "daily_status.json").read_text(encoding="utf-8"))
+        self.assertEqual(status["status"], "error")
+
+    def test_standalone_update_rejects_carry_forward_without_live_quote_proof(self):
+        malformed = {
+            "data_date": "2026-10-30", "errors": [],
+            "long_top10": [], "short_top10": [],
+            "market_session": {
+                "status": "paused_no_new_official_session",
+                "requested_date": "2026-11-02", "latest_official_date": "2026-10-30",
+            },
+            "execution_eligibility": {
+                "enforced": True, "eligible_count": 0,
+                "source_date": "2026-10-30", "requested_date": "2026-11-02",
+                "execution_for_signal_date": "paused_no_new_official_session",
+                "sources": ["https://www.twse.com.tw/rwd/zh/dayTrading/TWTB4U",
+                            "https://www.tpex.org.tw/openapi/v1/tpex_securities"],
+            },
+        }
+        with tempfile.TemporaryDirectory() as directory, \
+             patch.object(app, "DATA", Path(directory)), \
+             patch.object(app, "update", return_value=malformed):
+            self.assertEqual(app.main(["--update"]), 1)
+            status = json.loads((Path(directory) / "daily_status.json").read_text(encoding="utf-8"))
+        self.assertEqual(status["status"], "error")
+
+    def test_standalone_update_rejects_closure_with_mismatched_execution_source(self):
+        malformed = {
+            "data_date": "2026-10-30", "errors": [],
+            "signals": [], "qualified": [], "top10": [],
+            "long_top10": [], "short_top10": [],
+            "market_session": {
+                "status": "paused_no_new_official_session",
+                "requested_date": "2026-11-01", "latest_official_date": "2026-10-30",
+                "closure_reason": "weekend", "closure_source": "calendar",
+            },
+            "execution_eligibility": {
+                "enforced": True, "eligible_count": 0,
+                "source_date": "2026-10-30", "requested_date": "2026-11-01",
+                "execution_for_signal_date": "paused_no_new_official_session",
+                "sources": ["https://evil.invalid/fake"],
+            },
+            "data_collection": {
+                "latest_complete_date": "2026-10-30",
+                "latest_official_quote_date": "2026-10-30",
+                "carried_forward": True,
+                "session_checked_at": "2026-11-01T06:30:00+08:00",
+            },
+        }
+        with tempfile.TemporaryDirectory() as directory, \
+             patch.object(app, "DATA", Path(directory)), \
+             patch.object(app, "update", return_value=malformed):
+            self.assertEqual(app.main(["--update"]), 1)
+            status = json.loads((Path(directory) / "daily_status.json").read_text(encoding="utf-8"))
+        self.assertEqual(status["status"], "error")
+
+    def test_standalone_update_rejects_executable_or_unmarked_carried_rows(self):
+        base = {
+            "data_date": "2026-10-30", "errors": [], "short_top10": [],
+            "market_session": {
+                "status": "paused_no_new_official_session",
+                "requested_date": "2026-11-02", "latest_official_date": "2026-10-30",
+            },
+            "execution_eligibility": {
+                "enforced": True, "eligible_count": 0,
+                "source_date": "2026-10-30", "requested_date": "2026-11-02",
+                "execution_for_signal_date": "paused_no_new_official_session",
+                "sources": [app.TWSE_DAY_TRADE, app.TPEX_DAY_TRADE],
+            },
+            "data_collection": {
+                "latest_complete_date": "2026-10-30",
+                "latest_official_quote_date": "2026-10-30",
+                "carried_forward": True,
+                "session_checked_at": "2026-11-02T06:30:00+08:00",
+            },
+        }
+        invalid_results = [
+            {**base, "execution_eligibility": {**base["execution_eligibility"], "eligible_count": 1},
+             "long_top10": []},
+            {**base, "long_top10": [{"code": "6269"}]},
+            {**base, "long_top10": [], "signals": [{
+                "code": "6269", "day_trading_eligibility": {
+                    "eligible": True, "source_date": "2026-10-30",
+                    "reason": "no_new_official_session",
+                }}]},
+        ]
+        for malformed in invalid_results:
+            with self.subTest(malformed=malformed), tempfile.TemporaryDirectory() as directory, \
+                 patch.object(app, "DATA", Path(directory)), \
+                 patch.object(app, "update", return_value=malformed):
+                self.assertEqual(app.main(["--update"]), 1)
+                status = json.loads((Path(directory) / "daily_status.json").read_text(encoding="utf-8"))
+                self.assertEqual(status["status"], "error")
+
+    def test_full_refresh_market_closure_marks_result_as_carried_forward(self):
+        scan = {
+            "data_date": "2026-10-30", "top100_count": 100,
+            "history_success_count": 100, "errors": [],
+            "signals": [], "qualified": [], "top10": [],
+            "long_top10": [], "short_top10": [],
+            "long_count": 0, "short_count": 0,
+            "optimization": {"status": "unchanged"},
+            "strategy_gate": {"status": "protective"},
+        }
+        fetcher = MagicMock()
+        fetcher.collect.return_value = [{"date": "2026-10-30"}]
+        fetcher.requests = 1
+        fetcher.cache_hits = 0
+        scanner = MagicMock()
+        scanner.run_from_days.return_value = scan
+        with patch("app.carry_forward_if_market_closed", return_value=None), \
+             patch("app.load_optimizer_state", return_value={"weights": {}}), \
+             patch("app.load_strategy_gate", return_value={}), \
+             patch("app.OfficialHistoryFetcher", return_value=fetcher), \
+             patch("app.Scanner", return_value=scanner), \
+             patch("app.market_session_status", return_value={
+                 "status": "closed", "reason": "weekend", "source": "calendar"}), \
+             patch("app.latest_official_quote_date", return_value="2026-10-30"), \
+             patch("app.enrich_broker_risk", side_effect=lambda result: result), \
+             patch("app.save_result", side_effect=lambda result, data: result), \
+             patch("app.datetime") as clock:
+            clock.now.return_value = datetime(2026, 11, 1, 6, 30, tzinfo=app.TAIPEI)
+            result = app.update()
+        self.assertTrue(result["data_collection"]["carried_forward"])
+        self.assertEqual(result["data_collection"]["latest_official_quote_date"], "2026-10-30")
+
+    def test_status_replace_failure_preserves_previous_file_and_removes_temp(self):
+        started = datetime(2026, 11, 2, 6, 30, tzinfo=app.TAIPEI)
+        result = {"data_date": "2026-10-30", "errors": [],
+                  "long_top10": [], "short_top10": []}
+        with tempfile.TemporaryDirectory() as directory:
+            data = Path(directory)
+            status_path = data / "daily_status.json"
+            status_path.write_text('{"status":"previous"}\n', encoding="utf-8")
+            with patch("app.os.replace", side_effect=OSError("replace failed")):
+                with self.assertRaisesRegex(OSError, "replace failed"):
+                    app._write_standalone_update_status(data, started_at=started, result=result)
+            self.assertEqual(status_path.read_text(encoding="utf-8"), '{"status":"previous"}\n')
+            self.assertEqual(list(data.glob(".daily_status.json.*.tmp")), [])
+
+    def test_main_does_not_retry_status_replace_after_success_publish_failure(self):
+        started_result = {"data_date": "2026-10-30", "errors": [],
+                          "long_top10": [], "short_top10": []}
+        real_replace = app.os.replace
+        replace_calls = []
+
+        def fail_once(source, target):
+            replace_calls.append((source, target))
+            if len(replace_calls) == 1:
+                raise OSError("one-shot replace failure")
+            return real_replace(source, target)
+
+        with tempfile.TemporaryDirectory() as directory, \
+             patch.object(app, "DATA", Path(directory)), \
+             patch.object(app, "update", return_value=started_result), \
+             patch("app.os.replace", side_effect=fail_once):
+            status_path = Path(directory) / "daily_status.json"
+            status_path.write_text('{"status":"previous"}\n', encoding="utf-8")
+            self.assertEqual(app.main(["--update"]), 1)
+            self.assertEqual(status_path.read_text(encoding="utf-8"), '{"status":"previous"}\n')
+        self.assertEqual(len(replace_calls), 1)
+
+    def test_standalone_update_failure_persists_canonical_error_status(self):
+        with tempfile.TemporaryDirectory() as directory, \
+             patch.object(app, "DATA", Path(directory)), \
+             patch.object(app, "update", side_effect=RuntimeError("offline")):
+            self.assertEqual(app.main(["--update"]), 1)
+            status = json.loads((Path(directory) / "daily_status.json").read_text(encoding="utf-8"))
+        self.assertEqual(status["status"], "error")
+        self.assertEqual(status["errors"], ["standalone_update_failed"])
+        self.assertNotIn("offline", json.dumps(status))
+
     def test_closed_session_carries_latest_data_and_skips_full_market_scan(self):
         previous = {
             "data_date": "2026-10-22", "top100_count": 100,
@@ -51,6 +285,42 @@ class AppCliTests(unittest.TestCase):
         self.assertEqual(saved["signals"][0]["score"], 88.0)
         self.assertEqual(saved["execution_eligibility"]["eligible_count"], 0)
         eligibility_fetch.assert_not_called()
+        history_fetcher.assert_not_called()
+
+    def test_monday_preflight_carries_previous_complete_friday_close(self):
+        previous = {
+            "data_date": "2026-10-30", "top100_count": 100,
+            "history_success_count": 100, "errors": [],
+            "signals": [{"code": "6269", "score": 88.0}],
+            "long_top10": [{"code": "6269", "score": 88.0}], "short_top10": [],
+            "data_collection": {"latest_complete_date": "2026-10-30"},
+        }
+        paused = json.loads(json.dumps(previous))
+        paused["market_session"] = {
+            "status": "paused_no_new_official_session",
+            "requested_date": "2026-11-02",
+            "latest_official_date": "2026-10-30",
+            "notice": "星期一盤前沿用前一完整交易日收盤資料。",
+        }
+        paused["execution_eligibility"] = {
+            "enforced": True, "eligible_count": 0,
+            "execution_for_signal_date": "paused_no_new_official_session",
+        }
+        now = datetime(2026, 11, 2, 6, 30, tzinfo=app.TAIPEI)
+        with tempfile.TemporaryDirectory() as directory:
+            data = Path(directory)
+            (data / "latest.json").write_text(json.dumps(previous), encoding="utf-8")
+            with patch("app.market_session_status", return_value={"status": "open"}), \
+                 patch("app.fetch_and_apply_execution_eligibility", return_value=paused), \
+                 patch("app.latest_official_quote_date", return_value="2026-10-30"), \
+                 patch("app.OfficialHistoryFetcher") as history_fetcher:
+                result = app.carry_forward_if_market_closed(data, now=now, client=object())
+            saved = json.loads((data / "latest.json").read_text(encoding="utf-8"))
+        self.assertEqual(result["data_date"], "2026-10-30")
+        self.assertEqual(saved["market_session"]["requested_date"], "2026-11-02")
+        self.assertEqual(saved["market_session"]["latest_official_date"], "2026-10-30")
+        self.assertEqual(saved["execution_eligibility"]["eligible_count"], 0)
+        self.assertEqual(saved["signals"][0]["code"], "6269")
         history_fetcher.assert_not_called()
 
     def test_closed_session_refuses_to_promote_stale_previous_data(self):
