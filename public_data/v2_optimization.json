@@ -8,13 +8,13 @@
     "selection_objective": "standard net average return, then cumulative return, PF, drawdown, trades"
   },
   "train_dates": {
-    "from": "2026-06-02",
-    "to": "2026-09-09",
+    "from": "2026-06-03",
+    "to": "2026-09-10",
     "days": 70
   },
   "holdout_dates": {
-    "from": "2026-09-10",
-    "to": "2026-10-28",
+    "from": "2026-09-11",
+    "to": "2026-10-29",
     "days": 30
   },
   "costs": {
@@ -116,15 +116,6 @@
         "required_profitable_windows": 2,
         "windows": [
           {
-            "from": "2026-09-22",
-            "to": "2026-10-22",
-            "days": 20,
-            "trades": 0,
-            "profit_factor": null,
-            "data_sufficient": false,
-            "profit_factor_above_1": false
-          },
-          {
             "from": "2026-09-23",
             "to": "2026-10-27",
             "days": 20,
@@ -141,12 +132,21 @@
             "profit_factor": 0.0,
             "data_sufficient": true,
             "profit_factor_above_1": false
+          },
+          {
+            "from": "2026-09-29",
+            "to": "2026-10-29",
+            "days": 20,
+            "trades": 1,
+            "profit_factor": 0.0,
+            "data_sufficient": true,
+            "profit_factor_above_1": false
           }
         ],
         "profitable_windows": 0,
-        "data_sufficient": false,
+        "data_sufficient": true,
         "passed": false,
-        "reason": "資料不足：至少一個20日窗口沒有已成交樣本"
+        "reason": "不通過：三個窗口中少於兩個 standard PF>1"
       },
       "passed": false
     },
@@ -178,20 +178,20 @@
       },
       "holdout": {
         "standard": {
-          "trades": 2,
-          "win_rate": 0.5,
-          "average_return": -0.007490829874000982,
-          "profit_factor": 0.2762054476081903,
-          "max_drawdown": -0.020698773841961726,
-          "cumulative_return": -0.015099996999661469
+          "trades": 3,
+          "win_rate": 0.3333333333333333,
+          "average_return": -0.010989341128121865,
+          "profit_factor": 0.14778580267843017,
+          "max_drawdown": -0.032814766599081224,
+          "cumulative_return": -0.032814766599081224
         },
         "stress": {
-          "trades": 2,
-          "win_rate": 0.5,
-          "average_return": -0.008490829874000983,
-          "profit_factor": 0.21739081333884608,
-          "max_drawdown": -0.021698773841961727,
-          "cumulative_return": -0.01708401533991355
+          "trades": 3,
+          "win_rate": 0.3333333333333333,
+          "average_return": -0.011989341128121866,
+          "profit_factor": 0.11594194800184057,
+          "max_drawdown": -0.03574601564866442,
+          "cumulative_return": -0.03574601564866442
         }
       },
       "activation_checks": {
@@ -205,15 +205,6 @@
         "window_days": 20,
         "required_profitable_windows": 2,
         "windows": [
-          {
-            "from": "2026-09-22",
-            "to": "2026-10-22",
-            "days": 20,
-            "trades": 2,
-            "profit_factor": 0.2762054476081903,
-            "data_sufficient": true,
-            "profit_factor_above_1": false
-          },
           {
             "from": "2026-09-23",
             "to": "2026-10-27",
@@ -229,6 +220,15 @@
             "days": 20,
             "trades": 2,
             "profit_factor": 0.2762054476081903,
+            "data_sufficient": true,
+            "profit_factor_above_1": false
+          },
+          {
+            "from": "2026-09-29",
+            "to": "2026-10-29",
+            "days": 20,
+            "trades": 3,
+            "profit_factor": 0.14778580267843017,
             "data_sufficient": true,
             "profit_factor_above_1": false
           }
@@ -256,5 +256,5 @@
     ],
     "notice": "日 OHLC 只能保守模擬次一交易日當沖，不能重建盤中先後；不跨日持有，也不保證勝率或獲利。"
   },
-  "updated_at": "2026-10-29T08:59:31+00:00"
+  "updated_at": "2026-11-02T00:04:51+00:00"
 }
