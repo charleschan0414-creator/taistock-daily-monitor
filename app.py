@@ -275,8 +275,10 @@ def update(send_notification=False):
     execution_date = datetime.now(TAIPEI).date().isoformat()
     progress(f"核對 {execution_date} 官方當沖資格…", 90)
     calendar = market_session_status(HttpClient(), execution_date)
+    verified_quote_date = None
     if calendar.get("status") == "closed":
-        if latest_official_quote_date(HttpClient()) != result["data_date"]:
+        verified_quote_date = latest_official_quote_date(HttpClient())
+        if verified_quote_date != result["data_date"]:
             raise ValueError("休市日掃描結果不是兩市場最新完整官方行情")
         result = pause_execution_for_closed_market(
             result, execution_date, calendar.get("reason", "official_market_closed"),
@@ -289,9 +291,15 @@ def update(send_notification=False):
     result["data_collection"] = {"complete_trading_days": len(histories),
                                  "latest_complete_date": latest_complete_date(histories),
                                  "network_requests": fetcher.requests, "cache_hits": fetcher.cache_hits}
-    if calendar.get("status") == "closed":
+    session = result.get("market_session")
+    if (isinstance(session, dict)
+            and session.get("status") == "paused_no_new_official_session"):
+        if verified_quote_date is None:
+            verified_quote_date = latest_official_quote_date(HttpClient())
+        if verified_quote_date != result["data_date"]:
+            raise ValueError("沿用掃描結果不是兩市場最新完整官方行情")
         result["data_collection"].update({
-            "latest_official_quote_date": result["data_date"],
+            "latest_official_quote_date": verified_quote_date,
             "carried_forward": True,
             "session_checked_at": datetime.now(TAIPEI).isoformat(timespec="seconds"),
         })

@@ -139,6 +139,9 @@ def apply_execution_eligibility(result, twse_payload, tpex_payload, expected_sou
     short_rows = [row for row in kept if row.get("signal_direction") == "short"]
     status = "next_session_verified" if expected_source_date > signal_date else "signal_date_only_recheck_required"
     updated = dict(result)
+    # A newly verified official session supersedes any closure marker carried
+    # forward from the previous calendar day.
+    updated.pop("market_session", None)
     updated.update({
         "signals": kept,
         "qualified": long_rows,

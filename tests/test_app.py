@@ -200,6 +200,56 @@ class AppCliTests(unittest.TestCase):
         self.assertTrue(result["data_collection"]["carried_forward"])
         self.assertEqual(result["data_collection"]["latest_official_quote_date"], "2026-10-30")
 
+    def test_full_refresh_open_day_official_lag_marks_result_as_carried_forward(self):
+        scan = {
+            "data_date": "2026-11-02", "top100_count": 100,
+            "history_success_count": 100, "errors": [],
+            "signals": [], "qualified": [], "top10": [],
+            "long_top10": [], "short_top10": [],
+            "long_count": 0, "short_count": 0,
+            "optimization": {"status": "unchanged"},
+            "strategy_gate": {"status": "protective"},
+        }
+        paused = app.pause_execution_for_closed_market(
+            scan, "2026-11-03", eligibility_reason="no_new_official_session")
+        fetcher = MagicMock()
+        fetcher.collect.return_value = [{"date": "2026-11-02"}]
+        fetcher.requests = 1
+        fetcher.cache_hits = 0
+        scanner = MagicMock()
+        scanner.run_from_days.return_value = scan
+        with patch("app.carry_forward_if_market_closed", return_value=None), \
+             patch("app.load_optimizer_state", return_value={"weights": {}}), \
+             patch("app.load_strategy_gate", return_value={}), \
+             patch("app.OfficialHistoryFetcher", return_value=fetcher), \
+             patch("app.Scanner", return_value=scanner), \
+             patch("app.market_session_status", return_value={"status": "open"}), \
+             patch("app.latest_official_quote_date", return_value="2026-11-02"), \
+             patch("app.fetch_and_apply_execution_eligibility", return_value=paused), \
+             patch("app.enrich_broker_risk", side_effect=lambda result: result), \
+             patch("app.save_result", side_effect=lambda result, data: result), \
+             patch("app.datetime") as clock:
+            clock.now.return_value = datetime(2026, 11, 3, 6, 30, tzinfo=app.TAIPEI)
+            result = app.update()
+        self.assertTrue(result["data_collection"]["carried_forward"])
+        self.assertEqual(result["data_collection"]["latest_official_quote_date"], "2026-11-02")
+        self.assertIn("session_checked_at", result["data_collection"])
+
+        with patch("app.carry_forward_if_market_closed", return_value=None), \
+             patch("app.load_optimizer_state", return_value={"weights": {}}), \
+             patch("app.load_strategy_gate", return_value={}), \
+             patch("app.OfficialHistoryFetcher", return_value=fetcher), \
+             patch("app.Scanner", return_value=scanner), \
+             patch("app.market_session_status", return_value={"status": "open"}), \
+             patch("app.latest_official_quote_date",
+                   side_effect=ValueError("TWSE/TPEx quote mismatch")), \
+             patch("app.fetch_and_apply_execution_eligibility", return_value=paused), \
+             patch("app.enrich_broker_risk", side_effect=lambda value: value), \
+             patch("app.save_result") as save:
+            with self.assertRaisesRegex(ValueError, "quote mismatch"):
+                app.update()
+        save.assert_not_called()
+
     def test_status_replace_failure_preserves_previous_file_and_removes_temp(self):
         started = datetime(2026, 11, 2, 6, 30, tzinfo=app.TAIPEI)
         result = {"data_date": "2026-10-30", "errors": [],

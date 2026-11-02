@@ -70,6 +70,33 @@ class DayTradingEligibilityTests(unittest.TestCase):
         self.assertEqual(filtered["execution_eligibility"]["source_date"], "2026-10-21")
         self.assertEqual(filtered["execution_eligibility"]["execution_for_signal_date"], "next_session_verified")
 
+    def test_current_official_eligibility_clears_stale_paused_market_session(self):
+        result = {
+            "data_date": "2026-10-30",
+            "signals": [], "qualified": [], "top10": [],
+            "long_top10": [], "short_top10": [],
+            "market_session": {
+                "status": "paused_no_new_official_session",
+                "requested_date": "2026-11-01",
+                "latest_official_date": "2026-10-30",
+                "closure_reason": "weekend", "closure_source": "calendar",
+            },
+        }
+        twse = {"stat": "OK", "date": "20261102", "tables": [{
+            "fields": ["證券代號", "暫停現股賣出後現款買進當沖註記"],
+            "data": [],
+        }]}
+        tpex = [{"資料日期": "1151102", "證券代號": "2222",
+                 "暫停現股賣出後現款買進當沖註記": ""}]
+        updated = apply_execution_eligibility(result, twse, tpex, "2026-11-02")
+        self.assertNotIn("market_session", updated)
+        self.assertEqual(updated["execution_eligibility"]["source_date"], "2026-11-02")
+        mismatched_tpex = [{"資料日期": "1151101", "證券代號": "2222",
+                            "暫停現股賣出後現款買進當沖註記": ""}]
+        with self.assertRaises(ValueError):
+            apply_execution_eligibility(result, twse, mismatched_tpex, "2026-11-02")
+        self.assertIn("market_session", result)
+
     def test_unknown_market_direction_and_non_list_signals_fail_closed(self):
         result = {"data_date": "2026-10-20", "signals": [
             {"code": "1111", "name": "未知市場", "market": "其他", "signal_direction": "long"},
