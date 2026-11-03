@@ -8,8 +8,8 @@
   "cost_validated": false,
   "research_only": true,
   "period": {
-    "from": "2026-06-04",
-    "to": "2026-11-02"
+    "from": "2026-06-05",
+    "to": "2026-11-03"
   },
   "old_weights": {
     "volume_growth_pct": 0.35,
@@ -30,8 +30,8 @@
     "volume_rank": 0.1
   },
   "metrics": {
-    "baseline": -0.0075737066352838545,
-    "selected": -0.007007000746143876
+    "baseline": -0.0072163118698832,
+    "selected": -0.006649605980743225
   },
-  "updated_at": "2026-11-03T00:08:21+00:00"
+  "updated_at": "2026-11-03T08:59:12+00:00"
 }

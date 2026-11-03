@@ -1,200 +1,10 @@
 {
   "initial_capital": 1000000.0,
-  "final_capital": 494761.55449999956,
-  "total_return": -0.5052384455000005,
-  "net_return": -0.5052384455000005,
-  "max_drawdown": -0.5052384455000005,
+  "final_capital": 506406.75400000025,
+  "total_return": -0.49359324599999976,
+  "net_return": -0.49359324599999976,
+  "max_drawdown": -0.4994204970002152,
   "realized_trades": [
-    {
-      "signal_date": "2026-06-04",
-      "code": "2883",
-      "name": "凱基金",
-      "direction": "long",
-      "entry_trigger": 27.65,
-      "stop_loss": 26.25,
-      "target1": 29.75,
-      "target2": 30.45,
-      "score": 89.48,
-      "volume_growth_pct": 332.77,
-      "ma5_distance_pct": 12.62,
-      "institutional_abs_lots": 64321.97,
-      "volume_rank": 2,
-      "weights_used": {
-        "volume_growth_pct": 0.35,
-        "ma5_distance_pct": 0.3,
-        "institutional_lots": 0.25,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-06-05",
-      "entry": 27.65,
-      "exit": 27.6,
-      "exit_date": "2026-06-05",
-      "exit_reason": "forced_close",
-      "return": -0.001808318264014364,
-      "mfe": 0.030741410488245986,
-      "mae": -0.023508137432188016,
-      "trade_date": "2026-06-05",
-      "gross_return": -0.001808318264014364,
-      "shares": 3000,
-      "notional": 82950.0,
-      "gross_pnl": -149.99999999999147,
-      "cost": 360.8325,
-      "net_pnl": -510.83249999999146
-    },
-    {
-      "signal_date": "2026-06-04",
-      "code": "1718",
-      "name": "中纖",
-      "direction": "long",
-      "entry_trigger": 9.78,
-      "stop_loss": 9.29,
-      "target1": 10.5,
-      "target2": 10.75,
-      "score": 67.6,
-      "volume_growth_pct": 84.01,
-      "ma5_distance_pct": 19.86,
-      "institutional_abs_lots": 2619.31,
-      "volume_rank": 75,
-      "weights_used": {
-        "volume_growth_pct": 0.35,
-        "ma5_distance_pct": 0.3,
-        "institutional_lots": 0.25,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-06-05",
-      "entry": 9.89,
-      "exit": 9.29,
-      "exit_date": "2026-06-05",
-      "exit_reason": "stop",
-      "return": -0.06066734074823068,
-      "mfe": 0.03134479271991898,
-      "mae": -0.11830131445904953,
-      "trade_date": "2026-06-05",
-      "gross_return": -0.06066734074823068,
-      "shares": 8000,
-      "notional": 79120.0,
-      "gross_pnl": -4800.000000000011,
-      "cost": 344.17199999999997,
-      "net_pnl": -5144.1720000000105
-    },
-    {
-      "signal_date": "2026-06-04",
-      "code": "1312",
-      "name": "國喬",
-      "direction": "long",
-      "entry_trigger": 14.35,
-      "stop_loss": 13.65,
-      "target1": 15.4,
-      "target2": 15.75,
-      "score": 67.23,
-      "volume_growth_pct": 600.23,
-      "ma5_distance_pct": 8.56,
-      "institutional_abs_lots": 937.15,
-      "volume_rank": 12,
-      "weights_used": {
-        "volume_growth_pct": 0.35,
-        "ma5_distance_pct": 0.3,
-        "institutional_lots": 0.25,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-06-05",
-      "entry": 14.35,
-      "exit": 13.65,
-      "exit_date": "2026-06-05",
-      "exit_reason": "stop",
-      "return": -0.048780487804878,
-      "mfe": 0.006968641114982554,
-      "mae": -0.06968641114982578,
-      "trade_date": "2026-06-05",
-      "gross_return": -0.048780487804878,
-      "shares": 7000,
-      "notional": 100450.0,
-      "gross_pnl": -4899.999999999995,
-      "cost": 436.9575,
-      "net_pnl": -5336.957499999995
-    },
-    {
-      "signal_date": "2026-06-04",
-      "code": "2855",
-      "name": "統一證",
-      "direction": "long",
-      "entry_trigger": 56.1,
-      "stop_loss": 53.8,
-      "target1": 59.6,
-      "target2": 60.7,
-      "score": 53.65,
-      "volume_growth_pct": 196.02,
-      "ma5_distance_pct": 8.84,
-      "institutional_abs_lots": 294.02,
-      "volume_rank": 52,
-      "weights_used": {
-        "volume_growth_pct": 0.35,
-        "ma5_distance_pct": 0.3,
-        "institutional_lots": 0.25,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-06-05",
-      "entry": 58.1,
-      "exit": 59.6,
-      "exit_date": "2026-06-05",
-      "exit_reason": "target1",
-      "return": 0.025817555938037865,
-      "mfe": 0.029259896729776174,
-      "mae": -0.04991394148020652,
-      "trade_date": "2026-06-05",
-      "gross_return": 0.025817555938037865,
-      "shares": 1000,
-      "notional": 58100.0,
-      "gross_pnl": 1500.0,
-      "cost": 252.73499999999999,
-      "net_pnl": 1247.265
-    },
-    {
-      "signal_date": "2026-06-04",
-      "code": "2367",
-      "name": "燿華",
-      "direction": "short",
-      "entry_trigger": 61.5,
-      "stop_loss": 62.9,
-      "target1": 59.4,
-      "target2": 58.7,
-      "score": 45.4,
-      "volume_growth_pct": 22.61,
-      "ma5_distance_pct": 5.63,
-      "institutional_abs_lots": 3244.21,
-      "volume_rank": 97,
-      "weights_used": {
-        "volume_growth_pct": 0.35,
-        "ma5_distance_pct": 0.3,
-        "institutional_lots": 0.25,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-06-05",
-      "entry": 61.5,
-      "exit": 62.9,
-      "exit_date": "2026-06-05",
-      "exit_reason": "stop",
-      "return": -0.0227642276422764,
-      "mfe": 0.006504065040650383,
-      "mae": -0.05528455284552855,
-      "trade_date": "2026-06-05",
-      "gross_return": -0.0227642276422764,
-      "shares": 3000,
-      "notional": 184500.0,
-      "gross_pnl": -4199.999999999995,
-      "cost": 802.5749999999999,
-      "net_pnl": -5002.574999999995
-    },
     {
       "signal_date": "2026-06-05",
       "code": "1718",
@@ -227,11 +37,11 @@
       "mae": -0.09547738693467331,
       "trade_date": "2026-06-08",
       "gross_return": -0.05025125628140704,
-      "shares": 9000,
-      "notional": 89550.0,
-      "gross_pnl": -4500.0,
-      "cost": 389.54249999999996,
-      "net_pnl": -4889.5425
+      "shares": 10000,
+      "notional": 99500.0,
+      "gross_pnl": -5000.0,
+      "cost": 432.825,
+      "net_pnl": -5432.825
     },
     {
       "signal_date": "2026-06-08",
@@ -379,11 +189,11 @@
       "mae": -0.012114537444934015,
       "trade_date": "2026-06-09",
       "gross_return": -0.00330396475770922,
-      "shares": 2000,
-      "notional": 90800.0,
-      "gross_pnl": -299.99999999999716,
-      "cost": 394.97999999999996,
-      "net_pnl": -694.9799999999971
+      "shares": 3000,
+      "notional": 136200.0,
+      "gross_pnl": -449.99999999999574,
+      "cost": 592.4699999999999,
+      "net_pnl": -1042.4699999999957
     },
     {
       "signal_date": "2026-06-08",
@@ -835,11 +645,11 @@
       "mae": -0.02835332606324982,
       "trade_date": "2026-06-11",
       "gross_return": -0.027262813522355506,
-      "shares": 3000,
-      "notional": 137550.0,
-      "gross_pnl": -3750.0,
-      "cost": 598.3425,
-      "net_pnl": -4348.3425
+      "shares": 4000,
+      "notional": 183400.0,
+      "gross_pnl": -5000.0,
+      "cost": 797.79,
+      "net_pnl": -5797.79
     },
     {
       "signal_date": "2026-06-10",
@@ -1679,6 +1489,44 @@
     },
     {
       "signal_date": "2026-06-16",
+      "code": "6209",
+      "name": "今國光",
+      "direction": "long",
+      "entry_trigger": 96.3,
+      "stop_loss": 91.5,
+      "target1": 103.5,
+      "target2": 106.0,
+      "score": 70.6,
+      "volume_growth_pct": 122.02,
+      "ma5_distance_pct": 12.2,
+      "institutional_abs_lots": 5522.58,
+      "volume_rank": 25,
+      "weights_used": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "status": "settled",
+      "triggered": true,
+      "entry_date": "2026-06-17",
+      "entry": 96.3,
+      "exit": 103.5,
+      "exit_date": "2026-06-17",
+      "exit_reason": "target1",
+      "return": 0.07476635514018695,
+      "mfe": 0.08515057113187957,
+      "mae": -0.02596053997923157,
+      "trade_date": "2026-06-17",
+      "gross_return": 0.07476635514018695,
+      "shares": 1000,
+      "notional": 96300.0,
+      "gross_pnl": 7200.000000000003,
+      "cost": 418.905,
+      "net_pnl": 6781.095000000003
+    },
+    {
+      "signal_date": "2026-06-16",
       "code": "2340",
       "name": "台亞",
       "direction": "long",
@@ -1937,11 +1785,11 @@
       "mae": -0.013574660633484194,
       "trade_date": "2026-06-18",
       "gross_return": -0.004524886877828118,
-      "shares": 5000,
-      "notional": 110500.0,
-      "gross_pnl": -500.0000000000071,
-      "cost": 480.67499999999995,
-      "net_pnl": -980.675000000007
+      "shares": 6000,
+      "notional": 132600.0,
+      "gross_pnl": -600.0000000000085,
+      "cost": 576.81,
+      "net_pnl": -1176.8100000000086
     },
     {
       "signal_date": "2026-06-17",
@@ -2165,11 +2013,11 @@
       "mae": -0.011884550084889572,
       "trade_date": "2026-06-22",
       "gross_return": 0.03735144312393893,
-      "shares": 1000,
-      "notional": 29450.0,
-      "gross_pnl": 1100.0000000000014,
-      "cost": 128.1075,
-      "net_pnl": 971.8925000000014
+      "shares": 2000,
+      "notional": 58900.0,
+      "gross_pnl": 2200.0000000000027,
+      "cost": 256.215,
+      "net_pnl": 1943.7850000000028
     },
     {
       "signal_date": "2026-06-18",
@@ -2203,11 +2051,49 @@
       "mae": -0.0051948051948052685,
       "trade_date": "2026-06-22",
       "gross_return": 0.020779220779220706,
-      "shares": 9000,
-      "notional": 173250.0,
-      "gross_pnl": 3599.9999999999873,
-      "cost": 753.6374999999999,
-      "net_pnl": 2846.3624999999874
+      "shares": 10000,
+      "notional": 192500.0,
+      "gross_pnl": 3999.999999999986,
+      "cost": 837.3749999999999,
+      "net_pnl": 3162.624999999986
+    },
+    {
+      "signal_date": "2026-06-18",
+      "code": "1708",
+      "name": "東鹼",
+      "direction": "long",
+      "entry_trigger": 50.8,
+      "stop_loss": 48.95,
+      "target1": 53.6,
+      "target2": 54.5,
+      "score": 64.39,
+      "volume_growth_pct": 426.78,
+      "ma5_distance_pct": 5.92,
+      "institutional_abs_lots": 8246.84,
+      "volume_rank": 98,
+      "weights_used": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "status": "settled",
+      "triggered": true,
+      "entry_date": "2026-06-22",
+      "entry": 53.8,
+      "exit": 53.6,
+      "exit_date": "2026-06-22",
+      "exit_reason": "target1",
+      "return": -0.0037174721189590287,
+      "mfe": 0.01115241635687735,
+      "mae": -0.05576208178438662,
+      "trade_date": "2026-06-22",
+      "gross_return": -0.0037174721189590287,
+      "shares": 1000,
+      "notional": 53800.0,
+      "gross_pnl": -199.99999999999574,
+      "cost": 234.02999999999997,
+      "net_pnl": -434.0299999999957
     },
     {
       "signal_date": "2026-06-18",
@@ -2469,11 +2355,11 @@
       "mae": -0.01818181818181818,
       "trade_date": "2026-06-23",
       "gross_return": 0.06545454545454553,
-      "shares": 1000,
-      "notional": 41250.0,
-      "gross_pnl": 2700.0000000000027,
-      "cost": 179.4375,
-      "net_pnl": 2520.5625000000027
+      "shares": 2000,
+      "notional": 82500.0,
+      "gross_pnl": 5400.0000000000055,
+      "cost": 358.875,
+      "net_pnl": 5041.1250000000055
     },
     {
       "signal_date": "2026-06-22",
@@ -2583,11 +2469,11 @@
       "mae": -0.07172995780590714,
       "trade_date": "2026-06-23",
       "gross_return": -0.03375527426160341,
-      "shares": 5000,
-      "notional": 118500.0,
-      "gross_pnl": -4000.0000000000036,
-      "cost": 515.4749999999999,
-      "net_pnl": -4515.475000000004
+      "shares": 6000,
+      "notional": 142200.0,
+      "gross_pnl": -4800.000000000005,
+      "cost": 618.5699999999999,
+      "net_pnl": -5418.570000000004
     },
     {
       "signal_date": "2026-06-22",
@@ -3001,11 +2887,11 @@
       "mae": -0.02240566037735843,
       "trade_date": "2026-06-25",
       "gross_return": -0.015330188679245165,
-      "shares": 21000,
-      "notional": 178080.0,
-      "gross_pnl": -2729.999999999979,
-      "cost": 774.6479999999999,
-      "net_pnl": -3504.647999999979
+      "shares": 22000,
+      "notional": 186560.0,
+      "gross_pnl": -2859.999999999978,
+      "cost": 811.536,
+      "net_pnl": -3671.5359999999782
     },
     {
       "signal_date": "2026-06-24",
@@ -3571,11 +3457,11 @@
       "mae": 0.0,
       "trade_date": "2026-06-29",
       "gross_return": 0.02109704641350211,
-      "shares": 3000,
-      "notional": 35550.0,
-      "gross_pnl": 750.0,
-      "cost": 154.64249999999998,
-      "net_pnl": 595.3575000000001
+      "shares": 4000,
+      "notional": 47400.0,
+      "gross_pnl": 1000.0,
+      "cost": 206.19,
+      "net_pnl": 793.81
     },
     {
       "signal_date": "2026-06-26",
@@ -4483,11 +4369,11 @@
       "mae": -0.029147982062780204,
       "trade_date": "2026-07-02",
       "gross_return": -0.029147982062780204,
-      "shares": 6000,
-      "notional": 133800.0,
-      "gross_pnl": -3899.9999999999914,
-      "cost": 582.03,
-      "net_pnl": -4482.029999999992
+      "shares": 7000,
+      "notional": 156100.0,
+      "gross_pnl": -4549.99999999999,
+      "cost": 679.035,
+      "net_pnl": -5229.03499999999
     },
     {
       "signal_date": "2026-07-01",
@@ -4673,11 +4559,11 @@
       "mae": -0.02105263157894742,
       "trade_date": "2026-07-03",
       "gross_return": 0.04736842105263163,
-      "shares": 4000,
-      "notional": 114000.0,
-      "gross_pnl": 5400.0000000000055,
-      "cost": 495.9,
-      "net_pnl": 4904.100000000006
+      "shares": 5000,
+      "notional": 142500.0,
+      "gross_pnl": 6750.000000000007,
+      "cost": 619.875,
+      "net_pnl": 6130.125000000007
     },
     {
       "signal_date": "2026-07-02",
@@ -4901,11 +4787,11 @@
       "mae": -0.07586206896551721,
       "trade_date": "2026-07-06",
       "gross_return": -0.05172413793103448,
-      "shares": 5000,
-      "notional": 72500.0,
-      "gross_pnl": -3750.0,
-      "cost": 315.375,
-      "net_pnl": -4065.375
+      "shares": 6000,
+      "notional": 87000.0,
+      "gross_pnl": -4500.0,
+      "cost": 378.45,
+      "net_pnl": -4878.45
     },
     {
       "signal_date": "2026-07-06",
@@ -5172,6 +5058,44 @@
       "gross_pnl": 3989.9999999999823,
       "cost": 757.9005,
       "net_pnl": 3232.099499999982
+    },
+    {
+      "signal_date": "2026-07-06",
+      "code": "2337",
+      "name": "旺宏",
+      "direction": "short",
+      "entry_trigger": 143.0,
+      "stop_loss": 147.5,
+      "target1": 136.5,
+      "target2": 134.0,
+      "score": 43.6,
+      "volume_growth_pct": 21.27,
+      "ma5_distance_pct": 1.23,
+      "institutional_abs_lots": 10705.42,
+      "volume_rank": 15,
+      "weights_used": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "status": "settled",
+      "triggered": true,
+      "entry_date": "2026-07-07",
+      "entry": 143.0,
+      "exit": 136.5,
+      "exit_date": "2026-07-07",
+      "exit_reason": "target1",
+      "return": 0.045454545454545456,
+      "mfe": 0.045454545454545456,
+      "mae": -0.02097902097902098,
+      "trade_date": "2026-07-07",
+      "gross_return": 0.045454545454545456,
+      "shares": 1000,
+      "notional": 143000.0,
+      "gross_pnl": 6500.0,
+      "cost": 622.05,
+      "net_pnl": 5877.95
     },
     {
       "signal_date": "2026-07-06",
@@ -5623,11 +5547,11 @@
       "mae": -0.009493670886075972,
       "trade_date": "2026-07-09",
       "gross_return": 0.0,
-      "shares": 10000,
-      "notional": 158000.0,
+      "shares": 11000,
+      "notional": 173800.0,
       "gross_pnl": 0.0,
-      "cost": 687.3,
-      "net_pnl": -687.3
+      "cost": 756.03,
+      "net_pnl": -756.03
     },
     {
       "signal_date": "2026-07-08",
@@ -6535,11 +6459,11 @@
       "mae": -0.03689320388349512,
       "trade_date": "2026-07-14",
       "gross_return": -0.0019417475728155617,
-      "shares": 2000,
-      "notional": 51500.0,
-      "gross_pnl": -100.00000000000142,
-      "cost": 224.02499999999998,
-      "net_pnl": -324.0250000000014
+      "shares": 3000,
+      "notional": 77250.0,
+      "gross_pnl": -150.00000000000213,
+      "cost": 336.03749999999997,
+      "net_pnl": -486.03750000000207
     },
     {
       "signal_date": "2026-07-13",
@@ -7029,11 +6953,11 @@
       "mae": -0.0379746835443038,
       "trade_date": "2026-07-16",
       "gross_return": -0.03544303797468351,
-      "shares": 5000,
-      "notional": 98750.0,
-      "gross_pnl": -3499.9999999999964,
-      "cost": 429.56249999999994,
-      "net_pnl": -3929.5624999999964
+      "shares": 6000,
+      "notional": 118500.0,
+      "gross_pnl": -4199.999999999995,
+      "cost": 515.4749999999999,
+      "net_pnl": -4715.474999999995
     },
     {
       "signal_date": "2026-07-15",
@@ -7257,11 +7181,11 @@
       "mae": -0.014836795252225518,
       "trade_date": "2026-07-17",
       "gross_return": -0.014836795252225518,
-      "shares": 4000,
-      "notional": 134800.0,
-      "gross_pnl": -2000.0,
-      "cost": 586.38,
-      "net_pnl": -2586.38
+      "shares": 5000,
+      "notional": 168500.0,
+      "gross_pnl": -2500.0,
+      "cost": 732.9749999999999,
+      "net_pnl": -3232.975
     },
     {
       "signal_date": "2026-07-16",
@@ -7675,11 +7599,11 @@
       "mae": -0.023214285714285663,
       "trade_date": "2026-07-20",
       "gross_return": 0.0571428571428572,
-      "shares": 1000,
-      "notional": 56000.0,
-      "gross_pnl": 3200.0000000000027,
-      "cost": 243.6,
-      "net_pnl": 2956.400000000003
+      "shares": 2000,
+      "notional": 112000.0,
+      "gross_pnl": 6400.0000000000055,
+      "cost": 487.2,
+      "net_pnl": 5912.800000000006
     },
     {
       "signal_date": "2026-07-17",
@@ -7827,11 +7751,11 @@
       "mae": -0.11091234347048307,
       "trade_date": "2026-07-21",
       "gross_return": -0.050089445438282726,
-      "shares": 2000,
-      "notional": 55900.0,
-      "gross_pnl": -2800.000000000004,
-      "cost": 243.165,
-      "net_pnl": -3043.165000000004
+      "shares": 3000,
+      "notional": 83850.0,
+      "gross_pnl": -4200.000000000006,
+      "cost": 364.7475,
+      "net_pnl": -4564.747500000007
     },
     {
       "signal_date": "2026-07-20",
@@ -7903,11 +7827,11 @@
       "mae": -0.10997067448680352,
       "trade_date": "2026-07-21",
       "gross_return": -0.0307917888563049,
-      "shares": 1000,
-      "notional": 68200.0,
-      "gross_pnl": -2099.9999999999945,
-      "cost": 296.66999999999996,
-      "net_pnl": -2396.6699999999946
+      "shares": 2000,
+      "notional": 136400.0,
+      "gross_pnl": -4199.999999999989,
+      "cost": 593.3399999999999,
+      "net_pnl": -4793.339999999989
     },
     {
       "signal_date": "2026-07-20",
@@ -7979,11 +7903,11 @@
       "mae": -0.002092050209204902,
       "trade_date": "2026-07-21",
       "gross_return": 0.016736401673640256,
-      "shares": 6000,
-      "notional": 143400.0,
-      "gross_pnl": 2400.0000000000127,
-      "cost": 623.79,
-      "net_pnl": 1776.2100000000128
+      "shares": 7000,
+      "notional": 167300.0,
+      "gross_pnl": 2800.000000000015,
+      "cost": 727.755,
+      "net_pnl": 2072.245000000015
     },
     {
       "signal_date": "2026-07-20",
@@ -8093,11 +8017,11 @@
       "mae": -0.11132075471698111,
       "trade_date": "2026-07-21",
       "gross_return": -0.03962264150943399,
-      "shares": 1000,
-      "notional": 53000.0,
-      "gross_pnl": -2100.0000000000014,
-      "cost": 230.54999999999998,
-      "net_pnl": -2330.5500000000015
+      "shares": 2000,
+      "notional": 106000.0,
+      "gross_pnl": -4200.000000000003,
+      "cost": 461.09999999999997,
+      "net_pnl": -4661.100000000003
     },
     {
       "signal_date": "2026-07-21",
@@ -8245,11 +8169,11 @@
       "mae": -0.01278772378516624,
       "trade_date": "2026-07-22",
       "gross_return": 0.007672634271099672,
-      "shares": 5000,
-      "notional": 97750.0,
-      "gross_pnl": 749.999999999993,
-      "cost": 425.2125,
-      "net_pnl": 324.787499999993
+      "shares": 6000,
+      "notional": 117300.0,
+      "gross_pnl": 899.9999999999915,
+      "cost": 510.25499999999994,
+      "net_pnl": 389.74499999999153
     },
     {
       "signal_date": "2026-07-21",
@@ -8359,11 +8283,11 @@
       "mae": -0.049382716049382686,
       "trade_date": "2026-07-23",
       "gross_return": 0.06584362139917702,
-      "shares": 5000,
-      "notional": 60750.0,
-      "gross_pnl": 4000.0000000000036,
-      "cost": 264.2625,
-      "net_pnl": 3735.737500000004
+      "shares": 6000,
+      "notional": 72900.0,
+      "gross_pnl": 4800.000000000005,
+      "cost": 317.11499999999995,
+      "net_pnl": 4482.885000000005
     },
     {
       "signal_date": "2026-07-22",
@@ -8473,11 +8397,11 @@
       "mae": -0.04521276595744669,
       "trade_date": "2026-07-23",
       "gross_return": 0.042553191489361736,
-      "shares": 3000,
-      "notional": 56400.0,
-      "gross_pnl": 2400.0000000000023,
-      "cost": 245.33999999999997,
-      "net_pnl": 2154.660000000002
+      "shares": 4000,
+      "notional": 75200.0,
+      "gross_pnl": 3200.0000000000027,
+      "cost": 327.12,
+      "net_pnl": 2872.880000000003
     },
     {
       "signal_date": "2026-07-22",
@@ -8739,11 +8663,11 @@
       "mae": -0.07174887892376687,
       "trade_date": "2026-07-24",
       "gross_return": -0.03139013452914811,
-      "shares": 1000,
-      "notional": 66900.0,
-      "gross_pnl": -2100.0000000000086,
-      "cost": 291.015,
-      "net_pnl": -2391.0150000000085
+      "shares": 2000,
+      "notional": 133800.0,
+      "gross_pnl": -4200.000000000017,
+      "cost": 582.03,
+      "net_pnl": -4782.030000000017
     },
     {
       "signal_date": "2026-07-23",
@@ -8929,11 +8853,11 @@
       "mae": -0.005988023952095894,
       "trade_date": "2026-07-24",
       "gross_return": 0.009580838323353302,
-      "shares": 19000,
-      "notional": 158650.0,
-      "gross_pnl": 1520.0000000000014,
-      "cost": 690.1274999999999,
-      "net_pnl": 829.8725000000014
+      "shares": 20000,
+      "notional": 167000.0,
+      "gross_pnl": 1600.0000000000014,
+      "cost": 726.4499999999999,
+      "net_pnl": 873.5500000000014
     },
     {
       "signal_date": "2026-07-24",
@@ -9157,11 +9081,11 @@
       "mae": -0.0018214936247723393,
       "trade_date": "2026-07-27",
       "gross_return": 0.0,
-      "shares": 5000,
-      "notional": 137250.0,
+      "shares": 6000,
+      "notional": 164700.0,
       "gross_pnl": 0.0,
-      "cost": 597.0374999999999,
-      "net_pnl": -597.0374999999999
+      "cost": 716.4449999999999,
+      "net_pnl": -716.4449999999999
     },
     {
       "signal_date": "2026-07-24",
@@ -9575,11 +9499,11 @@
       "mae": -0.0023584905660377696,
       "trade_date": "2026-07-28",
       "gross_return": 0.04009433962264141,
-      "shares": 3000,
-      "notional": 63600.0,
-      "gross_pnl": 2549.9999999999936,
-      "cost": 276.65999999999997,
-      "net_pnl": 2273.339999999994
+      "shares": 4000,
+      "notional": 84800.0,
+      "gross_pnl": 3399.9999999999914,
+      "cost": 368.88,
+      "net_pnl": 3031.1199999999913
     },
     {
       "signal_date": "2026-07-27",
@@ -9803,11 +9727,11 @@
       "mae": -0.027343749999999997,
       "trade_date": "2026-07-29",
       "gross_return": -0.027343749999999997,
-      "shares": 18000,
-      "notional": 138240.0,
-      "gross_pnl": -3779.9999999999995,
-      "cost": 601.3439999999999,
-      "net_pnl": -4381.343999999999
+      "shares": 19000,
+      "notional": 145920.0,
+      "gross_pnl": -3989.9999999999995,
+      "cost": 634.752,
+      "net_pnl": -4624.7519999999995
     },
     {
       "signal_date": "2026-07-28",
@@ -9993,11 +9917,11 @@
       "mae": -0.01526717557251903,
       "trade_date": "2026-07-30",
       "gross_return": -0.01526717557251903,
-      "shares": 5000,
-      "notional": 131000.0,
-      "gross_pnl": -1999.999999999993,
-      "cost": 569.8499999999999,
-      "net_pnl": -2569.849999999993
+      "shares": 6000,
+      "notional": 157200.0,
+      "gross_pnl": -2399.9999999999914,
+      "cost": 683.8199999999999,
+      "net_pnl": -3083.8199999999915
     },
     {
       "signal_date": "2026-07-29",
@@ -10943,11 +10867,11 @@
       "mae": -0.022988505747126416,
       "trade_date": "2026-08-06",
       "gross_return": -0.021346469622331644,
-      "shares": 4000,
-      "notional": 121800.0,
-      "gross_pnl": -2599.9999999999945,
-      "cost": 529.8299999999999,
-      "net_pnl": -3129.8299999999945
+      "shares": 5000,
+      "notional": 152250.0,
+      "gross_pnl": -3249.9999999999927,
+      "cost": 662.2874999999999,
+      "net_pnl": -3912.2874999999926
     },
     {
       "signal_date": "2026-08-06",
@@ -11285,11 +11209,11 @@
       "mae": -0.015936254980079764,
       "trade_date": "2026-08-10",
       "gross_return": -0.003984063745019977,
-      "shares": 2000,
-      "notional": 100400.0,
-      "gross_pnl": -400.0000000000057,
-      "cost": 436.73999999999995,
-      "net_pnl": -836.7400000000057
+      "shares": 3000,
+      "notional": 150600.0,
+      "gross_pnl": -600.0000000000085,
+      "cost": 655.1099999999999,
+      "net_pnl": -1255.1100000000083
     },
     {
       "signal_date": "2026-08-10",
@@ -11475,11 +11399,11 @@
       "mae": -0.02407932011331429,
       "trade_date": "2026-08-11",
       "gross_return": 0.03966005665722396,
-      "shares": 1000,
-      "notional": 70600.0,
-      "gross_pnl": 2800.0000000000114,
-      "cost": 307.10999999999996,
-      "net_pnl": 2492.8900000000112
+      "shares": 2000,
+      "notional": 141200.0,
+      "gross_pnl": 5600.000000000023,
+      "cost": 614.2199999999999,
+      "net_pnl": 4985.7800000000225
     },
     {
       "signal_date": "2026-08-10",
@@ -12045,11 +11969,11 @@
       "mae": -0.029776674937965156,
       "trade_date": "2026-08-13",
       "gross_return": -0.02481389578163772,
-      "shares": 2000,
-      "notional": 80600.0,
-      "gross_pnl": -2000.0,
-      "cost": 350.60999999999996,
-      "net_pnl": -2350.61
+      "shares": 3000,
+      "notional": 120899.99999999999,
+      "gross_pnl": -3000.0,
+      "cost": 525.9149999999998,
+      "net_pnl": -3525.915
     },
     {
       "signal_date": "2026-08-12",
@@ -12767,11 +12691,11 @@
       "mae": -0.03661327231121285,
       "trade_date": "2026-08-17",
       "gross_return": -0.02517162471395888,
-      "shares": 16000,
-      "notional": 139840.0,
-      "gross_pnl": -3520.00000000001,
-      "cost": 608.304,
-      "net_pnl": -4128.30400000001
+      "shares": 17000,
+      "notional": 148580.0,
+      "gross_pnl": -3740.000000000011,
+      "cost": 646.323,
+      "net_pnl": -4386.323000000011
     },
     {
       "signal_date": "2026-08-14",
@@ -13185,11 +13109,11 @@
       "mae": -0.025069637883008318,
       "trade_date": "2026-08-19",
       "gross_return": 0.025069637883008318,
-      "shares": 2000,
-      "notional": 71800.0,
-      "gross_pnl": 1799.9999999999973,
-      "cost": 312.33,
-      "net_pnl": 1487.6699999999973
+      "shares": 3000,
+      "notional": 107700.0,
+      "gross_pnl": 2699.999999999996,
+      "cost": 468.49499999999995,
+      "net_pnl": 2231.504999999996
     },
     {
       "signal_date": "2026-08-18",
@@ -13527,11 +13451,11 @@
       "mae": -0.011904761904761833,
       "trade_date": "2026-08-21",
       "gross_return": 0.027210884353741523,
-      "shares": 4000,
-      "notional": 117600.0,
-      "gross_pnl": 3200.0000000000027,
-      "cost": 511.55999999999995,
-      "net_pnl": 2688.440000000003
+      "shares": 5000,
+      "notional": 147000.0,
+      "gross_pnl": 4000.0000000000036,
+      "cost": 639.4499999999999,
+      "net_pnl": 3360.550000000004
     },
     {
       "signal_date": "2026-08-20",
@@ -14439,11 +14363,11 @@
       "mae": -0.01381509032943674,
       "trade_date": "2026-08-26",
       "gross_return": -0.01381509032943674,
-      "shares": 2000,
-      "notional": 94100.0,
-      "gross_pnl": -1299.9999999999973,
-      "cost": 409.335,
-      "net_pnl": -1709.3349999999973
+      "shares": 3000,
+      "notional": 141150.0,
+      "gross_pnl": -1949.9999999999957,
+      "cost": 614.0024999999999,
+      "net_pnl": -2564.0024999999955
     },
     {
       "signal_date": "2026-08-26",
@@ -15009,11 +14933,11 @@
       "mae": -0.010489510489510514,
       "trade_date": "2026-08-31",
       "gross_return": 0.07342657342657335,
-      "shares": 4000,
-      "notional": 57200.0,
-      "gross_pnl": 4199.999999999995,
-      "cost": 248.82,
-      "net_pnl": 3951.1799999999953
+      "shares": 5000,
+      "notional": 71500.0,
+      "gross_pnl": 5249.9999999999945,
+      "cost": 311.025,
+      "net_pnl": 4938.974999999995
     },
     {
       "signal_date": "2026-08-28",
@@ -15161,11 +15085,11 @@
       "mae": -0.007235890014471781,
       "trade_date": "2026-08-31",
       "gross_return": 0.021707670043415343,
-      "shares": 3000,
-      "notional": 103649.99999999999,
-      "gross_pnl": 2250.0,
-      "cost": 450.8774999999999,
-      "net_pnl": 1799.1225000000002
+      "shares": 4000,
+      "notional": 138200.0,
+      "gross_pnl": 3000.0,
+      "cost": 601.17,
+      "net_pnl": 2398.83
     },
     {
       "signal_date": "2026-08-28",
@@ -15351,11 +15275,11 @@
       "mae": -0.004405286343612294,
       "trade_date": "2026-09-01",
       "gross_return": 0.02643171806167418,
-      "shares": 3000,
-      "notional": 102149.99999999999,
-      "gross_pnl": 2700.0000000000173,
-      "cost": 444.3524999999999,
-      "net_pnl": 2255.6475000000173
+      "shares": 4000,
+      "notional": 136200.0,
+      "gross_pnl": 3600.0000000000227,
+      "cost": 592.4699999999999,
+      "net_pnl": 3007.530000000023
     },
     {
       "signal_date": "2026-08-31",
@@ -15389,11 +15313,11 @@
       "mae": -0.0117647058823529,
       "trade_date": "2026-09-01",
       "gross_return": 0.005882352941176554,
-      "shares": 7000,
-      "notional": 119000.0,
-      "gross_pnl": 700.00000000001,
-      "cost": 517.65,
-      "net_pnl": 182.35000000001003
+      "shares": 8000,
+      "notional": 136000.0,
+      "gross_pnl": 800.0000000000114,
+      "cost": 591.5999999999999,
+      "net_pnl": 208.40000000001146
     },
     {
       "signal_date": "2026-08-31",
@@ -15579,11 +15503,11 @@
       "mae": -0.0263929618768328,
       "trade_date": "2026-09-01",
       "gross_return": -0.014662756598240468,
-      "shares": 7000,
-      "notional": 119350.0,
-      "gross_pnl": -1750.0,
-      "cost": 519.1725,
-      "net_pnl": -2269.1725
+      "shares": 8000,
+      "notional": 136400.0,
+      "gross_pnl": -2000.0,
+      "cost": 593.3399999999999,
+      "net_pnl": -2593.34
     },
     {
       "signal_date": "2026-09-01",
@@ -15693,11 +15617,11 @@
       "mae": -0.023474178403755867,
       "trade_date": "2026-09-02",
       "gross_return": -0.014084507042253554,
-      "shares": 12000,
-      "notional": 127800.0,
-      "gross_pnl": -1800.0000000000043,
-      "cost": 555.93,
-      "net_pnl": -2355.9300000000044
+      "shares": 13000,
+      "notional": 138450.0,
+      "gross_pnl": -1950.0000000000045,
+      "cost": 602.2574999999999,
+      "net_pnl": -2552.2575000000043
     },
     {
       "signal_date": "2026-09-02",
@@ -15807,11 +15731,11 @@
       "mae": -0.0025706940874036356,
       "trade_date": "2026-09-03",
       "gross_return": 0.0,
-      "shares": 6000,
-      "notional": 116700.0,
+      "shares": 7000,
+      "notional": 136150.0,
       "gross_pnl": 0.0,
-      "cost": 507.645,
-      "net_pnl": -507.645
+      "cost": 592.2524999999999,
+      "net_pnl": -592.2524999999999
     },
     {
       "signal_date": "2026-09-02",
@@ -15921,11 +15845,11 @@
       "mae": -0.0390625,
       "trade_date": "2026-09-03",
       "gross_return": -0.015625000000000038,
-      "shares": 6000,
-      "notional": 115200.0,
-      "gross_pnl": -1800.0000000000043,
-      "cost": 501.11999999999995,
-      "net_pnl": -2301.1200000000044
+      "shares": 7000,
+      "notional": 134400.0,
+      "gross_pnl": -2100.000000000005,
+      "cost": 584.64,
+      "net_pnl": -2684.640000000005
     },
     {
       "signal_date": "2026-09-03",
@@ -16111,11 +16035,11 @@
       "mae": -0.012084592145015062,
       "trade_date": "2026-09-04",
       "gross_return": 0.0030211480362538194,
-      "shares": 7000,
-      "notional": 115850.0,
-      "gross_pnl": 350.000000000005,
-      "cost": 503.9475,
-      "net_pnl": -153.947499999995
+      "shares": 8000,
+      "notional": 132400.0,
+      "gross_pnl": 400.0000000000057,
+      "cost": 575.9399999999999,
+      "net_pnl": -175.93999999999426
     },
     {
       "signal_date": "2026-09-03",
@@ -16681,11 +16605,11 @@
       "mae": -0.011918951132300357,
       "trade_date": "2026-09-08",
       "gross_return": -0.011918951132300357,
-      "shares": 2000,
-      "notional": 83900.0,
-      "gross_pnl": -1000.0,
-      "cost": 364.965,
-      "net_pnl": -1364.965
+      "shares": 3000,
+      "notional": 125850.00000000001,
+      "gross_pnl": -1500.0,
+      "cost": 547.4475,
+      "net_pnl": -2047.4475
     },
     {
       "signal_date": "2026-09-08",
@@ -16909,11 +16833,11 @@
       "mae": -0.014405762304922003,
       "trade_date": "2026-09-10",
       "gross_return": -0.014405762304922003,
-      "shares": 2000,
-      "notional": 83300.0,
-      "gross_pnl": -1200.0000000000027,
-      "cost": 362.35499999999996,
-      "net_pnl": -1562.3550000000027
+      "shares": 3000,
+      "notional": 124950.0,
+      "gross_pnl": -1800.0000000000043,
+      "cost": 543.5324999999999,
+      "net_pnl": -2343.5325000000043
     },
     {
       "signal_date": "2026-09-09",
@@ -17745,11 +17669,11 @@
       "mae": -0.022123893805309734,
       "trade_date": "2026-09-15",
       "gross_return": -0.013274336283185872,
-      "shares": 10000,
-      "notional": 113000.0,
-      "gross_pnl": -1500.0000000000036,
-      "cost": 491.54999999999995,
-      "net_pnl": -1991.5500000000036
+      "shares": 11000,
+      "notional": 124300.00000000001,
+      "gross_pnl": -1650.0000000000039,
+      "cost": 540.705,
+      "net_pnl": -2190.705000000004
     },
     {
       "signal_date": "2026-09-14",
@@ -18011,11 +17935,11 @@
       "mae": -0.017799352750809086,
       "trade_date": "2026-09-16",
       "gross_return": -0.017799352750809086,
-      "shares": 3000,
-      "notional": 92700.0,
-      "gross_pnl": -1650.000000000002,
-      "cost": 403.24499999999995,
-      "net_pnl": -2053.245000000002
+      "shares": 4000,
+      "notional": 123600.0,
+      "gross_pnl": -2200.0000000000027,
+      "cost": 537.66,
+      "net_pnl": -2737.6600000000026
     },
     {
       "signal_date": "2026-09-15",
@@ -18049,11 +17973,49 @@
       "mae": -0.013414634146341394,
       "trade_date": "2026-09-16",
       "gross_return": -0.007317073170731638,
-      "shares": 2000,
-      "notional": 82000.0,
-      "gross_pnl": -599.9999999999943,
-      "cost": 356.7,
-      "net_pnl": -956.6999999999944
+      "shares": 3000,
+      "notional": 123000.0,
+      "gross_pnl": -899.9999999999915,
+      "cost": 535.05,
+      "net_pnl": -1435.0499999999915
+    },
+    {
+      "signal_date": "2026-09-15",
+      "code": "3045",
+      "name": "台灣大",
+      "direction": "long",
+      "entry_trigger": 124.5,
+      "stop_loss": 122.5,
+      "target1": 127.5,
+      "target2": 128.5,
+      "score": 47.5,
+      "volume_growth_pct": 130.59,
+      "ma5_distance_pct": 2.31,
+      "institutional_abs_lots": 2158.94,
+      "volume_rank": 76,
+      "weights_used": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "status": "settled",
+      "triggered": true,
+      "entry_date": "2026-09-16",
+      "entry": 124.5,
+      "exit": 122.5,
+      "exit_date": "2026-09-16",
+      "exit_reason": "stop",
+      "return": -0.01606425702811245,
+      "mfe": 0.0,
+      "mae": -0.01606425702811245,
+      "trade_date": "2026-09-16",
+      "gross_return": -0.01606425702811245,
+      "shares": 1000,
+      "notional": 124500.0,
+      "gross_pnl": -2000.0,
+      "cost": 541.5749999999999,
+      "net_pnl": -2541.575
     },
     {
       "signal_date": "2026-09-15",
@@ -18543,11 +18505,11 @@
       "mae": -0.03275862068965524,
       "trade_date": "2026-09-21",
       "gross_return": -0.022413793103448258,
-      "shares": 13000,
-      "notional": 75400.0,
-      "gross_pnl": -1689.9999999999986,
-      "cost": 327.98999999999995,
-      "net_pnl": -2017.9899999999986
+      "shares": 14000,
+      "notional": 81200.0,
+      "gross_pnl": -1819.9999999999984,
+      "cost": 353.21999999999997,
+      "net_pnl": -2173.2199999999984
     },
     {
       "signal_date": "2026-09-18",
@@ -19265,11 +19227,11 @@
       "mae": -0.0684410646387833,
       "trade_date": "2026-09-24",
       "gross_return": -0.03802281368821293,
-      "shares": 2000,
-      "notional": 52600.0,
-      "gross_pnl": -2000.0,
-      "cost": 228.80999999999997,
-      "net_pnl": -2228.81
+      "shares": 3000,
+      "notional": 78900.0,
+      "gross_pnl": -3000.0,
+      "cost": 343.215,
+      "net_pnl": -3343.215
     },
     {
       "signal_date": "2026-09-23",
@@ -19303,11 +19265,11 @@
       "mae": 0.0,
       "trade_date": "2026-09-24",
       "gross_return": 0.00991735537190085,
-      "shares": 1000,
-      "notional": 60500.0,
-      "gross_pnl": 600.0000000000014,
-      "cost": 263.17499999999995,
-      "net_pnl": 336.8250000000014
+      "shares": 2000,
+      "notional": 121000.0,
+      "gross_pnl": 1200.0000000000027,
+      "cost": 526.3499999999999,
+      "net_pnl": 673.6500000000028
     },
     {
       "signal_date": "2026-09-23",
@@ -19607,11 +19569,11 @@
       "mae": -0.013563501849568366,
       "trade_date": "2026-09-30",
       "gross_return": 0.036991368680641186,
-      "shares": 2000,
-      "notional": 81100.0,
-      "gross_pnl": 3000.0,
-      "cost": 352.78499999999997,
-      "net_pnl": 2647.215
+      "shares": 3000,
+      "notional": 121649.99999999999,
+      "gross_pnl": 4500.0,
+      "cost": 529.1774999999999,
+      "net_pnl": 3970.8225
     },
     {
       "signal_date": "2026-09-29",
@@ -19759,11 +19721,11 @@
       "mae": -0.07035175879396978,
       "trade_date": "2026-10-01",
       "gross_return": -0.03768844221105528,
-      "shares": 3000,
-      "notional": 59699.99999999999,
-      "gross_pnl": -2250.0,
-      "cost": 259.69499999999994,
-      "net_pnl": -2509.6949999999997
+      "shares": 4000,
+      "notional": 79600.0,
+      "gross_pnl": -3000.0,
+      "cost": 346.26,
+      "net_pnl": -3346.26
     },
     {
       "signal_date": "2026-09-30",
@@ -20101,11 +20063,11 @@
       "mae": 0.0,
       "trade_date": "2026-10-02",
       "gross_return": 0.011494252873563244,
-      "shares": 8000,
-      "notional": 104400.0,
-      "gross_pnl": 1200.0000000000027,
-      "cost": 454.14,
-      "net_pnl": 745.8600000000027
+      "shares": 9000,
+      "notional": 117450.0,
+      "gross_pnl": 1350.0000000000032,
+      "cost": 510.90749999999997,
+      "net_pnl": 839.0925000000032
     },
     {
       "signal_date": "2026-10-01",
@@ -20755,6 +20717,44 @@
     },
     {
       "signal_date": "2026-10-08",
+      "code": "2337",
+      "name": "旺宏",
+      "direction": "short",
+      "entry_trigger": 115.5,
+      "stop_loss": 117.0,
+      "target1": 113.5,
+      "target2": 112.5,
+      "score": 80.28,
+      "volume_growth_pct": 59.85,
+      "ma5_distance_pct": 2.85,
+      "institutional_abs_lots": 15777.73,
+      "volume_rank": 30,
+      "weights_used": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "status": "settled",
+      "triggered": true,
+      "entry_date": "2026-10-12",
+      "entry": 115.0,
+      "exit": 117.0,
+      "exit_date": "2026-10-12",
+      "exit_reason": "stop",
+      "return": -0.017391304347826087,
+      "mfe": 0.008695652173913044,
+      "mae": -0.02608695652173913,
+      "trade_date": "2026-10-12",
+      "gross_return": -0.017391304347826087,
+      "shares": 1000,
+      "notional": 115000.0,
+      "gross_pnl": -2000.0,
+      "cost": 500.24999999999994,
+      "net_pnl": -2500.25
+    },
+    {
+      "signal_date": "2026-10-08",
       "code": "1314",
       "name": "中石化",
       "direction": "long",
@@ -20975,11 +20975,11 @@
       "mae": -0.04825737265415561,
       "trade_date": "2026-10-12",
       "gross_return": -0.016085790884718537,
-      "shares": 2000,
-      "notional": 74600.0,
-      "gross_pnl": -1200.0000000000027,
-      "cost": 324.51,
-      "net_pnl": -1524.5100000000027
+      "shares": 3000,
+      "notional": 111899.99999999999,
+      "gross_pnl": -1800.0000000000043,
+      "cost": 486.76499999999993,
+      "net_pnl": -2286.7650000000044
     },
     {
       "signal_date": "2026-10-12",
@@ -21051,11 +21051,11 @@
       "mae": -0.027777777777777735,
       "trade_date": "2026-10-13",
       "gross_return": -0.02469135802469127,
-      "shares": 6000,
-      "notional": 97200.0,
-      "gross_pnl": -2399.9999999999914,
-      "cost": 422.82,
-      "net_pnl": -2822.8199999999915
+      "shares": 7000,
+      "notional": 113400.0,
+      "gross_pnl": -2799.99999999999,
+      "cost": 493.28999999999996,
+      "net_pnl": -3293.28999999999
     },
     {
       "signal_date": "2026-10-12",
@@ -21089,11 +21089,11 @@
       "mae": -0.0026954177897574507,
       "trade_date": "2026-10-13",
       "gross_return": -0.0026954177897574507,
-      "shares": 5000,
-      "notional": 92750.0,
-      "gross_pnl": -250.00000000000355,
-      "cost": 403.4625,
-      "net_pnl": -653.4625000000035
+      "shares": 6000,
+      "notional": 111300.0,
+      "gross_pnl": -300.00000000000426,
+      "cost": 484.155,
+      "net_pnl": -784.1550000000043
     },
     {
       "signal_date": "2026-10-12",
@@ -21629,6 +21629,44 @@
     },
     {
       "signal_date": "2026-10-19",
+      "code": "6770",
+      "name": "力積電",
+      "direction": "short",
+      "entry_trigger": 64.6,
+      "stop_loss": 67.3,
+      "target1": 60.5,
+      "target2": 59.2,
+      "score": 56.9,
+      "volume_growth_pct": 37.04,
+      "ma5_distance_pct": 3.2,
+      "institutional_abs_lots": 35322.74,
+      "volume_rank": 7,
+      "weights_used": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "status": "settled",
+      "triggered": true,
+      "entry_date": "2026-10-20",
+      "entry": 64.6,
+      "exit": 64.1,
+      "exit_date": "2026-10-20",
+      "exit_reason": "forced_close",
+      "return": 0.007739938080495357,
+      "mfe": 0.007739938080495357,
+      "mae": -0.021671826625387088,
+      "trade_date": "2026-10-20",
+      "gross_return": 0.007739938080495357,
+      "shares": 1000,
+      "notional": 64599.99999999999,
+      "gross_pnl": 500.0,
+      "cost": 281.00999999999993,
+      "net_pnl": 218.99000000000007
+    },
+    {
+      "signal_date": "2026-10-19",
       "code": "4906",
       "name": "正文",
       "direction": "long",
@@ -22009,6 +22047,44 @@
     },
     {
       "signal_date": "2026-10-21",
+      "code": "4526",
+      "name": "東台",
+      "direction": "long",
+      "entry_trigger": 38.45,
+      "stop_loss": 36.55,
+      "target1": 41.3,
+      "target2": 42.25,
+      "score": 57.0,
+      "volume_growth_pct": 58.71,
+      "ma5_distance_pct": 8.53,
+      "institutional_abs_lots": 1858.49,
+      "volume_rank": 100,
+      "weights_used": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "status": "settled",
+      "triggered": true,
+      "entry_date": "2026-10-22",
+      "entry": 39.25,
+      "exit": 41.3,
+      "exit_date": "2026-10-22",
+      "exit_reason": "target1",
+      "return": 0.05222929936305725,
+      "mfe": 0.06624203821656055,
+      "mae": -0.011464968152866314,
+      "trade_date": "2026-10-22",
+      "gross_return": 0.05222929936305725,
+      "shares": 1000,
+      "notional": 39250.0,
+      "gross_pnl": 2049.9999999999973,
+      "cost": 170.73749999999998,
+      "net_pnl": 1879.2624999999973
+    },
+    {
+      "signal_date": "2026-10-21",
       "code": "2891",
       "name": "中信金",
       "direction": "long",
@@ -22343,11 +22419,11 @@
       "mae": -0.02409638554216873,
       "trade_date": "2026-10-27",
       "gross_return": 0.032128514056224786,
-      "shares": 3000,
-      "notional": 74700.0,
-      "gross_pnl": 2399.9999999999914,
-      "cost": 324.945,
-      "net_pnl": 2075.054999999991
+      "shares": 4000,
+      "notional": 99600.0,
+      "gross_pnl": 3199.9999999999886,
+      "cost": 433.26,
+      "net_pnl": 2766.739999999989
     },
     {
       "signal_date": "2026-10-22",
@@ -22761,11 +22837,11 @@
       "mae": -0.007648183556405463,
       "trade_date": "2026-10-29",
       "gross_return": 0.0,
-      "shares": 3000,
-      "notional": 78450.0,
+      "shares": 4000,
+      "notional": 104600.0,
       "gross_pnl": 0.0,
-      "cost": 341.2575,
-      "net_pnl": -341.2575
+      "cost": 455.01,
+      "net_pnl": -455.01
     },
     {
       "signal_date": "2026-10-29",
@@ -23146,77 +23222,123 @@
       "gross_pnl": -1500.0,
       "cost": 381.05999999999995,
       "net_pnl": -1881.06
+    },
+    {
+      "signal_date": "2026-11-02",
+      "code": "2371",
+      "name": "大同",
+      "direction": "long",
+      "entry_trigger": 30.05,
+      "stop_loss": 29.2,
+      "target1": 31.35,
+      "target2": 31.75,
+      "score": 70.5,
+      "volume_growth_pct": 144.52,
+      "ma5_distance_pct": 3.69,
+      "institutional_abs_lots": 4367.48,
+      "volume_rank": 46,
+      "weights_used": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "status": "settled",
+      "triggered": true,
+      "entry_date": "2026-11-03",
+      "entry": 31.3,
+      "exit": 29.2,
+      "exit_date": "2026-11-03",
+      "exit_reason": "stop",
+      "return": -0.06709265175718854,
+      "mfe": 0.0,
+      "mae": -0.08306709265175723,
+      "trade_date": "2026-11-03",
+      "gross_return": -0.06709265175718854,
+      "shares": 1000,
+      "notional": 31300.0,
+      "gross_pnl": -2100.0000000000014,
+      "cost": 136.155,
+      "net_pnl": -2236.1550000000016
+    },
+    {
+      "signal_date": "2026-11-02",
+      "code": "9908",
+      "name": "大台北",
+      "direction": "short",
+      "entry_trigger": 28.8,
+      "stop_loss": 29.25,
+      "target1": 28.15,
+      "target2": 27.9,
+      "score": 55.13,
+      "volume_growth_pct": 4535.95,
+      "ma5_distance_pct": 0.1,
+      "institutional_abs_lots": 12.0,
+      "volume_rank": 83,
+      "weights_used": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "status": "settled",
+      "triggered": true,
+      "entry_date": "2026-11-03",
+      "entry": 28.8,
+      "exit": 28.9,
+      "exit_date": "2026-11-03",
+      "exit_reason": "forced_close",
+      "return": -0.0034722222222221483,
+      "mfe": 0.0,
+      "mae": -0.005208333333333284,
+      "trade_date": "2026-11-03",
+      "gross_return": -0.0034722222222221483,
+      "shares": 3000,
+      "notional": 86400.0,
+      "gross_pnl": -299.99999999999363,
+      "cost": 375.84,
+      "net_pnl": -675.8399999999936
+    },
+    {
+      "signal_date": "2026-11-02",
+      "code": "2801",
+      "name": "彰銀",
+      "direction": "long",
+      "entry_trigger": 30.95,
+      "stop_loss": 30.5,
+      "target1": 31.65,
+      "target2": 31.85,
+      "score": 46.69,
+      "volume_growth_pct": 27.69,
+      "ma5_distance_pct": 1.35,
+      "institutional_abs_lots": 5881.66,
+      "volume_rank": 27,
+      "weights_used": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "status": "settled",
+      "triggered": true,
+      "entry_date": "2026-11-03",
+      "entry": 30.95,
+      "exit": 30.5,
+      "exit_date": "2026-11-03",
+      "exit_reason": "stop",
+      "return": -0.0145395799676898,
+      "mfe": 0.0016155088852988922,
+      "mae": -0.0436187399030694,
+      "trade_date": "2026-11-03",
+      "gross_return": -0.0145395799676898,
+      "shares": 3000,
+      "notional": 92850.0,
+      "gross_pnl": -1349.999999999998,
+      "cost": 403.8975,
+      "net_pnl": -1753.897499999998
     }
   ],
   "skipped": [
-    {
-      "signal_date": "2026-06-04",
-      "code": "2327",
-      "name": "國巨*",
-      "direction": "short",
-      "entry_trigger": 736.0,
-      "stop_loss": 773.0,
-      "target1": 681.0,
-      "target2": 662.0,
-      "score": 90.7,
-      "volume_growth_pct": 45.38,
-      "ma5_distance_pct": 5.64,
-      "institutional_abs_lots": 6471.14,
-      "volume_rank": 94,
-      "weights_used": {
-        "volume_growth_pct": 0.35,
-        "ma5_distance_pct": 0.3,
-        "institutional_lots": 0.25,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-06-05",
-      "entry": 708.0,
-      "exit": 773.0,
-      "exit_date": "2026-06-05",
-      "exit_reason": "stop",
-      "return": -0.09180790960451977,
-      "mfe": 0.05367231638418079,
-      "mae": -0.09887005649717515,
-      "trade_date": "2026-06-05",
-      "gross_return": -0.09180790960451977,
-      "reason": "insufficient_capital"
-    },
-    {
-      "signal_date": "2026-06-04",
-      "code": "4931",
-      "name": "新盛力",
-      "direction": "long",
-      "entry_trigger": 262.5,
-      "stop_loss": 250.0,
-      "target1": 281.5,
-      "target2": 287.5,
-      "score": 45.6,
-      "volume_growth_pct": 123.7,
-      "ma5_distance_pct": 7.17,
-      "institutional_abs_lots": 722.7,
-      "volume_rank": 95,
-      "weights_used": {
-        "volume_growth_pct": 0.35,
-        "ma5_distance_pct": 0.3,
-        "institutional_lots": 0.25,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-06-05",
-      "entry": 262.5,
-      "exit": 250.0,
-      "exit_date": "2026-06-05",
-      "exit_reason": "stop",
-      "return": -0.047619047619047616,
-      "mfe": 0.013333333333333334,
-      "mae": -0.09333333333333334,
-      "trade_date": "2026-06-05",
-      "gross_return": -0.047619047619047616,
-      "reason": "insufficient_capital"
-    },
     {
       "signal_date": "2026-06-05",
       "code": "2337",
@@ -24851,40 +24973,6 @@
     },
     {
       "signal_date": "2026-06-16",
-      "code": "6209",
-      "name": "今國光",
-      "direction": "long",
-      "entry_trigger": 96.3,
-      "stop_loss": 91.5,
-      "target1": 103.5,
-      "target2": 106.0,
-      "score": 70.6,
-      "volume_growth_pct": 122.02,
-      "ma5_distance_pct": 12.2,
-      "institutional_abs_lots": 5522.58,
-      "volume_rank": 25,
-      "weights_used": {
-        "volume_growth_pct": 0.35,
-        "ma5_distance_pct": 0.3,
-        "institutional_lots": 0.25,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-06-17",
-      "entry": 96.3,
-      "exit": 103.5,
-      "exit_date": "2026-06-17",
-      "exit_reason": "target1",
-      "return": 0.07476635514018695,
-      "mfe": 0.08515057113187957,
-      "mae": -0.02596053997923157,
-      "trade_date": "2026-06-17",
-      "gross_return": 0.07476635514018695,
-      "reason": "insufficient_capital"
-    },
-    {
-      "signal_date": "2026-06-16",
       "code": "2408",
       "name": "南亞科",
       "direction": "long",
@@ -24983,7 +25071,7 @@
       "mae": -0.041666666666666664,
       "trade_date": "2026-06-17",
       "gross_return": 0.0787037037037037,
-      "reason": "insufficient_capital"
+      "reason": "daily_direction_limit"
     },
     {
       "signal_date": "2026-06-16",
@@ -25017,7 +25105,7 @@
       "mae": -0.0341726618705036,
       "trade_date": "2026-06-17",
       "gross_return": 0.07553956834532374,
-      "reason": "insufficient_capital"
+      "reason": "daily_direction_limit"
     },
     {
       "signal_date": "2026-06-16",
@@ -25391,40 +25479,6 @@
       "mae": -0.004424778761061947,
       "trade_date": "2026-06-22",
       "gross_return": 0.035398230088495575,
-      "reason": "insufficient_capital"
-    },
-    {
-      "signal_date": "2026-06-18",
-      "code": "1708",
-      "name": "東鹼",
-      "direction": "long",
-      "entry_trigger": 50.8,
-      "stop_loss": 48.95,
-      "target1": 53.6,
-      "target2": 54.5,
-      "score": 64.39,
-      "volume_growth_pct": 426.78,
-      "ma5_distance_pct": 5.92,
-      "institutional_abs_lots": 8246.84,
-      "volume_rank": 98,
-      "weights_used": {
-        "volume_growth_pct": 0.35,
-        "ma5_distance_pct": 0.3,
-        "institutional_lots": 0.25,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-06-22",
-      "entry": 53.8,
-      "exit": 53.6,
-      "exit_date": "2026-06-22",
-      "exit_reason": "target1",
-      "return": -0.0037174721189590287,
-      "mfe": 0.01115241635687735,
-      "mae": -0.05576208178438662,
-      "trade_date": "2026-06-22",
-      "gross_return": -0.0037174721189590287,
       "reason": "insufficient_capital"
     },
     {
@@ -27703,40 +27757,6 @@
       "mae": -0.023863636363636365,
       "trade_date": "2026-07-07",
       "gross_return": 0.026136363636363635,
-      "reason": "insufficient_capital"
-    },
-    {
-      "signal_date": "2026-07-06",
-      "code": "2337",
-      "name": "旺宏",
-      "direction": "short",
-      "entry_trigger": 143.0,
-      "stop_loss": 147.5,
-      "target1": 136.5,
-      "target2": 134.0,
-      "score": 43.6,
-      "volume_growth_pct": 21.27,
-      "ma5_distance_pct": 1.23,
-      "institutional_abs_lots": 10705.42,
-      "volume_rank": 15,
-      "weights_used": {
-        "volume_growth_pct": 0.35,
-        "ma5_distance_pct": 0.3,
-        "institutional_lots": 0.25,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-07-07",
-      "entry": 143.0,
-      "exit": 136.5,
-      "exit_date": "2026-07-07",
-      "exit_reason": "target1",
-      "return": 0.045454545454545456,
-      "mfe": 0.045454545454545456,
-      "mae": -0.02097902097902098,
-      "trade_date": "2026-07-07",
-      "gross_return": 0.045454545454545456,
       "reason": "insufficient_capital"
     },
     {
@@ -38315,40 +38335,6 @@
     },
     {
       "signal_date": "2026-09-15",
-      "code": "3045",
-      "name": "台灣大",
-      "direction": "long",
-      "entry_trigger": 124.5,
-      "stop_loss": 122.5,
-      "target1": 127.5,
-      "target2": 128.5,
-      "score": 47.5,
-      "volume_growth_pct": 130.59,
-      "ma5_distance_pct": 2.31,
-      "institutional_abs_lots": 2158.94,
-      "volume_rank": 76,
-      "weights_used": {
-        "volume_growth_pct": 0.35,
-        "ma5_distance_pct": 0.3,
-        "institutional_lots": 0.25,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-09-16",
-      "entry": 124.5,
-      "exit": 122.5,
-      "exit_date": "2026-09-16",
-      "exit_reason": "stop",
-      "return": -0.01606425702811245,
-      "mfe": 0.0,
-      "mae": -0.01606425702811245,
-      "trade_date": "2026-09-16",
-      "gross_return": -0.01606425702811245,
-      "reason": "insufficient_capital"
-    },
-    {
-      "signal_date": "2026-09-15",
       "code": "3042",
       "name": "晶技",
       "direction": "long",
@@ -41851,40 +41837,6 @@
     },
     {
       "signal_date": "2026-10-08",
-      "code": "2337",
-      "name": "旺宏",
-      "direction": "short",
-      "entry_trigger": 115.5,
-      "stop_loss": 117.0,
-      "target1": 113.5,
-      "target2": 112.5,
-      "score": 80.28,
-      "volume_growth_pct": 59.85,
-      "ma5_distance_pct": 2.85,
-      "institutional_abs_lots": 15777.73,
-      "volume_rank": 30,
-      "weights_used": {
-        "volume_growth_pct": 0.35,
-        "ma5_distance_pct": 0.3,
-        "institutional_lots": 0.25,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-10-12",
-      "entry": 115.0,
-      "exit": 117.0,
-      "exit_date": "2026-10-12",
-      "exit_reason": "stop",
-      "return": -0.017391304347826087,
-      "mfe": 0.008695652173913044,
-      "mae": -0.02608695652173913,
-      "trade_date": "2026-10-12",
-      "gross_return": -0.017391304347826087,
-      "reason": "insufficient_capital"
-    },
-    {
-      "signal_date": "2026-10-08",
       "code": "3624",
       "name": "光頡",
       "direction": "long",
@@ -43789,40 +43741,6 @@
     },
     {
       "signal_date": "2026-10-19",
-      "code": "6770",
-      "name": "力積電",
-      "direction": "short",
-      "entry_trigger": 64.6,
-      "stop_loss": 67.3,
-      "target1": 60.5,
-      "target2": 59.2,
-      "score": 56.9,
-      "volume_growth_pct": 37.04,
-      "ma5_distance_pct": 3.2,
-      "institutional_abs_lots": 35322.74,
-      "volume_rank": 7,
-      "weights_used": {
-        "volume_growth_pct": 0.35,
-        "ma5_distance_pct": 0.3,
-        "institutional_lots": 0.25,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-10-20",
-      "entry": 64.6,
-      "exit": 64.1,
-      "exit_date": "2026-10-20",
-      "exit_reason": "forced_close",
-      "return": 0.007739938080495357,
-      "mfe": 0.007739938080495357,
-      "mae": -0.021671826625387088,
-      "trade_date": "2026-10-20",
-      "gross_return": 0.007739938080495357,
-      "reason": "insufficient_capital"
-    },
-    {
-      "signal_date": "2026-10-19",
       "code": "6239",
       "name": "力成",
       "direction": "short",
@@ -44465,40 +44383,6 @@
       "mae": -0.058577405857740586,
       "trade_date": "2026-10-22",
       "gross_return": -0.0502092050209205,
-      "reason": "insufficient_capital"
-    },
-    {
-      "signal_date": "2026-10-21",
-      "code": "4526",
-      "name": "東台",
-      "direction": "long",
-      "entry_trigger": 38.45,
-      "stop_loss": 36.55,
-      "target1": 41.3,
-      "target2": 42.25,
-      "score": 57.0,
-      "volume_growth_pct": 58.71,
-      "ma5_distance_pct": 8.53,
-      "institutional_abs_lots": 1858.49,
-      "volume_rank": 100,
-      "weights_used": {
-        "volume_growth_pct": 0.35,
-        "ma5_distance_pct": 0.3,
-        "institutional_lots": 0.25,
-        "volume_rank": 0.1
-      },
-      "status": "settled",
-      "triggered": true,
-      "entry_date": "2026-10-22",
-      "entry": 39.25,
-      "exit": 41.3,
-      "exit_date": "2026-10-22",
-      "exit_reason": "target1",
-      "return": 0.05222929936305725,
-      "mfe": 0.06624203821656055,
-      "mae": -0.011464968152866314,
-      "trade_date": "2026-10-22",
-      "gross_return": 0.05222929936305725,
       "reason": "insufficient_capital"
     },
     {
@@ -46098,612 +45982,748 @@
       "trade_date": "2026-11-02",
       "gross_return": -0.01587301587301601,
       "reason": "insufficient_capital"
+    },
+    {
+      "signal_date": "2026-11-02",
+      "code": "6274",
+      "name": "台燿",
+      "direction": "short",
+      "entry_trigger": 1200.0,
+      "stop_loss": 1260.0,
+      "target1": 1110.0,
+      "target2": 1080.0,
+      "score": 70.67,
+      "volume_growth_pct": 22.4,
+      "ma5_distance_pct": 7.21,
+      "institutional_abs_lots": 375.88,
+      "volume_rank": 61,
+      "weights_used": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "status": "settled",
+      "triggered": true,
+      "entry_date": "2026-11-03",
+      "entry": 1155.0,
+      "exit": 1110.0,
+      "exit_date": "2026-11-03",
+      "exit_reason": "target1",
+      "return": 0.03896103896103896,
+      "mfe": 0.05627705627705628,
+      "mae": -0.04329004329004329,
+      "trade_date": "2026-11-03",
+      "gross_return": 0.03896103896103896,
+      "reason": "insufficient_capital"
+    },
+    {
+      "signal_date": "2026-11-02",
+      "code": "2881",
+      "name": "富邦金",
+      "direction": "short",
+      "entry_trigger": 159.0,
+      "stop_loss": 161.5,
+      "target1": 155.5,
+      "target2": 154.0,
+      "score": 65.8,
+      "volume_growth_pct": 48.54,
+      "ma5_distance_pct": 1.05,
+      "institutional_abs_lots": 126.92,
+      "volume_rank": 43,
+      "weights_used": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "status": "settled",
+      "triggered": true,
+      "entry_date": "2026-11-03",
+      "entry": 159.0,
+      "exit": 155.5,
+      "exit_date": "2026-11-03",
+      "exit_reason": "target1",
+      "return": 0.0220125786163522,
+      "mfe": 0.03459119496855346,
+      "mae": -0.009433962264150943,
+      "trade_date": "2026-11-03",
+      "gross_return": 0.0220125786163522,
+      "reason": "insufficient_capital"
+    },
+    {
+      "signal_date": "2026-11-02",
+      "code": "4903",
+      "name": "聯光通",
+      "direction": "long",
+      "entry_trigger": 54.1,
+      "stop_loss": 51.4,
+      "target1": 58.2,
+      "target2": 59.5,
+      "score": 61.2,
+      "volume_growth_pct": 75.42,
+      "ma5_distance_pct": 5.59,
+      "institutional_abs_lots": 1968.36,
+      "volume_rank": 89,
+      "weights_used": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "status": "settled",
+      "triggered": true,
+      "entry_date": "2026-11-03",
+      "entry": 54.1,
+      "exit": 51.4,
+      "exit_date": "2026-11-03",
+      "exit_reason": "stop",
+      "return": -0.04990757855822556,
+      "mfe": 0.03142329020332709,
+      "mae": -0.07578558225508321,
+      "trade_date": "2026-11-03",
+      "gross_return": -0.04990757855822556,
+      "reason": "insufficient_capital"
+    },
+    {
+      "signal_date": "2026-11-02",
+      "code": "2882",
+      "name": "國泰金",
+      "direction": "long",
+      "entry_trigger": 116.5,
+      "stop_loss": 115.0,
+      "target1": 119.0,
+      "target2": 119.5,
+      "score": 29.03,
+      "volume_growth_pct": 38.97,
+      "ma5_distance_pct": 0.35,
+      "institutional_abs_lots": 1624.83,
+      "volume_rank": 25,
+      "weights_used": {
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
+        "volume_rank": 0.1
+      },
+      "status": "settled",
+      "triggered": true,
+      "entry_date": "2026-11-03",
+      "entry": 116.5,
+      "exit": 115.0,
+      "exit_date": "2026-11-03",
+      "exit_reason": "stop",
+      "return": -0.012875536480686695,
+      "mfe": 0.0,
+      "mae": -0.03862660944206009,
+      "trade_date": "2026-11-03",
+      "gross_return": -0.012875536480686695,
+      "reason": "insufficient_capital"
     }
   ],
   "peak_positions": 1,
   "open_positions": 0,
-  "gross_pnl": -255440.00000000006,
-  "net_pnl": -505238.44550000003,
-  "costs": 249798.4455,
+  "gross_pnl": -234450.0,
+  "net_pnl": -493593.2460000001,
+  "costs": 259143.2460000001,
   "equity_curve": [
     {
-      "date": "2026-06-05",
-      "equity": 985252.7279999999,
-      "cash": 985252.7279999999,
-      "open_positions": 0
-    },
-    {
       "date": "2026-06-08",
-      "equity": 980363.1854999999,
-      "cash": 980363.1854999999,
+      "equity": 994567.175,
+      "cash": 994567.175,
       "open_positions": 0
     },
     {
       "date": "2026-06-09",
-      "equity": 992406.9404999998,
-      "cash": 992406.9404999998,
+      "equity": 1006263.44,
+      "cash": 1006263.44,
       "open_positions": 0
     },
     {
       "date": "2026-06-10",
-      "equity": 997784.5104999996,
-      "cash": 997784.5104999996,
+      "equity": 1011641.0099999998,
+      "cash": 1011641.0099999998,
       "open_positions": 0
     },
     {
       "date": "2026-06-11",
-      "equity": 979384.8754999995,
-      "cash": 979384.8754999995,
+      "equity": 991791.9274999996,
+      "cash": 991791.9274999996,
       "open_positions": 0
     },
     {
       "date": "2026-06-12",
-      "equity": 974706.6604999995,
-      "cash": 974706.6604999995,
+      "equity": 987113.7124999997,
+      "cash": 987113.7124999997,
       "open_positions": 0
     },
     {
       "date": "2026-06-15",
-      "equity": 969117.2954999995,
-      "cash": 969117.2954999995,
+      "equity": 981524.3474999997,
+      "cash": 981524.3474999997,
       "open_positions": 0
     },
     {
       "date": "2026-06-16",
-      "equity": 951660.2579999994,
-      "cash": 951660.2579999994,
+      "equity": 964067.3099999996,
+      "cash": 964067.3099999996,
       "open_positions": 0
     },
     {
       "date": "2026-06-17",
-      "equity": 949859.4604999995,
-      "cash": 949859.4604999995,
+      "equity": 969047.6074999996,
+      "cash": 969047.6074999996,
       "open_positions": 0
     },
     {
       "date": "2026-06-18",
-      "equity": 954888.1829999995,
-      "cash": 954888.1829999995,
+      "equity": 973880.1949999996,
+      "cash": 973880.1949999996,
       "open_positions": 0
     },
     {
       "date": "2026-06-22",
-      "equity": 952720.8654999994,
-      "cash": 952720.8654999994,
+      "equity": 972567.0024999995,
+      "cash": 972567.0024999995,
       "open_positions": 0
     },
     {
       "date": "2026-06-23",
-      "equity": 933687.4129999994,
-      "cash": 933687.4129999994,
+      "equity": 955151.0174999995,
+      "cash": 955151.0174999995,
       "open_positions": 0
     },
     {
       "date": "2026-06-24",
-      "equity": 922216.5989999993,
-      "cash": 922216.5989999993,
+      "equity": 943680.2034999995,
+      "cash": 943680.2034999995,
       "open_positions": 0
     },
     {
       "date": "2026-06-25",
-      "equity": 914682.2359999996,
-      "cash": 914682.2359999996,
+      "equity": 935978.9524999997,
+      "cash": 935978.9524999997,
       "open_positions": 0
     },
     {
       "date": "2026-06-26",
-      "equity": 918382.7459999996,
-      "cash": 918382.7459999996,
+      "equity": 939679.4624999997,
+      "cash": 939679.4624999997,
       "open_positions": 0
     },
     {
       "date": "2026-06-29",
-      "equity": 909957.6784999996,
-      "cash": 909957.6784999996,
+      "equity": 931452.8474999996,
+      "cash": 931452.8474999996,
       "open_positions": 0
     },
     {
       "date": "2026-06-30",
-      "equity": 913750.0559999995,
-      "cash": 913750.0559999995,
+      "equity": 935245.2249999995,
+      "cash": 935245.2249999995,
       "open_positions": 0
     },
     {
       "date": "2026-07-01",
-      "equity": 900533.0084999995,
-      "cash": 900533.0084999995,
+      "equity": 922028.1774999995,
+      "cash": 922028.1774999995,
       "open_positions": 0
     },
     {
       "date": "2026-07-02",
-      "equity": 882332.8384999995,
-      "cash": 882332.8384999995,
+      "equity": 903081.0024999995,
+      "cash": 903081.0024999995,
       "open_positions": 0
     },
     {
       "date": "2026-07-03",
-      "equity": 897628.8269999995,
-      "cash": 897628.8269999995,
+      "equity": 919603.0159999995,
+      "cash": 919603.0159999995,
       "open_positions": 0
     },
     {
       "date": "2026-07-06",
-      "equity": 895455.1969999993,
-      "cash": 895455.1969999993,
+      "equity": 916616.3109999994,
+      "cash": 916616.3109999994,
       "open_positions": 0
     },
     {
       "date": "2026-07-07",
-      "equity": 881646.4614999992,
-      "cash": 881646.4614999992,
+      "equity": 908685.5254999992,
+      "cash": 908685.5254999992,
       "open_positions": 0
     },
     {
       "date": "2026-07-08",
-      "equity": 862819.4589999991,
-      "cash": 862819.4589999991,
+      "equity": 889858.5229999991,
+      "cash": 889858.5229999991,
       "open_positions": 0
     },
     {
       "date": "2026-07-09",
-      "equity": 866356.4064999991,
-      "cash": 866356.4064999991,
+      "equity": 893326.7404999991,
+      "cash": 893326.7404999991,
       "open_positions": 0
     },
     {
       "date": "2026-07-13",
-      "equity": 849320.811499999,
-      "cash": 849320.811499999,
+      "equity": 876291.145499999,
+      "cash": 876291.145499999,
       "open_positions": 0
     },
     {
       "date": "2026-07-14",
-      "equity": 843120.451499999,
-      "cash": 843120.451499999,
+      "equity": 869928.7729999991,
+      "cash": 869928.7729999991,
       "open_positions": 0
     },
     {
       "date": "2026-07-15",
-      "equity": 836478.473999999,
-      "cash": 836478.473999999,
+      "equity": 863286.7954999991,
+      "cash": 863286.7954999991,
       "open_positions": 0
     },
     {
       "date": "2026-07-16",
-      "equity": 825548.9464999989,
-      "cash": 825548.9464999989,
+      "equity": 851571.355499999,
+      "cash": 851571.355499999,
       "open_positions": 0
     },
     {
       "date": "2026-07-17",
-      "equity": 820151.6639999988,
-      "cash": 820151.6639999988,
+      "equity": 845527.477999999,
+      "cash": 845527.477999999,
       "open_positions": 0
     },
     {
       "date": "2026-07-20",
-      "equity": 832640.0759999987,
-      "cash": 832640.0759999987,
+      "equity": 860972.289999999,
+      "cash": 860972.289999999,
       "open_positions": 0
     },
     {
       "date": "2026-07-21",
-      "equity": 830499.9959999985,
-      "cash": 830499.9959999985,
+      "equity": 852879.4424999991,
+      "cash": 852879.4424999991,
       "open_positions": 0
     },
     {
       "date": "2026-07-22",
-      "equity": 829276.5359999985,
-      "cash": 829276.5359999985,
+      "equity": 851720.939999999,
+      "cash": 851720.939999999,
       "open_positions": 0
     },
     {
       "date": "2026-07-23",
-      "equity": 831543.5484999986,
-      "cash": 831543.5484999986,
+      "equity": 855453.3199999991,
+      "cash": 855453.3199999991,
       "open_positions": 0
     },
     {
       "date": "2026-07-24",
-      "equity": 817484.0409999986,
-      "cash": 817484.0409999986,
+      "equity": 839046.4749999989,
+      "cash": 839046.4749999989,
       "open_positions": 0
     },
     {
       "date": "2026-07-27",
-      "equity": 809234.5334999987,
-      "cash": 809234.5334999987,
+      "equity": 830677.5599999991,
+      "cash": 830677.5599999991,
       "open_positions": 0
     },
     {
       "date": "2026-07-28",
-      "equity": 796544.6209999986,
-      "cash": 796544.6209999986,
+      "equity": 818745.4274999991,
+      "cash": 818745.4274999991,
       "open_positions": 0
     },
     {
       "date": "2026-07-29",
-      "equity": 777690.6469999986,
-      "cash": 777690.6469999986,
+      "equity": 799648.0454999991,
+      "cash": 799648.0454999991,
       "open_positions": 0
     },
     {
       "date": "2026-07-30",
-      "equity": 765521.2094999987,
-      "cash": 765521.2094999987,
+      "equity": 786964.6379999991,
+      "cash": 786964.6379999991,
       "open_positions": 0
     },
     {
       "date": "2026-07-31",
-      "equity": 765712.3444999987,
-      "cash": 765712.3444999987,
+      "equity": 787155.7729999991,
+      "cash": 787155.7729999991,
       "open_positions": 0
     },
     {
       "date": "2026-08-03",
-      "equity": 761670.3469999987,
-      "cash": 761670.3469999987,
+      "equity": 783113.775499999,
+      "cash": 783113.775499999,
       "open_positions": 0
     },
     {
       "date": "2026-08-04",
-      "equity": 764179.3669999987,
-      "cash": 764179.3669999987,
+      "equity": 785622.7954999991,
+      "cash": 785622.7954999991,
       "open_positions": 0
     },
     {
       "date": "2026-08-05",
-      "equity": 760716.2619999987,
-      "cash": 760716.2619999987,
+      "equity": 782159.6904999991,
+      "cash": 782159.6904999991,
       "open_positions": 0
     },
     {
       "date": "2026-08-06",
-      "equity": 754219.2769999987,
-      "cash": 754219.2769999987,
+      "equity": 774880.2479999991,
+      "cash": 774880.2479999991,
       "open_positions": 0
     },
     {
       "date": "2026-08-07",
-      "equity": 749555.3669999987,
-      "cash": 749555.3669999987,
+      "equity": 770216.337999999,
+      "cash": 770216.337999999,
       "open_positions": 0
     },
     {
       "date": "2026-08-10",
-      "equity": 742499.4569999988,
-      "cash": 742499.4569999988,
+      "equity": 762742.0579999991,
+      "cash": 762742.0579999991,
       "open_positions": 0
     },
     {
       "date": "2026-08-11",
-      "equity": 737530.5669999989,
-      "cash": 737530.5669999989,
+      "equity": 760266.0579999993,
+      "cash": 760266.0579999993,
       "open_positions": 0
     },
     {
       "date": "2026-08-12",
-      "equity": 743078.181999999,
-      "cash": 743078.181999999,
+      "equity": 765813.6729999994,
+      "cash": 765813.6729999994,
       "open_positions": 0
     },
     {
       "date": "2026-08-13",
-      "equity": 734415.7719999991,
-      "cash": 734415.7719999991,
+      "equity": 755975.9579999993,
+      "cash": 755975.9579999993,
       "open_positions": 0
     },
     {
       "date": "2026-08-14",
-      "equity": 730976.6569999991,
-      "cash": 730976.6569999991,
+      "equity": 752536.8429999993,
+      "cash": 752536.8429999993,
       "open_positions": 0
     },
     {
       "date": "2026-08-17",
-      "equity": 724844.3404999992,
-      "cash": 724844.3404999992,
+      "equity": 746146.5074999995,
+      "cash": 746146.5074999995,
       "open_positions": 0
     },
     {
       "date": "2026-08-18",
-      "equity": 727195.1404999992,
-      "cash": 727195.1404999992,
+      "equity": 748497.3074999994,
+      "cash": 748497.3074999994,
       "open_positions": 0
     },
     {
       "date": "2026-08-19",
-      "equity": 727528.9404999993,
-      "cash": 727528.9404999993,
+      "equity": 749574.9424999994,
+      "cash": 749574.9424999994,
       "open_positions": 0
     },
     {
       "date": "2026-08-20",
-      "equity": 720845.3254999993,
-      "cash": 720845.3254999993,
+      "equity": 742891.3274999994,
+      "cash": 742891.3274999994,
       "open_positions": 0
     },
     {
       "date": "2026-08-21",
-      "equity": 720235.5129999992,
-      "cash": 720235.5129999992,
+      "equity": 742953.6249999994,
+      "cash": 742953.6249999994,
       "open_positions": 0
     },
     {
       "date": "2026-08-24",
-      "equity": 714348.6904999992,
-      "cash": 714348.6904999992,
+      "equity": 737066.8024999994,
+      "cash": 737066.8024999994,
       "open_positions": 0
     },
     {
       "date": "2026-08-25",
-      "equity": 706262.1404999992,
-      "cash": 706262.1404999992,
+      "equity": 728980.2524999994,
+      "cash": 728980.2524999994,
       "open_positions": 0
     },
     {
       "date": "2026-08-26",
-      "equity": 693973.6554999992,
-      "cash": 693973.6554999992,
+      "equity": 715837.0999999994,
+      "cash": 715837.0999999994,
       "open_positions": 0
     },
     {
       "date": "2026-08-27",
-      "equity": 693918.6579999992,
-      "cash": 693918.6579999992,
+      "equity": 715782.1024999995,
+      "cash": 715782.1024999995,
       "open_positions": 0
     },
     {
       "date": "2026-08-28",
-      "equity": 684323.7329999993,
-      "cash": 684323.7329999993,
+      "equity": 706187.1774999995,
+      "cash": 706187.1774999995,
       "open_positions": 0
     },
     {
       "date": "2026-08-31",
-      "equity": 678718.8804999994,
-      "cash": 678718.8804999994,
+      "equity": 702169.8274999995,
+      "cash": 702169.8274999995,
       "open_positions": 0
     },
     {
       "date": "2026-09-01",
-      "equity": 676416.1104999994,
-      "cash": 676416.1104999994,
+      "equity": 700320.8224999997,
+      "cash": 700320.8224999997,
       "open_positions": 0
     },
     {
       "date": "2026-09-02",
-      "equity": 675813.2354999995,
-      "cash": 675813.2354999995,
+      "equity": 699521.6199999996,
+      "cash": 699521.6199999996,
       "open_positions": 0
     },
     {
       "date": "2026-09-03",
-      "equity": 665478.7754999995,
-      "cash": 665478.7754999995,
+      "equity": 688719.0324999996,
+      "cash": 688719.0324999996,
       "open_positions": 0
     },
     {
       "date": "2026-09-04",
-      "equity": 647442.3179999994,
-      "cash": 647442.3179999994,
+      "equity": 670660.5824999994,
+      "cash": 670660.5824999994,
       "open_positions": 0
     },
     {
       "date": "2026-09-07",
-      "equity": 638076.5429999995,
-      "cash": 638076.5429999995,
+      "equity": 661294.8074999995,
+      "cash": 661294.8074999995,
       "open_positions": 0
     },
     {
       "date": "2026-09-08",
-      "equity": 622203.7204999995,
-      "cash": 622203.7204999995,
+      "equity": 644739.5024999995,
+      "cash": 644739.5024999995,
       "open_positions": 0
     },
     {
       "date": "2026-09-09",
-      "equity": 621546.0104999995,
-      "cash": 621546.0104999995,
+      "equity": 644081.7924999995,
+      "cash": 644081.7924999995,
       "open_positions": 0
     },
     {
       "date": "2026-09-10",
-      "equity": 619242.7779999995,
-      "cash": 619242.7779999995,
+      "equity": 640997.3824999996,
+      "cash": 640997.3824999996,
       "open_positions": 0
     },
     {
       "date": "2026-09-11",
-      "equity": 620285.7954999995,
-      "cash": 620285.7954999995,
+      "equity": 642040.3999999997,
+      "cash": 642040.3999999997,
       "open_positions": 0
     },
     {
       "date": "2026-09-14",
-      "equity": 614027.4529999996,
-      "cash": 614027.4529999996,
+      "equity": 635782.0574999998,
+      "cash": 635782.0574999998,
       "open_positions": 0
     },
     {
       "date": "2026-09-15",
-      "equity": 610472.0304999996,
-      "cash": 610472.0304999996,
+      "equity": 632027.4799999999,
+      "cash": 632027.4799999999,
       "open_positions": 0
     },
     {
       "date": "2026-09-16",
-      "equity": 607947.3804999996,
-      "cash": 607947.3804999996,
+      "equity": 625798.49,
+      "cash": 625798.49,
       "open_positions": 0
     },
     {
       "date": "2026-09-17",
-      "equity": 608760.6254999996,
-      "cash": 608760.6254999996,
+      "equity": 626611.7350000001,
+      "cash": 626611.7350000001,
       "open_positions": 0
     },
     {
       "date": "2026-09-18",
-      "equity": 612119.8749999999,
-      "cash": 612119.8749999999,
+      "equity": 629970.9845000004,
+      "cash": 629970.9845000004,
       "open_positions": 0
     },
     {
       "date": "2026-09-21",
-      "equity": 605404.1799999998,
-      "cash": 605404.1799999998,
+      "equity": 623100.0595000003,
+      "cash": 623100.0595000003,
       "open_positions": 0
     },
     {
       "date": "2026-09-22",
-      "equity": 603492.6049999996,
-      "cash": 603492.6049999996,
+      "equity": 621188.4845000001,
+      "cash": 621188.4845000001,
       "open_positions": 0
     },
     {
       "date": "2026-09-23",
-      "equity": 597003.2249999995,
-      "cash": 597003.2249999995,
+      "equity": 614699.1045,
+      "cash": 614699.1045,
       "open_positions": 0
     },
     {
       "date": "2026-09-24",
-      "equity": 592408.1649999995,
-      "cash": 592408.1649999995,
+      "equity": 609326.4645000001,
+      "cash": 609326.4645000001,
       "open_positions": 0
     },
     {
       "date": "2026-09-29",
-      "equity": 587779.0549999995,
-      "cash": 587779.0549999995,
+      "equity": 604697.3545000001,
+      "cash": 604697.3545000001,
       "open_positions": 0
     },
     {
       "date": "2026-09-30",
-      "equity": 588771.1284999994,
-      "cash": 588771.1284999994,
+      "equity": 607013.0355000001,
+      "cash": 607013.0355000001,
       "open_positions": 0
     },
     {
       "date": "2026-10-01",
-      "equity": 585351.0534999993,
-      "cash": 585351.0534999993,
+      "equity": 602756.3955000001,
+      "cash": 602756.3955000001,
       "open_positions": 0
     },
     {
       "date": "2026-10-02",
-      "equity": 583189.8659999995,
-      "cash": 583189.8659999995,
+      "equity": 600688.4405000003,
+      "cash": 600688.4405000003,
       "open_positions": 0
     },
     {
       "date": "2026-10-05",
-      "equity": 576966.2609999994,
-      "cash": 576966.2609999994,
+      "equity": 594464.8355000002,
+      "cash": 594464.8355000002,
       "open_positions": 0
     },
     {
       "date": "2026-10-06",
-      "equity": 566125.8104999993,
-      "cash": 566125.8104999993,
+      "equity": 583624.3850000001,
+      "cash": 583624.3850000001,
       "open_positions": 0
     },
     {
       "date": "2026-10-07",
-      "equity": 563906.9054999993,
-      "cash": 563906.9054999993,
+      "equity": 581405.4800000001,
+      "cash": 581405.4800000001,
       "open_positions": 0
     },
     {
       "date": "2026-10-08",
-      "equity": 560446.6104999994,
-      "cash": 560446.6104999994,
+      "equity": 577945.1850000002,
+      "cash": 577945.1850000002,
       "open_positions": 0
     },
     {
       "date": "2026-10-12",
-      "equity": 556022.8964999994,
-      "cash": 556022.8964999994,
+      "equity": 570258.9660000002,
+      "cash": 570258.9660000002,
       "open_positions": 0
     },
     {
       "date": "2026-10-13",
-      "equity": 548947.6189999995,
-      "cash": 548947.6189999995,
+      "equity": 562582.5260000002,
+      "cash": 562582.5260000002,
       "open_positions": 0
     },
     {
       "date": "2026-10-14",
-      "equity": 547305.2339999995,
-      "cash": 547305.2339999995,
+      "equity": 560940.1410000002,
+      "cash": 560940.1410000002,
       "open_positions": 0
     },
     {
       "date": "2026-10-15",
-      "equity": 547305.2339999995,
-      "cash": 547305.2339999995,
+      "equity": 560940.1410000002,
+      "cash": 560940.1410000002,
       "open_positions": 0
     },
     {
       "date": "2026-10-16",
-      "equity": 543315.6439999994,
-      "cash": 543315.6439999994,
+      "equity": 556950.5510000001,
+      "cash": 556950.5510000001,
       "open_positions": 0
     },
     {
       "date": "2026-10-19",
-      "equity": 541216.2889999994,
-      "cash": 541216.2889999994,
+      "equity": 554851.1960000001,
+      "cash": 554851.1960000001,
       "open_positions": 0
     },
     {
       "date": "2026-10-20",
-      "equity": 535142.3989999995,
-      "cash": 535142.3989999995,
+      "equity": 548996.2960000001,
+      "cash": 548996.2960000001,
       "open_positions": 0
     },
     {
       "date": "2026-10-21",
-      "equity": 537843.1214999995,
-      "cash": 537843.1214999995,
+      "equity": 551697.0185000001,
+      "cash": 551697.0185000001,
       "open_positions": 0
     },
     {
       "date": "2026-10-22",
-      "equity": 529844.5919999996,
-      "cash": 529844.5919999996,
+      "equity": 545577.7515000001,
+      "cash": 545577.7515000001,
       "open_positions": 0
     },
     {
       "date": "2026-10-27",
-      "equity": 516893.5874999996,
-      "cash": 516893.5874999996,
+      "equity": 533318.4320000001,
+      "cash": 533318.4320000001,
       "open_positions": 0
     },
     {
       "date": "2026-10-28",
-      "equity": 514051.2199999996,
-      "cash": 514051.2199999996,
+      "equity": 530476.0645000002,
+      "cash": 530476.0645000002,
       "open_positions": 0
     },
     {
       "date": "2026-10-29",
-      "equity": 507573.35749999963,
-      "cash": 507573.35749999963,
+      "equity": 523884.4495000002,
+      "cash": 523884.4495000002,
       "open_positions": 0
     },
     {
       "date": "2026-10-30",
-      "equity": 505385.3874999996,
-      "cash": 505385.3874999996,
+      "equity": 521696.4795000002,
+      "cash": 521696.4795000002,
       "open_positions": 0
     },
     {
       "date": "2026-11-02",
-      "equity": 494761.55449999956,
-      "cash": 494761.55449999956,
+      "equity": 511072.6465000002,
+      "cash": 511072.6465000002,
+      "open_positions": 0
+    },
+    {
+      "date": "2026-11-03",
+      "equity": 506406.75400000025,
+      "cash": 506406.75400000025,
       "open_positions": 0
     }
   ],
@@ -46718,20 +46738,20 @@
   },
   "event_order": "existing_exits_then_priority_entries_then_same_day_exits",
   "exposure": {
-    "peak_notional": 187000.0,
-    "peak_fraction_of_initial_capital": 0.187,
+    "peak_notional": 192500.0,
+    "peak_fraction_of_initial_capital": 0.1925,
     "by_direction": {
       "long": {
-        "peak_notional": 184200.0,
-        "realized_trades": 363,
-        "gross_pnl": -133410.00000000003,
-        "net_pnl": -272286.09900000016
+        "peak_notional": 192500.0,
+        "realized_trades": 365,
+        "gross_pnl": -117730.00000000003,
+        "net_pnl": -261594.54850000003
       },
       "short": {
         "peak_notional": 187000.0,
-        "realized_trades": 246,
-        "gross_pnl": -122030.00000000013,
-        "net_pnl": -232952.34650000004
+        "realized_trades": 249,
+        "gross_pnl": -116720.0000000001,
+        "net_pnl": -231998.69750000015
       }
     }
   },
