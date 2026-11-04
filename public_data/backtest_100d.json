@@ -1,10 +1,9 @@
 {
   "period": {
-    "from": "2026-06-05",
-    "to": "2026-11-02"
+    "from": "2026-06-08",
+    "to": "2026-11-03"
   },
   "signal_dates": [
-    "2026-06-05",
     "2026-06-08",
     "2026-06-09",
     "2026-06-10",
@@ -103,33 +102,34 @@
     "2026-10-28",
     "2026-10-29",
     "2026-10-30",
-    "2026-11-02"
+    "2026-11-02",
+    "2026-11-03"
   ],
   "metrics": {
-    "signals": 1690,
-    "trades": 1284,
-    "triggered": 1284,
-    "untriggered": 406,
+    "signals": 1688,
+    "trades": 1290,
+    "triggered": 1290,
+    "untriggered": 398,
     "unresolved": 0,
-    "win_rate": 0.3862928348909657,
-    "average_return": -0.006291961508160009,
-    "median_return": -0.010917238749046529,
-    "cumulative_return": -0.4550696117848899,
-    "max_drawdown": -0.4550696117848899,
-    "profit_factor": 0.6437680581361448,
+    "win_rate": 0.38992248062015505,
+    "average_return": -0.005720631763111166,
+    "median_return": -0.010227102943373693,
+    "cumulative_return": -0.4222676655443316,
+    "max_drawdown": -0.4435238317905832,
+    "profit_factor": 0.6689275553056466,
     "signal_days": 100,
     "long": {
-      "signals": 974,
-      "trades": 769,
-      "triggered": 769,
-      "untriggered": 205,
+      "signals": 972,
+      "trades": 775,
+      "triggered": 775,
+      "untriggered": 197,
       "unresolved": 0,
-      "win_rate": 0.3953185955786736,
-      "average_return": -0.005600405533435565,
+      "win_rate": 0.3961290322580645,
+      "average_return": -0.005432679160889262,
       "median_return": -0.011627906976744146,
-      "cumulative_return": -0.4841985789536486,
-      "max_drawdown": -0.4841985789536486,
-      "profit_factor": 0.703494144578162
+      "cumulative_return": -0.45798450270672064,
+      "max_drawdown": -0.4725342369467864,
+      "profit_factor": 0.710446274103333
     },
     "short": {
       "signals": 716,
@@ -137,30 +137,15 @@
       "triggered": 515,
       "untriggered": 201,
       "unresolved": 0,
-      "win_rate": 0.37281553398058254,
-      "average_return": -0.007324595575272822,
-      "median_return": -0.010067114093959731,
-      "cumulative_return": -0.5652627095438453,
-      "max_drawdown": -0.5734386668311029,
-      "profit_factor": 0.537374514347466
+      "win_rate": 0.38058252427184464,
+      "average_return": -0.0061539584946101586,
+      "median_return": -0.008174386920980848,
+      "cumulative_return": -0.5375158999978124,
+      "max_drawdown": -0.5562093145043643,
+      "profit_factor": 0.5910219394666788
     }
   },
   "walk_forward": [
-    {
-      "signal_date": "2026-06-05",
-      "weights": {
-        "volume_growth_pct": 0.35,
-        "ma5_distance_pct": 0.3,
-        "institutional_lots": 0.25,
-        "volume_rank": 0.1
-      },
-      "sample_count": 0,
-      "changed": false,
-      "baseline_metric": null,
-      "selected_metric": null,
-      "applied": false,
-      "research_only": true
-    },
     {
       "signal_date": "2026-06-08",
       "weights": {
@@ -184,7 +169,7 @@
         "institutional_lots": 0.25,
         "volume_rank": 0.1
       },
-      "sample_count": 12,
+      "sample_count": 0,
       "changed": false,
       "baseline_metric": null,
       "selected_metric": null,
@@ -199,7 +184,7 @@
         "institutional_lots": 0.25,
         "volume_rank": 0.1
       },
-      "sample_count": 20,
+      "sample_count": 8,
       "changed": false,
       "baseline_metric": null,
       "selected_metric": null,
@@ -209,15 +194,15 @@
     {
       "signal_date": "2026-06-11",
       "weights": {
-        "volume_growth_pct": 0.45,
-        "ma5_distance_pct": 0.25,
-        "institutional_lots": 0.2,
+        "volume_growth_pct": 0.35,
+        "ma5_distance_pct": 0.3,
+        "institutional_lots": 0.25,
         "volume_rank": 0.1
       },
-      "sample_count": 33,
-      "changed": true,
-      "baseline_metric": -0.011878034927234498,
-      "selected_metric": -0.009188252718280044,
+      "sample_count": 21,
+      "changed": false,
+      "baseline_metric": null,
+      "selected_metric": null,
       "applied": false,
       "research_only": true
     },
@@ -229,10 +214,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 49,
+      "sample_count": 37,
       "changed": true,
-      "baseline_metric": -0.020823657841854637,
-      "selected_metric": -0.01742714575510385,
+      "baseline_metric": -0.013730706710870797,
+      "selected_metric": -0.007299896196644232,
       "applied": false,
       "research_only": true
     },
@@ -244,10 +229,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 61,
+      "sample_count": 49,
       "changed": true,
-      "baseline_metric": -0.02309252500987509,
-      "selected_metric": -0.018828832640260966,
+      "baseline_metric": -0.018340028453642323,
+      "selected_metric": -0.011583817192705535,
       "applied": false,
       "research_only": true
     },
@@ -259,10 +244,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 73,
+      "sample_count": 61,
       "changed": true,
-      "baseline_metric": -0.01859801194229803,
-      "selected_metric": -0.01639283241219885,
+      "baseline_metric": -0.013897112083796404,
+      "selected_metric": -0.010109620008542082,
       "applied": false,
       "research_only": true
     },
@@ -274,25 +259,25 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 84,
+      "sample_count": 72,
       "changed": true,
-      "baseline_metric": -0.018709624521872605,
-      "selected_metric": -0.016557247483355624,
+      "baseline_metric": -0.01481081006971701,
+      "selected_metric": -0.011348639658834446,
       "applied": false,
       "research_only": true
     },
     {
       "signal_date": "2026-06-18",
       "weights": {
-        "volume_growth_pct": 0.45,
-        "ma5_distance_pct": 0.25,
-        "institutional_lots": 0.2,
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 96,
+      "sample_count": 84,
       "changed": true,
-      "baseline_metric": -0.01979399048255521,
-      "selected_metric": -0.017005820066937655,
+      "baseline_metric": -0.016607058946519357,
+      "selected_metric": -0.012620945713269997,
       "applied": false,
       "research_only": true
     },
@@ -304,10 +289,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 107,
+      "sample_count": 95,
       "changed": true,
-      "baseline_metric": -0.015366895079051738,
-      "selected_metric": -0.012888521376280581,
+      "baseline_metric": -0.012024943059582436,
+      "selected_metric": -0.009236772643964884,
       "applied": false,
       "research_only": true
     },
@@ -319,10 +304,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 121,
+      "sample_count": 109,
       "changed": true,
-      "baseline_metric": -0.013005706240296877,
-      "selected_metric": -0.011051373613548139,
+      "baseline_metric": -0.009772727907573624,
+      "selected_metric": -0.007601247211186137,
       "applied": false,
       "research_only": true
     },
@@ -334,10 +319,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 133,
+      "sample_count": 121,
       "changed": true,
-      "baseline_metric": -0.013579790801263569,
-      "selected_metric": -0.012091751927077777,
+      "baseline_metric": -0.010727518757909308,
+      "selected_metric": -0.009090675996304939,
       "applied": false,
       "research_only": true
     },
@@ -349,25 +334,25 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 150,
+      "sample_count": 138,
       "changed": true,
-      "baseline_metric": -0.013734177296696936,
-      "selected_metric": -0.012607587918798758,
+      "baseline_metric": -0.011155237847777917,
+      "selected_metric": -0.009926231253707177,
       "applied": false,
       "research_only": true
     },
     {
       "signal_date": "2026-06-26",
       "weights": {
-        "volume_growth_pct": 0.45,
-        "ma5_distance_pct": 0.25,
-        "institutional_lots": 0.2,
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 163,
+      "sample_count": 151,
       "changed": true,
-      "baseline_metric": -0.011962571432535997,
-      "selected_metric": -0.010922642776014603,
+      "baseline_metric": -0.009450909782346818,
+      "selected_metric": -0.008266112301507497,
       "applied": false,
       "research_only": true
     },
@@ -379,10 +364,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 175,
+      "sample_count": 163,
       "changed": true,
-      "baseline_metric": -0.011190824221196698,
-      "selected_metric": -0.01022517618299826,
+      "baseline_metric": -0.00881300214322674,
+      "selected_metric": -0.007773073486705346,
       "applied": false,
       "research_only": true
     },
@@ -394,10 +379,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 190,
+      "sample_count": 178,
       "changed": true,
-      "baseline_metric": -0.011675599250890891,
-      "selected_metric": -0.010024112668079326,
+      "baseline_metric": -0.009502248394896943,
+      "selected_metric": -0.007732798484741697,
       "applied": false,
       "research_only": true
     },
@@ -409,10 +394,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 202,
+      "sample_count": 190,
       "changed": true,
-      "baseline_metric": -0.010079692142625541,
-      "selected_metric": -0.007992359243192807,
+      "baseline_metric": -0.007944837536480166,
+      "selected_metric": -0.005718349110418585,
       "applied": false,
       "research_only": true
     },
@@ -424,10 +409,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 219,
+      "sample_count": 207,
       "changed": true,
-      "baseline_metric": -0.010474791278273842,
-      "selected_metric": -0.008510242667043033,
+      "baseline_metric": -0.008498058780990572,
+      "selected_metric": -0.006410725881557839,
       "applied": false,
       "research_only": true
     },
@@ -439,10 +424,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 234,
+      "sample_count": 222,
       "changed": true,
-      "baseline_metric": -0.012200114858921496,
-      "selected_metric": -0.010234266678487014,
+      "baseline_metric": -0.0104411503662224,
+      "selected_metric": -0.008359664057527066,
       "applied": false,
       "research_only": true
     },
@@ -454,10 +439,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 242,
+      "sample_count": 230,
       "changed": true,
-      "baseline_metric": -0.010577822159386779,
-      "selected_metric": -0.00866510501085593,
+      "baseline_metric": -0.008776411355077101,
+      "selected_metric": -0.0067543960837730625,
       "applied": false,
       "research_only": true
     },
@@ -469,10 +454,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 252,
+      "sample_count": 240,
       "changed": true,
-      "baseline_metric": -0.010432848296876318,
-      "selected_metric": -0.008570465810148914,
+      "baseline_metric": -0.00867342257810244,
+      "selected_metric": -0.006707574397667958,
       "applied": false,
       "research_only": true
     },
@@ -484,25 +469,25 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 265,
+      "sample_count": 253,
       "changed": true,
-      "baseline_metric": -0.012360367629154611,
-      "selected_metric": -0.009865814337859522,
+      "baseline_metric": -0.010794991649909793,
+      "selected_metric": -0.008169146080125492,
       "applied": false,
       "research_only": true
     },
     {
       "signal_date": "2026-07-09",
       "weights": {
-        "volume_growth_pct": 0.45,
-        "ma5_distance_pct": 0.25,
-        "institutional_lots": 0.2,
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 283,
+      "sample_count": 271,
       "changed": true,
-      "baseline_metric": -0.013676418899943537,
-      "selected_metric": -0.010861121075721274,
+      "baseline_metric": -0.012255114283200409,
+      "selected_metric": -0.009231455691975414,
       "applied": false,
       "research_only": true
     },
@@ -514,25 +499,25 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 300,
+      "sample_count": 288,
       "changed": true,
-      "baseline_metric": -0.012929351989060707,
-      "selected_metric": -0.009565458837404554,
+      "baseline_metric": -0.011540153929739496,
+      "selected_metric": -0.007744342856781785,
       "applied": false,
       "research_only": true
     },
     {
       "signal_date": "2026-07-14",
       "weights": {
-        "volume_growth_pct": 0.45,
-        "ma5_distance_pct": 0.25,
-        "institutional_lots": 0.2,
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 314,
+      "sample_count": 302,
       "changed": true,
-      "baseline_metric": -0.01247372489681904,
-      "selected_metric": -0.010412662459688908,
+      "baseline_metric": -0.011126961881455986,
+      "selected_metric": -0.00877670817600164,
       "applied": false,
       "research_only": true
     },
@@ -544,10 +529,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 331,
+      "sample_count": 319,
       "changed": true,
-      "baseline_metric": -0.010889459596867069,
-      "selected_metric": -0.009317606842698301,
+      "baseline_metric": -0.009532370395217541,
+      "selected_metric": -0.007892176216954481,
       "applied": false,
       "research_only": true
     },
@@ -559,10 +544,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 343,
+      "sample_count": 331,
       "changed": true,
-      "baseline_metric": -0.010757639911734652,
-      "selected_metric": -0.009156818212170669,
+      "baseline_metric": -0.009451603606606674,
+      "selected_metric": -0.007546315036407667,
       "applied": false,
       "research_only": true
     },
@@ -574,10 +559,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 349,
+      "sample_count": 337,
       "changed": true,
-      "baseline_metric": -0.012314439483466898,
-      "selected_metric": -0.010542087616170526,
+      "baseline_metric": -0.011122916613413327,
+      "selected_metric": -0.009051415343598039,
       "applied": false,
       "research_only": true
     },
@@ -589,10 +574,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 363,
+      "sample_count": 351,
       "changed": true,
-      "baseline_metric": -0.011895715561373652,
-      "selected_metric": -0.009767686235495609,
+      "baseline_metric": -0.010733915727780093,
+      "selected_metric": -0.00830456284338072,
       "applied": false,
       "research_only": true
     },
@@ -604,10 +589,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 382,
+      "sample_count": 370,
       "changed": true,
-      "baseline_metric": -0.010913961740508056,
-      "selected_metric": -0.008692064164829818,
+      "baseline_metric": -0.009758830277756274,
+      "selected_metric": -0.007243292673509339,
       "applied": false,
       "research_only": true
     },
@@ -619,10 +604,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 393,
+      "sample_count": 381,
       "changed": true,
-      "baseline_metric": -0.010544903791694933,
-      "selected_metric": -0.008378799722960024,
+      "baseline_metric": -0.009417846383012391,
+      "selected_metric": -0.006970582054834214,
       "applied": false,
       "research_only": true
     },
@@ -634,10 +619,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 404,
+      "sample_count": 392,
       "changed": true,
-      "baseline_metric": -0.010712674262530867,
-      "selected_metric": -0.008352921589028374,
+      "baseline_metric": -0.009630266091073099,
+      "selected_metric": -0.006992370801392017,
       "applied": false,
       "research_only": true
     },
@@ -649,10 +634,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 421,
+      "sample_count": 409,
       "changed": true,
-      "baseline_metric": -0.009512021690431735,
-      "selected_metric": -0.00772870319991541,
+      "baseline_metric": -0.008425672038952588,
+      "selected_metric": -0.006392696825563165,
       "applied": false,
       "research_only": true
     },
@@ -664,10 +649,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 433,
+      "sample_count": 421,
       "changed": true,
-      "baseline_metric": -0.009281310722415602,
-      "selected_metric": -0.007455673676887886,
+      "baseline_metric": -0.008222562318790101,
+      "selected_metric": -0.006153956878384827,
       "applied": false,
       "research_only": true
     },
@@ -679,10 +664,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 446,
+      "sample_count": 434,
       "changed": true,
-      "baseline_metric": -0.008334418893320216,
-      "selected_metric": -0.006438712332975681,
+      "baseline_metric": -0.007279166007648782,
+      "selected_metric": -0.005145894142428586,
       "applied": false,
       "research_only": true
     },
@@ -694,10 +679,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 459,
+      "sample_count": 447,
       "changed": true,
-      "baseline_metric": -0.008917246068843112,
-      "selected_metric": -0.0067662497827112745,
+      "baseline_metric": -0.00791163197290484,
+      "selected_metric": -0.005522533278233352,
       "applied": false,
       "research_only": true
     },
@@ -709,10 +694,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 477,
+      "sample_count": 465,
       "changed": true,
-      "baseline_metric": -0.0082758125357441,
-      "selected_metric": -0.006970661891918708,
+      "baseline_metric": -0.007280909632830512,
+      "selected_metric": -0.005769537405490355,
       "applied": false,
       "research_only": true
     },
@@ -724,10 +709,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 495,
+      "sample_count": 483,
       "changed": true,
-      "baseline_metric": -0.008913169181837228,
-      "selected_metric": -0.006866101548692487,
+      "baseline_metric": -0.007964902266038118,
+      "selected_metric": -0.005696307466355624,
       "applied": false,
       "research_only": true
     },
@@ -739,10 +724,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 498,
+      "sample_count": 486,
       "changed": true,
-      "baseline_metric": -0.0088125352151505,
-      "selected_metric": -0.006793509604377604,
+      "baseline_metric": -0.007874789411779921,
+      "selected_metric": -0.0056381466515295735,
       "applied": false,
       "research_only": true
     },
@@ -754,10 +739,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 512,
+      "sample_count": 500,
       "changed": true,
-      "baseline_metric": -0.009332131651213542,
-      "selected_metric": -0.00736694672339459,
+      "baseline_metric": -0.00843431303248498,
+      "selected_metric": -0.006258948156077109,
       "applied": false,
       "research_only": true
     },
@@ -769,10 +754,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 522,
+      "sample_count": 510,
       "changed": true,
-      "baseline_metric": -0.008133708964798763,
-      "selected_metric": -0.006257092180185921,
+      "baseline_metric": -0.00722787423759857,
+      "selected_metric": -0.005149044120178008,
       "applied": false,
       "research_only": true
     },
@@ -784,10 +769,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 535,
+      "sample_count": 523,
       "changed": true,
-      "baseline_metric": -0.00809593253966182,
-      "selected_metric": -0.00645609473869083,
+      "baseline_metric": -0.007212644781346388,
+      "selected_metric": -0.0053819960453975356,
       "applied": false,
       "research_only": true
     },
@@ -799,10 +784,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 544,
+      "sample_count": 532,
       "changed": true,
-      "baseline_metric": -0.00787789357916368,
-      "selected_metric": -0.005930692270617146,
+      "baseline_metric": -0.007011447562565139,
+      "selected_metric": -0.005014950018359194,
       "applied": false,
       "research_only": true
     },
@@ -814,40 +799,40 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 553,
+      "sample_count": 541,
       "changed": true,
-      "baseline_metric": -0.008166749829585146,
-      "selected_metric": -0.006019116134811763,
+      "baseline_metric": -0.007318355794454624,
+      "selected_metric": -0.005117031257311901,
       "applied": false,
       "research_only": true
     },
     {
       "signal_date": "2026-08-11",
       "weights": {
-        "volume_growth_pct": 0.45,
-        "ma5_distance_pct": 0.25,
-        "institutional_lots": 0.2,
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 563,
+      "sample_count": 551,
       "changed": true,
-      "baseline_metric": -0.007916771053459008,
-      "selected_metric": -0.005820271494275468,
+      "baseline_metric": -0.007082972512450543,
+      "selected_metric": -0.0048002670409178876,
       "applied": false,
       "research_only": true
     },
     {
       "signal_date": "2026-08-12",
       "weights": {
-        "volume_growth_pct": 0.45,
-        "ma5_distance_pct": 0.25,
-        "institutional_lots": 0.2,
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 581,
+      "sample_count": 569,
       "changed": true,
-      "baseline_metric": -0.007813777006617485,
-      "selected_metric": -0.00576603325113589,
+      "baseline_metric": -0.006997378572612996,
+      "selected_metric": -0.004842334970357535,
       "applied": false,
       "research_only": true
     },
@@ -859,10 +844,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 594,
+      "sample_count": 582,
       "changed": true,
-      "baseline_metric": -0.0075730146591630075,
-      "selected_metric": -0.005551495789060099,
+      "baseline_metric": -0.00677000311089224,
+      "selected_metric": -0.004701472174042747,
       "applied": false,
       "research_only": true
     },
@@ -874,10 +859,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 605,
+      "sample_count": 593,
       "changed": true,
-      "baseline_metric": -0.007671108000125746,
-      "selected_metric": -0.005694511771580679,
+      "baseline_metric": -0.006888576108428467,
+      "selected_metric": -0.004867057238325554,
       "applied": false,
       "research_only": true
     },
@@ -889,10 +874,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 623,
+      "sample_count": 611,
       "changed": true,
-      "baseline_metric": -0.007787897387013551,
-      "selected_metric": -0.005739999005825318,
+      "baseline_metric": -0.007025350412618162,
+      "selected_metric": -0.004805134663055156,
       "applied": false,
       "research_only": true
     },
@@ -904,10 +889,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 634,
+      "sample_count": 622,
       "changed": true,
-      "baseline_metric": -0.007856766556750784,
-      "selected_metric": -0.005852440481545279,
+      "baseline_metric": -0.007112293846358278,
+      "selected_metric": -0.004940343656568379,
       "applied": false,
       "research_only": true
     },
@@ -919,10 +904,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 643,
+      "sample_count": 631,
       "changed": true,
-      "baseline_metric": -0.007290602876213074,
-      "selected_metric": -0.0053916578948176004,
+      "baseline_metric": -0.006549923974966415,
+      "selected_metric": -0.004489163500441748,
       "applied": false,
       "research_only": true
     },
@@ -934,10 +919,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 662,
+      "sample_count": 650,
       "changed": true,
-      "baseline_metric": -0.007191181459149844,
-      "selected_metric": -0.005253042611161536,
+      "baseline_metric": -0.006463862088823674,
+      "selected_metric": -0.004366462364925678,
       "applied": false,
       "research_only": true
     },
@@ -949,10 +934,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 677,
+      "sample_count": 665,
       "changed": true,
-      "baseline_metric": -0.007610010361247632,
-      "selected_metric": -0.0053301623693045265,
+      "baseline_metric": -0.006906081771991339,
+      "selected_metric": -0.0044632494700968086,
       "applied": false,
       "research_only": true
     },
@@ -964,10 +949,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 693,
+      "sample_count": 681,
       "changed": true,
-      "baseline_metric": -0.007727152570694976,
-      "selected_metric": -0.004980120584811769,
+      "baseline_metric": -0.007039645397412755,
+      "selected_metric": -0.004123545107898349,
       "applied": false,
       "research_only": true
     },
@@ -979,10 +964,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 703,
+      "sample_count": 691,
       "changed": true,
-      "baseline_metric": -0.007670438966041629,
-      "selected_metric": -0.0049127185520345,
+      "baseline_metric": -0.006995300294105073,
+      "selected_metric": -0.00407161706422179,
       "applied": false,
       "research_only": true
     },
@@ -994,10 +979,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 717,
+      "sample_count": 705,
       "changed": true,
-      "baseline_metric": -0.007281555327687171,
-      "selected_metric": -0.005099710394712774,
+      "baseline_metric": -0.006611921560242578,
+      "selected_metric": -0.00427837993248643,
       "applied": false,
       "research_only": true
     },
@@ -1009,10 +994,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 733,
+      "sample_count": 721,
       "changed": true,
-      "baseline_metric": -0.007441531650702404,
-      "selected_metric": -0.005293493736950867,
+      "baseline_metric": -0.006787550903832524,
+      "selected_metric": -0.004491316365374795,
       "applied": false,
       "research_only": true
     },
@@ -1024,10 +1009,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 744,
+      "sample_count": 732,
       "changed": true,
-      "baseline_metric": -0.007499363673895003,
-      "selected_metric": -0.00539038099493895,
+      "baseline_metric": -0.0068585646449892445,
+      "selected_metric": -0.0046048529683548065,
       "applied": false,
       "research_only": true
     },
@@ -1039,10 +1024,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 757,
+      "sample_count": 745,
       "changed": true,
-      "baseline_metric": -0.0074999721122939915,
-      "selected_metric": -0.0054327054437899956,
+      "baseline_metric": -0.006870835037339227,
+      "selected_metric": -0.004662229280395583,
       "applied": false,
       "research_only": true
     },
@@ -1054,10 +1039,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 769,
+      "sample_count": 757,
       "changed": true,
-      "baseline_metric": -0.007291065993226195,
-      "selected_metric": -0.005291974919182977,
+      "baseline_metric": -0.006669433042483699,
+      "selected_metric": -0.004532744213624053,
       "applied": false,
       "research_only": true
     },
@@ -1069,10 +1054,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 784,
+      "sample_count": 772,
       "changed": true,
-      "baseline_metric": -0.007202496761018835,
-      "selected_metric": -0.00523787277445912,
+      "baseline_metric": -0.0065902158053383585,
+      "selected_metric": -0.004491012745406075,
       "applied": false,
       "research_only": true
     },
@@ -1084,10 +1069,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 788,
+      "sample_count": 776,
       "changed": true,
-      "baseline_metric": -0.007112651161746035,
-      "selected_metric": -0.005181325886822926,
+      "baseline_metric": -0.006509377712210518,
+      "selected_metric": -0.004446367808483964,
       "applied": false,
       "research_only": true
     },
@@ -1099,10 +1084,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 803,
+      "sample_count": 791,
       "changed": true,
-      "baseline_metric": -0.006918399587487282,
-      "selected_metric": -0.00487844035853448,
+      "baseline_metric": -0.006322058712108999,
+      "selected_metric": -0.004150805543755697,
       "applied": false,
       "research_only": true
     },
@@ -1114,10 +1099,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 820,
+      "sample_count": 808,
       "changed": true,
-      "baseline_metric": -0.00702523185407207,
-      "selected_metric": -0.005201063415877831,
+      "baseline_metric": -0.006440610531059837,
+      "selected_metric": -0.0044909328989677505,
       "applied": false,
       "research_only": true
     },
@@ -1129,10 +1114,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 829,
+      "sample_count": 817,
       "changed": true,
-      "baseline_metric": -0.00753593943531124,
-      "selected_metric": -0.005674966926147484,
+      "baseline_metric": -0.006969274323844112,
+      "selected_metric": -0.004984246803125596,
       "applied": false,
       "research_only": true
     },
@@ -1144,10 +1129,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 840,
+      "sample_count": 828,
       "changed": true,
-      "baseline_metric": -0.00769910715809682,
-      "selected_metric": -0.005865099859798136,
+      "baseline_metric": -0.0071442135439563495,
+      "selected_metric": -0.005188587044141934,
       "applied": false,
       "research_only": true
     },
@@ -1159,10 +1144,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 851,
+      "sample_count": 839,
       "changed": true,
-      "baseline_metric": -0.007792676663359263,
-      "selected_metric": -0.0061133002851447085,
+      "baseline_metric": -0.00724807611460614,
+      "selected_metric": -0.0054514654574409314,
       "applied": false,
       "research_only": true
     },
@@ -1174,10 +1159,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 861,
+      "sample_count": 849,
       "changed": true,
-      "baseline_metric": -0.007720451290349385,
-      "selected_metric": -0.006066911471799669,
+      "baseline_metric": -0.007183231603717249,
+      "selected_metric": -0.005414692988070248,
       "applied": false,
       "research_only": true
     },
@@ -1189,10 +1174,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 873,
+      "sample_count": 861,
       "changed": true,
-      "baseline_metric": -0.007649591539255382,
-      "selected_metric": -0.005927808444543745,
+      "baseline_metric": -0.007119546620862295,
+      "selected_metric": -0.0052834840447600695,
       "applied": false,
       "research_only": true
     },
@@ -1204,10 +1189,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 891,
+      "sample_count": 879,
       "changed": true,
-      "baseline_metric": -0.007423533716655401,
-      "selected_metric": -0.006234805747950949,
+      "baseline_metric": -0.006898094663350088,
+      "selected_metric": -0.0056048953133671356,
       "applied": false,
       "research_only": true
     },
@@ -1219,10 +1204,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 907,
+      "sample_count": 895,
       "changed": true,
-      "baseline_metric": -0.007418562263407286,
-      "selected_metric": -0.006295850049681314,
+      "baseline_metric": -0.006900891383237156,
+      "selected_metric": -0.005676252372355922,
       "applied": false,
       "research_only": true
     },
@@ -1234,10 +1219,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 917,
+      "sample_count": 905,
       "changed": true,
-      "baseline_metric": -0.007345960808156739,
-      "selected_metric": -0.0062395197859340425,
+      "baseline_metric": -0.006834835066588367,
+      "selected_metric": -0.005628205452925975,
       "applied": false,
       "research_only": true
     },
@@ -1249,10 +1234,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 929,
+      "sample_count": 917,
       "changed": true,
-      "baseline_metric": -0.007283336544188543,
-      "selected_metric": -0.006180005534231934,
+      "baseline_metric": -0.006778710824034667,
+      "selected_metric": -0.00557668830385149,
       "applied": false,
       "research_only": true
     },
@@ -1264,10 +1249,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 938,
+      "sample_count": 926,
       "changed": true,
-      "baseline_metric": -0.007216859939497437,
-      "selected_metric": -0.006155957896166498,
+      "baseline_metric": -0.006718493492421601,
+      "selected_metric": -0.005560915945676267,
       "applied": false,
       "research_only": true
     },
@@ -1279,10 +1264,10 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 952,
+      "sample_count": 940,
       "changed": true,
-      "baseline_metric": -0.007150005138727424,
-      "selected_metric": -0.0060995604766974605,
+      "baseline_metric": -0.006657716320472798,
+      "selected_metric": -0.0055121050688976695,
       "applied": false,
       "research_only": true
     },
@@ -1294,25 +1279,25 @@
         "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 962,
+      "sample_count": 950,
       "changed": true,
-      "baseline_metric": -0.006956435875927943,
-      "selected_metric": -0.005913235659843014,
+      "baseline_metric": -0.006464882374405174,
+      "selected_metric": -0.005327282390323578,
       "applied": false,
       "research_only": true
     },
     {
       "signal_date": "2026-09-24",
       "weights": {
-        "volume_growth_pct": 0.45,
-        "ma5_distance_pct": 0.25,
-        "institutional_lots": 0.2,
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 976,
+      "sample_count": 964,
       "changed": true,
-      "baseline_metric": -0.006825049850751184,
-      "selected_metric": -0.005745040783989802,
+      "baseline_metric": -0.006338464176488359,
+      "selected_metric": -0.00523925905227099,
       "applied": false,
       "research_only": true
     },
@@ -1324,10 +1309,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 991,
+      "sample_count": 979,
       "changed": true,
-      "baseline_metric": -0.006842449448268133,
-      "selected_metric": -0.005776937147503548,
+      "baseline_metric": -0.006362720716478502,
+      "selected_metric": -0.005282711649717117,
       "applied": false,
       "research_only": true
     },
@@ -1339,10 +1324,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 999,
+      "sample_count": 987,
       "changed": true,
-      "baseline_metric": -0.0068394496248979685,
-      "selected_metric": -0.005735412353606351,
+      "baseline_metric": -0.006366119938858936,
+      "selected_metric": -0.005247263375335212,
       "applied": false,
       "research_only": true
     },
@@ -1354,10 +1339,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 1011,
+      "sample_count": 999,
       "changed": true,
-      "baseline_metric": -0.0065866132513688865,
-      "selected_metric": -0.0054970078398327155,
+      "baseline_metric": -0.0061162040065551515,
+      "selected_metric": -0.00501216673526353,
       "applied": false,
       "research_only": true
     },
@@ -1369,10 +1354,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 1018,
+      "sample_count": 1006,
       "changed": true,
-      "baseline_metric": -0.006794963969687235,
-      "selected_metric": -0.005719417982816047,
+      "baseline_metric": -0.006333427404130129,
+      "selected_metric": -0.005243821992593953,
       "applied": false,
       "research_only": true
     },
@@ -1384,10 +1369,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 1036,
+      "sample_count": 1024,
       "changed": true,
-      "baseline_metric": -0.00658716724628529,
-      "selected_metric": -0.005621030331884951,
+      "baseline_metric": -0.006128904743207603,
+      "selected_metric": -0.005150301546040805,
       "applied": false,
       "research_only": true
     },
@@ -1399,10 +1384,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 1047,
+      "sample_count": 1035,
       "changed": true,
-      "baseline_metric": -0.006647994848380142,
-      "selected_metric": -0.005824147024809145,
+      "baseline_metric": -0.006196344958107202,
+      "selected_metric": -0.005362002257802813,
       "applied": false,
       "research_only": true
     },
@@ -1414,10 +1399,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 1064,
+      "sample_count": 1052,
       "changed": true,
-      "baseline_metric": -0.006767160822212504,
-      "selected_metric": -0.005953547133095806,
+      "baseline_metric": -0.006322691005701896,
+      "selected_metric": -0.005498843182130895,
       "applied": false,
       "research_only": true
     },
@@ -1429,10 +1414,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 1076,
+      "sample_count": 1064,
       "changed": true,
-      "baseline_metric": -0.006812302039006006,
-      "selected_metric": -0.006008671339939819,
+      "baseline_metric": -0.006373914347132715,
+      "selected_metric": -0.005560300658016012,
       "applied": false,
       "research_only": true
     },
@@ -1444,10 +1429,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 1088,
+      "sample_count": 1076,
       "changed": true,
-      "baseline_metric": -0.006667792531328996,
-      "selected_metric": -0.00602320045284789,
+      "baseline_metric": -0.006233010706746457,
+      "selected_metric": -0.0055805095230079095,
       "applied": false,
       "research_only": true
     },
@@ -1459,10 +1444,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 1104,
+      "sample_count": 1092,
       "changed": true,
-      "baseline_metric": -0.006705476000623879,
-      "selected_metric": -0.005987241999619662,
+      "baseline_metric": -0.006276421028088339,
+      "selected_metric": -0.0055494811604052795,
       "applied": false,
       "research_only": true
     },
@@ -1474,10 +1459,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 1116,
+      "sample_count": 1104,
       "changed": true,
-      "baseline_metric": -0.006564493435712789,
-      "selected_metric": -0.005854759245371343,
+      "baseline_metric": -0.006138888432130836,
+      "selected_metric": -0.005420654431126615,
       "applied": false,
       "research_only": true
     },
@@ -1489,10 +1474,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 1132,
+      "sample_count": 1120,
       "changed": true,
-      "baseline_metric": -0.006371608779531819,
-      "selected_metric": -0.005751178535116708,
+      "baseline_metric": -0.005948757862901357,
+      "selected_metric": -0.00532098524872985,
       "applied": false,
       "research_only": true
     },
@@ -1504,10 +1489,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 1137,
+      "sample_count": 1125,
       "changed": true,
-      "baseline_metric": -0.006560292326886506,
-      "selected_metric": -0.005947034686453073,
+      "baseline_metric": -0.006144593860127215,
+      "selected_metric": -0.0055241636157121006,
       "applied": false,
       "research_only": true
     },
@@ -1519,10 +1504,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 1150,
+      "sample_count": 1138,
       "changed": true,
-      "baseline_metric": -0.0064425104952184125,
-      "selected_metric": -0.00596740957826019,
+      "baseline_metric": -0.006030256151408153,
+      "selected_metric": -0.005549662738300121,
       "applied": false,
       "research_only": true
     },
@@ -1534,10 +1519,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 1160,
+      "sample_count": 1148,
       "changed": true,
-      "baseline_metric": -0.006504833323756662,
-      "selected_metric": -0.006039410507570759,
+      "baseline_metric": -0.006098002719058956,
+      "selected_metric": -0.005627260784973784,
       "applied": false,
       "research_only": true
     },
@@ -1549,10 +1534,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 1179,
+      "sample_count": 1167,
       "changed": true,
-      "baseline_metric": -0.006271364766627823,
-      "selected_metric": -0.005661692068785097,
+      "baseline_metric": -0.005866493055122986,
+      "selected_metric": -0.005249931400242488,
       "applied": false,
       "research_only": true
     },
@@ -1564,10 +1549,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 1190,
+      "sample_count": 1178,
       "changed": true,
-      "baseline_metric": -0.0065168290658261085,
-      "selected_metric": -0.005807419801061722,
+      "baseline_metric": -0.006119223678463206,
+      "selected_metric": -0.005401888053198656,
       "applied": false,
       "research_only": true
     },
@@ -1579,10 +1564,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 1208,
+      "sample_count": 1196,
       "changed": true,
-      "baseline_metric": -0.006748983195654009,
-      "selected_metric": -0.006111904898962777,
+      "baseline_metric": -0.0063583364769893465,
+      "selected_metric": -0.0057142186411081545,
       "applied": false,
       "research_only": true
     },
@@ -1594,25 +1579,25 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 1223,
+      "sample_count": 1211,
       "changed": true,
-      "baseline_metric": -0.0068429233048131624,
-      "selected_metric": -0.006183546379532171,
+      "baseline_metric": -0.006457572617053679,
+      "selected_metric": -0.005790989386578357,
       "applied": false,
       "research_only": true
     },
     {
       "signal_date": "2026-10-29",
       "weights": {
-        "volume_growth_pct": 0.45,
-        "ma5_distance_pct": 0.25,
-        "institutional_lots": 0.2,
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
         "volume_rank": 0.1
       },
-      "sample_count": 1234,
+      "sample_count": 1222,
       "changed": true,
-      "baseline_metric": -0.006864907620467975,
-      "selected_metric": -0.006282633149065125,
+      "baseline_metric": -0.006483960554367024,
+      "selected_metric": -0.005887224889499011,
       "applied": false,
       "research_only": true
     },
@@ -1624,10 +1609,10 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 1247,
+      "sample_count": 1235,
       "changed": true,
-      "baseline_metric": -0.006857216778165802,
-      "selected_metric": -0.006281103941380972,
+      "baseline_metric": -0.006480261757239169,
+      "selected_metric": -0.005897987285836318,
       "applied": false,
       "research_only": true
     },
@@ -1639,10 +1624,25 @@
         "institutional_lots": 0.2,
         "volume_rank": 0.1
       },
-      "sample_count": 1260,
+      "sample_count": 1248,
       "changed": true,
-      "baseline_metric": -0.007045120613206447,
-      "selected_metric": -0.006510141085183965,
+      "baseline_metric": -0.006674142934671003,
+      "selected_metric": -0.006133502247621825,
+      "applied": false,
+      "research_only": true
+    },
+    {
+      "signal_date": "2026-11-03",
+      "weights": {
+        "volume_growth_pct": 0.25,
+        "ma5_distance_pct": 0.2,
+        "institutional_lots": 0.45,
+        "volume_rank": 0.1
+      },
+      "sample_count": 1265,
+      "changed": true,
+      "baseline_metric": -0.006797362934633337,
+      "selected_metric": -0.006209204381448191,
       "applied": false,
       "research_only": true
     }
@@ -1650,15 +1650,15 @@
   "optimization": {
     "source": "walk_forward_backtest_100d",
     "minimum_samples": 30,
-    "sample_count": 1284,
+    "sample_count": 1290,
     "changed": false,
     "research_changed": true,
     "approved": false,
     "cost_validated": false,
     "research_only": true,
     "period": {
-      "from": "2026-06-05",
-      "to": "2026-11-03"
+      "from": "2026-06-08",
+      "to": "2026-11-04"
     },
     "old_weights": {
       "volume_growth_pct": 0.35,
@@ -1679,31 +1679,31 @@
       "volume_rank": 0.1
     },
     "metrics": {
-      "baseline": -0.0072163118698832,
-      "selected": -0.006649605980743225
+      "baseline": -0.0066576251492932136,
+      "selected": -0.006059190355224196
     },
-    "updated_at": "2026-11-03T08:59:12+00:00"
+    "updated_at": "2026-11-04T09:04:54+00:00"
   },
   "cost_rate": 0.0,
   "cost_assumption": "gross 未扣成本；standard 每筆已成交扣雙邊總成本 0.435%；stress 扣 0.535%；未觸發不扣成本；未另計固定滑價、借券費與融券限制",
-  "completed_at": "2026-11-03T08:59:12+00:00",
+  "completed_at": "2026-11-04T09:04:54+00:00",
   "data_collection": {
     "complete_trading_days": 106,
-    "latest_complete_date": "2026-11-03",
+    "latest_complete_date": "2026-11-04",
     "network_requests": 18,
     "cache_hits": 434
   },
   "portfolio_standard": {
     "initial_capital": 1000000.0,
-    "final_capital": 506406.75400000025,
-    "total_return": -0.49359324599999976,
-    "net_return": -0.49359324599999976,
-    "max_drawdown": -0.4994204970002152,
+    "final_capital": 502760.2815000005,
+    "total_return": -0.4972397184999995,
+    "net_return": -0.4972397184999995,
+    "max_drawdown": -0.5055591602913043,
     "peak_positions": 1,
     "open_positions": 0,
-    "gross_pnl": -234450.0,
-    "net_pnl": -493593.2460000001,
-    "costs": 259143.2460000001,
+    "gross_pnl": -233409.9999999999,
+    "net_pnl": -497239.7185000001,
+    "costs": 263829.7185000002,
     "realized_only_equity": true,
     "model": {
       "risk_per_trade": 0.005,
@@ -1715,27 +1715,27 @@
     },
     "event_order": "existing_exits_then_priority_entries_then_same_day_exits",
     "exposure": {
-      "peak_notional": 192500.0,
-      "peak_fraction_of_initial_capital": 0.1925,
+      "peak_notional": 202500.0,
+      "peak_fraction_of_initial_capital": 0.2025,
       "by_direction": {
         "long": {
-          "peak_notional": 192500.0,
-          "realized_trades": 365,
-          "gross_pnl": -117730.00000000003,
-          "net_pnl": -261594.54850000003
+          "peak_notional": 202500.0,
+          "realized_trades": 372,
+          "gross_pnl": -110100.00000000007,
+          "net_pnl": -257266.59
         },
         "short": {
           "peak_notional": 187000.0,
-          "realized_trades": 249,
-          "gross_pnl": -116720.0000000001,
-          "net_pnl": -231998.69750000015
+          "realized_trades": 253,
+          "gross_pnl": -123310.0000000001,
+          "net_pnl": -239973.1285000001
         }
       }
     },
     "borrow_fees_included": false,
     "short_availability_mode": "assumed_available",
-    "realized_trade_count": 614,
-    "skipped_count": 670,
+    "realized_trade_count": 625,
+    "skipped_count": 665,
     "equity_curve_points": 100
   },
   "costs": {
@@ -1745,30 +1745,30 @@
   },
   "metrics_scenarios": {
     "gross": {
-      "signals": 1690,
-      "trades": 1284,
-      "triggered": 1284,
-      "untriggered": 406,
+      "signals": 1688,
+      "trades": 1290,
+      "triggered": 1290,
+      "untriggered": 398,
       "unresolved": 0,
-      "win_rate": 0.3862928348909657,
-      "average_return": -0.006291961508160009,
-      "median_return": -0.010917238749046529,
-      "cumulative_return": -0.4550696117848899,
-      "max_drawdown": -0.4550696117848899,
-      "profit_factor": 0.6437680581361448,
+      "win_rate": 0.38992248062015505,
+      "average_return": -0.005720631763111166,
+      "median_return": -0.010227102943373693,
+      "cumulative_return": -0.4222676655443316,
+      "max_drawdown": -0.4435238317905832,
+      "profit_factor": 0.6689275553056466,
       "signal_days": 100,
       "long": {
-        "signals": 974,
-        "trades": 769,
-        "triggered": 769,
-        "untriggered": 205,
+        "signals": 972,
+        "trades": 775,
+        "triggered": 775,
+        "untriggered": 197,
         "unresolved": 0,
-        "win_rate": 0.3953185955786736,
-        "average_return": -0.005600405533435565,
+        "win_rate": 0.3961290322580645,
+        "average_return": -0.005432679160889262,
         "median_return": -0.011627906976744146,
-        "cumulative_return": -0.4841985789536486,
-        "max_drawdown": -0.4841985789536486,
-        "profit_factor": 0.703494144578162
+        "cumulative_return": -0.45798450270672064,
+        "max_drawdown": -0.4725342369467864,
+        "profit_factor": 0.710446274103333
       },
       "short": {
         "signals": 716,
@@ -1776,39 +1776,39 @@
         "triggered": 515,
         "untriggered": 201,
         "unresolved": 0,
-        "win_rate": 0.37281553398058254,
-        "average_return": -0.007324595575272822,
-        "median_return": -0.010067114093959731,
-        "cumulative_return": -0.5652627095438453,
-        "max_drawdown": -0.5734386668311029,
-        "profit_factor": 0.537374514347466
+        "win_rate": 0.38058252427184464,
+        "average_return": -0.0061539584946101586,
+        "median_return": -0.008174386920980848,
+        "cumulative_return": -0.5375158999978124,
+        "max_drawdown": -0.5562093145043643,
+        "profit_factor": 0.5910219394666788
       }
     },
     "standard": {
-      "signals": 1690,
-      "trades": 1284,
-      "triggered": 1284,
-      "untriggered": 406,
+      "signals": 1688,
+      "trades": 1290,
+      "triggered": 1290,
+      "untriggered": 398,
       "unresolved": 0,
-      "win_rate": 0.3512461059190031,
-      "average_return": -0.010641961508160007,
-      "median_return": -0.015267238749046529,
-      "cumulative_return": -0.6485738865937969,
-      "max_drawdown": -0.6485738865937969,
-      "profit_factor": 0.47791852400357093,
+      "win_rate": 0.3550387596899225,
+      "average_return": -0.010070631763111168,
+      "median_return": -0.014577102943373693,
+      "cumulative_return": -0.6273221336095585,
+      "max_drawdown": -0.6369728413324983,
+      "profit_factor": 0.49607134379825507,
       "signal_days": 100,
       "long": {
-        "signals": 974,
-        "trades": 769,
-        "triggered": 769,
-        "untriggered": 205,
+        "signals": 972,
+        "trades": 775,
+        "triggered": 775,
+        "untriggered": 197,
         "unresolved": 0,
-        "win_rate": 0.37451235370611186,
-        "average_return": -0.009950405533435553,
+        "win_rate": 0.37548387096774194,
+        "average_return": -0.009782679160889249,
         "median_return": -0.015977906976744144,
-        "cumulative_return": -0.6674505674577083,
-        "max_drawdown": -0.6674505674577083,
-        "profit_factor": 0.5382708888633163
+        "cumulative_return": -0.6504721154528157,
+        "max_drawdown": -0.658408723986794,
+        "profit_factor": 0.5433088505363266
       },
       "short": {
         "signals": 716,
@@ -1816,39 +1816,39 @@
         "triggered": 515,
         "untriggered": 201,
         "unresolved": 0,
-        "win_rate": 0.31650485436893205,
-        "average_return": -0.01167459557527282,
-        "median_return": -0.01441711409395973,
-        "cumulative_return": -0.7137485500703922,
-        "max_drawdown": -0.7179280473654466,
-        "profit_factor": 0.3737395523184282
+        "win_rate": 0.32427184466019415,
+        "average_return": -0.010503958494610168,
+        "median_return": -0.012524386920980847,
+        "cumulative_return": -0.6953942226619065,
+        "max_drawdown": -0.702617299472122,
+        "profit_factor": 0.4106337702058614
       }
     },
     "stress": {
-      "signals": 1690,
-      "trades": 1284,
-      "triggered": 1284,
-      "untriggered": 406,
+      "signals": 1688,
+      "trades": 1290,
+      "triggered": 1290,
+      "untriggered": 398,
       "unresolved": 0,
-      "win_rate": 0.34034267912772587,
-      "average_return": -0.01164196150816,
-      "median_return": -0.01626723874904653,
-      "cumulative_return": -0.6823704480608255,
-      "max_drawdown": -0.6823704480608255,
-      "profit_factor": 0.44659888923300656,
+      "win_rate": 0.34418604651162793,
+      "average_return": -0.011070631763111162,
+      "median_return": -0.015577102943373694,
+      "cumulative_return": -0.6631420456388717,
+      "max_drawdown": -0.6712164992548234,
+      "profit_factor": 0.4634715782960475,
       "signal_days": 100,
       "long": {
-        "signals": 974,
-        "trades": 769,
-        "triggered": 769,
-        "untriggered": 205,
+        "signals": 972,
+        "trades": 775,
+        "triggered": 775,
+        "untriggered": 197,
         "unresolved": 0,
-        "win_rate": 0.36671001300390116,
-        "average_return": -0.010950405533435554,
+        "win_rate": 0.36774193548387096,
+        "average_return": -0.010782679160889246,
         "median_return": -0.016977906976744145,
-        "cumulative_return": -0.6994508624862101,
-        "max_drawdown": -0.6994508624862101,
-        "profit_factor": 0.5062839795178333
+        "cumulative_return": -0.6840899824959474,
+        "max_drawdown": -0.6909612202310553,
+        "profit_factor": 0.5109680695069214
       },
       "short": {
         "signals": 716,
@@ -1856,24 +1856,24 @@
         "triggered": 515,
         "untriggered": 201,
         "unresolved": 0,
-        "win_rate": 0.30097087378640774,
-        "average_return": -0.012674595575272814,
-        "median_return": -0.015417114093959731,
-        "cumulative_return": -0.7400348005364457,
-        "max_drawdown": -0.7435778195957032,
-        "profit_factor": 0.3443451727966909
+        "win_rate": 0.3087378640776699,
+        "average_return": -0.011503958494610146,
+        "median_return": -0.013524386920980846,
+        "cumulative_return": -0.7233481897136469,
+        "max_drawdown": -0.7288316950567276,
+        "profit_factor": 0.37830356010982147
       }
     }
   },
   "candidate_universe_summary": {
     "signal_dates": 100,
     "total_rows": 10000,
-    "eligible": 3061,
-    "selected": 1690,
+    "eligible": 3081,
+    "selected": 1688,
     "rejection_reasons": {
       "insufficient_history": 13,
-      "ma5_institutional_misaligned": 3250,
-      "volume_growth_below_20": 5689
+      "ma5_institutional_misaligned": 3249,
+      "volume_growth_below_20": 5653
     },
     "artifact": "candidate_universe_100d.csv.gz"
   }
