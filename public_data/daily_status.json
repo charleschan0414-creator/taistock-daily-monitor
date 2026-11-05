@@ -1,7 +1,4 @@
 {
-  "started_at": "2026-11-04T17:01:12+08:00",
-  "completed_at": "2026-11-04T17:05:24+08:00",
-  "status": "success",
   "data_date": "2026-11-04",
   "strategy_campaign": {
     "id": "one_month_winrate_pf_20261020",
@@ -733,9 +730,64 @@
       "error": "TAIFEX 行情更新失敗：官方回傳缺少契約：CDF"
     }
   },
+  "started_at": "2026-11-05T08:13:58+08:00",
+  "completed_at": "2026-11-05T08:14:13+08:00",
+  "status": "success",
+  "run_mode": "market_closed_carry_forward",
+  "market_session": {
+    "status": "paused_no_new_official_session",
+    "requested_date": "2026-11-05",
+    "latest_official_date": "2026-11-04",
+    "notice": "2026-11-05 官方尚無新交易日資料；沿用 2026-11-04 觀察資料並暫停執行。"
+  },
+  "execution_eligibility": {
+    "version": "official-day-trade-v1",
+    "source_date": "2026-11-04",
+    "requested_date": "2026-11-05",
+    "execution_for_signal_date": "paused_no_new_official_session",
+    "enforced": true,
+    "score_effect": "none",
+    "eligible_count": 0,
+    "filtered_count": 4,
+    "filtered_out": [
+      {
+        "code": "4533",
+        "name": "協易機",
+        "direction": "long",
+        "reason": "no_new_official_session",
+        "source_date": "2026-11-04"
+      },
+      {
+        "code": "1528",
+        "name": "恩德",
+        "direction": "long",
+        "reason": "no_new_official_session",
+        "source_date": "2026-11-04"
+      },
+      {
+        "code": "6488",
+        "name": "環球晶",
+        "direction": "short",
+        "reason": "no_new_official_session",
+        "source_date": "2026-11-04"
+      },
+      {
+        "code": "6213",
+        "name": "聯茂",
+        "direction": "short",
+        "reason": "no_new_official_session",
+        "source_date": "2026-11-04"
+      }
+    ],
+    "sources": [
+      "https://www.twse.com.tw/rwd/zh/dayTrading/TWTB4U",
+      "https://www.tpex.org.tw/openapi/v1/tpex_securities"
+    ],
+    "notice": "官方兩市場未同時提供新交易日資料；沿用觀察資料並暫停所有可執行訊號。"
+  },
   "health": {
     "overall": "ok",
-    "generated_at": "2026-11-04T17:05:24+08:00",
+    "generated_at": "2026-11-05T08:14:13+08:00",
     "sources": {
       "daily_status": {
         "status": "ok",
@@ -764,12 +816,17 @@
       }
     },
     "latest_data_date": "2026-11-04",
-    "market_session": null,
+    "market_session": {
+      "status": "paused_no_new_official_session",
+      "requested_date": "2026-11-05",
+      "latest_official_date": "2026-11-04",
+      "notice": "2026-11-05 官方尚無新交易日資料；沿用 2026-11-04 觀察資料並暫停執行。"
+    },
     "pipeline": {
       "status": "success",
-      "completed_at": "2026-11-04T17:05:24+08:00",
+      "completed_at": "2026-11-05T08:14:13+08:00",
       "data_date": "2026-11-04",
-      "freshness": "fresh"
+      "freshness": "paused"
     },
     "strategy": {
       "version": 2,
@@ -789,7 +846,7 @@
       "remaining": 51
     },
     "desktop_version": "2026.11.03.1",
-    "next_update": "2026-11-05T06:30:00+08:00",
+    "next_update": "2026-11-06T06:30:00+08:00",
     "recent_error": null
   }
 }
