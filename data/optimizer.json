@@ -1,15 +1,15 @@
 {
   "source": "walk_forward_backtest_100d",
   "minimum_samples": 30,
-  "sample_count": 1297,
+  "sample_count": 1287,
   "changed": false,
   "research_changed": true,
   "approved": false,
   "cost_validated": false,
   "research_only": true,
   "period": {
-    "from": "2026-06-10",
-    "to": "2026-11-06"
+    "from": "2026-06-11",
+    "to": "2026-11-09"
   },
   "old_weights": {
     "volume_growth_pct": 0.35,
@@ -30,8 +30,8 @@
     "volume_rank": 0.1
   },
   "metrics": {
-    "baseline": -0.007196805205334469,
-    "selected": -0.006750592687650845
+    "baseline": -0.006773000395604324,
+    "selected": -0.006257174951164916
   },
-  "updated_at": "2026-11-06T09:03:23+00:00"
+  "updated_at": "2026-11-09T09:19:43+00:00"
 }
