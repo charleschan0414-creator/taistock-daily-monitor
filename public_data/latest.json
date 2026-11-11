@@ -120,10 +120,9 @@
         "explanation": "最近3日未形成保守定義的型態；5日收盤走高 +11.17%。只供研究，不計分。"
       },
       "day_trading_eligibility": {
+        "eligible": false,
         "source_date": "2026-11-10",
-        "eligible": true,
-        "reason": "eligible",
-        "source": "TWSE"
+        "reason": "no_new_official_session"
       },
       "broker_risk_research": {
         "version": "broker-risk-v1",
@@ -254,10 +253,9 @@
         "explanation": "最近3日未形成保守定義的型態；5日收盤走高 +4.65%。只供研究，不計分。"
       },
       "day_trading_eligibility": {
+        "eligible": false,
         "source_date": "2026-11-10",
-        "eligible": true,
-        "reason": "eligible",
-        "source": "TWSE"
+        "reason": "no_new_official_session"
       },
       "broker_risk_research": {
         "version": "broker-risk-v1",
@@ -388,10 +386,9 @@
         "explanation": "最近3日未形成保守定義的型態；5日收盤走高 +3.32%。只供研究，不計分。"
       },
       "day_trading_eligibility": {
+        "eligible": false,
         "source_date": "2026-11-10",
-        "eligible": true,
-        "reason": "eligible",
-        "source": "TWSE"
+        "reason": "no_new_official_session"
       },
       "broker_risk_research": {
         "version": "broker-risk-v1",
@@ -522,10 +519,9 @@
         "explanation": "最近3日未形成保守定義的型態；5日收盤走高 +4.52%。只供研究，不計分。"
       },
       "day_trading_eligibility": {
+        "eligible": false,
         "source_date": "2026-11-10",
-        "eligible": true,
-        "reason": "eligible",
-        "source": "TWSE"
+        "reason": "no_new_official_session"
       },
       "broker_risk_research": {
         "version": "broker-risk-v1",
@@ -658,10 +654,9 @@
         "explanation": "最近3日未形成保守定義的型態；5日收盤走高 +11.17%。只供研究，不計分。"
       },
       "day_trading_eligibility": {
+        "eligible": false,
         "source_date": "2026-11-10",
-        "eligible": true,
-        "reason": "eligible",
-        "source": "TWSE"
+        "reason": "no_new_official_session"
       },
       "broker_risk_research": {
         "version": "broker-risk-v1",
@@ -792,10 +787,9 @@
         "explanation": "最近3日未形成保守定義的型態；5日收盤走高 +4.65%。只供研究，不計分。"
       },
       "day_trading_eligibility": {
+        "eligible": false,
         "source_date": "2026-11-10",
-        "eligible": true,
-        "reason": "eligible",
-        "source": "TWSE"
+        "reason": "no_new_official_session"
       },
       "broker_risk_research": {
         "version": "broker-risk-v1",
@@ -926,10 +920,9 @@
         "explanation": "最近3日未形成保守定義的型態；5日收盤走高 +3.32%。只供研究，不計分。"
       },
       "day_trading_eligibility": {
+        "eligible": false,
         "source_date": "2026-11-10",
-        "eligible": true,
-        "reason": "eligible",
-        "source": "TWSE"
+        "reason": "no_new_official_session"
       },
       "broker_risk_research": {
         "version": "broker-risk-v1",
@@ -1060,10 +1053,9 @@
         "explanation": "最近3日未形成保守定義的型態；5日收盤走高 +4.52%。只供研究，不計分。"
       },
       "day_trading_eligibility": {
+        "eligible": false,
         "source_date": "2026-11-10",
-        "eligible": true,
-        "reason": "eligible",
-        "source": "TWSE"
+        "reason": "no_new_official_session"
       },
       "broker_risk_research": {
         "version": "broker-risk-v1",
@@ -1196,10 +1188,9 @@
         "explanation": "最近3日未形成保守定義的型態；5日收盤走高 +11.17%。只供研究，不計分。"
       },
       "day_trading_eligibility": {
+        "eligible": false,
         "source_date": "2026-11-10",
-        "eligible": true,
-        "reason": "eligible",
-        "source": "TWSE"
+        "reason": "no_new_official_session"
       },
       "broker_risk_research": {
         "version": "broker-risk-v1",
@@ -1330,10 +1321,9 @@
         "explanation": "最近3日未形成保守定義的型態；5日收盤走高 +4.65%。只供研究，不計分。"
       },
       "day_trading_eligibility": {
+        "eligible": false,
         "source_date": "2026-11-10",
-        "eligible": true,
-        "reason": "eligible",
-        "source": "TWSE"
+        "reason": "no_new_official_session"
       },
       "broker_risk_research": {
         "version": "broker-risk-v1",
@@ -1464,10 +1454,9 @@
         "explanation": "最近3日未形成保守定義的型態；5日收盤走高 +3.32%。只供研究，不計分。"
       },
       "day_trading_eligibility": {
+        "eligible": false,
         "source_date": "2026-11-10",
-        "eligible": true,
-        "reason": "eligible",
-        "source": "TWSE"
+        "reason": "no_new_official_session"
       },
       "broker_risk_research": {
         "version": "broker-risk-v1",
@@ -1598,10 +1587,9 @@
         "explanation": "最近3日未形成保守定義的型態；5日收盤走高 +4.52%。只供研究，不計分。"
       },
       "day_trading_eligibility": {
+        "eligible": false,
         "source_date": "2026-11-10",
-        "eligible": true,
-        "reason": "eligible",
-        "source": "TWSE"
+        "reason": "no_new_official_session"
       },
       "broker_risk_research": {
         "version": "broker-risk-v1",
@@ -1734,10 +1722,9 @@
         "explanation": "最近3日未形成保守定義的型態；5日收盤走低 -5.26%。只供研究，不計分。"
       },
       "day_trading_eligibility": {
+        "eligible": false,
         "source_date": "2026-11-10",
-        "eligible": true,
-        "reason": "eligible",
-        "source": "TWSE"
+        "reason": "no_new_official_session"
       },
       "broker_risk_research": {
         "version": "broker-risk-v1",
@@ -1870,10 +1857,9 @@
         "explanation": "最近3日未形成保守定義的型態；5日收盤走高 +11.17%。只供研究，不計分。"
       },
       "day_trading_eligibility": {
+        "eligible": false,
         "source_date": "2026-11-10",
-        "eligible": true,
-        "reason": "eligible",
-        "source": "TWSE"
+        "reason": "no_new_official_session"
       },
       "broker_risk_research": {
         "version": "broker-risk-v1",
@@ -2004,10 +1990,9 @@
         "explanation": "最近3日未形成保守定義的型態；5日收盤走高 +4.65%。只供研究，不計分。"
       },
       "day_trading_eligibility": {
+        "eligible": false,
         "source_date": "2026-11-10",
-        "eligible": true,
-        "reason": "eligible",
-        "source": "TWSE"
+        "reason": "no_new_official_session"
       },
       "broker_risk_research": {
         "version": "broker-risk-v1",
@@ -2138,10 +2123,9 @@
         "explanation": "最近3日未形成保守定義的型態；5日收盤走高 +3.32%。只供研究，不計分。"
       },
       "day_trading_eligibility": {
+        "eligible": false,
         "source_date": "2026-11-10",
-        "eligible": true,
-        "reason": "eligible",
-        "source": "TWSE"
+        "reason": "no_new_official_session"
       },
       "broker_risk_research": {
         "version": "broker-risk-v1",
@@ -2272,10 +2256,9 @@
         "explanation": "最近3日未形成保守定義的型態；5日收盤走高 +4.52%。只供研究，不計分。"
       },
       "day_trading_eligibility": {
+        "eligible": false,
         "source_date": "2026-11-10",
-        "eligible": true,
-        "reason": "eligible",
-        "source": "TWSE"
+        "reason": "no_new_official_session"
       },
       "broker_risk_research": {
         "version": "broker-risk-v1",
@@ -2406,10 +2389,9 @@
         "explanation": "最近3日未形成保守定義的型態；5日收盤走低 -5.26%。只供研究，不計分。"
       },
       "day_trading_eligibility": {
+        "eligible": false,
         "source_date": "2026-11-10",
-        "eligible": true,
-        "reason": "eligible",
-        "source": "TWSE"
+        "reason": "no_new_official_session"
       },
       "broker_risk_research": {
         "version": "broker-risk-v1",
@@ -18137,17 +18119,54 @@
   "execution_eligibility": {
     "version": "official-day-trade-v1",
     "source_date": "2026-11-10",
-    "execution_for_signal_date": "signal_date_only_recheck_required",
+    "requested_date": "2026-11-11",
+    "execution_for_signal_date": "paused_no_new_official_session",
     "enforced": true,
     "score_effect": "none",
-    "eligible_count": 5,
-    "filtered_count": 0,
-    "filtered_out": [],
+    "eligible_count": 0,
+    "filtered_count": 5,
+    "filtered_out": [
+      {
+        "code": "6269",
+        "name": "台郡",
+        "direction": "long",
+        "reason": "no_new_official_session",
+        "source_date": "2026-11-10"
+      },
+      {
+        "code": "1802",
+        "name": "台玻",
+        "direction": "long",
+        "reason": "no_new_official_session",
+        "source_date": "2026-11-10"
+      },
+      {
+        "code": "1326",
+        "name": "台化",
+        "direction": "long",
+        "reason": "no_new_official_session",
+        "source_date": "2026-11-10"
+      },
+      {
+        "code": "1303",
+        "name": "南亞",
+        "direction": "long",
+        "reason": "no_new_official_session",
+        "source_date": "2026-11-10"
+      },
+      {
+        "code": "2812",
+        "name": "台中銀",
+        "direction": "short",
+        "reason": "no_new_official_session",
+        "source_date": "2026-11-10"
+      }
+    ],
     "sources": [
       "https://www.twse.com.tw/rwd/zh/dayTrading/TWTB4U",
       "https://www.tpex.org.tw/openapi/v1/tpex_securities"
     ],
-    "notice": "官方當沖資格屬執行限制，不改變策略分數；空方另排除暫停先賣後買標的。"
+    "notice": "官方兩市場未同時提供新交易日資料；沿用觀察資料並暫停所有可執行訊號。"
   },
   "broker_risk_research": {
     "version": "broker-risk-v1",
@@ -18171,6 +18190,15 @@
     "complete_trading_days": 6,
     "latest_complete_date": "2026-11-10",
     "network_requests": 0,
-    "cache_hits": 24
+    "cache_hits": 24,
+    "latest_official_quote_date": "2026-11-10",
+    "carried_forward": true,
+    "session_checked_at": "2026-11-11T08:06:53+08:00"
+  },
+  "market_session": {
+    "status": "paused_no_new_official_session",
+    "requested_date": "2026-11-11",
+    "latest_official_date": "2026-11-10",
+    "notice": "2026-11-11 官方尚無新交易日資料；沿用 2026-11-10 觀察資料並暫停執行。"
   }
 }
