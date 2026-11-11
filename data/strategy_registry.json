@@ -10,8 +10,8 @@
   "cost_validated": false,
   "activated_on": "2026-10-16",
   "minimum_forward_signal_days": 20,
-  "forward_signal_days": 15,
-  "last_observed_date": "2026-11-10",
+  "forward_signal_days": 16,
+  "last_observed_date": "2026-11-11",
   "status": "forward_observation",
   "forward_observation": {
     "not_holdout_reuse": true,
